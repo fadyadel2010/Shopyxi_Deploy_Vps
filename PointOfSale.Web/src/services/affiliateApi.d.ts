@@ -1,0 +1,20 @@
+import type { ApiJson } from './apiJson';
+import type { AffiliateCanonicalOrder, AffiliateCommissionActivityPage } from './affiliateReadModels';
+import type { affiliateAxios } from './affiliateAuthApi';
+type AffiliateRequestConfig = NonNullable<Parameters<typeof affiliateAxios.get>[1]>;
+export const affiliateApi: {
+    debugClaims(): Promise<ApiJson>; getDashboard(): Promise<ApiJson>; getOrders(page?: number, pageSize?: number, status?: string): Promise<ApiJson>;
+    getEarningsSummary(): Promise<ApiJson>; getProfile(): Promise<ApiJson>; register(displayName: string): Promise<ApiJson>;
+    getSourceOrder(orderId: string): Promise<AffiliateCanonicalOrder>;
+    getCommissionActivity(page?: number, pageSize?: number): Promise<AffiliateCommissionActivityPage>;
+    updatePayoutWallet(walletNumber: string, walletType: string): Promise<ApiJson>;
+    discoverProducts(options?: { q?: string; categoryId?: string; page?: number; pageSize?: number }): Promise<ApiJson>;
+    discoverProductsIntelligence(options?: { search?: string; minCommissionRate?: number; inStockOnly?: boolean; storeTenantId?: string; categorySlug?: string; sort?: string; page?: number; pageSize?: number }): Promise<ApiJson>;
+    getDiscoverCategories(storeTenantId?: string): Promise<ApiJson>; getProductIntelligence(id: string, config?: AffiliateRequestConfig): Promise<ApiJson>;
+    getAnalyticsSummary(range?: number): Promise<ApiJson>; getAnalyticsTrend(range?: number): Promise<ApiJson>;
+    getAnalyticsTopProducts(range?: number, limit?: number): Promise<ApiJson>; getAnalyticsTopStores(range?: number, limit?: number): Promise<ApiJson>;
+    getAnalyticsClicks(page?: number, pageSize?: number): Promise<ApiJson>; createPromotionLink(tenantId: string, productId: string): Promise<ApiJson>;
+    listPromotionLinks(config?: AffiliateRequestConfig): Promise<ApiJson>; deactivatePromotionLink(id: string): Promise<ApiJson>; getPayouts(page?: number, pageSize?: number): Promise<ApiJson>; requestPayout(amount: number): Promise<ApiJson>;
+    cancelPayout(requestId: string, reason: string | null): Promise<ApiJson>;
+};
+export default affiliateApi;

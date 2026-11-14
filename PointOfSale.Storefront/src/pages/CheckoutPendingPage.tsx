@@ -1,0 +1,525 @@
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { Layout } from '@/components/layout';
+import { AffiliateLink } from '@/components/common/AffiliateLink';
+import { useCategories } from '@/hooks';
+import { useAffiliateNavigate } from '@/hooks/useAffiliateNavigation';
+import { useTranslation } from '@/i18n';
+import { normalizeError, paymentStatusApi } from '@/services/api';
+import {
+    type CanonicalPaymentStatusResponse,
+    isPaymentStatusAccessDeniedFailure,
+    isAwaitingCodCollection,
+    resolvePendingCheckoutAction,
+} from '@/features/checkout/paymentFlow';
+import { readPendingCheckoutRouteEvidence } from '@/features/checkout/postOrderNavigation';
+import {
+    clearActiveCheckoutOrderContextIfMatches,
+    readCheckoutTokenForOrder,
+} from '@/features/checkout/activeCheckoutOrderContext';
+import { finalizeSuccessfulCheckout } from '@/features/checkout/checkoutCompletion';
+import { emitGuestPaymentRecoverySuccess } from '@/features/checkout/checkoutTelemetry';
+
+const POLL_INTERVAL_MS = 3000;
+const MAX_POLL_ATTEMPTS = 20;
+
+export const CheckoutPendingPage: React.FC = () => {
+    const { t } = useTranslation();
+    const navigate = useAffiliateNavigate();
+    const { categories, isLoading: categoriesLoading } = useCategories();
+    const [searchParams] = useSearchParams();
+
+    const routeEvidence = useMemo(
+        () => readPendingCheckoutRouteEvidence(searchParams),
+        [searchParams]
+    );
+    const orderId = routeEvidence.orderId;
+    const routeOrderNumber = routeEvidence.orderNumber;
+
+    const [paymentStatus, setPaymentStatus] = useState<CanonicalPaymentStatusResponse | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isTimedOut, setIsTimedOut] = useState(false);
+    const [hasFailed, setHasFailed] = useState(false);
+    const [isAccessDenied, setIsAccessDenied] = useState(false);
+    const [requiresManualReview, setRequiresManualReview] = useState(false);
+    const [lastError, setLastError] = useState<string | null>(null);
+    const [retryError, setRetryError] = useState<string | null>(null);
+    const [isRetrying, setIsRetrying] = useState(false);
+    const [pollAttempt, setPollAttempt] = useState(0);
+
+    const attemptRef = useRef(0);
+    const redirectedRef = useRef(false);
+    const navigateRef = useRef(navigate);
+    const tRef = useRef(t);
+    const abortControllerRef = useRef<AbortController | null>(null);
+    const guestRecoveryTelemetrySentRef = useRef(false);
+    const retryInFlightRef = useRef(false);
+
+    // Keep refs up to date
+    useEffect(() => {
+        navigateRef.current = navigate;
+        tRef.current = t;
+    }, [navigate, t]);
+
+    // Cleanup: abort any in-flight requests on unmount
+    useEffect(() => {
+        return () => {
+            abortControllerRef.current?.abort();
+            abortControllerRef.current = null;
+        };
+    }, []);
+
+    const displayOrderNumber = useMemo(() => {
+        if (isAccessDenied) {
+            return t('checkout.pending.orderUnavailable');
+        }
+
+        return paymentStatus?.orderNumber || routeOrderNumber || t('checkout.pending.orderUnavailable');
+    }, [isAccessDenied, paymentStatus?.orderNumber, routeOrderNumber, t]);
+
+    const trackingHref = useMemo(() => {
+        return `/orders/${orderId}/track`;
+    }, [orderId]);
+
+    const fetchPaymentStatus = useCallback(async (currentOrderId: string) => {
+        if (!currentOrderId || redirectedRef.current) {
+            setIsLoading(false);
+            return;
+        }
+
+        // Abort any previous request
+        abortControllerRef.current?.abort();
+        const controller = new AbortController();
+        abortControllerRef.current = controller;
+
+        try {
+            const checkoutToken = readCheckoutTokenForOrder(currentOrderId);
+            const response = await paymentStatusApi.getCanonicalPaymentStatus(currentOrderId, {
+                signal: controller.signal,
+                checkoutToken,
+            });
+            
+            // Ignore stale responses - verify we haven't been aborted or redirected
+            if (controller.signal.aborted || redirectedRef.current) {
+                return;
+            }
+
+            setPaymentStatus(response);
+            setLastError(null);
+            setRetryError(null);
+            setIsLoading(false);
+
+            if (checkoutToken && !guestRecoveryTelemetrySentRef.current) {
+                guestRecoveryTelemetrySentRef.current = true;
+                emitGuestPaymentRecoverySuccess(currentOrderId, 'volatile_checkout_token');
+            }
+
+            const nextAction = resolvePendingCheckoutAction(currentOrderId, response);
+            if (nextAction.kind === 'success') {
+                redirectedRef.current = true;
+                navigateRef.current(nextAction.href, { replace: true });
+                void finalizeSuccessfulCheckout(currentOrderId);
+                return;
+            } else if (nextAction.kind === 'manual_review') {
+                setHasFailed(false);
+                setRequiresManualReview(true);
+                setIsTimedOut(false);
+                return;
+            } else if (nextAction.kind === 'failed') {
+                clearActiveCheckoutOrderContextIfMatches(currentOrderId);
+                setHasFailed(true);
+                setRequiresManualReview(false);
+                setIsTimedOut(false);
+                return;
+            } else {
+                setHasFailed(false);
+                setRequiresManualReview(false);
+                setIsTimedOut(false);
+            }
+        } catch (error) {
+            // Ignore abort errors - they're expected when orderId changes
+            if (controller.signal.aborted || (error instanceof Error && error.name === 'AbortError')) {
+                return;
+            }
+
+            const normalized = normalizeError(error);
+            if (isPaymentStatusAccessDeniedFailure(normalized)) {
+                setIsLoading(false);
+                setIsAccessDenied(true);
+                setHasFailed(false);
+                setRequiresManualReview(false);
+                setIsTimedOut(false);
+                setLastError(tRef.current('checkout.pending.accessDeniedDescription'));
+                return;
+            }
+
+            console.error('[CheckoutPendingPage] Failed to load payment status:', error);
+            setIsLoading(false);
+            setLastError(tRef.current('checkout.pending.pollingError'));
+            // Note: Errors intentionally count toward MAX_POLL_ATTEMPTS to prevent infinite polling
+            // when the API is consistently failing. attemptRef.current is incremented below.
+        }
+
+        if (attemptRef.current + 1 >= MAX_POLL_ATTEMPTS) {
+            setIsTimedOut(true);
+            return;
+        }
+
+        attemptRef.current += 1;
+        setPollAttempt(attemptRef.current);
+    }, []);
+
+    // Reset telemetry guard when actual orderId changes (not display number)
+    useEffect(() => {
+        guestRecoveryTelemetrySentRef.current = false;
+    }, [orderId]);
+
+    // Reset polling state when order identity changes
+    useEffect(() => {
+        // Abort any in-flight request for the previous orderId
+        abortControllerRef.current?.abort();
+        
+        attemptRef.current = 0;
+        redirectedRef.current = false;
+        setPollAttempt(0);
+        setPaymentStatus(null);
+        setIsLoading(true);
+        setIsTimedOut(false);
+        setHasFailed(false);
+        setIsAccessDenied(false);
+        setRequiresManualReview(false);
+        setLastError(null);
+        setRetryError(null);
+        setIsRetrying(false);
+        retryInFlightRef.current = false;
+    }, [orderId]);
+
+    // Initial fetch when order identity changes
+    useEffect(() => {
+        if (orderId) {
+            void fetchPaymentStatus(orderId);
+        }
+    }, [orderId, fetchPaymentStatus]);
+
+    useEffect(() => {
+        if (!orderId || redirectedRef.current || isTimedOut || hasFailed || isAccessDenied || requiresManualReview || pollAttempt === 0) {
+            return;
+        }
+
+        const timeoutId = window.setTimeout(() => {
+            void fetchPaymentStatus(orderId);
+        }, POLL_INTERVAL_MS);
+
+        return () => {
+            window.clearTimeout(timeoutId);
+        };
+    }, [fetchPaymentStatus, hasFailed, isAccessDenied, isTimedOut, orderId, pollAttempt, requiresManualReview]);
+
+    const handleManualRefresh = useCallback(() => {
+        attemptRef.current = 0;
+        redirectedRef.current = false;
+        setPollAttempt(0);
+        setIsTimedOut(false);
+        setHasFailed(false);
+        setIsAccessDenied(false);
+        setRequiresManualReview(false);
+        setLastError(null);
+        setIsLoading(true);
+        if (orderId) {
+            void fetchPaymentStatus(orderId);
+        }
+    }, [fetchPaymentStatus, orderId]);
+
+    const handlePayAgain = useCallback(async () => {
+        if (!paymentStatus?.canRetryPayment || retryInFlightRef.current) {
+            return;
+        }
+
+        retryInFlightRef.current = true;
+        setIsRetrying(true);
+        setRetryError(null);
+
+        try {
+            const retrySession = await paymentStatusApi.retryPaymobPayment(paymentStatus, {
+                checkoutToken: readCheckoutTokenForOrder(orderId),
+            });
+            window.location.assign(retrySession.iframeUrl);
+        } catch (error) {
+            console.error('[CheckoutPendingPage] Paymob retry failed:', error);
+            retryInFlightRef.current = false;
+            setIsRetrying(false);
+            setRetryError(tRef.current('checkout.pending.retryError'));
+        }
+    }, [orderId, paymentStatus]);
+
+    const statusTone = isAccessDenied
+        ? 'border-red-200 bg-red-50'
+        : requiresManualReview
+        ? 'border-orange-200 bg-orange-50'
+        : hasFailed
+            ? 'border-red-200 bg-red-50'
+            : 'border-amber-200 bg-amber-50';
+    const awaitingCod = !isAccessDenied && !hasFailed && !requiresManualReview && isAwaitingCodCollection(paymentStatus);
+    const statusTitleTone = isAccessDenied || hasFailed
+        ? 'text-red-900'
+        : requiresManualReview
+            ? 'text-orange-900'
+            : 'text-amber-900';
+    const statusDescriptionTone = isAccessDenied || hasFailed
+        ? 'text-red-800'
+        : requiresManualReview
+            ? 'text-orange-800'
+            : 'text-amber-800';
+
+    const statusIcon = isAccessDenied ? (
+        <svg className="h-10 w-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v4m0 4h.01M5.07 19h13.86A2 2 0 0 0 20.66 16L13.73 4a2 2 0 0 0-3.46 0L3.34 16a2 2 0 0 0 1.73 3Z" />
+        </svg>
+    ) : requiresManualReview ? (
+        <svg className="h-10 w-10 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v4m0 4h.01M10.29 3.86l-7.5 13A1 1 0 0 0 3.67 18h16.66a1 1 0 0 0 .87-1.5l-7.5-13a1 1 0 0 0-1.74 0Z" />
+        </svg>
+    ) : hasFailed ? (
+        <svg className="h-10 w-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18 18 6M6 6l12 12" />
+        </svg>
+    ) : (
+        <svg className="h-10 w-10 animate-spin text-amber-600" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 0 1 8-8V0C5.373 0 0 5.373 0 12h4Z" />
+        </svg>
+    );
+
+    if (!orderId) {
+        return (
+            <Layout categories={categories} isLoading={categoriesLoading}>
+                <div className="container mx-auto px-4 py-8 max-w-2xl">
+                    <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center">
+                        <h1 className="text-2xl font-bold text-red-900">
+                            {t('checkout.pending.missingOrderTitle')}
+                        </h1>
+                        <p className="mt-3 text-sm text-red-700">
+                            {t('checkout.pending.missingOrderDescription')}
+                        </p>
+                        <div className="mt-6">
+                            <AffiliateLink
+                                href="/checkout"
+                                className="inline-flex items-center justify-center rounded-xl bg-primary px-5 py-3 font-medium text-white hover:bg-primary/90"
+                            >
+                                {t('checkout.pending.returnToCheckout')}
+                            </AffiliateLink>
+                        </div>
+                    </div>
+                </div>
+            </Layout>
+        );
+    }
+
+    return (
+        <Layout categories={categories} isLoading={categoriesLoading}>
+            <div className="container mx-auto px-4 py-8 max-w-3xl">
+                <div className="rounded-3xl border border-muted/10 bg-white p-6 shadow-sm md:p-8">
+                    <div className="mx-auto max-w-2xl text-center">
+                        <div className={`mx-auto flex h-20 w-20 items-center justify-center rounded-full ${
+                            isAccessDenied ? 'bg-red-100' : requiresManualReview ? 'bg-orange-100' : hasFailed ? 'bg-red-100' : 'bg-amber-100'
+                        }`}>
+                            {statusIcon}
+                        </div>
+
+                        <h1 className="mt-6 text-2xl font-bold text-text md:text-3xl">
+                            {isAccessDenied
+                                ? t('checkout.pending.accessDeniedTitle')
+                                : requiresManualReview
+                                ? t('checkout.pending.reviewTitle')
+                                 : hasFailed
+                                 ? t('checkout.pending.failedTitle')
+                                 : awaitingCod
+                                 ? t('checkout.pending.codTitle')
+                                 : t('checkout.pending.title')}
+                        </h1>
+
+                        <p className="mt-3 text-muted">
+                            {isAccessDenied
+                                ? t('checkout.pending.accessDeniedDescription')
+                                : requiresManualReview
+                                ? t('checkout.pending.reviewDescription')
+                                 : hasFailed
+                                 ? t('checkout.pending.failedDescription')
+                                 : awaitingCod
+                                 ? t('checkout.pending.codDescription')
+                                 : t('checkout.pending.description')}
+                        </p>
+
+                        <div className="mt-6 rounded-2xl border border-primary/10 bg-primary/5 p-4">
+                            <p className="text-sm text-muted">{t('checkout.pending.orderNumber')}</p>
+                            <p className="mt-1 font-mono text-lg font-semibold text-text">
+                                {displayOrderNumber}
+                            </p>
+                            {paymentStatus && !hasFailed ? (
+                                <p className="mt-2 text-xs text-muted">
+                                    {t('checkout.pending.backendStatus')}: {paymentStatus.status}
+                                </p>
+                            ) : null}
+                        </div>
+
+                        {!hasFailed ? (
+                            <div className={`mt-6 rounded-2xl border p-5 text-left ${statusTone}`}>
+                                <p className={`font-medium ${statusTitleTone}`}>
+                                    {isAccessDenied
+                                        ? t('checkout.pending.accessDeniedStatusTitle')
+                                         : requiresManualReview
+                                         ? t('checkout.pending.reviewStatusTitle')
+                                         : awaitingCod
+                                         ? t('checkout.pending.codWaitingTitle')
+                                         : isTimedOut
+                                        ? t('checkout.pending.timeoutTitle')
+                                        : t('checkout.pending.waitingTitle')}
+                                </p>
+                                <p className={`mt-2 text-sm ${statusDescriptionTone}`}>
+                                    {isAccessDenied
+                                        ? t('checkout.pending.accessDeniedStatusDescription')
+                                         : requiresManualReview
+                                         ? t('checkout.pending.reviewStatusDescription')
+                                         : awaitingCod
+                                         ? t('checkout.pending.codWaitingDescription')
+                                         : isTimedOut
+                                        ? t('checkout.pending.timeoutDescription')
+                                        : t('checkout.pending.waitingDescription')}
+                                </p>
+                                {lastError ? (
+                                    <p className="mt-3 text-sm text-amber-900">
+                                        {lastError}
+                                    </p>
+                                ) : null}
+                            </div>
+                        ) : null}
+
+                        {isLoading && !hasFailed && !isAccessDenied && !requiresManualReview ? (
+                            <p className="mt-4 text-sm text-muted">
+                                {t('checkout.pending.loading')}
+                            </p>
+                        ) : null}
+
+                        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+                            {isAccessDenied ? (
+                                <>
+                                    <AffiliateLink
+                                        href="/checkout"
+                                        className="inline-flex items-center justify-center rounded-xl bg-primary px-5 py-3 font-medium text-white hover:bg-primary/90"
+                                    >
+                                        {t('checkout.pending.returnToCheckout')}
+                                    </AffiliateLink>
+
+                                    <button
+                                        type="button"
+                                        onClick={handleManualRefresh}
+                                        className="inline-flex items-center justify-center rounded-xl border border-muted/20 px-5 py-3 font-medium text-text hover:bg-muted/10"
+                                    >
+                                        {t('checkout.pending.refreshStatus')}
+                                    </button>
+                                </>
+                            ) : hasFailed ? (
+                                <>
+                                    {paymentStatus?.canRetryPayment ? (
+                                        <button
+                                            type="button"
+                                            onClick={handlePayAgain}
+                                            disabled={isRetrying}
+                                            className="inline-flex items-center justify-center rounded-xl bg-primary px-5 py-3 font-medium text-white hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
+                                        >
+                                            {isRetrying
+                                                ? t('checkout.pending.retrying')
+                                                : t('checkout.pending.payAgain')}
+                                        </button>
+                                    ) : null}
+
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            clearActiveCheckoutOrderContextIfMatches(orderId);
+                                            navigate('/checkout');
+                                        }}
+                                        className="inline-flex items-center justify-center rounded-xl bg-primary px-5 py-3 font-medium text-white hover:bg-primary/90"
+                                    >
+                                        {t('checkout.pending.returnToCheckout')}
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        onClick={handleManualRefresh}
+                                        className="inline-flex items-center justify-center rounded-xl border border-muted/20 px-5 py-3 font-medium text-text hover:bg-muted/10"
+                                    >
+                                        {t('checkout.pending.refreshStatus')}
+                                    </button>
+
+                                    <AffiliateLink
+                                        href={trackingHref}
+                                        className="inline-flex items-center justify-center rounded-xl border border-primary/30 px-5 py-3 font-medium text-primary hover:bg-primary/5"
+                                    >
+                                        {t('checkout.pending.trackOrder')}
+                                    </AffiliateLink>
+
+                                    {retryError ? (
+                                        <p className="basis-full text-sm text-red-700" role="alert">
+                                            {retryError}
+                                        </p>
+                                    ) : null}
+                                </>
+                            ) : requiresManualReview ? (
+                                <>
+                                    <AffiliateLink
+                                        href={trackingHref}
+                                        className="inline-flex items-center justify-center rounded-xl border border-primary/30 px-5 py-3 font-medium text-primary hover:bg-primary/5"
+                                    >
+                                        {t('checkout.pending.trackOrder')}
+                                    </AffiliateLink>
+
+                                    <button
+                                        type="button"
+                                        onClick={handleManualRefresh}
+                                        className="inline-flex items-center justify-center rounded-xl border border-muted/20 px-5 py-3 font-medium text-text hover:bg-muted/10"
+                                    >
+                                        {t('checkout.pending.refreshStatus')}
+                                    </button>
+
+                                    <AffiliateLink
+                                        href="/products"
+                                        className="inline-flex items-center justify-center rounded-xl bg-primary px-5 py-3 font-medium text-white hover:bg-primary/90"
+                                    >
+                                        {t('checkout.pending.continueShopping')}
+                                    </AffiliateLink>
+                                </>
+                            ) : (
+                                <>
+                                    <AffiliateLink
+                                        href={trackingHref}
+                                        className="inline-flex items-center justify-center rounded-xl border border-primary/30 px-5 py-3 font-medium text-primary hover:bg-primary/5"
+                                    >
+                                        {t('checkout.pending.trackOrder')}
+                                    </AffiliateLink>
+
+                                    <button
+                                        type="button"
+                                        onClick={handleManualRefresh}
+                                        className="inline-flex items-center justify-center rounded-xl border border-muted/20 px-5 py-3 font-medium text-text hover:bg-muted/10"
+                                    >
+                                        {t('checkout.pending.refreshStatus')}
+                                    </button>
+
+                                    <AffiliateLink
+                                        href="/products"
+                                        className="inline-flex items-center justify-center rounded-xl bg-primary px-5 py-3 font-medium text-white hover:bg-primary/90"
+                                    >
+                                        {t('checkout.pending.continueShopping')}
+                                    </AffiliateLink>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Layout>
+    );
+};
+
+export default CheckoutPendingPage;

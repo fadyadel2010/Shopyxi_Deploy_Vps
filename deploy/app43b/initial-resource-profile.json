@@ -1,0 +1,32 @@
+{
+  "api": {
+    "cpu_m": 250,
+    "memory_Mi": 1024,
+    "cpu_limit_m": 2000,
+    "memory_limit_Mi": 2048
+  },
+  "baileys": {
+    "cpu_m": 100,
+    "memory_Mi": 512,
+    "cpu_limit_m": 1000,
+    "memory_limit_Mi": 1024
+  },
+  "web": {
+    "cpu_m": 25,
+    "memory_Mi": 64,
+    "cpu_limit_m": 250,
+    "memory_limit_Mi": 128
+  },
+  "storefront": {
+    "cpu_m": 25,
+    "memory_Mi": 64,
+    "cpu_limit_m": 250,
+    "memory_limit_Mi": 128
+  },
+  "commercehub": {
+    "cpu_m": 25,
+    "memory_Mi": 64,
+    "cpu_limit_m": 250,
+    "memory_limit_Mi": 128
+  }
+}

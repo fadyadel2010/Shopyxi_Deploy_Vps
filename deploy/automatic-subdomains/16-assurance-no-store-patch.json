@@ -1,0 +1,32 @@
+[
+  {
+    "op": "test",
+    "path": "/spec/routes/2/match",
+    "value": "Host(`app82-assurance-a.shopyxi.com`)"
+  },
+  {
+    "op": "test",
+    "path": "/spec/routes/2/middlewares/0/name",
+    "value": "app82-internal-only-r4"
+  },
+  {
+    "op": "test",
+    "path": "/spec/routes/3/match",
+    "value": "Host(`app82-assurance-b.shopyxi.com`)"
+  },
+  {
+    "op": "test",
+    "path": "/spec/routes/3/middlewares/0/name",
+    "value": "app82-internal-only-r4"
+  },
+  {
+    "op": "add",
+    "path": "/spec/routes/2/middlewares/0",
+    "value": { "name": "app82-api-no-store-r4" }
+  },
+  {
+    "op": "add",
+    "path": "/spec/routes/3/middlewares/0",
+    "value": { "name": "app82-api-no-store-r4" }
+  }
+]

@@ -1,0 +1,27 @@
+[
+  {
+    "op": "test",
+    "path": "/spec/replicas",
+    "value": 1
+  },
+  {
+    "op": "test",
+    "path": "/spec/strategy/type",
+    "value": "Recreate"
+  },
+  {
+    "op": "test",
+    "path": "/spec/template/spec/containers/0/image",
+    "value": "docker.io/shopixy/storefront@sha256:8c59cbb19d41f94906c6dd2d314a43216bb98f7f71cfafd39351b6b38b075c36"
+  },
+  {
+    "op": "test",
+    "path": "/spec/template/spec/volumes/0/configMap/name",
+    "value": "shopixy-storefront-controlled-qa-r1"
+  },
+  {
+    "op": "replace",
+    "path": "/spec/template/spec/volumes/0/configMap/name",
+    "value": "shopixy-storefront-wildcard-r1"
+  }
+]

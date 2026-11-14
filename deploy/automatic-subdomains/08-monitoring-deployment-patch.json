@@ -1,0 +1,42 @@
+[
+  {
+    "op": "test",
+    "path": "/spec/replicas",
+    "value": 1
+  },
+  {
+    "op": "test",
+    "path": "/spec/strategy/type",
+    "value": "Recreate"
+  },
+  {
+    "op": "test",
+    "path": "/spec/template/spec/containers/0/image",
+    "value": "docker.io/grafana/grafana:13.3.0-distroless"
+  },
+  {
+    "op": "test",
+    "path": "/spec/template/spec/containers/0/volumeMounts/2/mountPath",
+    "value": "/etc/grafana/provisioning/alerting"
+  },
+  {
+    "op": "test",
+    "path": "/spec/template/spec/containers/0/volumeMounts/2/name",
+    "value": "phase4j-alerting"
+  },
+  {
+    "op": "test",
+    "path": "/spec/template/spec/volumes/2/name",
+    "value": "phase4j-alerting"
+  },
+  {
+    "op": "test",
+    "path": "/spec/template/spec/volumes/2/configMap/name",
+    "value": "phase4j-alerting"
+  },
+  {
+    "op": "replace",
+    "path": "/spec/template/spec/volumes/2/configMap/name",
+    "value": "shopixy-alerting-automatic-subdomains-r2"
+  }
+]

@@ -1,0 +1,594 @@
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { ChevronDown, ChevronUp, Loader2, Plus, RefreshCcw, Sparkles, Trash2 } from 'lucide-react'
+import { useSuperAdminLocale } from '../../super-admin/i18n/useSuperAdminLocale'
+import {
+    admitFooterConfiguration,
+    createFooterLink as createLink,
+    createFooterSection as createSection,
+    createSocialLink as createSocial,
+    getFooterDraftFingerprint,
+    mapFooterDraftToRequest,
+    validateFooterDraft,
+} from './footerAuthoringContract'
+import { loadFooterConfiguration, saveFooterConfiguration } from './footerAuthoringService'
+import {
+    AuthoringActionBar,
+    AuthoringConfirmDialog,
+    AuthoringConflictDialog,
+    AuthoringFeedback,
+    AuthoringLoadingState,
+    AuthoringStatusBadge,
+    AuthoringValidationSummary,
+    UnsavedChangesDialog,
+    getAuthoringErrorFeedback,
+    useAuthoringGuard,
+} from '../../modules/storefront/authoringPlatform'
+
+const LINK_TYPES = ['Internal', 'Cms', 'External']
+const inputClassName = 'w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100'
+const createLocalizedField = (fallback = '') => ({ en: fallback || '', ar: '' })
+
+const moveItem = (items, index, direction) => {
+    const nextIndex = direction === 'up' ? index - 1 : index + 1
+    if (nextIndex < 0 || nextIndex >= items.length) {
+        return items
+    }
+
+    const cloned = [...items]
+    const [item] = cloned.splice(index, 1)
+    cloned.splice(nextIndex, 0, item)
+    return cloned
+}
+
+export function FooterConfigScreen({
+    scope,
+    title,
+    description,
+    note,
+    guide = null,
+    localized = false,
+    allowCmsSlugEntry = false,
+    loadCmsPages,
+    onTranslateContent,
+}) {
+    const { tr } = useSuperAdminLocale()
+    const [acceptedConfiguration, setAcceptedConfiguration] = useState(null)
+    const [draft, setDraft] = useState(null)
+    const [cmsPages, setCmsPages] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
+    const [isSaving, setIsSaving] = useState(false)
+    const [loadError, setLoadError] = useState(null)
+    const [feedback, setFeedback] = useState(null)
+    const [conflict, setConflict] = useState(null)
+    const [isSaveConfirmOpen, setIsSaveConfirmOpen] = useState(false)
+    const [isDiscardConfirmOpen, setIsDiscardConfirmOpen] = useState(false)
+    const [pendingDelete, setPendingDelete] = useState(null)
+    const [pendingTranslation, setPendingTranslation] = useState(null)
+    const [activeLanguage, setActiveLanguage] = useState('en')
+    const [translatingKey, setTranslatingKey] = useState('')
+    const draftRef = useRef(draft)
+    draftRef.current = draft
+    const saveInFlightRef = useRef(false)
+
+    const baseline = useMemo(
+        () => acceptedConfiguration ? getFooterDraftFingerprint(acceptedConfiguration, localized) : '',
+        [acceptedConfiguration, localized],
+    )
+    const current = useMemo(
+        () => draft ? getFooterDraftFingerprint(draft, localized) : '',
+        [draft, localized],
+    )
+    const isDirty = Boolean(draft && acceptedConfiguration && baseline !== current)
+    const validationIssues = useMemo(
+        () => draft ? validateFooterDraft(draft, { isLocalized: localized, cmsPages, allowCmsSlugEntry }) : [],
+        [allowCmsSlugEntry, cmsPages, draft, localized],
+    )
+
+    const adoptFooterResponse = (response) => {
+        const admitted = admitFooterConfiguration(response, scope)
+        setAcceptedConfiguration(admitted)
+        setDraft(admitted)
+        setConflict(null)
+        return admitted
+    }
+
+    const loadWorkspace = async () => {
+        setIsLoading(true)
+        setLoadError(null)
+        setFeedback(null)
+        try {
+            const [configuration, pages] = await Promise.all([
+                loadFooterConfiguration(scope),
+                loadCmsPages ? loadCmsPages() : Promise.resolve([]),
+            ])
+            setCmsPages(Array.isArray(pages) ? pages : [])
+            adoptFooterResponse(configuration)
+            return true
+        } catch (error) {
+            setLoadError(getAuthoringErrorFeedback(error))
+            return false
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        loadWorkspace()
+        // The scope owns the workspace identity. Explicit Refresh owns later reloads.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [scope])
+
+    const updateSection = (sectionKey, updater) =>
+        setDraft((value) => ({
+            ...value,
+            sections: value.sections.map((section) => (section._key === sectionKey ? updater(section) : section)),
+        }))
+
+    const updateLink = (sectionKey, linkKey, updater) =>
+        updateSection(sectionKey, (section) => ({
+            ...section,
+            links: section.links.map((link) => (link._key === linkKey ? updater(link) : link)),
+        }))
+
+    const cmsOptions = (cmsPages || []).slice().sort((left, right) => left.title.localeCompare(right.title))
+
+    const performTranslation = async (key, source, apply) => {
+        setTranslatingKey(key)
+        try {
+            const translated = await onTranslateContent(source, 'en', 'ar')
+            apply(translated)
+        } catch (saveFailure) {
+            setFeedback(getAuthoringErrorFeedback(saveFailure))
+        } finally {
+            setTranslatingKey('')
+        }
+    }
+
+    const updateLocalizedField = async (key, source, target, apply) => {
+        if (!onTranslateContent || activeLanguage !== 'ar') {
+            return
+        }
+
+        if (!source?.trim()) {
+            setFeedback({
+                kind: 'warning',
+                title: tr('English content required', 'المحتوى الإنجليزي مطلوب'),
+                message: tr('Add English content first, then translate it into Arabic.', 'أضف المحتوى الإنجليزي أولًا ثم ترجمه إلى العربية.'),
+            })
+            return
+        }
+
+        if (target?.trim()) {
+            setPendingTranslation({ key, source, apply })
+            return
+        }
+
+        await performTranslation(key, source, apply)
+    }
+
+    const handleSave = async (revision = acceptedConfiguration?.revision) => {
+        if (saveInFlightRef.current || !draft || !revision || validationIssues.length > 0) return
+        saveInFlightRef.current = true
+        const submittedFingerprint = getFooterDraftFingerprint(draft, localized)
+        setIsSaving(true)
+        setFeedback(null)
+        try {
+            const request = mapFooterDraftToRequest(draft, revision, localized)
+            const response = await saveFooterConfiguration(scope, request)
+            const admitted = admitFooterConfiguration(response, scope)
+            const hasNewerEdits = getFooterDraftFingerprint(draftRef.current, localized) !== submittedFingerprint
+            setAcceptedConfiguration(admitted)
+            if (!hasNewerEdits) setDraft(admitted)
+            setConflict(null)
+            setFeedback({
+                kind: hasNewerEdits ? 'info' : 'success',
+                title: tr('Footer saved live', 'تم حفظ التذييل مباشرة'),
+                message: hasNewerEdits
+                    ? tr(
+                          'The submitted Footer is live. Newer unsaved edits were retained.',
+                          'التذييل المحفوظ أصبح مباشرًا. تم الاحتفاظ بالتعديلات الأحدث غير المحفوظة.',
+                      )
+                    : tr(
+                          'The accepted backend response is now live and is the saved authoring baseline.',
+                          'استجابة الخادم المقبولة أصبحت مباشرة وهي الأساس المحفوظ للتحرير.',
+                      ),
+            })
+            setIsSaveConfirmOpen(false)
+        } catch (saveFailure) {
+            const failure = getAuthoringErrorFeedback(saveFailure)
+            if (failure.kind === 'conflict') {
+                setIsSaveConfirmOpen(false)
+                try {
+                    const latest = admitFooterConfiguration(await loadFooterConfiguration(scope), scope)
+                    setConflict({ ...failure, latest })
+                } catch {
+                    setConflict({
+                        ...failure,
+                        message: tr(
+                            `${failure.message} The latest revision could not be loaded, so retry is disabled.`,
+                            `${failure.message} تعذّر تحميل أحدث إصدار، لذا إعادة المحاولة معطّلة.`,
+                        ),
+                        latest: null,
+                    })
+                }
+            } else {
+                setFeedback(failure)
+            }
+        } finally {
+            saveInFlightRef.current = false
+            setIsSaving(false)
+        }
+    }
+
+    const handleDiscard = () => {
+        setDraft(acceptedConfiguration)
+        setConflict(null)
+        setFeedback({
+            kind: 'info',
+            title: tr('Changes discarded', 'تم تجاهل التغييرات'),
+            message: tr('The accepted live Footer has been restored.', 'تمت استعادة التذييل المباشر المقبول.'),
+        })
+        setIsDiscardConfirmOpen(false)
+    }
+
+    const handleLoadLatest = () => {
+        if (!conflict?.latest) return
+        adoptFooterResponse(conflict.latest)
+        setFeedback({
+            kind: 'success',
+            title: tr('Latest revision loaded', 'تم تحميل أحدث إصدار'),
+            message: tr(
+                'The footer editor now matches the authoritative backend response.',
+                'محرر التذييل يطابق الآن استجابة الخادم المعتمدة.',
+            ),
+        })
+    }
+
+    const handleRetryAfterConflict = () => {
+        if (!conflict?.latest) return
+        handleSave(conflict.latest.revision)
+    }
+
+    const confirmDelete = (message, remove) => {
+        setPendingDelete({ message, remove })
+    }
+
+    const { requestNavigation, unsavedDialogProps } = useAuthoringGuard({
+        isDirty,
+        isBusy: isSaving,
+        onSave: () => setIsSaveConfirmOpen(true),
+    })
+
+    if (isLoading) {
+        return <AuthoringLoadingState label={tr('Loading Footer content…', 'جارٍ تحميل محتوى التذييل…')} />
+    }
+
+    if (!draft) {
+        return (
+            <div className="rounded-[24px] border border-rose-200 bg-white p-8 shadow-sm">
+                <h1 className="text-2xl font-semibold text-slate-900">{title}</h1>
+                <p className="mt-3 font-semibold text-rose-800">{loadError?.title || tr('Footer authoring is unavailable', 'تحرير التذييل غير متاح')}</p>
+                <p className="mt-1 text-sm text-rose-700">{loadError?.message || tr('No editable fallback was created because the authoritative footer could not be loaded.', 'لم تُنشأ نسخة قابلة للتحرير لأن التذييل المعتمد تعذّر تحميله.')}</p>
+                <button type="button" onClick={() => loadWorkspace()} className="mt-5 inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white">
+                    <RefreshCcw size={16} /> {tr('Retry loading', 'إعادة محاولة التحميل')}
+                </button>
+            </div>
+        )
+    }
+
+    return (
+        <div className="space-y-6">
+            <AuthoringActionBar
+                title={title}
+                subtitle={`${description} ${tr('Changes on this surface are committed live; there is no separate publish step.', 'تُحفظ التغييرات في هذه الشاشة مباشرة؛ ولا توجد خطوة نشر منفصلة.')}`}
+                backAction={{ label: tr('Back', 'رجوع'), onClick: () => requestNavigation('/storefront') }}
+                status={<AuthoringStatusBadge state={isSaving ? 'saving' : isDirty ? 'dirty' : 'live'} />}
+                discardAction={{ label: tr('Discard', 'تجاهل'), onClick: () => setIsDiscardConfirmOpen(true), disabled: !isDirty || isSaving }}
+                publishAction={{ label: tr('Save live Footer', 'حفظ التذييل مباشرة'), busyLabel: tr('Saving…', 'جارٍ الحفظ…'), onClick: () => setIsSaveConfirmOpen(true), disabled: !isDirty || validationIssues.length > 0, busy: isSaving }}
+            />
+
+            {guide}
+
+            <div className="rounded-[24px] border border-sky-100 bg-sky-50/80 px-5 py-4 text-sm text-sky-900">{note}</div>
+            {feedback ? <AuthoringFeedback {...feedback} /> : null}
+            {isDirty ? <AuthoringValidationSummary errors={validationIssues.map((item) => item.message)} title={tr('Resolve Footer validation before saving live', 'عالج تحقق التذييل قبل الحفظ المباشر')} /> : null}
+
+            {localized ? (
+                <div className="inline-flex rounded-2xl border border-slate-200 bg-white p-1 shadow-sm">
+                    {['en', 'ar'].map((language) => (
+                        <button
+                            key={language}
+                            type="button"
+                            onClick={() => setActiveLanguage(language)}
+                            className={[
+                                'rounded-xl px-4 py-2 text-sm font-semibold transition',
+                                activeLanguage === language
+                                    ? 'bg-slate-900 text-white'
+                                    : 'text-slate-600 hover:bg-slate-50',
+                            ].join(' ')}
+                        >
+                            {language.toUpperCase()}
+                        </button>
+                    ))}
+                </div>
+            ) : null}
+
+            <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+                    <div>
+                        <h2 className="text-lg font-semibold text-slate-900">{tr('Footer Sections', 'أقسام التذييل')}</h2>
+                        <p className="mt-1 text-sm text-slate-500">{tr('Create ordered sections and decide which links stay active.', 'أنشئ أقسامًا مرتبة وحدد الروابط التي تبقى نشطة.')}</p>
+                    </div>
+                    <button onClick={() => setDraft((value) => ({ ...value, sections: [...value.sections, createSection(localized)] }))} className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50">
+                        <Plus size={16} />
+                        {tr('Add Section', 'إضافة قسم')}
+                    </button>
+                </div>
+
+                <div className="mt-6 space-y-4">
+                    {draft.sections.length === 0 ? <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 py-10 text-center text-sm text-slate-500">{tr('No footer sections configured yet.', 'لم تُهيأ أقسام تذييل بعد.')}</div> : null}
+                    {draft.sections.map((section, sectionIndex) => (
+                        <div key={section._key} className="rounded-[20px] border border-slate-200 bg-slate-50/70 p-4">
+                            <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_auto]">
+                                <div className="grid gap-4 md:grid-cols-2">
+                                    <div className="space-y-2">
+                                        {localized ? (
+                                            <div className="flex items-center justify-between gap-3">
+                                                <span className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                                                    {tr('Section title', 'عنوان القسم')} ({activeLanguage.toUpperCase()})
+                                                </span>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => updateLocalizedField(
+                                                        `section-${section._key}-title`,
+                                                        section.titleLocalized?.en || '',
+                                                        section.titleLocalized?.ar || '',
+                                                        (translated) => updateSection(section._key, (currentSection) => ({
+                                                            ...currentSection,
+                                                            titleLocalized: {
+                                                                ...(currentSection.titleLocalized || createLocalizedField(currentSection.title)),
+                                                                ar: translated,
+                                                            },
+                                                        })),
+                                                    )}
+                                                    disabled={!onTranslateContent || activeLanguage !== 'ar' || translatingKey === `section-${section._key}-title`}
+                                                    className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 disabled:opacity-50"
+                                                >
+                                                    {translatingKey === `section-${section._key}-title` ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
+                                                    {tr('Auto Translate', 'ترجمة تلقائية')}
+                                                </button>
+                                            </div>
+                                        ) : null}
+                                        <input
+                                            aria-label={tr(`Section title ${activeLanguage.toUpperCase()}`, `عنوان القسم ${activeLanguage.toUpperCase()}`)}
+                                            dir={localized && activeLanguage === 'ar' ? 'rtl' : 'ltr'}
+                                            value={localized ? (section.titleLocalized?.[activeLanguage] || '') : section.title}
+                                            onChange={(event) => updateSection(section._key, (currentSection) => ({
+                                                ...currentSection,
+                                                ...(localized
+                                                    ? {
+                                                        titleLocalized: {
+                                                            ...(currentSection.titleLocalized || createLocalizedField(currentSection.title)),
+                                                            [activeLanguage]: event.target.value,
+                                                        },
+                                                    }
+                                                    : { title: event.target.value }),
+                                            }))}
+                                            className={inputClassName}
+                                            placeholder={tr('Section title', 'عنوان القسم')}
+                                        />
+                                    </div>
+                                    <label className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700">
+                                        <input aria-label={tr(`Section ${sectionIndex + 1} active`, `القسم ${sectionIndex + 1} نشط`)} type="checkbox" checked={section.isActive !== false} onChange={(event) => updateSection(section._key, (currentSection) => ({ ...currentSection, isActive: event.target.checked }))} className="h-4 w-4 rounded border-slate-300 text-sky-600" />
+                                        {tr('Section active', 'القسم نشط')}
+                                    </label>
+                                </div>
+                                <div className="flex items-start gap-2">
+                                    <button type="button" aria-label={tr(`Move section ${sectionIndex + 1} up`, `نقل القسم ${sectionIndex + 1} لأعلى`)} onClick={() => setDraft((value) => ({ ...value, sections: moveItem(value.sections, sectionIndex, 'up') }))} disabled={sectionIndex === 0} className="rounded-lg border border-slate-200 bg-white p-2 text-slate-600 disabled:opacity-40"><ChevronUp size={16} /></button>
+                                    <button type="button" aria-label={tr(`Move section ${sectionIndex + 1} down`, `نقل القسم ${sectionIndex + 1} لأسفل`)} onClick={() => setDraft((value) => ({ ...value, sections: moveItem(value.sections, sectionIndex, 'down') }))} disabled={sectionIndex === draft.sections.length - 1} className="rounded-lg border border-slate-200 bg-white p-2 text-slate-600 disabled:opacity-40"><ChevronDown size={16} /></button>
+                                    <button type="button" aria-label={tr(`Delete section ${section.title || sectionIndex + 1}`, `حذف القسم ${section.title || sectionIndex + 1}`)} onClick={() => confirmDelete(tr('Delete this footer section and all of its links?', 'هل تريد حذف قسم التذييل هذا وكل روابطه؟'), () => setDraft((value) => ({ ...value, sections: value.sections.filter((item) => item._key !== section._key) })))} className="rounded-lg border border-rose-200 bg-white p-2 text-rose-700"><Trash2 size={16} /></button>
+                                </div>
+                            </div>
+
+                            <div className="mt-4 space-y-3">
+                                {section.links.map((link, linkIndex) => (
+                                    <div key={link._key} className="rounded-xl border border-slate-200 bg-white p-4">
+                                        <div className={`grid gap-3 ${localized ? 'xl:grid-cols-6' : 'xl:grid-cols-6'}`}>
+                                            <div className="space-y-2 xl:col-span-2">
+                                                {localized ? (
+                                                    <div className="flex items-center justify-between gap-3">
+                                                        <span className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                                                            {tr('Label', 'التسمية')} ({activeLanguage.toUpperCase()})
+                                                        </span>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => updateLocalizedField(
+                                                                `link-${link._key}-label`,
+                                                                link.labelLocalized?.en || '',
+                                                                link.labelLocalized?.ar || '',
+                                                                (translated) => updateLink(section._key, link._key, (currentLink) => ({
+                                                                    ...currentLink,
+                                                                    labelLocalized: {
+                                                                        ...(currentLink.labelLocalized || createLocalizedField(currentLink.label)),
+                                                                        ar: translated,
+                                                                    },
+                                                                })),
+                                                            )}
+                                                            disabled={!onTranslateContent || activeLanguage !== 'ar' || translatingKey === `link-${link._key}-label`}
+                                                            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 disabled:opacity-50"
+                                                        >
+                                                            {translatingKey === `link-${link._key}-label` ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
+                                                            {tr('Auto Translate', 'ترجمة تلقائية')}
+                                                        </button>
+                                                    </div>
+                                                ) : null}
+                                                <input
+                                                    aria-label={tr(`Link ${linkIndex + 1} label ${activeLanguage.toUpperCase()}`, `تسمية الرابط ${linkIndex + 1} ${activeLanguage.toUpperCase()}`)}
+                                                    dir={localized && activeLanguage === 'ar' ? 'rtl' : 'ltr'}
+                                                    value={localized ? (link.labelLocalized?.[activeLanguage] || '') : link.label}
+                                                    onChange={(event) => updateLink(section._key, link._key, (currentLink) => ({
+                                                        ...currentLink,
+                                                        ...(localized
+                                                            ? {
+                                                                labelLocalized: {
+                                                                    ...(currentLink.labelLocalized || createLocalizedField(currentLink.label)),
+                                                                    [activeLanguage]: event.target.value,
+                                                                },
+                                                            }
+                                                            : { label: event.target.value }),
+                                                    }))}
+                                                    className={inputClassName}
+                                                    placeholder={tr('Label', 'التسمية')}
+                                                />
+                                            </div>
+                                            <select aria-label={tr(`Link ${linkIndex + 1} type`, `نوع الرابط ${linkIndex + 1}`)} value={link.type} onChange={(event) => updateLink(section._key, link._key, (currentLink) => ({ ...currentLink, type: event.target.value, url: event.target.value === 'Cms' ? '' : currentLink.url, cmsPageSlug: event.target.value === 'Cms' ? currentLink.cmsPageSlug : '' }))} className={inputClassName}>
+                                                {LINK_TYPES.map((type) => <option key={type} value={type}>{type}</option>)}
+                                            </select>
+                                            {link.type === 'Cms' ? (
+                                                allowCmsSlugEntry ? (
+                                                    <div>
+                                                        <input
+                                                            aria-label={tr(`Link ${linkIndex + 1} CMS page slug`, `معرّف صفحة CMS للرابط ${linkIndex + 1}`)}
+                                                            value={link.cmsPageSlug}
+                                                            onChange={(event) => updateLink(section._key, link._key, (currentLink) => ({ ...currentLink, cmsPageSlug: event.target.value }))}
+                                                            className={inputClassName}
+                                                            placeholder="about"
+                                                            list={cmsOptions.length > 0 ? `cms-pages-${link._key}` : undefined}
+                                                        />
+                                                        {cmsOptions.length > 0 ? (
+                                                            <datalist id={`cms-pages-${link._key}`}>
+                                                                {cmsOptions.map((page) => (
+                                                                    <option key={page.slug} value={page.slug}>
+                                                                        {page.title}
+                                                                    </option>
+                                                                ))}
+                                                            </datalist>
+                                                        ) : null}
+                                                    </div>
+                                                ) : (
+                                                    <select aria-label={tr(`Link ${linkIndex + 1} CMS page`, `صفحة CMS للرابط ${linkIndex + 1}`)} value={link.cmsPageSlug} onChange={(event) => updateLink(section._key, link._key, (currentLink) => ({ ...currentLink, cmsPageSlug: event.target.value }))} className={inputClassName}>
+                                                        <option value="">{tr('Select CMS page', 'اختر صفحة CMS')}</option>
+                                                        {cmsOptions.map((page) => <option key={page.slug} value={page.slug}>{page.title} ({page.slug})</option>)}
+                                                    </select>
+                                                )
+                                            ) : (
+                                                <input aria-label={tr(`Link ${linkIndex + 1} URL`, `عنوان URL للرابط ${linkIndex + 1}`)} value={link.url} onChange={(event) => updateLink(section._key, link._key, (currentLink) => ({ ...currentLink, url: event.target.value }))} className={inputClassName} placeholder={link.type === 'External' ? 'https://example.com' : '/about'} />
+                                            )}
+                                            <label className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700">
+                                                <input aria-label={tr(`Link ${linkIndex + 1} active`, `الرابط ${linkIndex + 1} نشط`)} type="checkbox" checked={link.isActive !== false} onChange={(event) => updateLink(section._key, link._key, (currentLink) => ({ ...currentLink, isActive: event.target.checked }))} className="h-4 w-4 rounded border-slate-300 text-sky-600" />
+                                                {tr('Active', 'نشط')}
+                                            </label>
+                                            <div className="flex items-center gap-2">
+                                                <label className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700">
+                                                    <input aria-label={tr(`Link ${linkIndex + 1} opens in new tab`, `الرابط ${linkIndex + 1} يفتح في تبويب جديد`)} type="checkbox" checked={Boolean(link.openInNewTab)} onChange={(event) => updateLink(section._key, link._key, (currentLink) => ({ ...currentLink, openInNewTab: event.target.checked }))} className="h-4 w-4 rounded border-slate-300 text-sky-600" />
+                                                    {tr('New tab', 'تبويب جديد')}
+                                                </label>
+                                                <button type="button" aria-label={tr(`Move link ${linkIndex + 1} up`, `نقل الرابط ${linkIndex + 1} لأعلى`)} onClick={() => updateSection(section._key, (currentSection) => ({ ...currentSection, links: moveItem(currentSection.links, linkIndex, 'up') }))} disabled={linkIndex === 0} className="rounded-lg border border-slate-200 bg-white p-2 text-slate-600 disabled:opacity-40"><ChevronUp size={16} /></button>
+                                                <button type="button" aria-label={tr(`Move link ${linkIndex + 1} down`, `نقل الرابط ${linkIndex + 1} لأسفل`)} onClick={() => updateSection(section._key, (currentSection) => ({ ...currentSection, links: moveItem(currentSection.links, linkIndex, 'down') }))} disabled={linkIndex === section.links.length - 1} className="rounded-lg border border-slate-200 bg-white p-2 text-slate-600 disabled:opacity-40"><ChevronDown size={16} /></button>
+                                                <button type="button" aria-label={tr(`Delete link ${link.label || linkIndex + 1}`, `حذف الرابط ${link.label || linkIndex + 1}`)} onClick={() => confirmDelete(tr('Delete this footer link?', 'هل تريد حذف رابط التذييل هذا؟'), () => updateSection(section._key, (currentSection) => ({ ...currentSection, links: currentSection.links.filter((item) => item._key !== link._key) })))} className="rounded-lg border border-rose-200 bg-white p-2 text-rose-700"><Trash2 size={16} /></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <button onClick={() => updateSection(section._key, (currentSection) => ({ ...currentSection, links: [...currentSection.links, createLink(localized)] }))} className="mt-4 inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50">
+                                <Plus size={16} />
+                                {tr('Add Link', 'إضافة رابط')}
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+                    <div>
+                        <h2 className="text-lg font-semibold text-slate-900">{tr('Social Links', 'الروابط الاجتماعية')}</h2>
+                        <p className="mt-1 text-sm text-slate-500">{tr('Only active links with valid URLs should be rendered.', 'تُعرض فقط الروابط النشطة ذات العناوين الصالحة.')}</p>
+                    </div>
+                    <button onClick={() => setDraft((value) => ({ ...value, socialLinks: [...value.socialLinks, createSocial()] }))} className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50">
+                        <Plus size={16} />
+                        {tr('Add Social Link', 'إضافة رابط اجتماعي')}
+                    </button>
+                </div>
+
+                <div className="mt-6 space-y-3">
+                    {draft.socialLinks.length === 0 ? <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 py-10 text-center text-sm text-slate-500">{tr('No social links configured yet.', 'لم تُهيأ روابط اجتماعية بعد.')}</div> : null}
+                    {draft.socialLinks.map((link, linkIndex) => (
+                        <div key={link._key} className="grid gap-3 rounded-xl border border-slate-200 bg-slate-50/70 p-4 xl:grid-cols-6">
+                            <input aria-label={tr(`Social link ${linkIndex + 1} platform`, `منصة الرابط الاجتماعي ${linkIndex + 1}`)} value={link.platform} onChange={(event) => setDraft((value) => ({ ...value, socialLinks: value.socialLinks.map((item) => item._key === link._key ? { ...item, platform: event.target.value } : item) }))} className={inputClassName} placeholder={tr('Platform', 'المنصة')} />
+                            <input aria-label={tr(`Social link ${linkIndex + 1} URL`, `عنوان URL للرابط الاجتماعي ${linkIndex + 1}`)} value={link.url} onChange={(event) => setDraft((value) => ({ ...value, socialLinks: value.socialLinks.map((item) => item._key === link._key ? { ...item, url: event.target.value } : item) }))} className={inputClassName} placeholder="https://instagram.com/brand" />
+                            <input aria-label={tr(`Social link ${linkIndex + 1} icon`, `أيقونة الرابط الاجتماعي ${linkIndex + 1}`)} value={link.icon} onChange={(event) => setDraft((value) => ({ ...value, socialLinks: value.socialLinks.map((item) => item._key === link._key ? { ...item, icon: event.target.value } : item) }))} className={inputClassName} placeholder={tr('Icon', 'الأيقونة')} />
+                            <label className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700">
+                                <input aria-label={tr(`Social link ${linkIndex + 1} active`, `الرابط الاجتماعي ${linkIndex + 1} نشط`)} type="checkbox" checked={link.isActive !== false} onChange={(event) => setDraft((value) => ({ ...value, socialLinks: value.socialLinks.map((item) => item._key === link._key ? { ...item, isActive: event.target.checked } : item) }))} className="h-4 w-4 rounded border-slate-300 text-sky-600" />
+                                Active
+                            </label>
+                            <button type="button" aria-label={tr(`Move social link ${linkIndex + 1} up`, `نقل الرابط الاجتماعي ${linkIndex + 1} لأعلى`)} onClick={() => setDraft((value) => ({ ...value, socialLinks: moveItem(value.socialLinks, linkIndex, 'up') }))} disabled={linkIndex === 0} className="rounded-lg border border-slate-200 bg-white p-2 text-slate-600 disabled:opacity-40"><ChevronUp size={16} /></button>
+                            <div className="flex items-center gap-2">
+                                <button type="button" aria-label={tr(`Move social link ${linkIndex + 1} down`, `نقل الرابط الاجتماعي ${linkIndex + 1} لأسفل`)} onClick={() => setDraft((value) => ({ ...value, socialLinks: moveItem(value.socialLinks, linkIndex, 'down') }))} disabled={linkIndex === draft.socialLinks.length - 1} className="rounded-lg border border-slate-200 bg-white p-2 text-slate-600 disabled:opacity-40"><ChevronDown size={16} /></button>
+                                <button type="button" aria-label={tr(`Delete social link ${link.platform || linkIndex + 1}`, `حذف الرابط الاجتماعي ${link.platform || linkIndex + 1}`)} onClick={() => confirmDelete(tr('Delete this social link?', 'هل تريد حذف هذا الرابط الاجتماعي؟'), () => setDraft((value) => ({ ...value, socialLinks: value.socialLinks.filter((item) => item._key !== link._key) })))} className="rounded-lg border border-rose-200 bg-white p-2 text-rose-700"><Trash2 size={16} /></button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+            <AuthoringConfirmDialog
+                open={isSaveConfirmOpen}
+                title={tr('Save Footer live?', 'حفظ التذييل مباشرة؟')}
+                description={tr('This action immediately replaces the live Footer content. It does not publish Homepage, Navigation, Theme, or Pages.', 'يستبدل هذا الإجراء محتوى التذييل المباشر فورًا. ولا ينشر الصفحة الرئيسية أو التنقل أو القالب أو الصفحات.')}
+                confirmLabel={tr('Save live Footer', 'حفظ التذييل مباشرة')}
+                confirmTone="publish"
+                busy={isSaving}
+                onClose={() => setIsSaveConfirmOpen(false)}
+                onConfirm={() => handleSave()}
+            />
+            <AuthoringConfirmDialog
+                open={isDiscardConfirmOpen}
+                title={tr('Discard Footer changes?', 'تجاهل تغييرات التذييل؟')}
+                description={tr('The editor will return to the accepted live Footer configuration.', 'سيعود المحرر إلى إعداد التذييل المباشر المقبول.')}
+                confirmLabel={tr('Discard Changes', 'تجاهل التغييرات')}
+                confirmTone="danger"
+                onClose={() => setIsDiscardConfirmOpen(false)}
+                onConfirm={handleDiscard}
+            />
+            <AuthoringConfirmDialog
+                open={pendingDelete != null}
+                title={tr('Delete Footer item?', 'حذف عنصر من التذييل؟')}
+                description={pendingDelete?.message}
+                confirmLabel={tr('Delete Item', 'حذف العنصر')}
+                confirmTone="danger"
+                onClose={() => setPendingDelete(null)}
+                onConfirm={() => {
+                    pendingDelete?.remove()
+                    setPendingDelete(null)
+                }}
+            />
+            <AuthoringConfirmDialog
+                open={pendingTranslation != null}
+                title={tr('Overwrite Arabic translation?', 'استبدال الترجمة العربية؟')}
+                description={tr('Arabic content already exists. Replace it with a fresh AI translation from the current English content?', 'المحتوى العربي موجود بالفعل. هل تريد استبداله بترجمة جديدة من الذكاء الاصطناعي اعتمادًا على المحتوى الإنجليزي الحالي؟')}
+                confirmLabel={tr('Overwrite Translation', 'استبدال الترجمة')}
+                confirmTone="danger"
+                onClose={() => setPendingTranslation(null)}
+                onConfirm={() => {
+                    const translation = pendingTranslation
+                    setPendingTranslation(null)
+                    void performTranslation(translation.key, translation.source, translation.apply)
+                }}
+            />
+            <AuthoringConflictDialog
+                open={conflict != null}
+                message={conflict?.message}
+                hasLatest={Boolean(conflict?.latest)}
+                busy={isSaving}
+                onClose={() => setConflict(null)}
+                onLoadLatest={handleLoadLatest}
+                onRetry={handleRetryAfterConflict}
+            />
+            <UnsavedChangesDialog {...unsavedDialogProps} />
+        </div>
+    )
+}
+
+export default FooterConfigScreen

@@ -1,0 +1,12 @@
+[
+  {
+    "op": "test",
+    "path": "/spec/routes/0/match",
+    "value": "(Host(`shopyxi.com`) || Host(`www.shopyxi.com`) || Host(`admin.shopyxi.com`) || Host(`api.shopyxi.com`) || Host(`affiliate.shopyxi.com`) || Host(`commercehub.shopyxi.com`) || Host(`app82-assurance-a.shopyxi.com`) || Host(`app82-assurance-b.shopyxi.com`)) && PathRegexp(`(?i)^/(health|healthz|metrics)(/|$)|(?i)^/api/(platform|auth|customers/auth|storefront/auth)/register(/|$)`)"
+  },
+  {
+    "op": "replace",
+    "path": "/spec/routes/0/match",
+    "value": "(Host(`shopyxi.com`) || Host(`www.shopyxi.com`) || Host(`admin.shopyxi.com`) || Host(`api.shopyxi.com`) || Host(`affiliate.shopyxi.com`) || Host(`commercehub.shopyxi.com`) || Host(`app82-assurance-a.shopyxi.com`) || Host(`app82-assurance-b.shopyxi.com`) || Host(`ahram.shopyxi.com`)) && PathRegexp(`(?i)^/(health|healthz|metrics)(/|$)|(?i)^/api/(platform|auth|customers/auth|storefront/auth)/register(/|$)`)"
+  }
+]

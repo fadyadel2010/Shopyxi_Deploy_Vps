@@ -1,0 +1,1369 @@
+{
+  "apiVersion": "v1",
+  "kind": "List",
+  "items": [
+    {
+      "apiVersion": "v1",
+      "kind": "Namespace",
+      "metadata": {
+        "name": "shopixy-app",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "labels": {
+          "kubernetes.io/metadata.name": "shopixy-app",
+          "pod-security.kubernetes.io/enforce": "restricted",
+          "pod-security.kubernetes.io/enforce-version": "v1.36",
+          "shopixy.mongo-access": "true"
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "ServiceAccount",
+      "metadata": {
+        "name": "shopixy-api",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-app"
+      },
+      "automountServiceAccountToken": false
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "ServiceAccount",
+      "metadata": {
+        "name": "shopixy-baileys",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-app"
+      },
+      "automountServiceAccountToken": false
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "ServiceAccount",
+      "metadata": {
+        "name": "shopixy-web",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-app"
+      },
+      "automountServiceAccountToken": false
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "ServiceAccount",
+      "metadata": {
+        "name": "shopixy-storefront",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-app"
+      },
+      "automountServiceAccountToken": false
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "ServiceAccount",
+      "metadata": {
+        "name": "shopixy-commercehub",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-app"
+      },
+      "automountServiceAccountToken": false
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "PersistentVolumeClaim",
+      "metadata": {
+        "name": "shopixy-api-dpkeys",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-app"
+      },
+      "spec": {
+        "accessModes": [
+          "ReadWriteOnce"
+        ],
+        "storageClassName": "shopixy-search-retain",
+        "resources": {
+          "requests": {
+            "storage": "1Gi"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "PersistentVolumeClaim",
+      "metadata": {
+        "name": "shopixy-api-uploads",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-app"
+      },
+      "spec": {
+        "accessModes": [
+          "ReadWriteOnce"
+        ],
+        "storageClassName": "shopixy-search-retain",
+        "resources": {
+          "requests": {
+            "storage": "5Gi"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "shopixy-api",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-app"
+      },
+      "spec": {
+        "replicas": 1,
+        "strategy": {
+          "type": "Recreate"
+        },
+        "revisionHistoryLimit": 2,
+        "selector": {
+          "matchLabels": {
+            "app": "shopixy-api"
+          }
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "app": "shopixy-api"
+            }
+          },
+          "spec": {
+            "serviceAccountName": "shopixy-api",
+            "automountServiceAccountToken": false,
+            "securityContext": {
+              "runAsNonRoot": true,
+              "runAsUser": 1654,
+              "runAsGroup": 1654,
+              "fsGroup": 1654,
+              "fsGroupChangePolicy": "OnRootMismatch",
+              "seccompProfile": {
+                "type": "RuntimeDefault"
+              }
+            },
+            "containers": [
+              {
+                "name": "api",
+                "image": "REQUIRES_NEW_API_DIGEST",
+                "ports": [
+                  {
+                    "name": "http",
+                    "containerPort": 8080
+                  }
+                ],
+                "securityContext": {
+                  "allowPrivilegeEscalation": false,
+                  "readOnlyRootFilesystem": true,
+                  "capabilities": {
+                    "drop": [
+                      "ALL"
+                    ]
+                  }
+                },
+                "envFrom": [
+                  {
+                    "configMapRef": {
+                      "name": "shopixy-api-config"
+                    }
+                  }
+                ],
+                "env": [
+                  {
+                    "name": "ConnectionStrings__DefaultConnection",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "shopixy-api-runtime-v1",
+                        "key": "postgres-runtime"
+                      }
+                    }
+                  },
+                  {
+                    "name": "MongoDB__ConnectionString",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "shopixy-api-runtime-v1",
+                        "key": "mongo-runtime"
+                      }
+                    }
+                  },
+                  {
+                    "name": "Redis__ConnectionString",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "shopixy-api-runtime-v1",
+                        "key": "redis-runtime"
+                      }
+                    }
+                  },
+                  {
+                    "name": "RabbitMQ__Username",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "shopixy-api-runtime-v1",
+                        "key": "rabbit-user"
+                      }
+                    }
+                  },
+                  {
+                    "name": "RabbitMQ__Password",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "shopixy-api-runtime-v1",
+                        "key": "rabbit-password"
+                      }
+                    }
+                  },
+                  {
+                    "name": "Elasticsearch__Username",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "shopixy-api-runtime-v1",
+                        "key": "search-user"
+                      }
+                    }
+                  },
+                  {
+                    "name": "Elasticsearch__Password",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "shopixy-api-runtime-v1",
+                        "key": "search-password"
+                      }
+                    }
+                  },
+                  {
+                    "name": "BaileysService__ApiKey",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "shopixy-api-baileys-transport-v1",
+                        "key": "api-key"
+                      }
+                    }
+                  },
+                  {
+                    "name": "JwtSettings__Secret",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "shopixy-api-signing-v1",
+                        "key": "pos-jwt"
+                      }
+                    }
+                  },
+                  {
+                    "name": "SuperAdminJwt__Secret",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "shopixy-api-signing-v1",
+                        "key": "superadmin-jwt"
+                      }
+                    }
+                  },
+                  {
+                    "name": "StorefrontJwt__Secret",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "shopixy-api-signing-v1",
+                        "key": "storefront-jwt"
+                      }
+                    }
+                  },
+                  {
+                    "name": "CustomerJwt__Secret",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "shopixy-api-signing-v1",
+                        "key": "customer-jwt"
+                      }
+                    }
+                  },
+                  {
+                    "name": "AffiliateJwt__Secret",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "shopixy-api-signing-v1",
+                        "key": "affiliate-jwt"
+                      }
+                    }
+                  },
+                  {
+                    "name": "CommerceHub__OrderAccessSigningKey",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "shopixy-api-signing-v1",
+                        "key": "order-access"
+                      }
+                    }
+                  },
+                  {
+                    "name": "AbandonedCart__TokenSecret",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "shopixy-api-signing-v1",
+                        "key": "abandoned-cart"
+                      }
+                    }
+                  },
+                  {
+                    "name": "ASPNETCORE_ENVIRONMENT",
+                    "value": "Production"
+                  },
+                  {
+                    "name": "ASPNETCORE_URLS",
+                    "value": "http://+:8080"
+                  },
+                  {
+                    "name": "DataProtection__KeysPath",
+                    "value": "/var/lib/shopixy/dpkeys"
+                  },
+                  {
+                    "name": "DataProtection__ApplicationName",
+                    "valueFrom": {
+                      "configMapKeyRef": {
+                        "name": "shopixy-api-config",
+                        "key": "DataProtection__ApplicationName"
+                      }
+                    }
+                  },
+                  {
+                    "name": "Redis__Topology",
+                    "value": "sentinel"
+                  },
+                  {
+                    "name": "Redis__SentinelServiceName",
+                    "value": "shopixy-redis-ha"
+                  },
+                  {
+                    "name": "Redis__SentinelConnectionString",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "shopixy-api-runtime-v1",
+                        "key": "redis-sentinel-runtime"
+                      }
+                    }
+                  },
+                  {
+                    "name": "Redis__ClientCertificatePath",
+                    "value": "/var/run/shopixy/redis-data/certificate.pem"
+                  },
+                  {
+                    "name": "Redis__ClientPrivateKeyPath",
+                    "value": "/var/run/shopixy/redis-data/private-key.pem"
+                  },
+                  {
+                    "name": "Redis__SentinelClientCertificatePath",
+                    "value": "/var/run/shopixy/redis-sentinel/certificate.pem"
+                  },
+                  {
+                    "name": "Redis__SentinelClientPrivateKeyPath",
+                    "value": "/var/run/shopixy/redis-sentinel/private-key.pem"
+                  },
+                  {
+                    "name": "RabbitMQ__Tls__ClientCertificatePath",
+                    "value": "/var/run/shopixy/rabbit/certificate.pem"
+                  },
+                  {
+                    "name": "RabbitMQ__Tls__ClientPrivateKeyPath",
+                    "value": "/var/run/shopixy/rabbit/private-key.pem"
+                  },
+                  {
+                    "name": "DataProtection__CertificatePath",
+                    "value": "/var/run/shopixy/dp-active/tls.crt"
+                  },
+                  {
+                    "name": "DataProtection__PrivateKeyPath",
+                    "value": "/var/run/shopixy/dp-active/tls.key"
+                  },
+                  {
+                    "name": "Redis__CaCertificatePath",
+                    "value": "/var/run/shopixy/trust/redis-ca.pem"
+                  },
+                  {
+                    "name": "Redis__SentinelCaCertificatePath",
+                    "value": "/var/run/shopixy/trust/sentinel-ca.pem"
+                  },
+                  {
+                    "name": "RabbitMQ__Tls__CaCertificatePath",
+                    "value": "/var/run/shopixy/trust/rabbit-ca.pem"
+                  },
+                  {
+                    "name": "RabbitMQ__Host",
+                    "value": "amqps://shopixy-rabbitmq.shopixy-messaging.svc.cluster.local:5671"
+                  }
+                ],
+                "startupProbe": {
+                  "httpGet": {
+                    "path": "/health/live",
+                    "port": "http"
+                  },
+                  "periodSeconds": 5,
+                  "failureThreshold": 60,
+                  "timeoutSeconds": 2
+                },
+                "livenessProbe": {
+                  "httpGet": {
+                    "path": "/health/live",
+                    "port": "http"
+                  },
+                  "periodSeconds": 15,
+                  "failureThreshold": 3,
+                  "timeoutSeconds": 2
+                },
+                "readinessProbe": {
+                  "httpGet": {
+                    "path": "/health/ready",
+                    "port": "http"
+                  },
+                  "periodSeconds": 15,
+                  "failureThreshold": 3,
+                  "timeoutSeconds": 10
+                },
+                "volumeMounts": [
+                  {
+                    "name": "persistent-uploads",
+                    "mountPath": "/app/wwwroot/uploads",
+                    "readOnly": false
+                  },
+                  {
+                    "name": "dpkeys",
+                    "mountPath": "/var/lib/shopixy/dpkeys"
+                  },
+                  {
+                    "name": "dp-active",
+                    "mountPath": "/var/run/shopixy/dp-active",
+                    "readOnly": true
+                  },
+                  {
+                    "name": "public-trust",
+                    "mountPath": "/var/run/shopixy/trust",
+                    "readOnly": true
+                  },
+                  {
+                    "name": "temporary",
+                    "mountPath": "/tmp"
+                  },
+                  {
+                    "name": "settings",
+                    "mountPath": "/app/appsettings.json",
+                    "subPath": "appsettings.json",
+                    "readOnly": true
+                  },
+                  {
+                    "name": "settings",
+                    "mountPath": "/app/appsettings.Production.json",
+                    "subPath": "appsettings.Production.json",
+                    "readOnly": true
+                  },
+                  {
+                    "name": "redis-data",
+                    "mountPath": "/var/run/shopixy/redis-data",
+                    "readOnly": true
+                  },
+                  {
+                    "name": "redis-sentinel",
+                    "mountPath": "/var/run/shopixy/redis-sentinel",
+                    "readOnly": true
+                  },
+                  {
+                    "name": "rabbit",
+                    "mountPath": "/var/run/shopixy/rabbit",
+                    "readOnly": true
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "250m",
+                    "memory": "1Gi",
+                    "ephemeral-storage": "128Mi"
+                  },
+                  "limits": {
+                    "cpu": "2",
+                    "memory": "2Gi",
+                    "ephemeral-storage": "512Mi"
+                  }
+                }
+              }
+            ],
+            "volumes": [
+              {
+                "name": "persistent-uploads",
+                "persistentVolumeClaim": {
+                  "claimName": "shopixy-api-uploads",
+                  "readOnly": false
+                }
+              },
+              {
+                "name": "dpkeys",
+                "persistentVolumeClaim": {
+                  "claimName": "shopixy-api-dpkeys"
+                }
+              },
+              {
+                "name": "dp-active",
+                "secret": {
+                  "secretName": "REQUIRED_DP_ACTIVE_SECRET",
+                  "defaultMode": 288,
+                  "items": [
+                    {
+                      "key": "REQUIRED_DP_CERTIFICATE_KEY",
+                      "path": "tls.crt"
+                    },
+                    {
+                      "key": "REQUIRED_DP_PRIVATE_KEY_KEY",
+                      "path": "tls.key"
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "public-trust",
+                "configMap": {
+                  "name": "shopixy-api-public-trust",
+                  "defaultMode": 292
+                }
+              },
+              {
+                "name": "temporary",
+                "emptyDir": {
+                  "sizeLimit": "128Mi"
+                }
+              },
+              {
+                "name": "settings",
+                "configMap": {
+                  "name": "shopixy-api-json",
+                  "defaultMode": 292
+                }
+              },
+              {
+                "name": "redis-data",
+                "secret": {
+                  "secretName": "REQUIRED_REDIS_DATA_SECRET",
+                  "defaultMode": 288,
+                  "items": [
+                    {
+                      "key": "REQUIRED_CERTIFICATE_KEY",
+                      "path": "certificate.pem"
+                    },
+                    {
+                      "key": "REQUIRED_PRIVATE_KEY_KEY",
+                      "path": "private-key.pem"
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "redis-sentinel",
+                "secret": {
+                  "secretName": "REQUIRED_REDIS_SENTINEL_SECRET",
+                  "defaultMode": 288,
+                  "items": [
+                    {
+                      "key": "REQUIRED_CERTIFICATE_KEY",
+                      "path": "certificate.pem"
+                    },
+                    {
+                      "key": "REQUIRED_PRIVATE_KEY_KEY",
+                      "path": "private-key.pem"
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "rabbit",
+                "secret": {
+                  "secretName": "REQUIRED_RABBIT_SECRET",
+                  "defaultMode": 288,
+                  "items": [
+                    {
+                      "key": "REQUIRED_CERTIFICATE_KEY",
+                      "path": "certificate.pem"
+                    },
+                    {
+                      "key": "REQUIRED_PRIVATE_KEY_KEY",
+                      "path": "private-key.pem"
+                    }
+                  ]
+                }
+              }
+            ],
+            "nodeSelector": {
+              "kubernetes.io/hostname": "shopixy"
+            },
+            "terminationGracePeriodSeconds": 60
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "name": "shopixy-api",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-app"
+      },
+      "spec": {
+        "type": "ClusterIP",
+        "selector": {
+          "app": "shopixy-api"
+        },
+        "ports": [
+          {
+            "name": "http",
+            "port": 8080,
+            "targetPort": "http"
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "shopixy-baileys",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-app"
+      },
+      "spec": {
+        "replicas": 1,
+        "strategy": {
+          "type": "Recreate"
+        },
+        "selector": {
+          "matchLabels": {
+            "app": "shopixy-baileys"
+          }
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "app": "shopixy-baileys"
+            }
+          },
+          "spec": {
+            "serviceAccountName": "shopixy-baileys",
+            "automountServiceAccountToken": false,
+            "securityContext": {
+              "runAsNonRoot": true,
+              "runAsUser": 1000,
+              "runAsGroup": 1000,
+              "fsGroup": 1000,
+              "seccompProfile": {
+                "type": "RuntimeDefault"
+              }
+            },
+            "containers": [
+              {
+                "name": "baileys",
+                "image": "REQUIRES_NEW_BAILEYS_DIGEST",
+                "securityContext": {
+                  "allowPrivilegeEscalation": false,
+                  "readOnlyRootFilesystem": true,
+                  "capabilities": {
+                    "drop": [
+                      "ALL"
+                    ]
+                  }
+                },
+                "ports": [
+                  {
+                    "name": "https",
+                    "containerPort": 3000
+                  }
+                ],
+                "envFrom": [
+                  {
+                    "configMapRef": {
+                      "name": "shopixy-baileys-config"
+                    }
+                  }
+                ],
+                "env": [
+                  {
+                    "name": "BAILEYS_API_KEY",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "shopixy-baileys-transport-v1",
+                        "key": "api-key"
+                      }
+                    }
+                  },
+                  {
+                    "name": "AUTH_STATE_ENCRYPTION_SECRET",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "shopixy-baileys-auth-v1",
+                        "key": "auth-state-key"
+                      }
+                    }
+                  },
+                  {
+                    "name": "REDIS_USERNAME",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "shopixy-baileys-redis-v1",
+                        "key": "data-user"
+                      }
+                    }
+                  },
+                  {
+                    "name": "REDIS_PASSWORD",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "shopixy-baileys-redis-v1",
+                        "key": "data-password"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POOL_MEMBERS",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "shopixy-baileys-pool-v1",
+                        "key": "members"
+                      }
+                    }
+                  },
+                  {
+                    "name": "REDIS_CLIENT_CERTIFICATE_PATH",
+                    "value": "/var/run/shopixy/redis-data/certificate.pem"
+                  },
+                  {
+                    "name": "REDIS_CLIENT_PRIVATE_KEY_PATH",
+                    "value": "/var/run/shopixy/redis-data/private-key.pem"
+                  },
+                  {
+                    "name": "REDIS_SENTINEL_CLIENT_CERTIFICATE_PATH",
+                    "value": "/var/run/shopixy/redis-sentinel/certificate.pem"
+                  },
+                  {
+                    "name": "REDIS_SENTINEL_CLIENT_PRIVATE_KEY_PATH",
+                    "value": "/var/run/shopixy/redis-sentinel/private-key.pem"
+                  },
+                  {
+                    "name": "HEALTH_TLS_SERVER_NAME",
+                    "value": "shopixy-baileys.shopixy-app.svc.cluster.local"
+                  },
+                  {
+                    "name": "HEALTH_TLS_CA_PATH",
+                    "value": "REQUIRED_BAILEYS_HEALTH_CA_MOUNT_PATH"
+                  }
+                ],
+                "livenessProbe": {
+                  "exec": {
+                    "command": [
+                      "node",
+                      "-e",
+                      "const fs=require('fs'),https=require('https');const r=https.get({hostname:'127.0.0.1',servername:process.env.HEALTH_TLS_SERVER_NAME,port:Number(process.env.PORT||3000),path:'/live',ca:fs.readFileSync(process.env.HEALTH_TLS_CA_PATH),rejectUnauthorized:true,timeout:3000},x=>{x.resume();process.exitCode=x.statusCode===200?0:1});r.on('timeout',()=>r.destroy());r.on('error',()=>{process.exitCode=1})"
+                    ]
+                  },
+                  "periodSeconds": 15,
+                  "timeoutSeconds": 5,
+                  "failureThreshold": 3
+                },
+                "readinessProbe": {
+                  "exec": {
+                    "command": [
+                      "node",
+                      "-e",
+                      "const fs=require('fs'),https=require('https');const r=https.get({hostname:'127.0.0.1',servername:process.env.HEALTH_TLS_SERVER_NAME,port:Number(process.env.PORT||3000),path:'/ready',ca:fs.readFileSync(process.env.HEALTH_TLS_CA_PATH),rejectUnauthorized:true,timeout:3000},x=>{x.resume();process.exitCode=x.statusCode===200?0:1});r.on('timeout',()=>r.destroy());r.on('error',()=>{process.exitCode=1})"
+                    ]
+                  },
+                  "periodSeconds": 15,
+                  "timeoutSeconds": 5,
+                  "failureThreshold": 3
+                },
+                "volumeMounts": [
+                  {
+                    "name": "server-tls",
+                    "mountPath": "/var/run/shopixy/server-tls",
+                    "readOnly": true
+                  },
+                  {
+                    "name": "public-trust",
+                    "mountPath": "/var/run/shopixy/trust",
+                    "readOnly": true
+                  },
+                  {
+                    "name": "temporary",
+                    "mountPath": "/tmp"
+                  },
+                  {
+                    "name": "redis-data",
+                    "mountPath": "/var/run/shopixy/redis-data",
+                    "readOnly": true
+                  },
+                  {
+                    "name": "redis-sentinel",
+                    "mountPath": "/var/run/shopixy/redis-sentinel",
+                    "readOnly": true
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "100m",
+                    "memory": "512Mi"
+                  },
+                  "limits": {
+                    "cpu": "1",
+                    "memory": "1Gi"
+                  }
+                },
+                "startupProbe": {
+                  "exec": {
+                    "command": [
+                      "node",
+                      "-e",
+                      "const fs=require('fs'),https=require('https');const r=https.get({hostname:'127.0.0.1',servername:process.env.HEALTH_TLS_SERVER_NAME,port:Number(process.env.PORT||3000),path:'/live',ca:fs.readFileSync(process.env.HEALTH_TLS_CA_PATH),rejectUnauthorized:true,timeout:3000},x=>{x.resume();process.exitCode=x.statusCode===200?0:1});r.on('timeout',()=>r.destroy());r.on('error',()=>{process.exitCode=1})"
+                    ]
+                  },
+                  "periodSeconds": 15,
+                  "timeoutSeconds": 5,
+                  "failureThreshold": 20
+                }
+              }
+            ],
+            "volumes": [
+              {
+                "name": "server-tls",
+                "secret": {
+                  "secretName": "shopixy-baileys-server-tls-v1",
+                  "defaultMode": 288,
+                  "optional": false
+                }
+              },
+              {
+                "name": "public-trust",
+                "configMap": {
+                  "name": "shopixy-baileys-public-trust",
+                  "defaultMode": 292
+                }
+              },
+              {
+                "name": "temporary",
+                "emptyDir": {
+                  "sizeLimit": "128Mi"
+                }
+              },
+              {
+                "name": "redis-data",
+                "secret": {
+                  "secretName": "REQUIRED_BAILEYS_REDIS_DATA_SECRET",
+                  "defaultMode": 288,
+                  "items": [
+                    {
+                      "key": "REQUIRED_CERTIFICATE_KEY",
+                      "path": "certificate.pem"
+                    },
+                    {
+                      "key": "REQUIRED_PRIVATE_KEY_KEY",
+                      "path": "private-key.pem"
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "redis-sentinel",
+                "secret": {
+                  "secretName": "REQUIRED_BAILEYS_REDIS_SENTINEL_SECRET",
+                  "defaultMode": 288,
+                  "items": [
+                    {
+                      "key": "REQUIRED_CERTIFICATE_KEY",
+                      "path": "certificate.pem"
+                    },
+                    {
+                      "key": "REQUIRED_PRIVATE_KEY_KEY",
+                      "path": "private-key.pem"
+                    }
+                  ]
+                }
+              }
+            ],
+            "nodeSelector": {
+              "kubernetes.io/hostname": "shopixy"
+            }
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "name": "shopixy-baileys",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-app"
+      },
+      "spec": {
+        "type": "ClusterIP",
+        "selector": {
+          "app": "shopixy-baileys"
+        },
+        "ports": [
+          {
+            "name": "https",
+            "port": 3000,
+            "targetPort": 3000
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "shopixy-web",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-app"
+      },
+      "spec": {
+        "replicas": 1,
+        "strategy": {
+          "type": "Recreate"
+        },
+        "selector": {
+          "matchLabels": {
+            "app": "shopixy-web"
+          }
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "app": "shopixy-web"
+            }
+          },
+          "spec": {
+            "serviceAccountName": "shopixy-web",
+            "automountServiceAccountToken": false,
+            "securityContext": {
+              "runAsNonRoot": true,
+              "runAsUser": 101,
+              "runAsGroup": 101,
+              "seccompProfile": {
+                "type": "RuntimeDefault"
+              }
+            },
+            "containers": [
+              {
+                "name": "web",
+                "image": "REQUIRES_NEW_WEB_DIGEST",
+                "securityContext": {
+                  "allowPrivilegeEscalation": false,
+                  "readOnlyRootFilesystem": true,
+                  "capabilities": {
+                    "drop": [
+                      "ALL"
+                    ]
+                  }
+                },
+                "ports": [
+                  {
+                    "name": "http",
+                    "containerPort": 8080
+                  }
+                ],
+                "env": [],
+                "readinessProbe": {
+                  "httpGet": {
+                    "path": "/index.html",
+                    "port": "http"
+                  },
+                  "timeoutSeconds": 2,
+                  "periodSeconds": 10
+                },
+                "livenessProbe": {
+                  "httpGet": {
+                    "path": "/index.html",
+                    "port": "http"
+                  },
+                  "timeoutSeconds": 2,
+                  "periodSeconds": 15
+                },
+                "volumeMounts": [
+                  {
+                    "name": "nginx",
+                    "mountPath": "/etc/nginx/nginx.conf",
+                    "subPath": "nginx.conf",
+                    "readOnly": true
+                  },
+                  {
+                    "name": "temporary",
+                    "mountPath": "/tmp"
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "25m",
+                    "memory": "64Mi"
+                  },
+                  "limits": {
+                    "cpu": "250m",
+                    "memory": "128Mi"
+                  }
+                }
+              }
+            ],
+            "volumes": [
+              {
+                "name": "nginx",
+                "configMap": {
+                  "name": "shopixy-web-nginx",
+                  "defaultMode": 292
+                }
+              },
+              {
+                "name": "temporary",
+                "emptyDir": {
+                  "sizeLimit": "128Mi"
+                }
+              }
+            ],
+            "nodeSelector": {
+              "kubernetes.io/hostname": "shopixy"
+            }
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "name": "shopixy-web",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-app"
+      },
+      "spec": {
+        "type": "ClusterIP",
+        "selector": {
+          "app": "shopixy-web"
+        },
+        "ports": [
+          {
+            "name": "http",
+            "port": 8080,
+            "targetPort": 8080
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "shopixy-storefront",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-app"
+      },
+      "spec": {
+        "replicas": 1,
+        "strategy": {
+          "type": "Recreate"
+        },
+        "selector": {
+          "matchLabels": {
+            "app": "shopixy-storefront"
+          }
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "app": "shopixy-storefront"
+            }
+          },
+          "spec": {
+            "serviceAccountName": "shopixy-storefront",
+            "automountServiceAccountToken": false,
+            "securityContext": {
+              "runAsNonRoot": true,
+              "runAsUser": 101,
+              "runAsGroup": 101,
+              "seccompProfile": {
+                "type": "RuntimeDefault"
+              }
+            },
+            "containers": [
+              {
+                "name": "storefront",
+                "image": "REQUIRES_NEW_STOREFRONT_DIGEST",
+                "securityContext": {
+                  "allowPrivilegeEscalation": false,
+                  "readOnlyRootFilesystem": true,
+                  "capabilities": {
+                    "drop": [
+                      "ALL"
+                    ]
+                  }
+                },
+                "ports": [
+                  {
+                    "name": "http",
+                    "containerPort": 8080
+                  }
+                ],
+                "env": [],
+                "readinessProbe": {
+                  "httpGet": {
+                    "path": "/index.html",
+                    "port": "http"
+                  },
+                  "timeoutSeconds": 2,
+                  "periodSeconds": 10
+                },
+                "livenessProbe": {
+                  "httpGet": {
+                    "path": "/index.html",
+                    "port": "http"
+                  },
+                  "timeoutSeconds": 2,
+                  "periodSeconds": 15
+                },
+                "volumeMounts": [
+                  {
+                    "name": "nginx",
+                    "mountPath": "/etc/nginx/nginx.conf",
+                    "subPath": "nginx.conf",
+                    "readOnly": true
+                  },
+                  {
+                    "name": "temporary",
+                    "mountPath": "/tmp"
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "25m",
+                    "memory": "64Mi"
+                  },
+                  "limits": {
+                    "cpu": "250m",
+                    "memory": "128Mi"
+                  }
+                }
+              }
+            ],
+            "volumes": [
+              {
+                "name": "nginx",
+                "configMap": {
+                  "name": "shopixy-storefront-nginx",
+                  "defaultMode": 292
+                }
+              },
+              {
+                "name": "temporary",
+                "emptyDir": {
+                  "sizeLimit": "128Mi"
+                }
+              }
+            ],
+            "nodeSelector": {
+              "kubernetes.io/hostname": "shopixy"
+            }
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "name": "shopixy-storefront",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-app"
+      },
+      "spec": {
+        "type": "ClusterIP",
+        "selector": {
+          "app": "shopixy-storefront"
+        },
+        "ports": [
+          {
+            "name": "http",
+            "port": 8080,
+            "targetPort": 8080
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "shopixy-commercehub",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-app"
+      },
+      "spec": {
+        "replicas": 1,
+        "strategy": {
+          "type": "Recreate"
+        },
+        "selector": {
+          "matchLabels": {
+            "app": "shopixy-commercehub"
+          }
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "app": "shopixy-commercehub"
+            }
+          },
+          "spec": {
+            "serviceAccountName": "shopixy-commercehub",
+            "automountServiceAccountToken": false,
+            "securityContext": {
+              "runAsNonRoot": true,
+              "runAsUser": 101,
+              "runAsGroup": 101,
+              "seccompProfile": {
+                "type": "RuntimeDefault"
+              }
+            },
+            "containers": [
+              {
+                "name": "commercehub",
+                "image": "REQUIRES_NEW_COMMERCEHUB_DIGEST",
+                "securityContext": {
+                  "allowPrivilegeEscalation": false,
+                  "readOnlyRootFilesystem": true,
+                  "capabilities": {
+                    "drop": [
+                      "ALL"
+                    ]
+                  }
+                },
+                "ports": [
+                  {
+                    "name": "http",
+                    "containerPort": 8080
+                  }
+                ],
+                "env": [],
+                "readinessProbe": {
+                  "httpGet": {
+                    "path": "/index.html",
+                    "port": "http"
+                  },
+                  "timeoutSeconds": 2,
+                  "periodSeconds": 10
+                },
+                "livenessProbe": {
+                  "httpGet": {
+                    "path": "/index.html",
+                    "port": "http"
+                  },
+                  "timeoutSeconds": 2,
+                  "periodSeconds": 15
+                },
+                "volumeMounts": [
+                  {
+                    "name": "nginx",
+                    "mountPath": "/etc/nginx/nginx.conf",
+                    "subPath": "nginx.conf",
+                    "readOnly": true
+                  },
+                  {
+                    "name": "temporary",
+                    "mountPath": "/tmp"
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "25m",
+                    "memory": "64Mi"
+                  },
+                  "limits": {
+                    "cpu": "250m",
+                    "memory": "128Mi"
+                  }
+                }
+              }
+            ],
+            "volumes": [
+              {
+                "name": "nginx",
+                "configMap": {
+                  "name": "shopixy-commercehub-nginx",
+                  "defaultMode": 292
+                }
+              },
+              {
+                "name": "temporary",
+                "emptyDir": {
+                  "sizeLimit": "128Mi"
+                }
+              }
+            ],
+            "nodeSelector": {
+              "kubernetes.io/hostname": "shopixy"
+            }
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "name": "shopixy-commercehub",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-app"
+      },
+      "spec": {
+        "type": "ClusterIP",
+        "selector": {
+          "app": "shopixy-commercehub"
+        },
+        "ports": [
+          {
+            "name": "http",
+            "port": 8080,
+            "targetPort": 8080
+          }
+        ]
+      }
+    }
+  ]
+}

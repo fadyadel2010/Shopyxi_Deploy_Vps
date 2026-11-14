@@ -1,0 +1,205 @@
+# =============================================================================
+# PointOfSale (Shopixy) — Professional .gitignore
+# SOURCE-CODE-BACKED. Every rule below is justified by actual repository
+# contents. See docs/project/GIT-1_PROFESSIONAL_GITIGNORE_CERTIFICATION.md
+#
+# Stack:
+#   - .NET 9 : PointOfSale.API, .Core, .Infrastructure, .Tests, PointOfSale (MVC)
+#   - Vite + React 18 + TypeScript : PointOfSale.Web, .CommerceHub, .Storefront
+#   - Node + TypeScript : PointOfSale.WhatsApp.Baileys
+#   - SQL migration scripts, PowerShell scripts, n8n workflow JSON, Caddy deploy
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Operating System
+# -----------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# -----------------------------------------------------------------------------
+# Visual Studio / Rider / IDE metadata
+# -----------------------------------------------------------------------------
+.vs/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.DotSettings.user
+
+# Keep shared VS Code workspace config; ignore per-user state only.
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+# -----------------------------------------------------------------------------
+# .NET build output
+# -----------------------------------------------------------------------------
+[Bb]in/
+[Oo]bj/
+*.dll
+*.exe
+*.pdb
+
+# Playwright browsers unpacked into bin/.../.playwright
+**/.playwright/
+
+# -----------------------------------------------------------------------------
+# NuGet
+# -----------------------------------------------------------------------------
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# -----------------------------------------------------------------------------
+# Node / Vite / React
+# -----------------------------------------------------------------------------
+node_modules/
+dist/
+build/
+.vite/
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# -----------------------------------------------------------------------------
+# Testing & Coverage
+# -----------------------------------------------------------------------------
+[Tt]est[Rr]esults/
+*.trx
+*.coverage
+*.cobertura.xml
+coverage/
+.nyc_output/
+
+# -----------------------------------------------------------------------------
+# Logs & Temporary files
+# -----------------------------------------------------------------------------
+*.log
+logs/
+**/tmp/
+**/temp/
+**/.temp/
+**/.codex-temp/
+*.tmp
+
+# -----------------------------------------------------------------------------
+# Environment files (SECRETS)
+# Keep committed *.example templates.
+# -----------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# -----------------------------------------------------------------------------
+# Application secrets / local overrides (SECRETS)
+# -----------------------------------------------------------------------------
+appsettings.*.local.json
+appsettings.*.local.*
+secrets.json
+credentials.yaml
+credentials.json
+token_check.json
+*.pfx
+*.p12
+
+# -----------------------------------------------------------------------------
+# Runtime data / generated credentials
+# -----------------------------------------------------------------------------
+
+# ASP.NET Core Data Protection keys
+data-protection-keys/
+**/DataProtection-Keys/
+**/DataProtectionKeys/
+**/.aspnet/DataProtection-Keys/
+
+# Runtime databases / journals
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-wal
+*.db-shm
+*.pid
+
+# -----------------------------------------------------------------------------
+# WhatsApp / Baileys runtime auth state
+# -----------------------------------------------------------------------------
+auth_states/
+PointOfSale.WhatsApp.Baileys/auth_states/
+
+# -----------------------------------------------------------------------------
+# AI tooling / scratch
+# -----------------------------------------------------------------------------
+.codex-tmp/
+.agents/
+.cursor/
+.aider*
+
+# -----------------------------------------------------------------------------
+# Local database / dump / backup artifacts
+# -----------------------------------------------------------------------------
+*.dump
+*.bak
+*.backup
+*.sql.gz
+*.tar.gz
+
+# -----------------------------------------------------------------------------
+# Local deployment / archive packages
+# -----------------------------------------------------------------------------
+*.zip
+*.7z
+*.rar
+
+# -----------------------------------------------------------------------------
+# Local environment / deployment artifacts
+# -----------------------------------------------------------------------------
+*.local.env
+*.secret
+# Playwright CLI output (may contain credentials)
+.playwright-cli/
+
+# Recovery baseline: private material and transient tooling remain local.
+__pycache__/
+*.pyc
+.pytest_cache/
+.ai-context/
+.kombai/
+*.pem
+*.key
+*.crt
+*.cer
+*.der
+*.jks
+*.keystore
+.kube/
+kubeconfig
+kubeconfig.*
+*.kubeconfig
+id_rsa*
+id_ed25519*
+*.acl
+*.rdb
+*.aof
+*.tar
+*.tgz
+*.sql.bz2
+*.sql.xz
+*.sql.zst
+
+# Historical validation may contain browser sessions, private responses or data.
+# Only the explicitly audited recovery allowlist is added with git add -f.
+/validation/
+/deploy/**/audit-results/
+/deploy/**/__pycache__/
+/deploy/**/00-predeployment-backup-r2.yaml

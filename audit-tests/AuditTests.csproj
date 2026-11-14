@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <AssemblyName>PointOfSale.Tests</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+    <PackageReference Include="Moq" Version="4.20.72" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.15" />
+    <ProjectReference Include="../PointOfSale.API/PointOfSale.API.csproj" />
+    <Compile Include="../PointOfSale.Tests/Security/TenantRegistrationFreshDatabaseTests.cs" Link="TenantRegistrationFreshDatabaseTests.cs" />
+    <Compile Include="../PointOfSale.Tests/Security/PlatformControllerSessionReplayTests.cs" Link="PlatformControllerSessionReplayTests.cs" />
+    <Compile Include="../PointOfSale.Tests/Tenancy/StoreSlugTests.cs" Link="StoreSlugTests.cs" />
+    <Compile Include="../PointOfSale.Tests/Platform/TenantProvisioningConsumerPostgresTests.cs" Link="TenantProvisioningConsumerPostgresTests.cs" />
+    <Compile Include="../PointOfSale.Tests/TestDoubles/NoOpUserGovernanceService.cs" Link="NoOpUserGovernanceService.cs" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+</Project>

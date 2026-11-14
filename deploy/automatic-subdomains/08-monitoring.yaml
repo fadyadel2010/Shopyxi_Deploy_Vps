@@ -1,0 +1,165 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shopixy-automatic-subdomains-alerting-r1
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/part-of: shopixy-automatic-subdomains
+immutable: true
+data:
+  automatic-subdomains.yaml: |
+    apiVersion: 1
+    groups:
+      - orgId: 1
+        name: Shopixy automatic subdomains
+        folder: Shopixy alerts
+        interval: 1m
+        rules:
+          - uid: shopixy-wildcard-cert-ready
+            title: Shopixy wildcard origin certificate not ready
+            condition: B
+            for: 10m
+            noDataState: Alerting
+            execErrState: Alerting
+            isPaused: false
+            annotations:
+              summary: Shopixy wildcard origin certificate is not ready
+              description: cert-manager has not reported the wildcard origin certificate Ready for ten minutes.
+            labels:
+              severity: critical
+              stack: automatic-subdomains
+            data:
+              - refId: A
+                datasourceUid: prometheus
+                relativeTimeRange: { from: 900, to: 0 }
+                model:
+                  refId: A
+                  expr: 'min(certmanager_certificate_ready_status{name="shopixy-wildcard-origin-r1",namespace="shopixy-app",condition="True"})'
+                  instant: true
+                  range: false
+                  intervalMs: 60000
+                  maxDataPoints: 1000
+              - refId: B
+                datasourceUid: __expr__
+                relativeTimeRange: { from: 900, to: 0 }
+                model:
+                  refId: B
+                  type: threshold
+                  expression: A
+                  conditions:
+                    - type: query
+                      evaluator: { type: lt, params: [0.5] }
+                      operator: { type: and }
+                      reducer: { type: last, params: [] }
+                      query: { params: [B] }
+          - uid: shopixy-wildcard-cert-expiry
+            title: Shopixy wildcard origin certificate expires soon
+            condition: B
+            for: 30m
+            noDataState: Alerting
+            execErrState: Alerting
+            isPaused: false
+            annotations:
+              summary: Shopixy wildcard origin certificate expires within 14 days
+              description: Repair DNS-01 renewal before Cloudflare Full (strict) origin TLS fails.
+            labels:
+              severity: critical
+              stack: automatic-subdomains
+            data:
+              - refId: A
+                datasourceUid: prometheus
+                relativeTimeRange: { from: 900, to: 0 }
+                model:
+                  refId: A
+                  expr: 'min(certmanager_certificate_expiration_timestamp_seconds{name="shopixy-wildcard-origin-r1",namespace="shopixy-app"}) - time()'
+                  instant: true
+                  range: false
+                  intervalMs: 60000
+                  maxDataPoints: 1000
+              - refId: B
+                datasourceUid: __expr__
+                relativeTimeRange: { from: 900, to: 0 }
+                model:
+                  refId: B
+                  type: threshold
+                  expression: A
+                  conditions:
+                    - type: query
+                      evaluator: { type: lt, params: [1209600] }
+                      operator: { type: and }
+                      reducer: { type: last, params: [] }
+                      query: { params: [B] }
+          - uid: shopixy-tenant-provisioning-failures
+            title: Shopixy tenant provisioning failures
+            condition: B
+            for: 10m
+            noDataState: OK
+            execErrState: Alerting
+            isPaused: false
+            annotations:
+              summary: Tenant provisioning failures are increasing
+              description: Inspect durable TenantProvisioningOperations and the tenant-provisioning-v1 queue.
+            labels:
+              severity: warning
+              stack: automatic-subdomains
+            data:
+              - refId: A
+                datasourceUid: prometheus
+                relativeTimeRange: { from: 900, to: 0 }
+                model:
+                  refId: A
+                  expr: 'sum(increase(tenant_provisioning_failures_total[15m])) or vector(0)'
+                  instant: true
+                  range: false
+                  intervalMs: 60000
+                  maxDataPoints: 1000
+              - refId: B
+                datasourceUid: __expr__
+                relativeTimeRange: { from: 900, to: 0 }
+                model:
+                  refId: B
+                  type: threshold
+                  expression: A
+                  conditions:
+                    - type: query
+                      evaluator: { type: gt, params: [5] }
+                      operator: { type: and }
+                      reducer: { type: last, params: [] }
+                      query: { params: [B] }
+          - uid: shopixy-tenant-provisioning-backlog
+            title: Shopixy durable tenant provisioning backlog or overdue recovery
+            condition: B
+            for: 15m
+            noDataState: Alerting
+            execErrState: Alerting
+            isPaused: false
+            annotations:
+              summary: Durable tenant provisioning backlog is elevated or recovery is stuck
+              description: PostgreSQL has more than 50 pending operations, an overdue unleased operation remains unrecovered, or the recovery scan heartbeat is stale. RabbitMQ aggregate metrics are not mistaken for queue-specific telemetry.
+            labels:
+              severity: warning
+              stack: automatic-subdomains
+            data:
+              - refId: A
+                datasourceUid: prometheus
+                relativeTimeRange: { from: 900, to: 0 }
+                model:
+                  refId: A
+                  expr: '(max(tenant_provisioning_pending_operations) > bool 50) + (max(tenant_provisioning_recovery_overdue) > bool 0) + ((time() - max(tenant_provisioning_recovery_last_success_timestamp_seconds)) > bool 120)'
+                  instant: true
+                  range: false
+                  intervalMs: 60000
+                  maxDataPoints: 1000
+              - refId: B
+                datasourceUid: __expr__
+                relativeTimeRange: { from: 900, to: 0 }
+                model:
+                  refId: B
+                  type: threshold
+                  expression: A
+                  conditions:
+                    - type: query
+                      evaluator: { type: gt, params: [0] }
+                      operator: { type: and }
+                      reducer: { type: last, params: [] }
+                      query: { params: [B] }

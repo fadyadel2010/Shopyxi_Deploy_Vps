@@ -1,0 +1,129 @@
+{
+  "apiVersion": "v1",
+  "kind": "List",
+  "items": [
+    {
+      "apiVersion": "admissionregistration.k8s.io/v1",
+      "kind": "ValidatingAdmissionPolicy",
+      "metadata": {
+        "name": "shopixy-cert-manager-secret-writes",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        }
+      },
+      "spec": {
+        "failurePolicy": "Fail",
+        "matchConstraints": {
+          "resourceRules": [
+            {
+              "apiGroups": [
+                ""
+              ],
+              "apiVersions": [
+                "v1"
+              ],
+              "operations": [
+                "CREATE",
+                "UPDATE",
+                "DELETE"
+              ],
+              "resources": [
+                "secrets"
+              ]
+            }
+          ]
+        },
+        "matchConditions": [
+          {
+            "name": "cert-manager-only",
+            "expression": "request.userInfo.username == 'system:serviceaccount:cert-manager:cert-manager'"
+          }
+        ],
+        "validations": [
+          {
+            "expression": "request.namespace + '/' + request.name in [\"cnpg-system/barman-cloud-client-tls\",\"cnpg-system/barman-cloud-server-tls\",\"rabbitmq-system/cluster-operator-webhook-server-cert\",\"shopixy-cache/phase4j-redis-monitoring-tls\",\"shopixy-cache/redis-ha-root-ca\",\"shopixy-cache/shopixy-redis-a-tls\",\"shopixy-cache/shopixy-redis-b-tls\",\"shopixy-cache/shopixy-sentinel-a-tls\",\"shopixy-cache/shopixy-sentinel-b-tls\",\"shopixy-cache/shopixy-sentinel-c-tls\",\"shopixy-messaging/rabbitmq-app-tls\",\"shopixy-messaging/rabbitmq-root-ca\",\"shopixy-messaging/rabbitmq-tls\",\"shopixy-mongo/mongo-a-tls\",\"shopixy-mongo/mongo-b-tls\",\"shopixy-mongo/mongo-c-tls\",\"shopixy-mongo/mongo-root-ca\",\"shopixy-search/search-http-tls\",\"shopixy-search/search-node-0-tls\",\"shopixy-search/search-node-1-tls\",\"shopixy-search/search-node-2-tls\",\"shopixy-search/search-probe-tls\",\"shopixy-search/search-root-ca\"] || (request.operation == 'CREATE' && has(object.metadata.generateName) && object.metadata.ownerReferences.exists(o, o.apiVersion == 'cert-manager.io/v1' && o.kind == 'Certificate'))",
+            "message": "cert-manager may only write recorded certificate targets or Certificate-owned temporary keys; update the reviewed target list before adding certificates."
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "admissionregistration.k8s.io/v1",
+      "kind": "ValidatingAdmissionPolicyBinding",
+      "metadata": {
+        "name": "shopixy-cert-manager-secret-writes",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        }
+      },
+      "spec": {
+        "policyName": "shopixy-cert-manager-secret-writes",
+        "validationActions": [
+          "Audit",
+          "Warn"
+        ]
+      }
+    },
+    {
+      "apiVersion": "admissionregistration.k8s.io/v1",
+      "kind": "ValidatingAdmissionPolicy",
+      "metadata": {
+        "name": "shopixy-one-api",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        }
+      },
+      "spec": {
+        "failurePolicy": "Fail",
+        "matchConstraints": {
+          "resourceRules": [
+            {
+              "apiGroups": [
+                "apps"
+              ],
+              "apiVersions": [
+                "v1"
+              ],
+              "operations": [
+                "CREATE",
+                "UPDATE"
+              ],
+              "resources": [
+                "deployments",
+                "deployments/scale"
+              ]
+            }
+          ]
+        },
+        "matchConditions": [
+          {
+            "name": "api-only",
+            "expression": "request.namespace == 'shopixy-app' && request.name == 'shopixy-api'"
+          }
+        ],
+        "validations": [
+          {
+            "expression": "has(object.spec.replicas) && object.spec.replicas == 1",
+            "message": "Shopixy production requires exactly one API instance."
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "admissionregistration.k8s.io/v1",
+      "kind": "ValidatingAdmissionPolicyBinding",
+      "metadata": {
+        "name": "shopixy-one-api",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        }
+      },
+      "spec": {
+        "policyName": "shopixy-one-api",
+        "validationActions": [
+          "Deny"
+        ]
+      }
+    }
+  ]
+}

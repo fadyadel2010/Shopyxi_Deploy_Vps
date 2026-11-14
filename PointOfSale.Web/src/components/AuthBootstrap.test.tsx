@@ -1,0 +1,535 @@
+import { StrictMode, act, useState } from 'react'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { render, screen, waitFor } from '@testing-library/react'
+import { MemoryRouter, Route, Routes } from 'react-router-dom'
+import AuthBootstrap from './AuthBootstrap'
+import ProtectedRoute from './ProtectedRoute'
+import { useAuthStore } from '../store/authStore'
+import { marketplaceQueryClient, queryClient, superAdminQueryClient } from '../queryClient'
+import { POS_VENDOR_SESSION_AUTHORITY_LOST_EVENT } from '../auth/posVendorSessionAuthority'
+
+const apiMock = vi.hoisted(() => ({
+    get: vi.fn(),
+    requestPosSessionRefresh: vi.fn(),
+}))
+
+vi.mock('../services/api', () => ({
+    default: apiMock,
+    requestPosSessionRefresh: apiMock.requestPosSessionRefresh,
+    isDefinitiveAuthFailure: (error: { response?: { status?: number } }) => (
+        error?.response?.status === 401 || error?.response?.status === 403
+    ),
+}))
+
+function createDeferred() {
+    let resolve!: (value: unknown) => void
+    let reject!: (reason?: unknown) => void
+
+    const promise = new Promise((res, rej) => {
+        resolve = res
+        reject = rej
+    })
+
+    return { promise, resolve, reject }
+}
+
+const authenticatedUser = {
+    id: '11111111-1111-4111-8111-111111111111',
+    tenantId: '22222222-2222-4222-8222-222222222222',
+    username: 'cashier',
+    firstName: 'POS',
+    lastName: 'User',
+    role: 'Cashier',
+    effectivePermissions: [
+        'dashboard.view',
+        'catalog.view',
+        'customers.view',
+        'customers.manage',
+        'sales.view',
+        'sales.operate',
+    ],
+    navigationCapabilities: [],
+    vendorLifecycleAuthority: {
+        vendorId: '22222222-2222-4222-8222-222222222222',
+        status: 'Active',
+        debtStatus: 'Current',
+        tenantActive: true,
+        marketplaceApproved: true,
+        kycVerified: true,
+        isDebtBlocked: false,
+        blocksCatalog: false,
+        blocksOrders: false,
+        blocksStorefront: false,
+        blocksAnalytics: false,
+        blocksPayments: false,
+        blocksPayouts: false,
+        blocksLogin: false,
+    },
+}
+
+function DraftForm() {
+    const [value, setValue] = useState('')
+
+    return <input aria-label="Draft value" value={value} onChange={(event) => setValue(event.target.value)} />
+}
+
+describe('POS auth bootstrap runtime hardening', () => {
+    beforeEach(() => {
+        localStorage.clear()
+        useAuthStore.setState({
+            user: null,
+            isAuthenticated: false,
+            hasHydrated: false,
+            isRouteAuthorityValidating: false,
+        })
+        apiMock.get.mockReset()
+        apiMock.requestPosSessionRefresh.mockReset()
+        queryClient.clear()
+        marketplaceQueryClient.clear()
+        superAdminQueryClient.clear()
+    })
+
+    afterEach(() => {
+        localStorage.clear()
+        vi.clearAllMocks()
+    })
+
+    it('rejects an old response after logout and login as the same actor (session ABA)', async () => {
+        useAuthStore.getState().login(authenticatedUser)
+        const oldRequest = createDeferred()
+        apiMock.get.mockReturnValue(oldRequest.promise)
+        render(<AuthBootstrap />)
+        act(() => {
+            useAuthStore.getState().logout()
+            useAuthStore.getState().login({ ...authenticatedUser, firstName: 'New session' })
+        })
+        await act(async () => {
+            oldRequest.resolve({ data: { user: { ...authenticatedUser, firstName: 'Old session' } } })
+            await oldRequest.promise
+        })
+        expect(useAuthStore.getState().user?.firstName).toBe('New session')
+    })
+
+    it('does not replace a newer same-user tenant binding with an old bootstrap response', async () => {
+        useAuthStore.getState().login(authenticatedUser)
+        const oldRequest = createDeferred()
+        apiMock.get.mockReturnValue(oldRequest.promise)
+        render(<AuthBootstrap />)
+        const nextTenant = '33333333-3333-4333-8333-333333333333'
+        act(() => useAuthStore.getState().login({
+            ...authenticatedUser, tenantId: nextTenant,
+            vendorLifecycleAuthority: { ...authenticatedUser.vendorLifecycleAuthority, vendorId: nextTenant },
+        }))
+        await act(async () => { oldRequest.resolve({ data: { user: authenticatedUser } }); await oldRequest.promise })
+        expect(useAuthStore.getState().user?.tenantId).toBe(nextTenant)
+    })
+
+    it('withholds history navigation and queues a fresh read behind an already-issued bootstrap', async () => {
+        useAuthStore.getState().login(authenticatedUser)
+        const first = createDeferred(); const second = createDeferred()
+        apiMock.get.mockReturnValueOnce(first.promise).mockReturnValueOnce(second.promise)
+        render(<AuthBootstrap />)
+        act(() => window.dispatchEvent(new PopStateEvent('popstate')))
+        expect(useAuthStore.getState().isRouteAuthorityValidating).toBe(true)
+        await act(async () => { first.resolve({ data: { user: authenticatedUser } }); await first.promise })
+        expect(apiMock.get).toHaveBeenCalledTimes(2)
+        expect(useAuthStore.getState().isRouteAuthorityValidating).toBe(true)
+        await act(async () => { second.resolve({ data: { user: authenticatedUser } }); await second.promise })
+        expect(useAuthStore.getState().isRouteAuthorityValidating).toBe(false)
+    })
+
+    it('keeps a navigated route withheld on transient failure until a later authoritative read succeeds', async () => {
+        useAuthStore.getState().login(authenticatedUser)
+        apiMock.get.mockResolvedValueOnce({ data: { user: authenticatedUser } })
+        render(<AuthBootstrap />)
+        await waitFor(() => expect(apiMock.get).toHaveBeenCalledTimes(1))
+        await act(async () => { await Promise.resolve() })
+        apiMock.get.mockRejectedValueOnce(new Error('Network unavailable'))
+        await act(async () => { window.dispatchEvent(new PopStateEvent('popstate')); await Promise.resolve() })
+        expect(useAuthStore.getState().isAuthenticated).toBe(true)
+        expect(useAuthStore.getState().isRouteAuthorityValidating).toBe(true)
+        apiMock.get.mockResolvedValueOnce({ data: { user: authenticatedUser } })
+        await act(async () => { window.dispatchEvent(new Event('focus')); await Promise.resolve() })
+        expect(useAuthStore.getState().isRouteAuthorityValidating).toBe(false)
+    })
+
+    it('does not let a stale anonymous session bootstrap wipe a newer login', async () => {
+        const bootstrapRequest = createDeferred()
+        apiMock.get.mockReturnValue(bootstrapRequest.promise)
+
+        render(<AuthBootstrap />)
+
+        expect(apiMock.get).toHaveBeenCalledWith('/auth/session')
+
+        act(() => {
+            useAuthStore.getState().login(authenticatedUser)
+        })
+
+        expect(useAuthStore.getState().isAuthenticated).toBe(true)
+        expect(useAuthStore.getState().hasHydrated).toBe(true)
+
+        await act(async () => {
+            bootstrapRequest.reject(new Error('Unauthorized'))
+            await Promise.resolve()
+        })
+
+        await waitFor(() => {
+            const state = useAuthStore.getState()
+            expect(state.isAuthenticated).toBe(true)
+            expect(state.user?.id).toBe(authenticatedUser.id)
+            expect(state.hasHydrated).toBe(true)
+        })
+    })
+
+    it('does not let a stale successful bootstrap replace a newer login actor', async () => {
+        const bootstrapRequest = createDeferred()
+        apiMock.get.mockReturnValue(bootstrapRequest.promise)
+
+        render(<AuthBootstrap />)
+
+        const replacementUser = {
+            ...authenticatedUser,
+            id: '33333333-3333-4333-8333-333333333333',
+        }
+
+        act(() => {
+            useAuthStore.getState().login(replacementUser)
+        })
+
+        await act(async () => {
+            bootstrapRequest.resolve({ data: { user: authenticatedUser } })
+            await Promise.resolve()
+        })
+
+        expect(useAuthStore.getState().user?.id).toBe(replacementUser.id)
+    })
+
+    it('restarts an in-flight bootstrap after the StrictMode effect replay', async () => {
+        const abandonedRequest = createDeferred()
+        apiMock.get
+            .mockReturnValueOnce(abandonedRequest.promise)
+            .mockResolvedValueOnce({ data: { user: authenticatedUser } })
+
+        render(
+            <StrictMode>
+                <AuthBootstrap />
+            </StrictMode>,
+        )
+
+        await waitFor(() => {
+            expect(apiMock.get).toHaveBeenCalledTimes(2)
+            const state = useAuthStore.getState()
+            expect(state.isAuthenticated).toBe(true)
+            expect(state.hasHydrated).toBe(true)
+        })
+
+        await act(async () => {
+            abandonedRequest.resolve({ data: { user: { ...authenticatedUser, id: 'stale-user' } } })
+            await Promise.resolve()
+        })
+
+        expect(useAuthStore.getState().user?.id).toBe(authenticatedUser.id)
+    })
+
+    it('does not render protected content for a persisted session before backend bootstrap proves authority', () => {
+        useAuthStore.setState({
+            user: authenticatedUser,
+            isAuthenticated: true,
+            hasHydrated: false,
+        })
+
+        render(
+            <MemoryRouter initialEntries={['/']}>
+                <Routes>
+                    <Route element={<ProtectedRoute />}>
+                        <Route path="/" element={<div>Dashboard</div>} />
+                    </Route>
+                </Routes>
+            </MemoryRouter>,
+        )
+
+        expect(screen.getByText('Restoring session...')).toBeInTheDocument()
+        expect(screen.queryByText('Dashboard')).not.toBeInTheDocument()
+    })
+
+    it('shows a visible session restore state instead of a blank protected route while auth is unresolved', () => {
+        render(
+            <MemoryRouter initialEntries={['/']}>
+                <Routes>
+                    <Route element={<ProtectedRoute />}>
+                        <Route path="/" element={<div>Dashboard</div>} />
+                    </Route>
+                </Routes>
+            </MemoryRouter>,
+        )
+
+        expect(screen.getByText('Restoring session...')).toBeInTheDocument()
+    })
+
+    it('rejects malformed backend session DTOs and clears protected presentation', async () => {
+        apiMock.get.mockResolvedValue({ data: { user: { id: 'user-1', role: 'Cashier' } } })
+
+        render(<AuthBootstrap />)
+
+        await waitFor(() => {
+            const state = useAuthStore.getState()
+            expect(state.isAuthenticated).toBe(false)
+            expect(state.user).toBeNull()
+            expect(state.hasHydrated).toBe(true)
+        })
+    })
+
+    it('treats cross-tab storage as terminal logout, not session creation authority', async () => {
+        apiMock.get.mockResolvedValue({ data: { user: authenticatedUser } })
+
+        render(<AuthBootstrap />)
+
+        await waitFor(() => {
+            expect(useAuthStore.getState().isAuthenticated).toBe(true)
+        })
+
+        act(() => {
+            window.dispatchEvent(new StorageEvent('storage', { key: 'pos_vendor_session_logout_at' }))
+        })
+
+        expect(useAuthStore.getState().isAuthenticated).toBe(false)
+        expect(useAuthStore.getState().user).toBeNull()
+    })
+
+    it('ignores storage activity from foreign runtime domains', async () => {
+        apiMock.get.mockResolvedValue({ data: { user: authenticatedUser } })
+
+        render(<AuthBootstrap />)
+
+        await waitFor(() => {
+            expect(useAuthStore.getState().isAuthenticated).toBe(true)
+        })
+
+        act(() => {
+            window.dispatchEvent(new StorageEvent('storage', { key: 'super_admin_session_logout_at' }))
+            window.dispatchEvent(new StorageEvent('storage', { key: null }))
+        })
+
+        expect(useAuthStore.getState().isAuthenticated).toBe(true)
+        expect(useAuthStore.getState().user?.id).toBe(authenticatedUser.id)
+    })
+
+    it('revalidates CommerceHub vendor authority loss without converting it into POS logout', async () => {
+        apiMock.get.mockResolvedValue({ data: { user: authenticatedUser } })
+
+        render(<AuthBootstrap />)
+
+        await waitFor(() => {
+            expect(useAuthStore.getState().isAuthenticated).toBe(true)
+        })
+
+        act(() => {
+            window.dispatchEvent(new Event(POS_VENDOR_SESSION_AUTHORITY_LOST_EVENT))
+        })
+
+        await waitFor(() => {
+            expect(apiMock.get).toHaveBeenCalledTimes(2)
+            expect(useAuthStore.getState().isAuthenticated).toBe(true)
+            expect(useAuthStore.getState().hasHydrated).toBe(true)
+        })
+    })
+
+    it('purges POS queries on actor replacement without clearing marketplace or Super Admin domains', async () => {
+        apiMock.get.mockResolvedValue({ data: { user: authenticatedUser } })
+        queryClient.setQueryData(['pos-authority'], { actor: 'old' })
+        marketplaceQueryClient.setQueryData(['marketplace', 'scope'], { actor: 'marketplace' })
+        superAdminQueryClient.setQueryData(['super-admin', 'finance'], { actor: 'platform' })
+
+        render(<AuthBootstrap />)
+
+        await waitFor(() => {
+            expect(useAuthStore.getState().isAuthenticated).toBe(true)
+        })
+
+        const replacementUser = {
+            ...authenticatedUser,
+            id: '33333333-3333-4333-8333-333333333333',
+        }
+
+        act(() => {
+            useAuthStore.getState().login(replacementUser)
+        })
+
+        expect(queryClient.getQueryData(['pos-authority'])).toBeUndefined()
+        expect(marketplaceQueryClient.getQueryData(['marketplace', 'scope'])).toEqual({ actor: 'marketplace' })
+        expect(superAdminQueryClient.getQueryData(['super-admin', 'finance'])).toEqual({ actor: 'platform' })
+    })
+
+    it('keeps protected routes mounted while BFCache restoration revalidates backend authority', async () => {
+        const restoredSession = createDeferred()
+        apiMock.get
+            .mockResolvedValueOnce({ data: { user: authenticatedUser } })
+            .mockReturnValueOnce(restoredSession.promise)
+
+        render(
+            <>
+                <AuthBootstrap />
+                <MemoryRouter initialEntries={['/commercehub/finance']}>
+                    <Routes>
+                        <Route element={<ProtectedRoute />}>
+                            <Route path="/commercehub/finance" element={<div>Vendor Finance</div>} />
+                        </Route>
+                    </Routes>
+                </MemoryRouter>
+            </>,
+        )
+
+        await waitFor(() => {
+            expect(screen.getByText('Vendor Finance')).toBeInTheDocument()
+        })
+
+        act(() => {
+            const event = new Event('pageshow')
+            Object.defineProperty(event, 'persisted', { value: true })
+            window.dispatchEvent(event)
+        })
+
+        expect(screen.getByText('Vendor Finance')).toBeInTheDocument()
+        expect(screen.queryByText('Restoring session...')).not.toBeInTheDocument()
+
+        await act(async () => {
+            restoredSession.resolve({ data: { user: authenticatedUser } })
+            await Promise.resolve()
+        })
+
+        await waitFor(() => {
+            expect(screen.getByText('Vendor Finance')).toBeInTheDocument()
+        })
+    })
+
+    it('deduplicates focus and visibility revalidation without unmounting unsaved form state', async () => {
+        const lifecycleSession = createDeferred()
+        apiMock.get
+            .mockResolvedValueOnce({ data: { user: authenticatedUser } })
+            .mockReturnValueOnce(lifecycleSession.promise)
+        const user = (await import('@testing-library/user-event')).default.setup()
+
+        render(
+            <>
+                <AuthBootstrap />
+                <MemoryRouter initialEntries={['/draft']}>
+                    <Routes>
+                        <Route element={<ProtectedRoute />}>
+                            <Route path="/draft" element={<DraftForm />} />
+                        </Route>
+                    </Routes>
+                </MemoryRouter>
+            </>,
+        )
+
+        const input = await screen.findByLabelText('Draft value')
+        await user.type(input, 'unsaved-secret')
+        const userAuthorityBefore = useAuthStore.getState().user
+
+        act(() => {
+            window.dispatchEvent(new Event('blur'))
+            window.dispatchEvent(new Event('focus'))
+            document.dispatchEvent(new Event('visibilitychange'))
+        })
+
+        expect(apiMock.get).toHaveBeenCalledTimes(2)
+        expect(screen.getByLabelText('Draft value')).toHaveValue('unsaved-secret')
+        expect(screen.queryByText('Restoring session...')).not.toBeInTheDocument()
+
+        await act(async () => {
+            lifecycleSession.resolve({ data: { user: authenticatedUser } })
+            await lifecycleSession.promise
+        })
+
+        expect(screen.getByLabelText('Draft value')).toHaveValue('unsaved-secret')
+        expect(useAuthStore.getState().user).toBe(userAuthorityBefore)
+    })
+
+    it('retains the proven session and form state when background revalidation has a network failure', async () => {
+        apiMock.get
+            .mockResolvedValueOnce({ data: { user: authenticatedUser } })
+            .mockRejectedValueOnce(Object.assign(new Error('offline'), { code: 'ERR_NETWORK' }))
+        const user = (await import('@testing-library/user-event')).default.setup()
+
+        render(
+            <>
+                <AuthBootstrap />
+                <MemoryRouter initialEntries={['/draft']}>
+                    <Routes>
+                        <Route element={<ProtectedRoute />}>
+                            <Route path="/draft" element={<DraftForm />} />
+                        </Route>
+                    </Routes>
+                </MemoryRouter>
+            </>,
+        )
+
+        const input = await screen.findByLabelText('Draft value')
+        await user.type(input, 'preserved')
+        act(() => window.dispatchEvent(new Event('focus')))
+
+        await waitFor(() => expect(apiMock.get).toHaveBeenCalledTimes(2))
+        expect(useAuthStore.getState().isAuthenticated).toBe(true)
+        expect(screen.getByLabelText('Draft value')).toHaveValue('preserved')
+    })
+
+    it('does no session work while hidden and revalidates once when the tab becomes visible', async () => {
+        let visibilityState = 'hidden'
+        const visibilitySpy = vi.spyOn(document, 'visibilityState', 'get')
+            .mockImplementation(() => visibilityState as DocumentVisibilityState)
+        apiMock.get.mockResolvedValue({ data: { user: authenticatedUser } })
+
+        render(<AuthBootstrap />)
+        await waitFor(() => expect(apiMock.get).toHaveBeenCalledOnce())
+
+        act(() => document.dispatchEvent(new Event('visibilitychange')))
+        expect(apiMock.get).toHaveBeenCalledOnce()
+
+        visibilityState = 'visible'
+        act(() => document.dispatchEvent(new Event('visibilitychange')))
+        await waitFor(() => expect(apiMock.get).toHaveBeenCalledTimes(2))
+        visibilitySpy.mockRestore()
+    })
+
+    it('uses the refresh session after a lifecycle 401 without replacing protected content', async () => {
+        apiMock.get
+            .mockResolvedValueOnce({ data: { user: authenticatedUser } })
+            .mockRejectedValueOnce({ response: { status: 401 } })
+        apiMock.requestPosSessionRefresh.mockResolvedValue(authenticatedUser)
+
+        render(
+            <>
+                <AuthBootstrap />
+                <MemoryRouter initialEntries={['/draft']}>
+                    <Routes>
+                        <Route element={<ProtectedRoute />}>
+                            <Route path="/draft" element={<DraftForm />} />
+                        </Route>
+                    </Routes>
+                </MemoryRouter>
+            </>,
+        )
+
+        await screen.findByLabelText('Draft value')
+        act(() => window.dispatchEvent(new Event('focus')))
+
+        await waitFor(() => expect(apiMock.requestPosSessionRefresh).toHaveBeenCalledOnce())
+        expect(useAuthStore.getState().isAuthenticated).toBe(true)
+        expect(screen.getByLabelText('Draft value')).toBeInTheDocument()
+        expect(screen.queryByText('Restoring session...')).not.toBeInTheDocument()
+    })
+
+    it('clears authority after a lifecycle 401 and definitive refresh failure', async () => {
+        apiMock.get
+            .mockResolvedValueOnce({ data: { user: authenticatedUser } })
+            .mockRejectedValueOnce({ response: { status: 401 } })
+        apiMock.requestPosSessionRefresh.mockRejectedValue({ response: { status: 401 } })
+
+        render(<AuthBootstrap />)
+        await waitFor(() => expect(useAuthStore.getState().isAuthenticated).toBe(true))
+
+        act(() => window.dispatchEvent(new Event('focus')))
+
+        await waitFor(() => expect(useAuthStore.getState().isAuthenticated).toBe(false))
+    })
+})

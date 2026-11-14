@@ -1,0 +1,100 @@
+namespace PointOfSale.Tests.Architecture;
+
+public sealed class HomepageDiscoveryRecommendationCertificationTests
+{
+    [Fact]
+    public void StorefrontHomepageShelvesStaySqlAuthorityBound()
+    {
+        var service = ReadRepoFile("PointOfSale.API/Services/Storefront/StorefrontHomeService.cs");
+
+        Assert.Contains("RecomposeProductCardsFromSqlAuthorityAsync", service, StringComparison.Ordinal);
+        Assert.Contains("ProductSearchSqlAuthorityOverlay.ApplyBatchAsync", service, StringComparison.Ordinal);
+        Assert.Contains("CategoryLineageAuthority.LoadTenantSnapshotAsync", service, StringComparison.Ordinal);
+        Assert.Contains("!product.IsAffiliateEnabled", service, StringComparison.Ordinal);
+        Assert.DoesNotContain("ProductSearchSqlAuthorityOverlay.ApplyAsync", service, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void CommerceHubHomepageProjectionAndReadsStaySqlAuthorityBound()
+    {
+        var projection = ReadRepoFile("PointOfSale.Infrastructure/ReadModels/Marketplace/MarketplaceReadModelProjectionServices.cs");
+        var consumer = ReadRepoFile("PointOfSale.Infrastructure/Consumers/Marketplace/HomepageProjectionConsumer.cs");
+        var controller = ReadRepoFile("PointOfSale.API/Controllers/MarketplaceReadController.cs");
+
+        Assert.Contains("ProjectionConsumerEventFence.TryAcquireAsync", consumer, StringComparison.Ordinal);
+        Assert.Contains("TenantLineageAuthority.IsActiveTenantAsync", projection, StringComparison.Ordinal);
+        Assert.Contains("SqlAuthorityOverlayKind.Homepage", projection, StringComparison.Ordinal);
+        Assert.Contains("LoadLiveListingIdsAsync", projection, StringComparison.Ordinal);
+        Assert.Contains("CommerceHubCategoryLineageAuthority.LoadLiveIdsAsync", projection, StringComparison.Ordinal);
+        Assert.Contains("listing.IsPublished", projection, StringComparison.Ordinal);
+        Assert.Contains("product.PublishStatus == PublishStatus.Published", projection, StringComparison.Ordinal);
+        Assert.Contains("FilterPublicReadAsync", controller, StringComparison.Ordinal);
+        Assert.Contains("FilterHomepageSectionsByVendorVisibilityAsync", controller, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void AffiliateDiscoveryReadsTreatSearchAsCandidateOnly()
+    {
+        var discovery = ReadRepoFile("PointOfSale.Infrastructure/Elasticsearch/Services/AffiliateProductDiscoveryService.cs");
+        var publicController = ReadRepoFile("PointOfSale.API/Controllers/PublicAffiliateProductsController.cs");
+        var registration = ReadRepoFile("PointOfSale.Infrastructure/Elasticsearch/ElasticsearchServiceCollectionExtensions.cs");
+
+        Assert.Contains("RecomposeDiscoveryItemsFromSqlAuthorityAsync", discovery, StringComparison.Ordinal);
+        Assert.Contains("ProductSearchSqlAuthorityOverlay.ApplyBatchByTenantAsync", discovery, StringComparison.Ordinal);
+        Assert.Contains("product.TryResolveAffiliatePublicPricing(out var pricing)", discovery, StringComparison.Ordinal);
+        Assert.Contains("ReadAllSearchCandidatesAsync", discovery, StringComparison.Ordinal);
+        Assert.Contains("(categoryId.HasValue && product.CategoryId != categoryId.Value)", discovery, StringComparison.Ordinal);
+        Assert.Contains("var total = deliverableItems.Count;", discovery, StringComparison.Ordinal);
+        Assert.Contains("deliverableItems.Skip((int)skip).Take(query.PageSize)", discovery, StringComparison.Ordinal);
+        Assert.DoesNotContain(".From(skip)", discovery, StringComparison.Ordinal);
+        Assert.Contains("RecomposePublicAffiliateProductsFromSqlAuthorityAsync", publicController, StringComparison.Ordinal);
+        Assert.Contains("RecomposePublicAffiliateProductFromSqlAuthorityAsync", publicController, StringComparison.Ordinal);
+        Assert.Contains("ReadAllSearchCandidatesAsync", publicController, StringComparison.Ordinal);
+        Assert.Contains("ProductSearchSqlAuthorityOverlay.ApplyBatchByTenantAsync", publicController, StringComparison.Ordinal);
+        Assert.Contains("ProductSearchSqlAuthorityOverlay.ApplyAsync", publicController, StringComparison.Ordinal);
+        Assert.Contains("var total = docs.Count", publicController, StringComparison.Ordinal);
+        Assert.Contains("pageDocs = docs.Skip(skip).Take(pageSize)", publicController, StringComparison.Ordinal);
+        Assert.DoesNotContain(".From(skip)", publicController, StringComparison.Ordinal);
+        Assert.Contains("seen.Add((candidate.TenantId, candidate.ProductId))", publicController, StringComparison.Ordinal);
+        Assert.Contains("Ascending(p => p.TenantId)", publicController, StringComparison.Ordinal);
+        Assert.Contains("Ascending(p => p.ProductId)", publicController, StringComparison.Ordinal);
+        Assert.Contains("services.AddScoped<IAffiliateProductDiscoveryService, AffiliateProductDiscoveryService>()", registration, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void ProductCacheInvalidationRetainsHomepageReplayCollapse()
+    {
+        var productInvalidation = ReadRepoFile("PointOfSale.Infrastructure/Consumers/ProductCacheInvalidationConsumer.cs");
+        var invalidationOwner = ReadRepoFile("PointOfSale.Infrastructure/Redis/Services/StorefrontProductCacheInvalidator.cs");
+        var redisInvalidation = ReadRepoFile("PointOfSale.API/Consumers/RedisInvalidationConsumer.cs");
+
+        Assert.Contains("ProjectionConsumerEventFence.TryAcquireAsync", productInvalidation, StringComparison.Ordinal);
+        Assert.Contains("invalidateHomepage", productInvalidation, StringComparison.Ordinal);
+        Assert.Contains("CacheKeyBuilder.HomePatternKey", invalidationOwner, StringComparison.Ordinal);
+        Assert.Contains("RemoveByPatternAsync", invalidationOwner, StringComparison.Ordinal);
+        Assert.Contains("ProjectionEventFence.TryAcquireAsync", redisInvalidation, StringComparison.Ordinal);
+        Assert.Contains("homepage", redisInvalidation, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string ReadRepoFile(string relativePath)
+    {
+        var root = FindRepoRoot(AppContext.BaseDirectory);
+        return File.ReadAllText(Path.Combine(root, relativePath.Replace('/', Path.DirectorySeparatorChar)));
+    }
+
+    private static string FindRepoRoot(string startDirectory)
+    {
+        var directory = new DirectoryInfo(startDirectory);
+        while (directory != null)
+        {
+            if (File.Exists(Path.Combine(directory.FullName, "PointOfSale.sln")))
+            {
+                return directory.FullName;
+            }
+
+            directory = directory.Parent;
+        }
+
+        throw new InvalidOperationException("Repository root could not be found.");
+    }
+}

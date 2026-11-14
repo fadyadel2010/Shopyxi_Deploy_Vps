@@ -1,0 +1,95 @@
+[
+    {
+        "Architecture": "amd64",
+        "Config": {
+            "Entrypoint": [
+                "dotnet",
+                "PointOfSale.API.dll"
+            ],
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "APP_UID=1654",
+                "ASPNETCORE_HTTP_PORTS=8080",
+                "DOTNET_RUNNING_IN_CONTAINER=true",
+                "DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false",
+                "DOTNET_VERSION=10.0.15",
+                "ASPNET_VERSION=10.0.15",
+                "ASPNETCORE_ENVIRONMENT=Production",
+                "DOTNET_ENVIRONMENT=Production",
+                "HOME=/home/app",
+                "XDG_DATA_HOME=/home/app/.local/share",
+                "DataProtection__KeysPath=/var/lib/shopixy/dpkeys"
+            ],
+            "ExposedPorts": {
+                "8080/tcp": {}
+            },
+            "Healthcheck": {
+                "Interval": 30000000000,
+                "Retries": 3,
+                "StartPeriod": 30000000000,
+                "Test": [
+                    "CMD",
+                    "dotnet",
+                    "/opt/shopixy-healthprobe/HealthProbe.dll"
+                ],
+                "Timeout": 3000000000
+            },
+            "Labels": {
+                "org.opencontainers.image.revision": "5c2cc1226a8e51d68e195062a17aae47b896b015fe40474fce8c7bacd2d8feba",
+                "org.opencontainers.image.source": "Shopixy APP82 r11 automatic subdomains independent-audit r3",
+                "org.opencontainers.image.title": "Shopixy API automatic subdomains",
+                "shopixy.io/base-image": "docker.io/shopixy/api@sha256:5efeb7042bcaf6ea223f3df06c7983862e073787e78634fb996ffbf9c4cf266e",
+                "shopixy.io/dotnet-runtime": "10.0.15",
+                "shopixy.io/source-input-sha256": "a4e14f1a60f331cf3d0ab9e67039c49acf2425f3072a281b37de5f20db7cfa90"
+            },
+            "User": "1654:1654",
+            "WorkingDir": "/app"
+        },
+        "Created": "2026-11-11T23:47:03.363739844+02:00",
+        "Descriptor": {
+            "digest": "sha256:860d691bb8c7a4dc463d4dfbd99dfe595e963cce3e32e6392d9e3ce8cb3dbc5a",
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "size": 5091
+        },
+        "Id": "sha256:860d691bb8c7a4dc463d4dfbd99dfe595e963cce3e32e6392d9e3ce8cb3dbc5a",
+        "Metadata": {
+            "LastTagTime": "2026-11-11T21:47:03.445521861Z"
+        },
+        "Os": "linux",
+        "Parent": "sha256:b6ee48007feb9de6b1730f8b0477956d2682d8f3ce5a0bb5b8a70ff1cf7d6401",
+        "RepoDigests": [
+            "shopixy/api@sha256:860d691bb8c7a4dc463d4dfbd99dfe595e963cce3e32e6392d9e3ce8cb3dbc5a"
+        ],
+        "RepoTags": [
+            "shopixy/api:automatic-subdomains-5c2cc1226a8e-r3"
+        ],
+        "RootFS": {
+            "Layers": [
+                "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064",
+                "sha256:7179963c95b33f40bbfd6734896600aff2631b733f2c00a38a081591b88cdb9d",
+                "sha256:bbbd8ede3481fae877878ca2f3ecbc4dc306e1aad0c54b7e323515bbf2996d51",
+                "sha256:caa285ab046924adb26df1a69da4480ca6d2048481f4162d7c8bdf0368cd8d67",
+                "sha256:4f7116e513862a2462cfd758f4a7ad0aa89c7d72bbef3b97b87f695a66a2fae9",
+                "sha256:71415bbbb9738cb340907a7b8c34cc6f209d1dca980a57070d2cb923675b69a7",
+                "sha256:d78b117bb12a5718009129327b575d99b86d66b43f33e77d63bf8e2ceaa8721d",
+                "sha256:80021c5c607aea18fa87f03d81ede533868d0fbd20e0b152facac7b25ada2517",
+                "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed",
+                "sha256:ea474ccf2e4938d9dc1630ee9725e2eb8377156c95c0e70aec0ef6e189df99bb",
+                "sha256:eb016e316df001dfe2131738643e975279c36f6b4079333d7c755db1191ebceb",
+                "sha256:1f0eac3c37dfd33cf09fe425bb0227cccaa6c3888b18b4fc2a04bbdcb43eb831",
+                "sha256:6ae22dfbf5d1cff1a66455250bfa5d70238fd7c71aa1064c81e5f9df2b702728",
+                "sha256:df9c0b10a65973974898144de8193e6d5bbc5175c92a6780fa7951b9d92e2014",
+                "sha256:34506e8d261422e1763e98f57498655c89ff20f94047e80bf0a269dfe86291f5",
+                "sha256:b0ff2f1c36ac305c1038b9adf17916bf63675c374b99dea704943696c38032ba",
+                "sha256:c0cd76df21dc33b0ffc1814b82058531ef96c6ccbb192de4083e84f083424795",
+                "sha256:93cd5c33536ec3eeb3edab40d2c8d2e9de94960642dc6309c9847d11de970ad0",
+                "sha256:699eeb7461da5dc2e28290b9a52ce80a41299e6125c544739014601063741e71",
+                "sha256:0dc99d1494ea013fd5bc63aa7cce8a01b91b87ca34a4f444a7572698e2cf67d1",
+                "sha256:3dd68f71711c85bc2e3381d4688180b3e99840c46db12e85d6d157af622af517",
+                "sha256:965c570a66685c1a23a61da8c184d34b31dd9d129f1aed39d71a134439d3851f"
+            ],
+            "Type": "layers"
+        },
+        "Size": 1016241470
+    }
+]

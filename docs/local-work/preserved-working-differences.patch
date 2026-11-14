@@ -1,0 +1,588 @@
+--- accepted/PointOfSale.API/Controllers/PlatformController.cs
++++ preserved-working/PointOfSale.API/Controllers/PlatformController.cs
+@@ -83,11 +83,6 @@
+     ///         "currency": "USD"
+     ///     }
+     /// </remarks>
+-    [HttpGet("registration-policy")]
+-    [PointOfSale.API.Attributes.AllowAnonymousTenant]
+-    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+-    public IActionResult RegistrationPolicy() => Ok(new { enabled = _securitySettings.RegistrationEnabled });
+-
+     [HttpPost("register")]
+     [ProducesResponseType(typeof(TenantRegistrationResponse), StatusCodes.Status201Created)]
+     [ProducesResponseType(typeof(RegistrationErrorResponse), StatusCodes.Status400BadRequest)]
+--- accepted/PointOfSale.API/DTOs/ExpenseDTOs.cs
++++ preserved-working/PointOfSale.API/DTOs/ExpenseDTOs.cs
+@@ -1,121 +1,121 @@
+-using System.ComponentModel.DataAnnotations;
+-
+-namespace PointOfSale.API.DTOs;
+-
+-// Expense Category DTOs
+-public record ExpenseCategoryDto(
+-    Guid Id,
+-    string Name,
+-    string? Description,
+-    bool IsActive
+-);
+-
+-public record CreateExpenseCategoryDto(
+-    string Name,
+-    string? Description,
+-    bool IsActive
+-);
+-
+-public record UpdateExpenseCategoryDto(
+-    string Name,
+-    string? Description,
+-    bool IsActive
+-);
+-
+-// Expense DTOs
+-public record ExpenseDto(
+-    Guid Id,
+-    Guid ExpenseCategoryId,
+-    string CategoryName,
+-    DateTime ExpenseDate,
+-    decimal Amount,
+-    string Description,
+-    string? Notes,
+-    string PaymentMethod,
+-    Guid? SupplierId,
+-    string? SupplierName,
+-    Guid? CashboxId,
+-    string? CashboxName,
+-    Guid? BankId,
+-    string? BankName,
+-    string? ReceiptPath,
+-    string? ReferenceNumber,
+-    bool IsRecurring,
+-    string? RecurringFrequency,
+-    bool RequiresApproval,
+-    bool IsApproved,
+-    Guid? ApprovedBy,
+-    DateTime? ApprovedAt
+-);
+-
+-public record CreateExpenseDto(
+-    Guid ExpenseCategoryId,
+-    DateTime ExpenseDate,
+-    [Range(typeof(decimal), "0.01", "79228162514264337593543950335")]
+-    decimal Amount,
+-    string Description,
+-    string? Notes,
+-    string PaymentMethod,
+-    Guid? SupplierId,
+-    Guid? CashboxId,
+-    Guid? BankId,
+-    string? ReferenceNumber,
+-    bool IsRecurring,
+-    string? RecurringFrequency,
+-    bool RequiresApproval
+-);
+-
+-public record UpdateExpenseDto(
+-    Guid ExpenseCategoryId,
+-    DateTime ExpenseDate,
+-    [Range(typeof(decimal), "0.01", "79228162514264337593543950335")]
+-    decimal Amount,
+-    string Description,
+-    string? Notes,
+-    string PaymentMethod,
+-    Guid? SupplierId,
+-    Guid? CashboxId,
+-    Guid? BankId,
+-    string? ReferenceNumber,
+-    bool IsRecurring,
+-    string? RecurringFrequency
+-);
+-
+-public record ApproveExpenseDto(
+-    Guid ExpenseId,
+-    bool Approved
+-);
+-
+-// Expense Report DTOs
+-public record ExpenseReportRequestDto(
+-    DateTime? FromDate,
+-    DateTime? ToDate,
+-    Guid? CategoryId,
+-    string? PaymentMethod,
+-    Guid? SupplierId,
+-    bool? IsApproved
+-);
+-
+-public record ExpenseReportItemDto(
+-    DateTime ExpenseDate,
+-    string CategoryName,
+-    string Description,
+-    decimal Amount,
+-    string PaymentMethod,
+-    string? SupplierName,
+-    string? ReferenceNumber,
+-    bool IsApproved
+-);
+-
+-public record ExpenseReportSummaryDto(
+-    decimal TotalExpenses,
+-    decimal ApprovedExpenses,
+-    decimal PendingExpenses,
+-    Dictionary<string, decimal> ExpensesByCategory,
+-    Dictionary<string, decimal> ExpensesByPaymentMethod
+-);
+-
+-public record ExpenseReportResponseDto(
+-    List<ExpenseReportItemDto> Items,
+-    ExpenseReportSummaryDto Summary
+-);
++using System.ComponentModel.DataAnnotations;
++
++namespace PointOfSale.API.DTOs;
++
++// Expense Category DTOs
++public record ExpenseCategoryDto(
++    Guid Id,
++    string Name,
++    string? Description,
++    bool IsActive
++);
++
++public record CreateExpenseCategoryDto(
++    string Name,
++    string? Description,
++    bool IsActive
++);
++
++public record UpdateExpenseCategoryDto(
++    string Name,
++    string? Description,
++    bool IsActive
++);
++
++// Expense DTOs
++public record ExpenseDto(
++    Guid Id,
++    Guid ExpenseCategoryId,
++    string CategoryName,
++    DateTime ExpenseDate,
++    decimal Amount,
++    string Description,
++    string? Notes,
++    string PaymentMethod,
++    Guid? SupplierId,
++    string? SupplierName,
++    Guid? CashboxId,
++    string? CashboxName,
++    Guid? BankId,
++    string? BankName,
++    string? ReceiptPath,
++    string? ReferenceNumber,
++    bool IsRecurring,
++    string? RecurringFrequency,
++    bool RequiresApproval,
++    bool IsApproved,
++    Guid? ApprovedBy,
++    DateTime? ApprovedAt
++);
++
++public record CreateExpenseDto(
++    Guid ExpenseCategoryId,
++    DateTime ExpenseDate,
++    [Range(typeof(decimal), "0.01", "79228162514264337593543950335")]
++    decimal Amount,
++    string Description,
++    string? Notes,
++    string PaymentMethod,
++    Guid? SupplierId,
++    Guid? CashboxId,
++    Guid? BankId,
++    string? ReferenceNumber,
++    bool IsRecurring,
++    string? RecurringFrequency,
++    bool RequiresApproval
++);
++
++public record UpdateExpenseDto(
++    Guid ExpenseCategoryId,
++    DateTime ExpenseDate,
++    [Range(typeof(decimal), "0.01", "79228162514264337593543950335")]
++    decimal Amount,
++    string Description,
++    string? Notes,
++    string PaymentMethod,
++    Guid? SupplierId,
++    Guid? CashboxId,
++    Guid? BankId,
++    string? ReferenceNumber,
++    bool IsRecurring,
++    string? RecurringFrequency
++);
++
++public record ApproveExpenseDto(
++    Guid ExpenseId,
++    bool Approved
++);
++
++// Expense Report DTOs
++public record ExpenseReportRequestDto(
++    DateTime? FromDate,
++    DateTime? ToDate,
++    Guid? CategoryId,
++    string? PaymentMethod,
++    Guid? SupplierId,
++    bool? IsApproved
++);
++
++public record ExpenseReportItemDto(
++    DateTime ExpenseDate,
++    string CategoryName,
++    string Description,
++    decimal Amount,
++    string PaymentMethod,
++    string? SupplierName,
++    string? ReferenceNumber,
++    bool IsApproved
++);
++
++public record ExpenseReportSummaryDto(
++    decimal TotalExpenses,
++    decimal ApprovedExpenses,
++    decimal PendingExpenses,
++    Dictionary<string, decimal> ExpensesByCategory,
++    Dictionary<string, decimal> ExpensesByPaymentMethod
++);
++
++public record ExpenseReportResponseDto(
++    List<ExpenseReportItemDto> Items,
++    ExpenseReportSummaryDto Summary
++);
+--- accepted/PointOfSale.API/Program.cs
++++ preserved-working/PointOfSale.API/Program.cs
+@@ -3849,7 +3849,6 @@
+     branch => branch.UseMiddleware<PointOfSale.API.Middleware.StorefrontJwtBlacklistMiddleware>());
+ 
+ app.UseAuthorization();
+-app.UseMiddleware<PointOfSale.API.Middleware.OwnerEmailVerificationMiddleware>();
+ app.UseMiddleware<PointOfSale.API.SuperAdmin.Infrastructure.SuperAdminPlatformAuthorityMiddleware>();
+ app.UseMiddleware<PointOfSale.API.SuperAdmin.Infrastructure.SuperAdminOperationalAuditMiddleware>();
+ app.UseWhen(
+--- accepted/PointOfSale.API/Services/Platform/RateLimitService.cs
++++ preserved-working/PointOfSale.API/Services/Platform/RateLimitService.cs
+@@ -11,7 +11,7 @@
+ /// Phase 8.3: Tenant Registration Hardening
+ /// 
+ /// Provides sliding window rate limiting based on IP + endpoint.
+-/// Admission fails closed when its authoritative limiter is unavailable.
++/// Gracefully degrades if Redis is unavailable (allows requests).
+ /// </summary>
+ public interface IRateLimitService
+ {
+@@ -58,27 +58,6 @@
+     
+     private const string KeyPrefix = "ratelimit";
+     private const string AbuseKeyPrefix = "abuse";
+-
+-    // Admission and counting are one atomic operation. Rejected attempts do not
+-    // enlarge the set, so its cardinality remains bounded by the configured limit.
+-    private const string WindowScript = """
+-        local key = KEYS[1]
+-        local now = tonumber(ARGV[1])
+-        local window = tonumber(ARGV[2])
+-        local limit = tonumber(ARGV[3])
+-        if ARGV[5] == '1' and redis.call('EXISTS', KEYS[2]) == 1 then
+-            limit = math.max(1, math.floor(limit * tonumber(ARGV[6])))
+-        end
+-        redis.call('ZREMRANGEBYSCORE', key, '-inf', now - window)
+-        local count = redis.call('ZCARD', key)
+-        if count >= limit then
+-            local oldest = redis.call('ZRANGE', key, 0, 0, 'WITHSCORES')
+-            return {0, count, limit, math.max(1, math.ceil(tonumber(oldest[2]) + window - now))}
+-        end
+-        redis.call('ZADD', key, now, ARGV[4])
+-        redis.call('PEXPIRE', key, window * 1000 + 10000)
+-        return {1, count + 1, limit, 0}
+-        """;
+     
+     public RateLimitService(
+         RedisConnectionFactory redis,
+@@ -102,48 +81,60 @@
+             return new RateLimitResult { Allowed = true, CurrentCount = 0, Limit = limit };
+         }
+         
+-        if (limit <= 0 || windowSeconds <= 0 ||
+-            !double.IsFinite(_settings.AbuseRateLimitMultiplier) ||
+-            _settings.AbuseRateLimitMultiplier <= 0 || _settings.AbuseRateLimitMultiplier > 1)
+-            return Unavailable(limit);
+-
+-        var db = _redis.GetDatabase();
+-        
+-        // Public admission must not lose its abuse boundary during an outage.
++        var db = _redis.GetDatabase();
++        
++        // Graceful degradation: if Redis unavailable, allow request
+         if (db == null)
+         {
+             _logger.LogWarning(
+-                "Rate limiting unavailable. Rejecting request. IP: {IP}, Endpoint: {Endpoint}",
++                "Rate limiting unavailable (Redis down). Allowing request. IP: {IP}, Endpoint: {Endpoint}",
+                 MaskIp(clientIp), endpoint);
+-            return Unavailable(limit);
+-        }
++            return new RateLimitResult { Allowed = true, CurrentCount = 0, Limit = limit };
++        }
++        
++        // Check for abuse throttle
++        var isAbusive = await IsInAbuseThrottleAsync(clientIp);
++        var effectiveLimit = isAbusive 
++            ? (int)(limit * _settings.AbuseRateLimitMultiplier) 
++            : limit;
+         
+         var key = GetRateLimitKey(clientIp, endpoint);
+-        // Preserve the shipped seconds-based score format across the rollout.
+         var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+-        
+-        try
+-        {
+-            var reply = (RedisResult[])(await db.ScriptEvaluateAsync(WindowScript,
+-                new RedisKey[] { key, $"{AbuseKeyPrefix}:{HashIp(clientIp)}" },
+-                new RedisValue[] { now, windowSeconds, limit, Guid.NewGuid().ToString("N"),
+-                    _settings.AbuseDetectionEnabled ? "1" : "0", _settings.AbuseRateLimitMultiplier }))!;
+-            var allowed = (int)reply[0] == 1;
+-            var currentCount = (int)reply[1];
+-            var effectiveLimit = (int)reply[2];
+-
+-            if (!allowed)
++        var windowStart = now - windowSeconds;
++        
++        try
++        {
++            // Use Redis sorted set for sliding window
++            var transaction = db.CreateTransaction();
++            
++            // Remove old entries outside the window
++            _ = transaction.SortedSetRemoveRangeByScoreAsync(key, 0, windowStart);
++            
++            // Count current entries
++            var countTask = transaction.SortedSetLengthAsync(key);
++            
++            // Add current request
++            _ = transaction.SortedSetAddAsync(key, now.ToString(), now);
++            
++            // Set expiry
++            _ = transaction.KeyExpireAsync(key, TimeSpan.FromSeconds(windowSeconds + 10));
++            
++            await transaction.ExecuteAsync();
++            
++            var currentCount = (int)await countTask;
++            
++            if (currentCount >= effectiveLimit)
+             {
+                 _logger.LogWarning(
+                     "Rate limit triggered | IP: {IP} | Endpoint: {Endpoint} | Count: {Count}/{Limit} | Abusive: {Abusive}",
+-                    MaskIp(clientIp), endpoint, currentCount, effectiveLimit, effectiveLimit < limit);
++                    MaskIp(clientIp), endpoint, currentCount, effectiveLimit, isAbusive);
+                 
+                 return new RateLimitResult
+                 {
+                     Allowed = false,
+                     CurrentCount = currentCount,
+                     Limit = effectiveLimit,
+-                    RetryAfterSeconds = (int)reply[3],
++                    RetryAfterSeconds = windowSeconds,
+                     Message = "Too many attempts. Please try again later."
+                 };
+             }
+@@ -151,27 +142,20 @@
+             return new RateLimitResult
+             {
+                 Allowed = true,
+-                CurrentCount = currentCount,
++                CurrentCount = currentCount + 1, // Include current request
+                 Limit = effectiveLimit
+             };
+         }
+         catch (Exception ex)
+         {
+             _logger.LogError(ex, 
+-                "Rate limit check failed. Rejecting request. IP: {IP}, Endpoint: {Endpoint}",
++                "Rate limit check failed. Allowing request. IP: {IP}, Endpoint: {Endpoint}",
+                 MaskIp(clientIp), endpoint);
+             
+-            return Unavailable(limit);
+-        }
+-    }
+-
+-    private static RateLimitResult Unavailable(int limit) => new()
+-    {
+-        Allowed = false,
+-        Limit = limit,
+-        RetryAfterSeconds = 60,
+-        Message = "Registration services are temporarily unavailable. Please try again later."
+-    };
++            // Graceful degradation
++            return new RateLimitResult { Allowed = true, CurrentCount = 0, Limit = limit };
++        }
++    }
+ 
+     public async Task RecordRateLimitHitAsync(string clientIp, string endpoint)
+     {
+--- accepted/PointOfSale.Web/src/components/ProtectedRoute.jsx
++++ preserved-working/PointOfSale.Web/src/components/ProtectedRoute.jsx
+@@ -1,6 +1,5 @@
+ import { Navigate, Outlet, useLocation } from 'react-router-dom'
+ import { useAuthStore } from '../store/authStore'
+-import EmailVerificationRequired from './EmailVerificationRequired'
+ 
+ /**
+  * ProtectedRoute – route guard for POS authenticated routes.
+@@ -12,7 +11,7 @@
+  * Follows the same pattern as SuperAdminProtectedRoute.
+  */
+ export default function ProtectedRoute() {
+-    const { hasHydrated, isAuthenticated, user } = useAuthStore()
++    const { hasHydrated, isAuthenticated } = useAuthStore()
+     const location = useLocation()
+ 
+     if (!hasHydrated) {
+@@ -27,9 +26,5 @@
+         return <Navigate to="/login" state={{ from: location }} replace />
+     }
+ 
+-    if (user?.role === 'Owner' && user.emailVerified !== true) {
+-        return <EmailVerificationRequired />
+-    }
+-
+     return <Outlet />
+ }
+--- accepted/PointOfSale.Web/src/marketplace/queryKeys.ts
++++ preserved-working/PointOfSale.Web/src/marketplace/queryKeys.ts
+@@ -12,9 +12,9 @@
+   myProfileStats: (scope = getMarketplaceAuthorityScope()) => [...marketplaceKeys.scope(scope), 'my-profile-stats'] as const,
+   search: (params: ServiceSearchRequest, scope = getMarketplaceAuthorityScope()) => [...marketplaceKeys.scope(scope), 'search', params] as const,
+   searchGeneration: (params: ServiceSearchRequest, scope = getMarketplaceAuthorityScope()) => {
+-    const identity: Omit<ServiceSearchRequest, 'page' | 'generationContinuation'> = { ...params };
+-    Reflect.deleteProperty(identity, 'page');
+-    Reflect.deleteProperty(identity, 'generationContinuation');
++    const identity: Partial<ServiceSearchRequest> = { ...params };
++    delete identity.page;
++    delete identity.generationContinuation;
+     return [...marketplaceKeys.scope(scope), 'search-generation', identity] as const;
+   },
+   service: (serviceId: string, scope = getMarketplaceAuthorityScope()) => [...marketplaceKeys.scope(scope), 'service', serviceId] as const,
+--- accepted/PointOfSale.Web/src/pages/Categories.jsx
++++ preserved-working/PointOfSale.Web/src/pages/Categories.jsx
+@@ -306,16 +306,15 @@
+ 
+             {canManageCatalog && showModal && (
+                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+-                    <div className="mx-4 w-full max-w-md rounded-lg bg-white shadow-xl" role="dialog" aria-modal="true" aria-labelledby="category-dialog-heading">
++                    <div className="mx-4 w-full max-w-md rounded-lg bg-white shadow-xl">
+                         <div className="p-6">
+-                            <h3 id="category-dialog-heading" className="mb-4 text-xl font-bold">
++                            <h3 className="mb-4 text-xl font-bold">
+                                 {editingCategory ? t('categories.editCategory') : t('categories.addCategory')}
+                             </h3>
+                             <form onSubmit={handleSubmit}>
+                                 <div className="mb-4">
+-                                    <label className="label" htmlFor="category-name">{t('categories.nameRequired')}</label>
++                                    <label className="label">{t('categories.nameRequired')}</label>
+                                     <input
+-                                        id="category-name"
+                                         type="text"
+                                         value={formData.name}
+                                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+@@ -324,9 +323,8 @@
+                                     />
+                                 </div>
+                                 <div className="mb-4">
+-                                    <label className="label" htmlFor="category-description">{t('categories.description')}</label>
++                                    <label className="label">{t('categories.description')}</label>
+                                     <textarea
+-                                        id="category-description"
+                                         value={formData.description}
+                                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                         className="input"
+--- accepted/PointOfSale.Web/src/pages/Register.jsx
++++ preserved-working/PointOfSale.Web/src/pages/Register.jsx
+@@ -16,35 +16,7 @@
+  * - Password (with show/hide toggle)
+  * - Store Address (subdomain with real-time availability check)
+  */
+-export default function Register() {
+-    const { t, i18n } = useTranslation()
+-    const [admission, setAdmission] = useState('loading')
+-    useEffect(() => {
+-        const controller = new AbortController()
+-        api.get('/platform/registration-policy', { signal: controller.signal })
+-            .then(response => {
+-                if (!controller.signal.aborted) setAdmission(response.data?.enabled === true ? 'open' : 'closed')
+-            })
+-            .catch(() => { if (!controller.signal.aborted) setAdmission('unavailable') })
+-        return () => controller.abort()
+-    }, [])
+-
+-    if (admission === 'open') return <MerchantRegistrationForm onAdmissionClosed={() => setAdmission('closed')} />
+-    const ar = i18n.resolvedLanguage === 'ar'
+-    return (
+-        <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-500 to-primary-700 p-4" dir={ar ? 'rtl' : 'ltr'}>
+-            <section className="w-full max-w-lg rounded-xl bg-white p-8 shadow-2xl" aria-labelledby="registration-admission-heading">
+-                <h1 id="registration-admission-heading" className="text-2xl font-bold text-gray-900">
+-                    {admission === 'loading' ? (ar ? 'جارٍ التحميل…' : 'Loading…') : (ar ? 'إنشاء المتاجر غير متاح مؤقتًا' : 'New store creation is temporarily unavailable')}
+-                </h1>
+-                <p className="mt-4 text-gray-600">{ar ? 'إذا كان لديك متجر بالفعل، يمكنك تسجيل الدخول كالمعتاد.' : 'If you already have a store, you can sign in as usual.'}</p>
+-                <Link to="/login" className="btn-primary mt-6 inline-flex">{t('tenantRegistration.signIn')}</Link>
+-            </section>
+-        </main>
+-    )
+-}
+-
+-function MerchantRegistrationForm({ onAdmissionClosed }) {
++export default function Register() {
+     const { t, i18n } = useTranslation()
+     const navigate = useNavigate()
+     const { isAuthenticated, login } = useAuthStore()
+@@ -96,8 +68,7 @@
+     const emailRef = useRef(null)
+     const passwordRef = useRef(null)
+     const subdomainRef = useRef(null)
+-    const emailCheckRequestIdRef = useRef(0)
+-    const registrationRequestIdRef = useRef(null)
++    const emailCheckRequestIdRef = useRef(0)
+     const currentEmailRef = useRef('')
+     const latestSubdomainRef = useRef(formData.subdomain)
+ 
+@@ -327,8 +298,7 @@
+     // Field handlers
+     // ==========================================================================
+ 
+-    const handleChange = (e) => {
+-        registrationRequestIdRef.current = null
++    const handleChange = (e) => {
+         const { name, value } = e.target
+         let processedValue = value
+ 
+@@ -436,8 +406,7 @@
+         setSubmitError('')
+ 
+         // Generate unique request ID for idempotency
+-        registrationRequestIdRef.current ||= `reg-${crypto.randomUUID()}`
+-        const requestId = registrationRequestIdRef.current
++        const requestId = `reg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+ 
+         try {
+             await api.post('/platform/register', {
+@@ -470,12 +439,7 @@
+                 console.error('Registration failed:', err)
+             }
+ 
+-            const errorData = err.response?.data
+-
+-            if (err.response?.status === 403 || errorData?.error === 'REGISTRATION_DISABLED') {
+-                onAdmissionClosed()
+-                return
+-            }
++            const errorData = err.response?.data
+ 
+             if (errorData?.fieldErrors) {
+                 setErrors(errorData.fieldErrors)

@@ -1,0 +1,3617 @@
+{
+  "SchemaVersion": 2,
+  "Trivy": {
+    "Version": "0.76.1"
+  },
+  "ReportID": "01a1cc94-4cb3-75f3-8854-8870e241779b",
+  "CreatedAt": "2026-11-11T23:47:13.459392168+02:00",
+  "ArtifactID": "sha256:9f428c3b305aea5ba25bffc6c2170da926db30d2eb8579447f719233cf2c58dd",
+  "ArtifactName": "shopixy/api:automatic-subdomains-5c2cc1226a8e-r3",
+  "ArtifactType": "container_image",
+  "Metadata": {
+    "Size": 736312832,
+    "OS": {
+      "Family": "alpine",
+      "Name": "3.24.4"
+    },
+    "ImageID": "sha256:860d691bb8c7a4dc463d4dfbd99dfe595e963cce3e32e6392d9e3ce8cb3dbc5a",
+    "DiffIDs": [
+      "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064",
+      "sha256:7179963c95b33f40bbfd6734896600aff2631b733f2c00a38a081591b88cdb9d",
+      "sha256:bbbd8ede3481fae877878ca2f3ecbc4dc306e1aad0c54b7e323515bbf2996d51",
+      "sha256:caa285ab046924adb26df1a69da4480ca6d2048481f4162d7c8bdf0368cd8d67",
+      "sha256:4f7116e513862a2462cfd758f4a7ad0aa89c7d72bbef3b97b87f695a66a2fae9",
+      "sha256:71415bbbb9738cb340907a7b8c34cc6f209d1dca980a57070d2cb923675b69a7",
+      "sha256:d78b117bb12a5718009129327b575d99b86d66b43f33e77d63bf8e2ceaa8721d",
+      "sha256:80021c5c607aea18fa87f03d81ede533868d0fbd20e0b152facac7b25ada2517",
+      "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed",
+      "sha256:ea474ccf2e4938d9dc1630ee9725e2eb8377156c95c0e70aec0ef6e189df99bb",
+      "sha256:eb016e316df001dfe2131738643e975279c36f6b4079333d7c755db1191ebceb",
+      "sha256:1f0eac3c37dfd33cf09fe425bb0227cccaa6c3888b18b4fc2a04bbdcb43eb831",
+      "sha256:6ae22dfbf5d1cff1a66455250bfa5d70238fd7c71aa1064c81e5f9df2b702728",
+      "sha256:df9c0b10a65973974898144de8193e6d5bbc5175c92a6780fa7951b9d92e2014",
+      "sha256:34506e8d261422e1763e98f57498655c89ff20f94047e80bf0a269dfe86291f5",
+      "sha256:b0ff2f1c36ac305c1038b9adf17916bf63675c374b99dea704943696c38032ba",
+      "sha256:c0cd76df21dc33b0ffc1814b82058531ef96c6ccbb192de4083e84f083424795",
+      "sha256:93cd5c33536ec3eeb3edab40d2c8d2e9de94960642dc6309c9847d11de970ad0",
+      "sha256:699eeb7461da5dc2e28290b9a52ce80a41299e6125c544739014601063741e71",
+      "sha256:0dc99d1494ea013fd5bc63aa7cce8a01b91b87ca34a4f444a7572698e2cf67d1",
+      "sha256:3dd68f71711c85bc2e3381d4688180b3e99840c46db12e85d6d157af622af517",
+      "sha256:965c570a66685c1a23a61da8c184d34b31dd9d129f1aed39d71a134439d3851f"
+    ],
+    "RepoTags": [
+      "shopixy/api:automatic-subdomains-5c2cc1226a8e-r3"
+    ],
+    "RepoDigests": [
+      "shopixy/api@sha256:860d691bb8c7a4dc463d4dfbd99dfe595e963cce3e32e6392d9e3ce8cb3dbc5a"
+    ],
+    "Reference": "shopixy/api:automatic-subdomains-5c2cc1226a8e-r3",
+    "ImageConfig": {
+      "architecture": "amd64",
+      "created": "2026-11-11T23:47:03.363739844+02:00",
+      "history": [
+        {
+          "created": "2026-11-05T18:00:28Z",
+          "created_by": "ADD alpine-minirootfs-3.24.4-x86_64.tar.gz / # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-05T18:00:28Z",
+          "created_by": "CMD [\"/bin/sh\"]",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-05T22:57:02Z",
+          "created_by": "ENV APP_UID=1654 ASPNETCORE_HTTP_PORTS=8080 DOTNET_RUNNING_IN_CONTAINER=true DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-05T22:57:02Z",
+          "created_by": "RUN /bin/sh -c apk add --upgrade --no-cache         ca-certificates-bundle                 libgcc         libssl3         libstdc++                 zlib # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-05T22:57:03Z",
+          "created_by": "RUN /bin/sh -c addgroup         --gid=$APP_UID         app     \u0026\u0026 adduser         --uid=$APP_UID         --ingroup=app         --disabled-password         app # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-05T22:57:12Z",
+          "created_by": "ENV DOTNET_VERSION=10.0.14",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-05T22:57:12Z",
+          "created_by": "COPY /dotnet /usr/share/dotnet # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-05T22:57:13Z",
+          "created_by": "RUN /bin/sh -c ln -s /usr/share/dotnet/dotnet /usr/bin/dotnet # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-05T22:57:24Z",
+          "created_by": "ENV ASPNET_VERSION=10.0.14",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-05T22:57:24Z",
+          "created_by": "COPY /dotnet /usr/share/dotnet # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-08T21:49:15Z",
+          "created_by": "USER 0:0",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-08T21:49:15Z",
+          "created_by": "RUN /bin/sh -c set -eu;     test \"$(apk --print-arch)\" = x86_64;     echo \"7b05bc778b8b25cd880835b40114182bd4d1581717504d0129c810c0a14291cb  /verified-packages/zlib-1.4-r0.apk\" | sha256sum -c -;     apk verify --keys-dir /etc/apk/keys /verified-packages/zlib-1.4-r0.apk;     tar -Oxzf /verified-packages/zlib-1.4-r0.apk .PKGINFO \u003e /tmp/zlib-metadata;     grep -qx 'pkgname = zlib' /tmp/zlib-metadata;     grep -qx 'pkgver = 1.4-r0' /tmp/zlib-metadata;     grep -qx 'arch = x86_64' /tmp/zlib-metadata;     apk add --no-cache icu-libs=78.1-r0 icu-data-full=78.1-r0 tzdata=2026f-r0 ca-certificates=20261020-r0;     apk info -v | sort \u003e /tmp/packages-before;     apk add --no-network --no-cache /verified-packages/zlib-1.4-r0.apk;     apk info -v | sort \u003e /tmp/packages-after;     grep -vx 'zlib-1.3.2-r1' /tmp/packages-before \u003e /tmp/packages-before-other;     grep -vx 'zlib-1.4-r0' /tmp/packages-after \u003e /tmp/packages-after-other;     cmp /tmp/packages-before-other /tmp/packages-after-other;     grep -qx 'zlib-1.4-r0' /tmp/packages-after;     echo VERIFIED_ZLIB_ONLY_PACKAGE_CHANGE; cat /tmp/packages-before /tmp/packages-after;     rm -f /tmp/zlib-metadata /tmp/packages-before /tmp/packages-after /tmp/packages-before-other /tmp/packages-after-other /sbin/apk # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-08T21:49:15Z",
+          "created_by": "LABEL org.opencontainers.image.title=Shopixy api org.opencontainers.image.revision=sha256:5832d4444498a85a0f35442bcfa50aa134d9b579385bfae4cb3e0fa3a20c73bd org.opencontainers.image.source=APP.7R.3 successor r2; API-only private-internal candidate",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-08T21:49:15Z",
+          "created_by": "USER 0:0",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-08T21:49:15Z",
+          "created_by": "WORKDIR /app",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-08T21:49:15Z",
+          "created_by": "ENV ASPNETCORE_ENVIRONMENT=Production DOTNET_ENVIRONMENT=Production ASPNETCORE_HTTP_PORTS=8080 DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false HOME=/home/app XDG_DATA_HOME=/home/app/.local/share",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-08T21:52:46Z",
+          "created_by": "COPY --chown=0:0 --chmod=0555 /out/ /app/ # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-08T21:52:46Z",
+          "created_by": "COPY --chown=0:0 --chmod=0555 /healthprobe-out/ /opt/shopixy-healthprobe/ # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-08T21:52:46Z",
+          "created_by": "COPY --chown=1654:1654 --chmod=0700 /runtime-data/keys/ /var/lib/shopixy/dpkeys/ # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-08T21:52:46Z",
+          "created_by": "COPY --chown=1654:1654 --chmod=0750 /runtime-data/images/ /app/wwwroot/uploads/images/ # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-08T21:52:46Z",
+          "created_by": "ENV DataProtection__KeysPath=/var/lib/shopixy/dpkeys",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-08T21:52:46Z",
+          "created_by": "USER 1654:1654",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-08T21:52:46Z",
+          "created_by": "EXPOSE [8080/tcp]",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-08T21:52:46Z",
+          "created_by": "HEALTHCHECK {Test:[CMD dotnet /opt/shopixy-healthprobe/HealthProbe.dll] Interval:30s Timeout:3s StartPeriod:30s StartInterval:0s Retries:3}",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-08T21:52:46Z",
+          "created_by": "ENTRYPOINT [\"dotnet\" \"PointOfSale.API.dll\"]",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-09T19:52:09Z",
+          "created_by": "USER 0:0",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-09T19:52:09Z",
+          "created_by": "RUN /bin/sh -c rm -f /app/AWSSDK.Core.dll /app/AWSSDK.S3.dll /app/Dapper.dll /app/DnsClient.dll /app/Hangfire.AspNetCore.dll /app/Hangfire.Core.dll /app/Hangfire.NetCore.dll /app/Hangfire.PostgreSql.dll /app/MassTransit.Abstractions.dll /app/MassTransit.EntityFrameworkCoreIntegration.dll /app/MassTransit.RabbitMqTransport.dll /app/MassTransit.dll /app/MessagePack.Annotations.dll /app/MessagePack.dll /app/Microsoft.AspNetCore.Authentication.JwtBearer.dll /app/Microsoft.AspNetCore.OpenApi.dll /app/Microsoft.AspNetCore.SignalR.StackExchangeRedis.dll /app/Microsoft.Bcl.Cryptography.dll /app/Microsoft.EntityFrameworkCore.Abstractions.dll /app/Microsoft.EntityFrameworkCore.Relational.dll /app/Microsoft.EntityFrameworkCore.dll /app/Microsoft.Extensions.Caching.StackExchangeRedis.dll /app/Microsoft.Extensions.Http.Polly.dll /app/Microsoft.IdentityModel.Abstractions.dll /app/Microsoft.IdentityModel.JsonWebTokens.dll /app/Microsoft.IdentityModel.Logging.dll /app/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll /app/Microsoft.IdentityModel.Protocols.dll /app/Microsoft.IdentityModel.Tokens.dll /app/Microsoft.NET.StringTools.dll /app/Microsoft.OpenApi.dll /app/MongoDB.Bson.dll /app/MongoDB.Driver.dll /app/Newtonsoft.Json.dll /app/Npgsql.EntityFrameworkCore.PostgreSQL.dll /app/Npgsql.dll /app/OpenSearch.Client.dll /app/OpenSearch.Net.dll /app/OpenTelemetry.Api.ProviderBuilderExtensions.dll /app/OpenTelemetry.Api.dll /app/OpenTelemetry.Exporter.OpenTelemetryProtocol.dll /app/OpenTelemetry.Exporter.Prometheus.AspNetCore.dll /app/OpenTelemetry.Extensions.Hosting.dll /app/OpenTelemetry.Instrumentation.AspNetCore.dll /app/OpenTelemetry.dll /app/PhoneNumbers.dll /app/Pipelines.Sockets.Unofficial.dll /app/PointOfSale.API.deps.json /app/PointOfSale.API.dll /app/PointOfSale.API.runtimeconfig.json /app/PointOfSale.API.staticwebassets.endpoints.json /app/PointOfSale.Core.dll /app/PointOfSale.Infrastructure.dll /app/Polly.Extensions.Http.dll /app/Polly.dll /app/RabbitMQ.Client.dll /app/SharpCompress.dll /app/Snappier.dll /app/StackExchange.Redis.dll /app/Stripe.net.dll /app/Swashbuckle.AspNetCore.Swagger.dll /app/Swashbuckle.AspNetCore.SwaggerGen.dll /app/Swashbuckle.AspNetCore.SwaggerUI.dll /app/System.Configuration.ConfigurationManager.dll /app/System.IdentityModel.Tokens.Jwt.dll /app/System.Security.Cryptography.ProtectedData.dll /app/ZstdSharp.dll /app/ca/Hangfire.Core.resources.dll /app/de/Hangfire.Core.resources.dll /app/es/Hangfire.Core.resources.dll /app/fa/Hangfire.Core.resources.dll /app/fr/Hangfire.Core.resources.dll /app/nb/Hangfire.Core.resources.dll /app/nl/Hangfire.Core.resources.dll /app/pt-BR/Hangfire.Core.resources.dll /app/pt-PT/Hangfire.Core.resources.dll /app/pt/Hangfire.Core.resources.dll /app/sv/Hangfire.Core.resources.dll /app/tr-TR/Hangfire.Core.resources.dll /app/zh-TW/Hangfire.Core.resources.dll /app/zh/Hangfire.Core.resources.dll # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-09T19:52:09Z",
+          "created_by": "LABEL org.opencontainers.image.revision=sha256:7c7d0f216342577ea499ad1b2fa884100d6ef9ed28fdc09130476867af829402 org.opencontainers.image.source=APP.8.2 final-v3 certified publish; operating acceptance pending",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-09T19:52:09Z",
+          "created_by": "COPY --chown=0:0 --chmod=0555 release/ /app/ # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-09T19:52:09Z",
+          "created_by": "USER 1654:1654",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-10T12:49:15Z",
+          "created_by": "USER 0:0",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-10T12:49:15Z",
+          "created_by": "RUN /bin/sh -c rm -f /app/AWSSDK.Core.dll /app/AWSSDK.S3.dll /app/Dapper.dll /app/DnsClient.dll /app/Hangfire.AspNetCore.dll /app/Hangfire.Core.dll /app/Hangfire.NetCore.dll /app/Hangfire.PostgreSql.dll /app/MassTransit.Abstractions.dll /app/MassTransit.EntityFrameworkCoreIntegration.dll /app/MassTransit.RabbitMqTransport.dll /app/MassTransit.dll /app/MessagePack.Annotations.dll /app/MessagePack.dll /app/Microsoft.AspNetCore.Authentication.JwtBearer.dll /app/Microsoft.AspNetCore.OpenApi.dll /app/Microsoft.AspNetCore.SignalR.StackExchangeRedis.dll /app/Microsoft.Bcl.Cryptography.dll /app/Microsoft.EntityFrameworkCore.Abstractions.dll /app/Microsoft.EntityFrameworkCore.Relational.dll /app/Microsoft.EntityFrameworkCore.dll /app/Microsoft.Extensions.Caching.StackExchangeRedis.dll /app/Microsoft.Extensions.Http.Polly.dll /app/Microsoft.IdentityModel.Abstractions.dll /app/Microsoft.IdentityModel.JsonWebTokens.dll /app/Microsoft.IdentityModel.Logging.dll /app/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll /app/Microsoft.IdentityModel.Protocols.dll /app/Microsoft.IdentityModel.Tokens.dll /app/Microsoft.NET.StringTools.dll /app/Microsoft.OpenApi.dll /app/MongoDB.Bson.dll /app/MongoDB.Driver.dll /app/Newtonsoft.Json.dll /app/Npgsql.EntityFrameworkCore.PostgreSQL.dll /app/Npgsql.dll /app/OpenSearch.Client.dll /app/OpenSearch.Net.dll /app/OpenTelemetry.Api.ProviderBuilderExtensions.dll /app/OpenTelemetry.Api.dll /app/OpenTelemetry.Exporter.OpenTelemetryProtocol.dll /app/OpenTelemetry.Exporter.Prometheus.AspNetCore.dll /app/OpenTelemetry.Extensions.Hosting.dll /app/OpenTelemetry.Instrumentation.AspNetCore.dll /app/OpenTelemetry.dll /app/PhoneNumbers.dll /app/Pipelines.Sockets.Unofficial.dll /app/PointOfSale.API.deps.json /app/PointOfSale.API.dll /app/PointOfSale.API.runtimeconfig.json /app/PointOfSale.API.staticwebassets.endpoints.json /app/PointOfSale.Core.dll /app/PointOfSale.Infrastructure.dll /app/Polly.Extensions.Http.dll /app/Polly.dll /app/RabbitMQ.Client.dll /app/SharpCompress.dll /app/Snappier.dll /app/StackExchange.Redis.dll /app/Stripe.net.dll /app/Swashbuckle.AspNetCore.Swagger.dll /app/Swashbuckle.AspNetCore.SwaggerGen.dll /app/Swashbuckle.AspNetCore.SwaggerUI.dll /app/System.Configuration.ConfigurationManager.dll /app/System.IdentityModel.Tokens.Jwt.dll /app/System.Security.Cryptography.ProtectedData.dll /app/ZstdSharp.dll /app/ca/Hangfire.Core.resources.dll /app/de/Hangfire.Core.resources.dll /app/es/Hangfire.Core.resources.dll /app/fa/Hangfire.Core.resources.dll /app/fr/Hangfire.Core.resources.dll /app/nb/Hangfire.Core.resources.dll /app/nl/Hangfire.Core.resources.dll /app/pt-BR/Hangfire.Core.resources.dll /app/pt-PT/Hangfire.Core.resources.dll /app/pt/Hangfire.Core.resources.dll /app/sv/Hangfire.Core.resources.dll /app/tr-TR/Hangfire.Core.resources.dll /app/zh-TW/Hangfire.Core.resources.dll /app/zh/Hangfire.Core.resources.dll # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-10T12:49:15Z",
+          "created_by": "LABEL org.opencontainers.image.revision=sha256:026365d490cfd87d247895999f1de81b05ea32108226ba6641ee39e826a6f61d org.opencontainers.image.source=Shopixy APP82 scoped alias discovery r9b; operating acceptance pending",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-10T17:41:21Z",
+          "created_by": "COPY --chown=0:0 --chmod=0555 release/ /app/ # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-10T17:41:21Z",
+          "created_by": "USER 1654:1654",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-10T21:12:56Z",
+          "created_by": "USER 0:0",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-10T21:12:56Z",
+          "created_by": "RUN /bin/sh -c rm -f /app/AWSSDK.Core.dll /app/AWSSDK.S3.dll /app/Dapper.dll /app/DnsClient.dll /app/Hangfire.AspNetCore.dll /app/Hangfire.Core.dll /app/Hangfire.NetCore.dll /app/Hangfire.PostgreSql.dll /app/MassTransit.Abstractions.dll /app/MassTransit.EntityFrameworkCoreIntegration.dll /app/MassTransit.RabbitMqTransport.dll /app/MassTransit.dll /app/MessagePack.Annotations.dll /app/MessagePack.dll /app/Microsoft.AspNetCore.Authentication.JwtBearer.dll /app/Microsoft.AspNetCore.OpenApi.dll /app/Microsoft.AspNetCore.SignalR.StackExchangeRedis.dll /app/Microsoft.Bcl.Cryptography.dll /app/Microsoft.EntityFrameworkCore.Abstractions.dll /app/Microsoft.EntityFrameworkCore.Relational.dll /app/Microsoft.EntityFrameworkCore.dll /app/Microsoft.Extensions.Caching.StackExchangeRedis.dll /app/Microsoft.Extensions.Http.Polly.dll /app/Microsoft.IdentityModel.Abstractions.dll /app/Microsoft.IdentityModel.JsonWebTokens.dll /app/Microsoft.IdentityModel.Logging.dll /app/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll /app/Microsoft.IdentityModel.Protocols.dll /app/Microsoft.IdentityModel.Tokens.dll /app/Microsoft.NET.StringTools.dll /app/Microsoft.OpenApi.dll /app/MongoDB.Bson.dll /app/MongoDB.Driver.dll /app/Newtonsoft.Json.dll /app/Npgsql.EntityFrameworkCore.PostgreSQL.dll /app/Npgsql.dll /app/OpenSearch.Client.dll /app/OpenSearch.Net.dll /app/OpenTelemetry.Api.ProviderBuilderExtensions.dll /app/OpenTelemetry.Api.dll /app/OpenTelemetry.Exporter.OpenTelemetryProtocol.dll /app/OpenTelemetry.Exporter.Prometheus.AspNetCore.dll /app/OpenTelemetry.Extensions.Hosting.dll /app/OpenTelemetry.Instrumentation.AspNetCore.dll /app/OpenTelemetry.dll /app/PhoneNumbers.dll /app/Pipelines.Sockets.Unofficial.dll /app/PointOfSale.API.deps.json /app/PointOfSale.API.dll /app/PointOfSale.API.runtimeconfig.json /app/PointOfSale.API.staticwebassets.endpoints.json /app/PointOfSale.Core.dll /app/PointOfSale.Infrastructure.dll /app/Polly.Extensions.Http.dll /app/Polly.dll /app/RabbitMQ.Client.dll /app/SharpCompress.dll /app/Snappier.dll /app/StackExchange.Redis.dll /app/Stripe.net.dll /app/Swashbuckle.AspNetCore.Swagger.dll /app/Swashbuckle.AspNetCore.SwaggerGen.dll /app/Swashbuckle.AspNetCore.SwaggerUI.dll /app/System.Configuration.ConfigurationManager.dll /app/System.IdentityModel.Tokens.Jwt.dll /app/System.Security.Cryptography.ProtectedData.dll /app/ZstdSharp.dll /app/ca/Hangfire.Core.resources.dll /app/de/Hangfire.Core.resources.dll /app/es/Hangfire.Core.resources.dll /app/fa/Hangfire.Core.resources.dll /app/fr/Hangfire.Core.resources.dll /app/nb/Hangfire.Core.resources.dll /app/nl/Hangfire.Core.resources.dll /app/pt-BR/Hangfire.Core.resources.dll /app/pt-PT/Hangfire.Core.resources.dll /app/pt/Hangfire.Core.resources.dll /app/sv/Hangfire.Core.resources.dll /app/tr-TR/Hangfire.Core.resources.dll /app/zh-TW/Hangfire.Core.resources.dll /app/zh/Hangfire.Core.resources.dll # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-10T21:12:56Z",
+          "created_by": "LABEL org.opencontainers.image.revision=sha256:393cb0cbd46ab70673ed1f40c8b3e620fa607803013440cb8efb811e2dec28da org.opencontainers.image.source=Shopixy APP82 Cart concurrency r11; operating acceptance pending",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-10T22:13:49Z",
+          "created_by": "COPY --chown=0:0 --chmod=0555 release/ /app/ # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-10T22:13:49Z",
+          "created_by": "USER 1654:1654",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-11T17:38:52Z",
+          "created_by": "/bin/sh -c #(nop)  ARG API_ASSEMBLY_SHA256",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-11T19:36:33Z",
+          "created_by": "/bin/sh -c #(nop)  ARG SOURCE_INPUT_SHA256",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-11T19:36:34Z",
+          "created_by": "/bin/sh -c #(nop)  USER 0:0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-11T21:46:54Z",
+          "created_by": "|2 API_ASSEMBLY_SHA256=5c2cc1226a8e51d68e195062a17aae47b896b015fe40474fce8c7bacd2d8feba SOURCE_INPUT_SHA256=a4e14f1a60f331cf3d0ab9e67039c49acf2425f3072a281b37de5f20db7cfa90 /bin/sh -c rm -rf /usr/share/dotnet/* /app/*"
+        },
+        {
+          "created": "2026-11-11T21:46:56Z",
+          "created_by": "/bin/sh -c #(nop) COPY dir:ccabb0cd653b587bed292ee57a49c93cb5052ca6421d8bcef49e174367847141 in /usr/share/dotnet/ "
+        },
+        {
+          "created": "2026-11-11T21:46:57Z",
+          "created_by": "|2 API_ASSEMBLY_SHA256=5c2cc1226a8e51d68e195062a17aae47b896b015fe40474fce8c7bacd2d8feba SOURCE_INPUT_SHA256=a4e14f1a60f331cf3d0ab9e67039c49acf2425f3072a281b37de5f20db7cfa90 /bin/sh -c ln -sf /usr/share/dotnet/dotnet /usr/bin/dotnet     \u0026\u0026 test \"$(dotnet --list-runtimes | grep -c 'Microsoft.AspNetCore.App 10.0.15')\" = \"1\"     \u0026\u0026 test \"$(dotnet --list-runtimes | grep -c 'Microsoft.NETCore.App 10.0.15')\" = \"1\""
+        },
+        {
+          "created": "2026-11-11T21:47:01Z",
+          "created_by": "/bin/sh -c #(nop) COPY --chown=1654:1654 dir:1f42e7e29b4f068224280304f6ec8b4633189e300fc66253b8e415ee8dc48fc9 in /app/ "
+        },
+        {
+          "created": "2026-11-11T21:47:02Z",
+          "created_by": "/bin/sh -c #(nop)  ENV DOTNET_VERSION=10.0.15 ASPNET_VERSION=10.0.15",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-11T21:47:02Z",
+          "created_by": "/bin/sh -c #(nop)  LABEL org.opencontainers.image.title=Shopixy API automatic subdomains org.opencontainers.image.source=Shopixy APP82 r11 automatic subdomains independent-audit r3 org.opencontainers.image.revision=5c2cc1226a8e51d68e195062a17aae47b896b015fe40474fce8c7bacd2d8feba shopixy.io/source-input-sha256=a4e14f1a60f331cf3d0ab9e67039c49acf2425f3072a281b37de5f20db7cfa90 shopixy.io/base-image=docker.io/shopixy/api@sha256:5efeb7042bcaf6ea223f3df06c7983862e073787e78634fb996ffbf9c4cf266e shopixy.io/dotnet-runtime=10.0.15",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-11T21:47:02Z",
+          "created_by": "/bin/sh -c #(nop) WORKDIR /app",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-11T21:47:03Z",
+          "created_by": "/bin/sh -c #(nop)  USER 1654:1654",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-11T21:47:03Z",
+          "created_by": "/bin/sh -c #(nop)  ENTRYPOINT [\"dotnet\" \"PointOfSale.API.dll\"]",
+          "empty_layer": true
+        }
+      ],
+      "os": "linux",
+      "rootfs": {
+        "type": "layers",
+        "diff_ids": [
+          "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064",
+          "sha256:7179963c95b33f40bbfd6734896600aff2631b733f2c00a38a081591b88cdb9d",
+          "sha256:bbbd8ede3481fae877878ca2f3ecbc4dc306e1aad0c54b7e323515bbf2996d51",
+          "sha256:caa285ab046924adb26df1a69da4480ca6d2048481f4162d7c8bdf0368cd8d67",
+          "sha256:4f7116e513862a2462cfd758f4a7ad0aa89c7d72bbef3b97b87f695a66a2fae9",
+          "sha256:71415bbbb9738cb340907a7b8c34cc6f209d1dca980a57070d2cb923675b69a7",
+          "sha256:d78b117bb12a5718009129327b575d99b86d66b43f33e77d63bf8e2ceaa8721d",
+          "sha256:80021c5c607aea18fa87f03d81ede533868d0fbd20e0b152facac7b25ada2517",
+          "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed",
+          "sha256:ea474ccf2e4938d9dc1630ee9725e2eb8377156c95c0e70aec0ef6e189df99bb",
+          "sha256:eb016e316df001dfe2131738643e975279c36f6b4079333d7c755db1191ebceb",
+          "sha256:1f0eac3c37dfd33cf09fe425bb0227cccaa6c3888b18b4fc2a04bbdcb43eb831",
+          "sha256:6ae22dfbf5d1cff1a66455250bfa5d70238fd7c71aa1064c81e5f9df2b702728",
+          "sha256:df9c0b10a65973974898144de8193e6d5bbc5175c92a6780fa7951b9d92e2014",
+          "sha256:34506e8d261422e1763e98f57498655c89ff20f94047e80bf0a269dfe86291f5",
+          "sha256:b0ff2f1c36ac305c1038b9adf17916bf63675c374b99dea704943696c38032ba",
+          "sha256:c0cd76df21dc33b0ffc1814b82058531ef96c6ccbb192de4083e84f083424795",
+          "sha256:93cd5c33536ec3eeb3edab40d2c8d2e9de94960642dc6309c9847d11de970ad0",
+          "sha256:699eeb7461da5dc2e28290b9a52ce80a41299e6125c544739014601063741e71",
+          "sha256:0dc99d1494ea013fd5bc63aa7cce8a01b91b87ca34a4f444a7572698e2cf67d1",
+          "sha256:3dd68f71711c85bc2e3381d4688180b3e99840c46db12e85d6d157af622af517",
+          "sha256:965c570a66685c1a23a61da8c184d34b31dd9d129f1aed39d71a134439d3851f"
+        ]
+      },
+      "config": {
+        "Healthcheck": {
+          "Test": [
+            "CMD",
+            "dotnet",
+            "/opt/shopixy-healthprobe/HealthProbe.dll"
+          ],
+          "Interval": 30000000000,
+          "Timeout": 3000000000,
+          "StartPeriod": 30000000000,
+          "Retries": 3
+        },
+        "Entrypoint": [
+          "dotnet",
+          "PointOfSale.API.dll"
+        ],
+        "Env": [
+          "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+          "APP_UID=1654",
+          "ASPNETCORE_HTTP_PORTS=8080",
+          "DOTNET_RUNNING_IN_CONTAINER=true",
+          "DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false",
+          "DOTNET_VERSION=10.0.15",
+          "ASPNET_VERSION=10.0.15",
+          "ASPNETCORE_ENVIRONMENT=Production",
+          "DOTNET_ENVIRONMENT=Production",
+          "HOME=/home/app",
+          "XDG_DATA_HOME=/home/app/.local/share",
+          "DataProtection__KeysPath=/var/lib/shopixy/dpkeys"
+        ],
+        "Labels": {
+          "org.opencontainers.image.revision": "5c2cc1226a8e51d68e195062a17aae47b896b015fe40474fce8c7bacd2d8feba",
+          "org.opencontainers.image.source": "Shopixy APP82 r11 automatic subdomains independent-audit r3",
+          "org.opencontainers.image.title": "Shopixy API automatic subdomains",
+          "shopixy.io/base-image": "docker.io/shopixy/api@sha256:5efeb7042bcaf6ea223f3df06c7983862e073787e78634fb996ffbf9c4cf266e",
+          "shopixy.io/dotnet-runtime": "10.0.15",
+          "shopixy.io/source-input-sha256": "a4e14f1a60f331cf3d0ab9e67039c49acf2425f3072a281b37de5f20db7cfa90"
+        },
+        "User": "1654:1654",
+        "WorkingDir": "/app",
+        "ExposedPorts": {
+          "8080/tcp": {}
+        }
+      }
+    },
+    "Layers": [
+      {
+        "Size": 8713728,
+        "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+        "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+      },
+      {
+        "Size": 3008512,
+        "Digest": "sha256:a40f1d3a6b081c9603427e9146eb6f7507667705c44fb9c93be0e2fbca75cc18",
+        "DiffID": "sha256:7179963c95b33f40bbfd6734896600aff2631b733f2c00a38a081591b88cdb9d"
+      },
+      {
+        "Size": 10752,
+        "Digest": "sha256:8cfac5602c059b84aae3fef1fa3a207f8f88efd132ae72154cd071fea5f0e882",
+        "DiffID": "sha256:bbbd8ede3481fae877878ca2f3ecbc4dc306e1aad0c54b7e323515bbf2996d51"
+      },
+      {
+        "Size": 82633216,
+        "Digest": "sha256:a78c4f3fa4e0227b54eb49089a36d189dfae75e9329d3267e4eb282493fb4f41",
+        "DiffID": "sha256:caa285ab046924adb26df1a69da4480ca6d2048481f4162d7c8bdf0368cd8d67"
+      },
+      {
+        "Size": 3072,
+        "Digest": "sha256:8a1d03f06376c08f3ab8decebbeb8872400c6bc48cb3c7a7876117613228c2ce",
+        "DiffID": "sha256:4f7116e513862a2462cfd758f4a7ad0aa89c7d72bbef3b97b87f695a66a2fae9"
+      },
+      {
+        "Size": 27179520,
+        "Digest": "sha256:35c33aa48398bd37aedc08bac6fb380c6b4ee449118e0523e9105ece3f326f25",
+        "DiffID": "sha256:71415bbbb9738cb340907a7b8c34cc6f209d1dca980a57070d2cb923675b69a7"
+      },
+      {
+        "Size": 42676224,
+        "Digest": "sha256:a362c81e76605c298c425e841e53e0ac8e78fcd72971bd0625bde15688c65f5f",
+        "DiffID": "sha256:d78b117bb12a5718009129327b575d99b86d66b43f33e77d63bf8e2ceaa8721d"
+      },
+      {
+        "Size": 1536,
+        "Digest": "sha256:5e3e5e37a078a420cfee8f586a87b2f17fa761a7c5120744b47b6c00844db003",
+        "DiffID": "sha256:80021c5c607aea18fa87f03d81ede533868d0fbd20e0b152facac7b25ada2517"
+      },
+      {
+        "Size": 90990592,
+        "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+        "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+      },
+      {
+        "Size": 10752,
+        "Digest": "sha256:008e559d15837b6269251ea0dc93e2686e92e3208db3a7f0ba0c796d29ad2211",
+        "DiffID": "sha256:ea474ccf2e4938d9dc1630ee9725e2eb8377156c95c0e70aec0ef6e189df99bb"
+      },
+      {
+        "Size": 3072,
+        "Digest": "sha256:197e77e479f785369f30d8ea620e2269482ed84df07cf975a888a7842c1116d6",
+        "DiffID": "sha256:eb016e316df001dfe2131738643e975279c36f6b4079333d7c755db1191ebceb"
+      },
+      {
+        "Size": 3072,
+        "Digest": "sha256:b0de51b23161ee562f4a8dd33715ba9d55e8005e769b13791ce745d31ea22b6e",
+        "DiffID": "sha256:1f0eac3c37dfd33cf09fe425bb0227cccaa6c3888b18b4fc2a04bbdcb43eb831"
+      },
+      {
+        "Size": 50176,
+        "Digest": "sha256:210541caf410fb26476d70503764a1ace481738a9db11087ac344c0124ddada7",
+        "DiffID": "sha256:6ae22dfbf5d1cff1a66455250bfa5d70238fd7c71aa1064c81e5f9df2b702728"
+      },
+      {
+        "Size": 91009536,
+        "Digest": "sha256:ff7e1ab29db06b6f9836ec53b21c1b5b44239dc443c4fab3f66b8e5d31bfdba3",
+        "DiffID": "sha256:df9c0b10a65973974898144de8193e6d5bbc5175c92a6780fa7951b9d92e2014"
+      },
+      {
+        "Size": 50176,
+        "Digest": "sha256:6d89ddd2eaa2f7aa585fcd5ed59fa83f1d664674726ee6d74422ba7f00278f91",
+        "DiffID": "sha256:34506e8d261422e1763e98f57498655c89ff20f94047e80bf0a269dfe86291f5"
+      },
+      {
+        "Size": 91009536,
+        "Digest": "sha256:2cb4fc21c10ebb95c84aae69cbb9a9abb3c4a214794b2e8a083b4bacdd6f0425",
+        "DiffID": "sha256:b0ff2f1c36ac305c1038b9adf17916bf63675c374b99dea704943696c38032ba"
+      },
+      {
+        "Size": 50176,
+        "Digest": "sha256:b7af159979f1616fc9ed7bb85e0f5f2b5a04f56d686b7359f638dd868bde84cb",
+        "DiffID": "sha256:c0cd76df21dc33b0ffc1814b82058531ef96c6ccbb192de4083e84f083424795"
+      },
+      {
+        "Size": 91014656,
+        "Digest": "sha256:ce397b37117f19279c2ccf827c9060f6af08be7c25a7575e4c2e94524c100459",
+        "DiffID": "sha256:93cd5c33536ec3eeb3edab40d2c8d2e9de94960642dc6309c9847d11de970ad0"
+      },
+      {
+        "Size": 47616,
+        "Digest": "sha256:5125a80474fd0f135c95c91306a778e3aeb2fc429ca37e0fefa2a1589a709c05",
+        "DiffID": "sha256:699eeb7461da5dc2e28290b9a52ce80a41299e6125c544739014601063741e71"
+      },
+      {
+        "Size": 109838848,
+        "Digest": "sha256:e51fb473274ddac49cabc0c880f310e7081abc3673b0e7757f2ed583ff582bb7",
+        "DiffID": "sha256:0dc99d1494ea013fd5bc63aa7cce8a01b91b87ca34a4f444a7572698e2cf67d1"
+      },
+      {
+        "Size": 2560,
+        "Digest": "sha256:3c89b27d240c52cf4dd8d50eed1882afaab5ef557038f43cff29739c1950a7b8",
+        "DiffID": "sha256:3dd68f71711c85bc2e3381d4688180b3e99840c46db12e85d6d157af622af517"
+      },
+      {
+        "Size": 98005504,
+        "Digest": "sha256:aae3e40b7deba28390a09966b575f24d7b4f5810ef85a296ff0e0be373edff55",
+        "DiffID": "sha256:965c570a66685c1a23a61da8c184d34b31dd9d129f1aed39d71a134439d3851f"
+      }
+    ]
+  },
+  "Results": [
+    {
+      "Target": "shopixy/api:automatic-subdomains-5c2cc1226a8e-r3 (alpine 3.24.4)",
+      "Class": "os-pkgs",
+      "Type": "alpine",
+      "Packages": [
+        {
+          "ID": "alpine-baselayout@3.7.2-r1",
+          "Name": "alpine-baselayout",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/alpine-baselayout@3.7.2-r1?arch=x86_64\u0026distro=3.24.4",
+            "UID": "1b9c543300f8073e"
+          },
+          "Version": "3.7.2-r1",
+          "Arch": "x86_64",
+          "SrcName": "alpine-baselayout",
+          "SrcVersion": "3.7.2-r1",
+          "Licenses": [
+            "GPL-2.0-only"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "DependsOn": [
+            "alpine-baselayout-data@3.7.2-r1",
+            "busybox-binsh@1.37.0-r31"
+          ],
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:f0fcfdc2f4da058af6473bc45c4eab62916225b2",
+          "InstalledFiles": [
+            "etc/motd",
+            "etc/crontabs/root",
+            "etc/modprobe.d/aliases.conf",
+            "etc/modprobe.d/blacklist.conf",
+            "etc/modprobe.d/i386.conf",
+            "etc/profile.d/20locale.sh",
+            "etc/profile.d/README",
+            "etc/profile.d/color_prompt.sh.disabled",
+            "usr/lib/sysctl.d/00-alpine.conf",
+            "var/lock",
+            "var/run",
+            "var/spool/mail",
+            "var/spool/cron/crontabs"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "alpine-baselayout-data@3.7.2-r1",
+          "Name": "alpine-baselayout-data",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/alpine-baselayout-data@3.7.2-r1?arch=x86_64\u0026distro=3.24.4",
+            "UID": "fcc3cd90122d8aa7"
+          },
+          "Version": "3.7.2-r1",
+          "Arch": "x86_64",
+          "SrcName": "alpine-baselayout",
+          "SrcVersion": "3.7.2-r1",
+          "Licenses": [
+            "GPL-2.0-only"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:c6f9bded17d844b6f1b0bb5766d2c35c0d5c8508",
+          "InstalledFiles": [
+            "etc/fstab",
+            "etc/group",
+            "etc/hostname",
+            "etc/hosts",
+            "etc/inittab",
+            "etc/modules",
+            "etc/mtab",
+            "etc/nsswitch.conf",
+            "etc/passwd",
+            "etc/profile",
+            "etc/protocols",
+            "etc/services",
+            "etc/shadow",
+            "etc/shells",
+            "etc/sysctl.conf"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "alpine-keys@2.6-r0",
+          "Name": "alpine-keys",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/alpine-keys@2.6-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "cb1f6c8fa74713e0"
+          },
+          "Version": "2.6-r0",
+          "Arch": "x86_64",
+          "SrcName": "alpine-keys",
+          "SrcVersion": "2.6-r0",
+          "Licenses": [
+            "MIT"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:d8d6b80e53c059a77e4915da78ba964f3ffea240",
+          "InstalledFiles": [
+            "etc/apk/keys/alpine-devel@lists.alpinelinux.org-4a6a0840.rsa.pub",
+            "etc/apk/keys/alpine-devel@lists.alpinelinux.org-5261cecb.rsa.pub",
+            "etc/apk/keys/alpine-devel@lists.alpinelinux.org-6165ee59.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-4a6a0840.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-5243ef4b.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-524d27bb.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-5261cecb.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-58199dcc.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-58cbb476.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-58e4f17d.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-5e69ca50.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-60ac2099.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-6165ee59.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-61666e3f.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-616a9724.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-616abc23.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-616ac3bc.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-616adfeb.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-616ae350.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-616db30d.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-66ba20fe.rsa.pub",
+            "usr/share/apk/keys/aarch64/alpine-devel@lists.alpinelinux.org-58199dcc.rsa.pub",
+            "usr/share/apk/keys/aarch64/alpine-devel@lists.alpinelinux.org-616ae350.rsa.pub",
+            "usr/share/apk/keys/armhf/alpine-devel@lists.alpinelinux.org-524d27bb.rsa.pub",
+            "usr/share/apk/keys/armhf/alpine-devel@lists.alpinelinux.org-616a9724.rsa.pub",
+            "usr/share/apk/keys/armv7/alpine-devel@lists.alpinelinux.org-524d27bb.rsa.pub",
+            "usr/share/apk/keys/armv7/alpine-devel@lists.alpinelinux.org-616adfeb.rsa.pub",
+            "usr/share/apk/keys/loongarch64/alpine-devel@lists.alpinelinux.org-66ba20fe.rsa.pub",
+            "usr/share/apk/keys/mips64/alpine-devel@lists.alpinelinux.org-5e69ca50.rsa.pub",
+            "usr/share/apk/keys/ppc64le/alpine-devel@lists.alpinelinux.org-58cbb476.rsa.pub",
+            "usr/share/apk/keys/ppc64le/alpine-devel@lists.alpinelinux.org-616abc23.rsa.pub",
+            "usr/share/apk/keys/riscv64/alpine-devel@lists.alpinelinux.org-60ac2099.rsa.pub",
+            "usr/share/apk/keys/riscv64/alpine-devel@lists.alpinelinux.org-616db30d.rsa.pub",
+            "usr/share/apk/keys/s390x/alpine-devel@lists.alpinelinux.org-58e4f17d.rsa.pub",
+            "usr/share/apk/keys/s390x/alpine-devel@lists.alpinelinux.org-616ac3bc.rsa.pub",
+            "usr/share/apk/keys/x86/alpine-devel@lists.alpinelinux.org-4a6a0840.rsa.pub",
+            "usr/share/apk/keys/x86/alpine-devel@lists.alpinelinux.org-5243ef4b.rsa.pub",
+            "usr/share/apk/keys/x86/alpine-devel@lists.alpinelinux.org-61666e3f.rsa.pub",
+            "usr/share/apk/keys/x86_64/alpine-devel@lists.alpinelinux.org-4a6a0840.rsa.pub",
+            "usr/share/apk/keys/x86_64/alpine-devel@lists.alpinelinux.org-5261cecb.rsa.pub",
+            "usr/share/apk/keys/x86_64/alpine-devel@lists.alpinelinux.org-6165ee59.rsa.pub"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "alpine-release@3.24.4-r0",
+          "Name": "alpine-release",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/alpine-release@3.24.4-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "15b8e9817f0698d8"
+          },
+          "Version": "3.24.4-r0",
+          "Arch": "x86_64",
+          "SrcName": "alpine-base",
+          "SrcVersion": "3.24.4-r0",
+          "Licenses": [
+            "MIT"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "DependsOn": [
+            "alpine-keys@2.6-r0"
+          ],
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:87bf87b1072870b784437d26bbbb7ab4df851590",
+          "InstalledFiles": [
+            "etc/alpine-release",
+            "etc/issue",
+            "etc/os-release",
+            "etc/secfixes.d/alpine",
+            "usr/lib/os-release"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "apk-tools@3.0.9-r0",
+          "Name": "apk-tools",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/apk-tools@3.0.9-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "e1d7f3bb96b96be"
+          },
+          "Version": "3.0.9-r0",
+          "Arch": "x86_64",
+          "SrcName": "apk-tools",
+          "SrcVersion": "3.0.9-r0",
+          "Licenses": [
+            "GPL-2.0-only"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "DependsOn": [
+            "ca-certificates-bundle@20261020-r0",
+            "libapk@3.0.9-r0",
+            "libcrypto3@3.5.9-r0",
+            "musl@1.2.6-r3",
+            "zlib@1.4-r0"
+          ],
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:27bc7866754fcf6b1eb12774b5c8e6c0842390d6",
+          "InstalledFiles": [
+            "sbin/apk"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "busybox@1.37.0-r31",
+          "Name": "busybox",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/busybox@1.37.0-r31?arch=x86_64\u0026distro=3.24.4",
+            "UID": "fc424f8052296b79"
+          },
+          "Version": "1.37.0-r31",
+          "Arch": "x86_64",
+          "SrcName": "busybox",
+          "SrcVersion": "1.37.0-r31",
+          "Licenses": [
+            "GPL-2.0-only"
+          ],
+          "Maintainer": "Sören Tempel \u003csoeren+alpine@soeren-tempel.net\u003e",
+          "DependsOn": [
+            "musl@1.2.6-r3"
+          ],
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:b5405ebc02f7dd8be95b6265c54b243d5456ab8f",
+          "InstalledFiles": [
+            "bin/busybox",
+            "etc/securetty",
+            "etc/busybox-paths.d/busybox",
+            "etc/logrotate.d/acpid",
+            "etc/network/if-up.d/dad",
+            "etc/udhcpc/udhcpc.conf",
+            "usr/share/udhcpc/default.script"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "busybox-binsh@1.37.0-r31",
+          "Name": "busybox-binsh",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/busybox-binsh@1.37.0-r31?arch=x86_64\u0026distro=3.24.4",
+            "UID": "1ec8a3d5d2b63297"
+          },
+          "Version": "1.37.0-r31",
+          "Arch": "x86_64",
+          "SrcName": "busybox",
+          "SrcVersion": "1.37.0-r31",
+          "Licenses": [
+            "GPL-2.0-only"
+          ],
+          "Maintainer": "Sören Tempel \u003csoeren+alpine@soeren-tempel.net\u003e",
+          "DependsOn": [
+            "busybox@1.37.0-r31"
+          ],
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:5cbd14acc6f1804c5bac6c77dc2c492f010b0fc7",
+          "InstalledFiles": [
+            "bin/sh"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "ca-certificates@20261020-r0",
+          "Name": "ca-certificates",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/ca-certificates@20261020-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "6e5aa65436c21892"
+          },
+          "Version": "20261020-r0",
+          "Arch": "x86_64",
+          "SrcName": "ca-certificates",
+          "SrcVersion": "20261020-r0",
+          "Licenses": [
+            "MPL-2.0",
+            "MIT"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "DependsOn": [
+            "busybox-binsh@1.37.0-r31",
+            "libcrypto3@3.5.9-r0",
+            "musl@1.2.6-r3"
+          ],
+          "Layer": {
+            "Digest": "sha256:a362c81e76605c298c425e841e53e0ac8e78fcd72971bd0625bde15688c65f5f",
+            "DiffID": "sha256:d78b117bb12a5718009129327b575d99b86d66b43f33e77d63bf8e2ceaa8721d"
+          },
+          "Digest": "sha1:bb910099b0e7b8aaf6c91497986fdca3abb13d35",
+          "InstalledFiles": [
+            "etc/ca-certificates.conf",
+            "etc/apk/protected_paths.d/ca-certificates.list",
+            "etc/ca-certificates/update.d/certhash",
+            "usr/bin/c_rehash",
+            "usr/sbin/update-ca-certificates",
+            "usr/share/ca-certificates/mozilla/ACCVRAIZ1.crt",
+            "usr/share/ca-certificates/mozilla/AC_RAIZ_FNMT-RCM.crt",
+            "usr/share/ca-certificates/mozilla/AC_RAIZ_FNMT-RCM_SERVIDORES_SEGUROS.crt",
+            "usr/share/ca-certificates/mozilla/ANF_Secure_Server_Root_CA.crt",
+            "usr/share/ca-certificates/mozilla/Actalis_Authentication_Root_CA.crt",
+            "usr/share/ca-certificates/mozilla/Amazon_Root_CA_1.crt",
+            "usr/share/ca-certificates/mozilla/Amazon_Root_CA_2.crt",
+            "usr/share/ca-certificates/mozilla/Amazon_Root_CA_3.crt",
+            "usr/share/ca-certificates/mozilla/Amazon_Root_CA_4.crt",
+            "usr/share/ca-certificates/mozilla/Atos_TrustedRoot_Root_CA_ECC_TLS_2021.crt",
+            "usr/share/ca-certificates/mozilla/Atos_TrustedRoot_Root_CA_RSA_TLS_2021.crt",
+            "usr/share/ca-certificates/mozilla/Autoridad_de_Certificacion_Firmaprofesional_CIF_A62634068.crt",
+            "usr/share/ca-certificates/mozilla/BJCA_Global_Root_CA1.crt",
+            "usr/share/ca-certificates/mozilla/BJCA_Global_Root_CA2.crt",
+            "usr/share/ca-certificates/mozilla/Buypass_Class_2_Root_CA.crt",
+            "usr/share/ca-certificates/mozilla/Buypass_Class_3_Root_CA.crt",
+            "usr/share/ca-certificates/mozilla/CA_Disig_Root_R2.crt",
+            "usr/share/ca-certificates/mozilla/CFCA_EV_ROOT.crt",
+            "usr/share/ca-certificates/mozilla/COMODO_ECC_Certification_Authority.crt",
+            "usr/share/ca-certificates/mozilla/COMODO_RSA_Certification_Authority.crt",
+            "usr/share/ca-certificates/mozilla/Certainly_Root_E1.crt",
+            "usr/share/ca-certificates/mozilla/Certainly_Root_R1.crt",
+            "usr/share/ca-certificates/mozilla/Certigna_Root_CA.crt",
+            "usr/share/ca-certificates/mozilla/Certum_EC-384_CA.crt",
+            "usr/share/ca-certificates/mozilla/Certum_Trusted_Network_CA.crt",
+            "usr/share/ca-certificates/mozilla/Certum_Trusted_Network_CA_2.crt",
+            "usr/share/ca-certificates/mozilla/Certum_Trusted_Root_CA.crt",
+            "usr/share/ca-certificates/mozilla/D-TRUST_BR_Root_CA_1_2020.crt",
+            "usr/share/ca-certificates/mozilla/D-TRUST_BR_Root_CA_2_2023.crt",
+            "usr/share/ca-certificates/mozilla/D-TRUST_EV_Root_CA_1_2020.crt",
+            "usr/share/ca-certificates/mozilla/D-TRUST_EV_Root_CA_2_2023.crt",
+            "usr/share/ca-certificates/mozilla/D-TRUST_Root_Class_3_CA_2_2009.crt",
+            "usr/share/ca-certificates/mozilla/D-TRUST_Root_Class_3_CA_2_EV_2009.crt",
+            "usr/share/ca-certificates/mozilla/DigiCert_Assured_ID_Root_G2.crt",
+            "usr/share/ca-certificates/mozilla/DigiCert_Assured_ID_Root_G3.crt",
+            "usr/share/ca-certificates/mozilla/DigiCert_Global_Root_G2.crt",
+            "usr/share/ca-certificates/mozilla/DigiCert_Global_Root_G3.crt",
+            "usr/share/ca-certificates/mozilla/DigiCert_TLS_ECC_P384_Root_G5.crt",
+            "usr/share/ca-certificates/mozilla/DigiCert_TLS_RSA4096_Root_G5.crt",
+            "usr/share/ca-certificates/mozilla/DigiCert_Trusted_Root_G4.crt",
+            "usr/share/ca-certificates/mozilla/GDCA_TrustAUTH_R5_ROOT.crt",
+            "usr/share/ca-certificates/mozilla/GTS_Root_R1.crt",
+            "usr/share/ca-certificates/mozilla/GTS_Root_R3.crt",
+            "usr/share/ca-certificates/mozilla/GTS_Root_R4.crt",
+            "usr/share/ca-certificates/mozilla/GlobalSign_ECC_Root_CA_-_R4.crt",
+            "usr/share/ca-certificates/mozilla/GlobalSign_ECC_Root_CA_-_R5.crt",
+            "usr/share/ca-certificates/mozilla/GlobalSign_Root_CA_-_R3.crt",
+            "usr/share/ca-certificates/mozilla/GlobalSign_Root_CA_-_R6.crt",
+            "usr/share/ca-certificates/mozilla/GlobalSign_Root_E46.crt",
+            "usr/share/ca-certificates/mozilla/GlobalSign_Root_R46.crt",
+            "usr/share/ca-certificates/mozilla/Go_Daddy_Root_Certificate_Authority_-_G2.crt",
+            "usr/share/ca-certificates/mozilla/HARICA_TLS_ECC_Root_CA_2021.crt",
+            "usr/share/ca-certificates/mozilla/HARICA_TLS_RSA_Root_CA_2021.crt",
+            "usr/share/ca-certificates/mozilla/Hellenic_Academic_and_Research_Institutions_ECC_RootCA_2015.crt",
+            "usr/share/ca-certificates/mozilla/Hellenic_Academic_and_Research_Institutions_RootCA_2015.crt",
+            "usr/share/ca-certificates/mozilla/HiPKI_Root_CA_-_G1.crt",
+            "usr/share/ca-certificates/mozilla/Hongkong_Post_Root_CA_3.crt",
+            "usr/share/ca-certificates/mozilla/ISRG_Root_X1.crt",
+            "usr/share/ca-certificates/mozilla/ISRG_Root_X2.crt",
+            "usr/share/ca-certificates/mozilla/IdenTrust_Commercial_Root_CA_1.crt",
+            "usr/share/ca-certificates/mozilla/IdenTrust_Public_Sector_Root_CA_1.crt",
+            "usr/share/ca-certificates/mozilla/Izenpe.com.crt",
+            "usr/share/ca-certificates/mozilla/Microsec_e-Szigno_Root_CA_2009.crt",
+            "usr/share/ca-certificates/mozilla/Microsoft_ECC_Root_Certificate_Authority_2017.crt",
+            "usr/share/ca-certificates/mozilla/Microsoft_RSA_Root_Certificate_Authority_2017.crt",
+            "usr/share/ca-certificates/mozilla/NAVER_Global_Root_Certification_Authority.crt",
+            "usr/share/ca-certificates/mozilla/NetLock_Arany_=Class_Gold=_Főtanúsítvány.crt",
+            "usr/share/ca-certificates/mozilla/OISTE_Server_Root_ECC_G1.crt",
+            "usr/share/ca-certificates/mozilla/OISTE_Server_Root_RSA_G1.crt",
+            "usr/share/ca-certificates/mozilla/OISTE_WISeKey_Global_Root_GB_CA.crt",
+            "usr/share/ca-certificates/mozilla/OISTE_WISeKey_Global_Root_GC_CA.crt",
+            "usr/share/ca-certificates/mozilla/QuoVadis_Root_CA_1_G3.crt",
+            "usr/share/ca-certificates/mozilla/QuoVadis_Root_CA_2_G3.crt",
+            "usr/share/ca-certificates/mozilla/QuoVadis_Root_CA_3_G3.crt",
+            "usr/share/ca-certificates/mozilla/SECOM_TLS_ECC_Root_CA_2024.crt",
+            "usr/share/ca-certificates/mozilla/SECOM_TLS_RSA_Root_CA_2024.crt",
+            "usr/share/ca-certificates/mozilla/SSL.com_EV_Root_Certification_Authority_ECC.crt",
+            "usr/share/ca-certificates/mozilla/SSL.com_EV_Root_Certification_Authority_RSA_R2.crt",
+            "usr/share/ca-certificates/mozilla/SSL.com_Root_Certification_Authority_ECC.crt",
+            "usr/share/ca-certificates/mozilla/SSL.com_Root_Certification_Authority_RSA.crt",
+            "usr/share/ca-certificates/mozilla/SSL.com_TLS_ECC_Root_CA_2022.crt",
+            "usr/share/ca-certificates/mozilla/SSL.com_TLS_RSA_Root_CA_2022.crt",
+            "usr/share/ca-certificates/mozilla/SZAFIR_ROOT_CA2.crt",
+            "usr/share/ca-certificates/mozilla/Sectigo_Public_Server_Authentication_Root_E46.crt",
+            "usr/share/ca-certificates/mozilla/Sectigo_Public_Server_Authentication_Root_R46.crt",
+            "usr/share/ca-certificates/mozilla/SecureSign_Root_CA14.crt",
+            "usr/share/ca-certificates/mozilla/SecureSign_Root_CA15.crt",
+            "usr/share/ca-certificates/mozilla/Security_Communication_ECC_RootCA1.crt",
+            "usr/share/ca-certificates/mozilla/Security_Communication_RootCA2.crt",
+            "usr/share/ca-certificates/mozilla/Starfield_Root_Certificate_Authority_-_G2.crt",
+            "usr/share/ca-certificates/mozilla/Starfield_Services_Root_Certificate_Authority_-_G2.crt",
+            "usr/share/ca-certificates/mozilla/SwissSign_RSA_TLS_Root_CA_2022_-_1.crt",
+            "usr/share/ca-certificates/mozilla/T-TeleSec_GlobalRoot_Class_2.crt",
+            "usr/share/ca-certificates/mozilla/T-TeleSec_GlobalRoot_Class_3.crt",
+            "usr/share/ca-certificates/mozilla/TUBITAK_Kamu_SM_SSL_Kok_Sertifikasi_-_Surum_1.crt",
+            "usr/share/ca-certificates/mozilla/TWCA_CYBER_Root_CA.crt",
+            "usr/share/ca-certificates/mozilla/TWCA_Global_Root_CA.crt",
+            "usr/share/ca-certificates/mozilla/TWCA_Root_Certification_Authority.crt",
+            "usr/share/ca-certificates/mozilla/Telekom_Security_TLS_ECC_Root_2020.crt",
+            "usr/share/ca-certificates/mozilla/Telekom_Security_TLS_RSA_Root_2023.crt",
+            "usr/share/ca-certificates/mozilla/Telia_EC_TLS_Root_CA_v3.crt",
+            "usr/share/ca-certificates/mozilla/Telia_RSA_TLS_Root_CA_v3.crt",
+            "usr/share/ca-certificates/mozilla/Telia_Root_CA_v2.crt",
+            "usr/share/ca-certificates/mozilla/TrustAsia_Global_Root_CA_G3.crt",
+            "usr/share/ca-certificates/mozilla/TrustAsia_Global_Root_CA_G4.crt",
+            "usr/share/ca-certificates/mozilla/TrustAsia_TLS_ECC_Root_CA.crt",
+            "usr/share/ca-certificates/mozilla/TrustAsia_TLS_RSA_Root_CA.crt",
+            "usr/share/ca-certificates/mozilla/TunTrust_Root_CA.crt",
+            "usr/share/ca-certificates/mozilla/UCA_Extended_Validation_Root.crt",
+            "usr/share/ca-certificates/mozilla/UCA_Global_G2_Root.crt",
+            "usr/share/ca-certificates/mozilla/USERTrust_ECC_Certification_Authority.crt",
+            "usr/share/ca-certificates/mozilla/USERTrust_RSA_Certification_Authority.crt",
+            "usr/share/ca-certificates/mozilla/certSIGN_Root_CA_G2.crt",
+            "usr/share/ca-certificates/mozilla/e-Szigno_Root_CA_2017.crt",
+            "usr/share/ca-certificates/mozilla/e-Szigno_TLS_Root_CA_2023.crt",
+            "usr/share/ca-certificates/mozilla/emSign_Root_CA_-_G1.crt",
+            "usr/share/ca-certificates/mozilla/vTrus_ECC_Root_CA.crt",
+            "usr/share/ca-certificates/mozilla/vTrus_Root_CA.crt"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "ca-certificates-bundle@20261020-r0",
+          "Name": "ca-certificates-bundle",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/ca-certificates-bundle@20261020-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "a70608abcaf07d7a"
+          },
+          "Version": "20261020-r0",
+          "Arch": "x86_64",
+          "SrcName": "ca-certificates",
+          "SrcVersion": "20261020-r0",
+          "Licenses": [
+            "MPL-2.0",
+            "MIT"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:7c6e635f86aafb46cb3b015d8505b3a5f61156bd",
+          "InstalledFiles": [
+            "etc/ssl/cert.pem",
+            "etc/ssl/certs/ca-certificates.crt",
+            "etc/ssl1.1/cert.pem",
+            "etc/ssl1.1/certs"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "icu-data-full@78.1-r0",
+          "Name": "icu-data-full",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/icu-data-full@78.1-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "4fa30f43b2e5f036"
+          },
+          "Version": "78.1-r0",
+          "Arch": "x86_64",
+          "SrcName": "icu",
+          "SrcVersion": "78.1-r0",
+          "Licenses": [
+            "ICU"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "Layer": {
+            "Digest": "sha256:a362c81e76605c298c425e841e53e0ac8e78fcd72971bd0625bde15688c65f5f",
+            "DiffID": "sha256:d78b117bb12a5718009129327b575d99b86d66b43f33e77d63bf8e2ceaa8721d"
+          },
+          "Digest": "sha1:1a2db5e6bc16c62c85c29cfc8897570f9051cf14",
+          "InstalledFiles": [
+            "usr/share/icu/78.1/icudt78l.dat"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "icu-libs@78.1-r0",
+          "Name": "icu-libs",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/icu-libs@78.1-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "e8ef093a5323d047"
+          },
+          "Version": "78.1-r0",
+          "Arch": "x86_64",
+          "SrcName": "icu",
+          "SrcVersion": "78.1-r0",
+          "Licenses": [
+            "ICU"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "DependsOn": [
+            "icu-data-full@78.1-r0",
+            "libgcc@15.2.0-r5",
+            "libstdc++@15.2.0-r5",
+            "musl@1.2.6-r3"
+          ],
+          "Layer": {
+            "Digest": "sha256:a362c81e76605c298c425e841e53e0ac8e78fcd72971bd0625bde15688c65f5f",
+            "DiffID": "sha256:d78b117bb12a5718009129327b575d99b86d66b43f33e77d63bf8e2ceaa8721d"
+          },
+          "Digest": "sha1:46bd3617f6d112f035d806d24c5cf8ea6e597f50",
+          "InstalledFiles": [
+            "usr/lib/libicudata.so.78",
+            "usr/lib/libicudata.so.78.1",
+            "usr/lib/libicui18n.so.78",
+            "usr/lib/libicui18n.so.78.1",
+            "usr/lib/libicuio.so.78",
+            "usr/lib/libicuio.so.78.1",
+            "usr/lib/libicuuc.so.78",
+            "usr/lib/libicuuc.so.78.1"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "libapk@3.0.9-r0",
+          "Name": "libapk",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/libapk@3.0.9-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "6727e178f0fab83a"
+          },
+          "Version": "3.0.9-r0",
+          "Arch": "x86_64",
+          "SrcName": "apk-tools",
+          "SrcVersion": "3.0.9-r0",
+          "Licenses": [
+            "GPL-2.0-only"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "DependsOn": [
+            "libcrypto3@3.5.9-r0",
+            "libssl3@3.5.9-r0",
+            "musl@1.2.6-r3",
+            "zlib@1.4-r0"
+          ],
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:a94f4d7f67ee47ba5c5185864af1d4b16113c598",
+          "InstalledFiles": [
+            "usr/lib/libapk.so.3.0.0"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "libcrypto3@3.5.9-r0",
+          "Name": "libcrypto3",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/libcrypto3@3.5.9-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "3de134b31d66634f"
+          },
+          "Version": "3.5.9-r0",
+          "Arch": "x86_64",
+          "SrcName": "openssl",
+          "SrcVersion": "3.5.9-r0",
+          "Licenses": [
+            "Apache-2.0"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "DependsOn": [
+            "musl@1.2.6-r3"
+          ],
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:1c0dee9734cf22fc97cdd181913bbd710e6dfb08",
+          "InstalledFiles": [
+            "etc/ssl/ct_log_list.cnf",
+            "etc/ssl/ct_log_list.cnf.dist",
+            "etc/ssl/openssl.cnf",
+            "etc/ssl/openssl.cnf.dist",
+            "usr/lib/libcrypto.so.3",
+            "usr/lib/engines-3/afalg.so",
+            "usr/lib/engines-3/capi.so",
+            "usr/lib/engines-3/loader_attic.so",
+            "usr/lib/engines-3/padlock.so",
+            "usr/lib/ossl-modules/legacy.so"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "libgcc@15.2.0-r5",
+          "Name": "libgcc",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/libgcc@15.2.0-r5?arch=x86_64\u0026distro=3.24.4",
+            "UID": "a092110f00cd5329"
+          },
+          "Version": "15.2.0-r5",
+          "Arch": "x86_64",
+          "SrcName": "gcc",
+          "SrcVersion": "15.2.0-r5",
+          "Licenses": [
+            "GPL-2.0-or-later",
+            "LGPL-2.1-or-later"
+          ],
+          "Maintainer": "Ariadne Conill \u003cariadne@dereferenced.org\u003e",
+          "DependsOn": [
+            "musl@1.2.6-r3"
+          ],
+          "Layer": {
+            "Digest": "sha256:a40f1d3a6b081c9603427e9146eb6f7507667705c44fb9c93be0e2fbca75cc18",
+            "DiffID": "sha256:7179963c95b33f40bbfd6734896600aff2631b733f2c00a38a081591b88cdb9d"
+          },
+          "Digest": "sha1:379c156c53e0cc140e87c79c0a3dd22b6ee51552",
+          "InstalledFiles": [
+            "usr/lib/libgcc_s.so.1"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "libssl3@3.5.9-r0",
+          "Name": "libssl3",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/libssl3@3.5.9-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "c5a60e84169f3215"
+          },
+          "Version": "3.5.9-r0",
+          "Arch": "x86_64",
+          "SrcName": "openssl",
+          "SrcVersion": "3.5.9-r0",
+          "Licenses": [
+            "Apache-2.0"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "DependsOn": [
+            "libcrypto3@3.5.9-r0",
+            "musl@1.2.6-r3"
+          ],
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:20c4c90ea9d20a9dd3a04deadf2c6c4f64233643",
+          "InstalledFiles": [
+            "usr/lib/libssl.so.3"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "libstdc++@15.2.0-r5",
+          "Name": "libstdc++",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/libstdc%2B%2B@15.2.0-r5?arch=x86_64\u0026distro=3.24.4",
+            "UID": "81829e8deb73ca15"
+          },
+          "Version": "15.2.0-r5",
+          "Arch": "x86_64",
+          "SrcName": "gcc",
+          "SrcVersion": "15.2.0-r5",
+          "Licenses": [
+            "GPL-2.0-or-later",
+            "LGPL-2.1-or-later"
+          ],
+          "Maintainer": "Ariadne Conill \u003cariadne@dereferenced.org\u003e",
+          "DependsOn": [
+            "libgcc@15.2.0-r5",
+            "musl@1.2.6-r3"
+          ],
+          "Layer": {
+            "Digest": "sha256:a40f1d3a6b081c9603427e9146eb6f7507667705c44fb9c93be0e2fbca75cc18",
+            "DiffID": "sha256:7179963c95b33f40bbfd6734896600aff2631b733f2c00a38a081591b88cdb9d"
+          },
+          "Digest": "sha1:5f7a2ad7646128ba02cc0d6fb94672b6845648d5",
+          "InstalledFiles": [
+            "usr/lib/libstdc++.so.6",
+            "usr/lib/libstdc++.so.6.0.34"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "musl@1.2.6-r3",
+          "Name": "musl",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/musl@1.2.6-r3?arch=x86_64\u0026distro=3.24.4",
+            "UID": "43d4b05c5472a58c"
+          },
+          "Version": "1.2.6-r3",
+          "Arch": "x86_64",
+          "SrcName": "musl",
+          "SrcVersion": "1.2.6-r3",
+          "Licenses": [
+            "MIT"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:770e8304d958dced98d76997df9e8fa1db5ca32f",
+          "InstalledFiles": [
+            "lib/ld-musl-x86_64.so.1",
+            "lib/libc.musl-x86_64.so.1"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "musl-utils@1.2.6-r3",
+          "Name": "musl-utils",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/musl-utils@1.2.6-r3?arch=x86_64\u0026distro=3.24.4",
+            "UID": "1bd73db44d355699"
+          },
+          "Version": "1.2.6-r3",
+          "Arch": "x86_64",
+          "SrcName": "musl",
+          "SrcVersion": "1.2.6-r3",
+          "Licenses": [
+            "MIT",
+            "BSD-2-Clause",
+            "GPL-2.0-or-later"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "DependsOn": [
+            "musl@1.2.6-r3",
+            "scanelf@1.3.9-r1"
+          ],
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:51372daafb234646960eca4d7a13f706324f24d6",
+          "InstalledFiles": [
+            "sbin/ldconfig",
+            "usr/bin/getconf",
+            "usr/bin/getent",
+            "usr/bin/iconv",
+            "usr/bin/ldd"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "scanelf@1.3.9-r1",
+          "Name": "scanelf",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/scanelf@1.3.9-r1?arch=x86_64\u0026distro=3.24.4",
+            "UID": "f832b0b0d6c76e18"
+          },
+          "Version": "1.3.9-r1",
+          "Arch": "x86_64",
+          "SrcName": "pax-utils",
+          "SrcVersion": "1.3.9-r1",
+          "Licenses": [
+            "GPL-2.0-only"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "DependsOn": [
+            "musl@1.2.6-r3"
+          ],
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:013f903d0ba219673aebbdd04f74bb5ed82b01f0",
+          "InstalledFiles": [
+            "usr/bin/scanelf"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "ssl_client@1.37.0-r31",
+          "Name": "ssl_client",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/ssl_client@1.37.0-r31?arch=x86_64\u0026distro=3.24.4",
+            "UID": "3e7a1baa8bc3bfe0"
+          },
+          "Version": "1.37.0-r31",
+          "Arch": "x86_64",
+          "SrcName": "busybox",
+          "SrcVersion": "1.37.0-r31",
+          "Licenses": [
+            "GPL-2.0-only"
+          ],
+          "Maintainer": "Sören Tempel \u003csoeren+alpine@soeren-tempel.net\u003e",
+          "DependsOn": [
+            "libcrypto3@3.5.9-r0",
+            "libssl3@3.5.9-r0",
+            "musl@1.2.6-r3"
+          ],
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:c220f4a5125a313af733e98def94132bb1e9d40d",
+          "InstalledFiles": [
+            "usr/bin/ssl_client"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "tzdata@2026f-r0",
+          "Name": "tzdata",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/tzdata@2026f-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "dfeab54a942e8811"
+          },
+          "Version": "2026f-r0",
+          "Arch": "x86_64",
+          "SrcName": "tzdata",
+          "SrcVersion": "2026f-r0",
+          "Licenses": [
+            "Public-Domain"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "Layer": {
+            "Digest": "sha256:a362c81e76605c298c425e841e53e0ac8e78fcd72971bd0625bde15688c65f5f",
+            "DiffID": "sha256:d78b117bb12a5718009129327b575d99b86d66b43f33e77d63bf8e2ceaa8721d"
+          },
+          "Digest": "sha1:08b3827f55f9cc5691e27f68d03d741bf9422a0b",
+          "InstalledFiles": [
+            "usr/share/zoneinfo/CET",
+            "usr/share/zoneinfo/CST6CDT",
+            "usr/share/zoneinfo/Cuba",
+            "usr/share/zoneinfo/EET",
+            "usr/share/zoneinfo/EST",
+            "usr/share/zoneinfo/EST5EDT",
+            "usr/share/zoneinfo/Egypt",
+            "usr/share/zoneinfo/Eire",
+            "usr/share/zoneinfo/Factory",
+            "usr/share/zoneinfo/GB",
+            "usr/share/zoneinfo/GB-Eire",
+            "usr/share/zoneinfo/GMT",
+            "usr/share/zoneinfo/GMT+0",
+            "usr/share/zoneinfo/GMT-0",
+            "usr/share/zoneinfo/GMT0",
+            "usr/share/zoneinfo/Greenwich",
+            "usr/share/zoneinfo/HST",
+            "usr/share/zoneinfo/Hongkong",
+            "usr/share/zoneinfo/Iceland",
+            "usr/share/zoneinfo/Iran",
+            "usr/share/zoneinfo/Israel",
+            "usr/share/zoneinfo/Jamaica",
+            "usr/share/zoneinfo/Japan",
+            "usr/share/zoneinfo/Kwajalein",
+            "usr/share/zoneinfo/Libya",
+            "usr/share/zoneinfo/MET",
+            "usr/share/zoneinfo/MST",
+            "usr/share/zoneinfo/MST7MDT",
+            "usr/share/zoneinfo/NZ",
+            "usr/share/zoneinfo/NZ-CHAT",
+            "usr/share/zoneinfo/Navajo",
+            "usr/share/zoneinfo/PRC",
+            "usr/share/zoneinfo/PST8PDT",
+            "usr/share/zoneinfo/Poland",
+            "usr/share/zoneinfo/Portugal",
+            "usr/share/zoneinfo/ROC",
+            "usr/share/zoneinfo/ROK",
+            "usr/share/zoneinfo/Singapore",
+            "usr/share/zoneinfo/Turkey",
+            "usr/share/zoneinfo/UCT",
+            "usr/share/zoneinfo/UTC",
+            "usr/share/zoneinfo/Universal",
+            "usr/share/zoneinfo/W-SU",
+            "usr/share/zoneinfo/WET",
+            "usr/share/zoneinfo/Zulu",
+            "usr/share/zoneinfo/iso3166.tab",
+            "usr/share/zoneinfo/leap-seconds.list",
+            "usr/share/zoneinfo/posixrules",
+            "usr/share/zoneinfo/zone.tab",
+            "usr/share/zoneinfo/zone1970.tab",
+            "usr/share/zoneinfo/Africa/Abidjan",
+            "usr/share/zoneinfo/Africa/Accra",
+            "usr/share/zoneinfo/Africa/Addis_Ababa",
+            "usr/share/zoneinfo/Africa/Algiers",
+            "usr/share/zoneinfo/Africa/Asmara",
+            "usr/share/zoneinfo/Africa/Asmera",
+            "usr/share/zoneinfo/Africa/Bamako",
+            "usr/share/zoneinfo/Africa/Bangui",
+            "usr/share/zoneinfo/Africa/Banjul",
+            "usr/share/zoneinfo/Africa/Bissau",
+            "usr/share/zoneinfo/Africa/Blantyre",
+            "usr/share/zoneinfo/Africa/Brazzaville",
+            "usr/share/zoneinfo/Africa/Bujumbura",
+            "usr/share/zoneinfo/Africa/Cairo",
+            "usr/share/zoneinfo/Africa/Casablanca",
+            "usr/share/zoneinfo/Africa/Ceuta",
+            "usr/share/zoneinfo/Africa/Conakry",
+            "usr/share/zoneinfo/Africa/Dakar",
+            "usr/share/zoneinfo/Africa/Dar_es_Salaam",
+            "usr/share/zoneinfo/Africa/Djibouti",
+            "usr/share/zoneinfo/Africa/Douala",
+            "usr/share/zoneinfo/Africa/El_Aaiun",
+            "usr/share/zoneinfo/Africa/Freetown",
+            "usr/share/zoneinfo/Africa/Gaborone",
+            "usr/share/zoneinfo/Africa/Harare",
+            "usr/share/zoneinfo/Africa/Johannesburg",
+            "usr/share/zoneinfo/Africa/Juba",
+            "usr/share/zoneinfo/Africa/Kampala",
+            "usr/share/zoneinfo/Africa/Khartoum",
+            "usr/share/zoneinfo/Africa/Kigali",
+            "usr/share/zoneinfo/Africa/Kinshasa",
+            "usr/share/zoneinfo/Africa/Lagos",
+            "usr/share/zoneinfo/Africa/Libreville",
+            "usr/share/zoneinfo/Africa/Lome",
+            "usr/share/zoneinfo/Africa/Luanda",
+            "usr/share/zoneinfo/Africa/Lubumbashi",
+            "usr/share/zoneinfo/Africa/Lusaka",
+            "usr/share/zoneinfo/Africa/Malabo",
+            "usr/share/zoneinfo/Africa/Maputo",
+            "usr/share/zoneinfo/Africa/Maseru",
+            "usr/share/zoneinfo/Africa/Mbabane",
+            "usr/share/zoneinfo/Africa/Mogadishu",
+            "usr/share/zoneinfo/Africa/Monrovia",
+            "usr/share/zoneinfo/Africa/Nairobi",
+            "usr/share/zoneinfo/Africa/Ndjamena",
+            "usr/share/zoneinfo/Africa/Niamey",
+            "usr/share/zoneinfo/Africa/Nouakchott",
+            "usr/share/zoneinfo/Africa/Ouagadougou",
+            "usr/share/zoneinfo/Africa/Porto-Novo",
+            "usr/share/zoneinfo/Africa/Sao_Tome",
+            "usr/share/zoneinfo/Africa/Timbuktu",
+            "usr/share/zoneinfo/Africa/Tripoli",
+            "usr/share/zoneinfo/Africa/Tunis",
+            "usr/share/zoneinfo/Africa/Windhoek",
+            "usr/share/zoneinfo/America/Adak",
+            "usr/share/zoneinfo/America/Anchorage",
+            "usr/share/zoneinfo/America/Anguilla",
+            "usr/share/zoneinfo/America/Antigua",
+            "usr/share/zoneinfo/America/Araguaina",
+            "usr/share/zoneinfo/America/Aruba",
+            "usr/share/zoneinfo/America/Asuncion",
+            "usr/share/zoneinfo/America/Atikokan",
+            "usr/share/zoneinfo/America/Atka",
+            "usr/share/zoneinfo/America/Bahia",
+            "usr/share/zoneinfo/America/Bahia_Banderas",
+            "usr/share/zoneinfo/America/Barbados",
+            "usr/share/zoneinfo/America/Belem",
+            "usr/share/zoneinfo/America/Belize",
+            "usr/share/zoneinfo/America/Blanc-Sablon",
+            "usr/share/zoneinfo/America/Boa_Vista",
+            "usr/share/zoneinfo/America/Bogota",
+            "usr/share/zoneinfo/America/Boise",
+            "usr/share/zoneinfo/America/Buenos_Aires",
+            "usr/share/zoneinfo/America/Cambridge_Bay",
+            "usr/share/zoneinfo/America/Campo_Grande",
+            "usr/share/zoneinfo/America/Cancun",
+            "usr/share/zoneinfo/America/Caracas",
+            "usr/share/zoneinfo/America/Catamarca",
+            "usr/share/zoneinfo/America/Cayenne",
+            "usr/share/zoneinfo/America/Cayman",
+            "usr/share/zoneinfo/America/Chicago",
+            "usr/share/zoneinfo/America/Chihuahua",
+            "usr/share/zoneinfo/America/Ciudad_Juarez",
+            "usr/share/zoneinfo/America/Coral_Harbour",
+            "usr/share/zoneinfo/America/Cordoba",
+            "usr/share/zoneinfo/America/Costa_Rica",
+            "usr/share/zoneinfo/America/Coyhaique",
+            "usr/share/zoneinfo/America/Creston",
+            "usr/share/zoneinfo/America/Cuiaba",
+            "usr/share/zoneinfo/America/Curacao",
+            "usr/share/zoneinfo/America/Danmarkshavn",
+            "usr/share/zoneinfo/America/Dawson",
+            "usr/share/zoneinfo/America/Dawson_Creek",
+            "usr/share/zoneinfo/America/Denver",
+            "usr/share/zoneinfo/America/Detroit",
+            "usr/share/zoneinfo/America/Dominica",
+            "usr/share/zoneinfo/America/Edmonton",
+            "usr/share/zoneinfo/America/Eirunepe",
+            "usr/share/zoneinfo/America/El_Salvador",
+            "usr/share/zoneinfo/America/Ensenada",
+            "usr/share/zoneinfo/America/Fort_Nelson",
+            "usr/share/zoneinfo/America/Fort_Wayne",
+            "usr/share/zoneinfo/America/Fortaleza",
+            "usr/share/zoneinfo/America/Glace_Bay",
+            "usr/share/zoneinfo/America/Godthab",
+            "usr/share/zoneinfo/America/Goose_Bay",
+            "usr/share/zoneinfo/America/Grand_Turk",
+            "usr/share/zoneinfo/America/Grenada",
+            "usr/share/zoneinfo/America/Guadeloupe",
+            "usr/share/zoneinfo/America/Guatemala",
+            "usr/share/zoneinfo/America/Guayaquil",
+            "usr/share/zoneinfo/America/Guyana",
+            "usr/share/zoneinfo/America/Halifax",
+            "usr/share/zoneinfo/America/Havana",
+            "usr/share/zoneinfo/America/Hermosillo",
+            "usr/share/zoneinfo/America/Indianapolis",
+            "usr/share/zoneinfo/America/Inuvik",
+            "usr/share/zoneinfo/America/Iqaluit",
+            "usr/share/zoneinfo/America/Jamaica",
+            "usr/share/zoneinfo/America/Jujuy",
+            "usr/share/zoneinfo/America/Juneau",
+            "usr/share/zoneinfo/America/Knox_IN",
+            "usr/share/zoneinfo/America/Kralendijk",
+            "usr/share/zoneinfo/America/La_Paz",
+            "usr/share/zoneinfo/America/Lima",
+            "usr/share/zoneinfo/America/Los_Angeles",
+            "usr/share/zoneinfo/America/Louisville",
+            "usr/share/zoneinfo/America/Lower_Princes",
+            "usr/share/zoneinfo/America/Maceio",
+            "usr/share/zoneinfo/America/Managua",
+            "usr/share/zoneinfo/America/Manaus",
+            "usr/share/zoneinfo/America/Marigot",
+            "usr/share/zoneinfo/America/Martinique",
+            "usr/share/zoneinfo/America/Matamoros",
+            "usr/share/zoneinfo/America/Mazatlan",
+            "usr/share/zoneinfo/America/Mendoza",
+            "usr/share/zoneinfo/America/Menominee",
+            "usr/share/zoneinfo/America/Merida",
+            "usr/share/zoneinfo/America/Metlakatla",
+            "usr/share/zoneinfo/America/Mexico_City",
+            "usr/share/zoneinfo/America/Miquelon",
+            "usr/share/zoneinfo/America/Moncton",
+            "usr/share/zoneinfo/America/Monterrey",
+            "usr/share/zoneinfo/America/Montevideo",
+            "usr/share/zoneinfo/America/Montreal",
+            "usr/share/zoneinfo/America/Montserrat",
+            "usr/share/zoneinfo/America/Nassau",
+            "usr/share/zoneinfo/America/New_York",
+            "usr/share/zoneinfo/America/Nipigon",
+            "usr/share/zoneinfo/America/Nome",
+            "usr/share/zoneinfo/America/Noronha",
+            "usr/share/zoneinfo/America/Nuuk",
+            "usr/share/zoneinfo/America/Ojinaga",
+            "usr/share/zoneinfo/America/Panama",
+            "usr/share/zoneinfo/America/Pangnirtung",
+            "usr/share/zoneinfo/America/Paramaribo",
+            "usr/share/zoneinfo/America/Phoenix",
+            "usr/share/zoneinfo/America/Port-au-Prince",
+            "usr/share/zoneinfo/America/Port_of_Spain",
+            "usr/share/zoneinfo/America/Porto_Acre",
+            "usr/share/zoneinfo/America/Porto_Velho",
+            "usr/share/zoneinfo/America/Puerto_Rico",
+            "usr/share/zoneinfo/America/Punta_Arenas",
+            "usr/share/zoneinfo/America/Rainy_River",
+            "usr/share/zoneinfo/America/Rankin_Inlet",
+            "usr/share/zoneinfo/America/Recife",
+            "usr/share/zoneinfo/America/Regina",
+            "usr/share/zoneinfo/America/Resolute",
+            "usr/share/zoneinfo/America/Rio_Branco",
+            "usr/share/zoneinfo/America/Rosario",
+            "usr/share/zoneinfo/America/Santa_Isabel",
+            "usr/share/zoneinfo/America/Santarem",
+            "usr/share/zoneinfo/America/Santiago",
+            "usr/share/zoneinfo/America/Santo_Domingo",
+            "usr/share/zoneinfo/America/Sao_Paulo",
+            "usr/share/zoneinfo/America/Scoresbysund",
+            "usr/share/zoneinfo/America/Shiprock",
+            "usr/share/zoneinfo/America/Sitka",
+            "usr/share/zoneinfo/America/St_Barthelemy",
+            "usr/share/zoneinfo/America/St_Johns",
+            "usr/share/zoneinfo/America/St_Kitts",
+            "usr/share/zoneinfo/America/St_Lucia",
+            "usr/share/zoneinfo/America/St_Thomas",
+            "usr/share/zoneinfo/America/St_Vincent",
+            "usr/share/zoneinfo/America/Swift_Current",
+            "usr/share/zoneinfo/America/Tegucigalpa",
+            "usr/share/zoneinfo/America/Thule",
+            "usr/share/zoneinfo/America/Thunder_Bay",
+            "usr/share/zoneinfo/America/Tijuana",
+            "usr/share/zoneinfo/America/Toronto",
+            "usr/share/zoneinfo/America/Tortola",
+            "usr/share/zoneinfo/America/Vancouver",
+            "usr/share/zoneinfo/America/Virgin",
+            "usr/share/zoneinfo/America/Whitehorse",
+            "usr/share/zoneinfo/America/Winnipeg",
+            "usr/share/zoneinfo/America/Yakutat",
+            "usr/share/zoneinfo/America/Yellowknife",
+            "usr/share/zoneinfo/America/Argentina/Buenos_Aires",
+            "usr/share/zoneinfo/America/Argentina/Catamarca",
+            "usr/share/zoneinfo/America/Argentina/ComodRivadavia",
+            "usr/share/zoneinfo/America/Argentina/Cordoba",
+            "usr/share/zoneinfo/America/Argentina/Jujuy",
+            "usr/share/zoneinfo/America/Argentina/La_Rioja",
+            "usr/share/zoneinfo/America/Argentina/Mendoza",
+            "usr/share/zoneinfo/America/Argentina/Rio_Gallegos",
+            "usr/share/zoneinfo/America/Argentina/Salta",
+            "usr/share/zoneinfo/America/Argentina/San_Juan",
+            "usr/share/zoneinfo/America/Argentina/San_Luis",
+            "usr/share/zoneinfo/America/Argentina/Tucuman",
+            "usr/share/zoneinfo/America/Argentina/Ushuaia",
+            "usr/share/zoneinfo/America/Indiana/Indianapolis",
+            "usr/share/zoneinfo/America/Indiana/Knox",
+            "usr/share/zoneinfo/America/Indiana/Marengo",
+            "usr/share/zoneinfo/America/Indiana/Petersburg",
+            "usr/share/zoneinfo/America/Indiana/Tell_City",
+            "usr/share/zoneinfo/America/Indiana/Vevay",
+            "usr/share/zoneinfo/America/Indiana/Vincennes",
+            "usr/share/zoneinfo/America/Indiana/Winamac",
+            "usr/share/zoneinfo/America/Kentucky/Louisville",
+            "usr/share/zoneinfo/America/Kentucky/Monticello",
+            "usr/share/zoneinfo/America/North_Dakota/Beulah",
+            "usr/share/zoneinfo/America/North_Dakota/Center",
+            "usr/share/zoneinfo/America/North_Dakota/New_Salem",
+            "usr/share/zoneinfo/Antarctica/Casey",
+            "usr/share/zoneinfo/Antarctica/Davis",
+            "usr/share/zoneinfo/Antarctica/DumontDUrville",
+            "usr/share/zoneinfo/Antarctica/Macquarie",
+            "usr/share/zoneinfo/Antarctica/Mawson",
+            "usr/share/zoneinfo/Antarctica/McMurdo",
+            "usr/share/zoneinfo/Antarctica/Palmer",
+            "usr/share/zoneinfo/Antarctica/Rothera",
+            "usr/share/zoneinfo/Antarctica/South_Pole",
+            "usr/share/zoneinfo/Antarctica/Syowa",
+            "usr/share/zoneinfo/Antarctica/Troll",
+            "usr/share/zoneinfo/Antarctica/Vostok",
+            "usr/share/zoneinfo/Arctic/Longyearbyen",
+            "usr/share/zoneinfo/Asia/Aden",
+            "usr/share/zoneinfo/Asia/Almaty",
+            "usr/share/zoneinfo/Asia/Amman",
+            "usr/share/zoneinfo/Asia/Anadyr",
+            "usr/share/zoneinfo/Asia/Aqtau",
+            "usr/share/zoneinfo/Asia/Aqtobe",
+            "usr/share/zoneinfo/Asia/Ashgabat",
+            "usr/share/zoneinfo/Asia/Ashkhabad",
+            "usr/share/zoneinfo/Asia/Atyrau",
+            "usr/share/zoneinfo/Asia/Baghdad",
+            "usr/share/zoneinfo/Asia/Bahrain",
+            "usr/share/zoneinfo/Asia/Baku",
+            "usr/share/zoneinfo/Asia/Bangkok",
+            "usr/share/zoneinfo/Asia/Barnaul",
+            "usr/share/zoneinfo/Asia/Beirut",
+            "usr/share/zoneinfo/Asia/Bishkek",
+            "usr/share/zoneinfo/Asia/Brunei",
+            "usr/share/zoneinfo/Asia/Calcutta",
+            "usr/share/zoneinfo/Asia/Chita",
+            "usr/share/zoneinfo/Asia/Choibalsan",
+            "usr/share/zoneinfo/Asia/Chongqing",
+            "usr/share/zoneinfo/Asia/Chungking",
+            "usr/share/zoneinfo/Asia/Colombo",
+            "usr/share/zoneinfo/Asia/Dacca",
+            "usr/share/zoneinfo/Asia/Damascus",
+            "usr/share/zoneinfo/Asia/Dhaka",
+            "usr/share/zoneinfo/Asia/Dili",
+            "usr/share/zoneinfo/Asia/Dubai",
+            "usr/share/zoneinfo/Asia/Dushanbe",
+            "usr/share/zoneinfo/Asia/Famagusta",
+            "usr/share/zoneinfo/Asia/Gaza",
+            "usr/share/zoneinfo/Asia/Harbin",
+            "usr/share/zoneinfo/Asia/Hebron",
+            "usr/share/zoneinfo/Asia/Ho_Chi_Minh",
+            "usr/share/zoneinfo/Asia/Hong_Kong",
+            "usr/share/zoneinfo/Asia/Hovd",
+            "usr/share/zoneinfo/Asia/Irkutsk",
+            "usr/share/zoneinfo/Asia/Istanbul",
+            "usr/share/zoneinfo/Asia/Jakarta",
+            "usr/share/zoneinfo/Asia/Jayapura",
+            "usr/share/zoneinfo/Asia/Jerusalem",
+            "usr/share/zoneinfo/Asia/Kabul",
+            "usr/share/zoneinfo/Asia/Kamchatka",
+            "usr/share/zoneinfo/Asia/Karachi",
+            "usr/share/zoneinfo/Asia/Kashgar",
+            "usr/share/zoneinfo/Asia/Kathmandu",
+            "usr/share/zoneinfo/Asia/Katmandu",
+            "usr/share/zoneinfo/Asia/Khandyga",
+            "usr/share/zoneinfo/Asia/Kolkata",
+            "usr/share/zoneinfo/Asia/Krasnoyarsk",
+            "usr/share/zoneinfo/Asia/Kuala_Lumpur",
+            "usr/share/zoneinfo/Asia/Kuching",
+            "usr/share/zoneinfo/Asia/Kuwait",
+            "usr/share/zoneinfo/Asia/Macao",
+            "usr/share/zoneinfo/Asia/Macau",
+            "usr/share/zoneinfo/Asia/Magadan",
+            "usr/share/zoneinfo/Asia/Makassar",
+            "usr/share/zoneinfo/Asia/Manila",
+            "usr/share/zoneinfo/Asia/Muscat",
+            "usr/share/zoneinfo/Asia/Nicosia",
+            "usr/share/zoneinfo/Asia/Novokuznetsk",
+            "usr/share/zoneinfo/Asia/Novosibirsk",
+            "usr/share/zoneinfo/Asia/Omsk",
+            "usr/share/zoneinfo/Asia/Oral",
+            "usr/share/zoneinfo/Asia/Phnom_Penh",
+            "usr/share/zoneinfo/Asia/Pontianak",
+            "usr/share/zoneinfo/Asia/Pyongyang",
+            "usr/share/zoneinfo/Asia/Qatar",
+            "usr/share/zoneinfo/Asia/Qostanay",
+            "usr/share/zoneinfo/Asia/Qyzylorda",
+            "usr/share/zoneinfo/Asia/Rangoon",
+            "usr/share/zoneinfo/Asia/Riyadh",
+            "usr/share/zoneinfo/Asia/Saigon",
+            "usr/share/zoneinfo/Asia/Sakhalin",
+            "usr/share/zoneinfo/Asia/Samarkand",
+            "usr/share/zoneinfo/Asia/Seoul",
+            "usr/share/zoneinfo/Asia/Shanghai",
+            "usr/share/zoneinfo/Asia/Singapore",
+            "usr/share/zoneinfo/Asia/Srednekolymsk",
+            "usr/share/zoneinfo/Asia/Taipei",
+            "usr/share/zoneinfo/Asia/Tashkent",
+            "usr/share/zoneinfo/Asia/Tbilisi",
+            "usr/share/zoneinfo/Asia/Tehran",
+            "usr/share/zoneinfo/Asia/Tel_Aviv",
+            "usr/share/zoneinfo/Asia/Thimbu",
+            "usr/share/zoneinfo/Asia/Thimphu",
+            "usr/share/zoneinfo/Asia/Tokyo",
+            "usr/share/zoneinfo/Asia/Tomsk",
+            "usr/share/zoneinfo/Asia/Ujung_Pandang",
+            "usr/share/zoneinfo/Asia/Ulaanbaatar",
+            "usr/share/zoneinfo/Asia/Ulan_Bator",
+            "usr/share/zoneinfo/Asia/Urumqi",
+            "usr/share/zoneinfo/Asia/Ust-Nera",
+            "usr/share/zoneinfo/Asia/Vientiane",
+            "usr/share/zoneinfo/Asia/Vladivostok",
+            "usr/share/zoneinfo/Asia/Yakutsk",
+            "usr/share/zoneinfo/Asia/Yangon",
+            "usr/share/zoneinfo/Asia/Yekaterinburg",
+            "usr/share/zoneinfo/Asia/Yerevan",
+            "usr/share/zoneinfo/Atlantic/Azores",
+            "usr/share/zoneinfo/Atlantic/Bermuda",
+            "usr/share/zoneinfo/Atlantic/Canary",
+            "usr/share/zoneinfo/Atlantic/Cape_Verde",
+            "usr/share/zoneinfo/Atlantic/Faeroe",
+            "usr/share/zoneinfo/Atlantic/Faroe",
+            "usr/share/zoneinfo/Atlantic/Jan_Mayen",
+            "usr/share/zoneinfo/Atlantic/Madeira",
+            "usr/share/zoneinfo/Atlantic/Reykjavik",
+            "usr/share/zoneinfo/Atlantic/South_Georgia",
+            "usr/share/zoneinfo/Atlantic/St_Helena",
+            "usr/share/zoneinfo/Atlantic/Stanley",
+            "usr/share/zoneinfo/Australia/ACT",
+            "usr/share/zoneinfo/Australia/Adelaide",
+            "usr/share/zoneinfo/Australia/Brisbane",
+            "usr/share/zoneinfo/Australia/Broken_Hill",
+            "usr/share/zoneinfo/Australia/Canberra",
+            "usr/share/zoneinfo/Australia/Currie",
+            "usr/share/zoneinfo/Australia/Darwin",
+            "usr/share/zoneinfo/Australia/Eucla",
+            "usr/share/zoneinfo/Australia/Hobart",
+            "usr/share/zoneinfo/Australia/LHI",
+            "usr/share/zoneinfo/Australia/Lindeman",
+            "usr/share/zoneinfo/Australia/Lord_Howe",
+            "usr/share/zoneinfo/Australia/Melbourne",
+            "usr/share/zoneinfo/Australia/NSW",
+            "usr/share/zoneinfo/Australia/North",
+            "usr/share/zoneinfo/Australia/Perth",
+            "usr/share/zoneinfo/Australia/Queensland",
+            "usr/share/zoneinfo/Australia/South",
+            "usr/share/zoneinfo/Australia/Sydney",
+            "usr/share/zoneinfo/Australia/Tasmania",
+            "usr/share/zoneinfo/Australia/Victoria",
+            "usr/share/zoneinfo/Australia/West",
+            "usr/share/zoneinfo/Australia/Yancowinna",
+            "usr/share/zoneinfo/Brazil/Acre",
+            "usr/share/zoneinfo/Brazil/DeNoronha",
+            "usr/share/zoneinfo/Brazil/East",
+            "usr/share/zoneinfo/Brazil/West",
+            "usr/share/zoneinfo/Canada/Atlantic",
+            "usr/share/zoneinfo/Canada/Central",
+            "usr/share/zoneinfo/Canada/Eastern",
+            "usr/share/zoneinfo/Canada/Mountain",
+            "usr/share/zoneinfo/Canada/Newfoundland",
+            "usr/share/zoneinfo/Canada/Pacific",
+            "usr/share/zoneinfo/Canada/Saskatchewan",
+            "usr/share/zoneinfo/Canada/Yukon",
+            "usr/share/zoneinfo/Chile/Continental",
+            "usr/share/zoneinfo/Chile/EasterIsland",
+            "usr/share/zoneinfo/Etc/GMT",
+            "usr/share/zoneinfo/Etc/GMT+0",
+            "usr/share/zoneinfo/Etc/GMT+1",
+            "usr/share/zoneinfo/Etc/GMT+10",
+            "usr/share/zoneinfo/Etc/GMT+11",
+            "usr/share/zoneinfo/Etc/GMT+12",
+            "usr/share/zoneinfo/Etc/GMT+2",
+            "usr/share/zoneinfo/Etc/GMT+3",
+            "usr/share/zoneinfo/Etc/GMT+4",
+            "usr/share/zoneinfo/Etc/GMT+5",
+            "usr/share/zoneinfo/Etc/GMT+6",
+            "usr/share/zoneinfo/Etc/GMT+7",
+            "usr/share/zoneinfo/Etc/GMT+8",
+            "usr/share/zoneinfo/Etc/GMT+9",
+            "usr/share/zoneinfo/Etc/GMT-0",
+            "usr/share/zoneinfo/Etc/GMT-1",
+            "usr/share/zoneinfo/Etc/GMT-10",
+            "usr/share/zoneinfo/Etc/GMT-11",
+            "usr/share/zoneinfo/Etc/GMT-12",
+            "usr/share/zoneinfo/Etc/GMT-13",
+            "usr/share/zoneinfo/Etc/GMT-14",
+            "usr/share/zoneinfo/Etc/GMT-2",
+            "usr/share/zoneinfo/Etc/GMT-3",
+            "usr/share/zoneinfo/Etc/GMT-4",
+            "usr/share/zoneinfo/Etc/GMT-5",
+            "usr/share/zoneinfo/Etc/GMT-6",
+            "usr/share/zoneinfo/Etc/GMT-7",
+            "usr/share/zoneinfo/Etc/GMT-8",
+            "usr/share/zoneinfo/Etc/GMT-9",
+            "usr/share/zoneinfo/Etc/GMT0",
+            "usr/share/zoneinfo/Etc/Greenwich",
+            "usr/share/zoneinfo/Etc/UCT",
+            "usr/share/zoneinfo/Etc/UTC",
+            "usr/share/zoneinfo/Etc/Universal",
+            "usr/share/zoneinfo/Etc/Zulu",
+            "usr/share/zoneinfo/Europe/Amsterdam",
+            "usr/share/zoneinfo/Europe/Andorra",
+            "usr/share/zoneinfo/Europe/Astrakhan",
+            "usr/share/zoneinfo/Europe/Athens",
+            "usr/share/zoneinfo/Europe/Belfast",
+            "usr/share/zoneinfo/Europe/Belgrade",
+            "usr/share/zoneinfo/Europe/Berlin",
+            "usr/share/zoneinfo/Europe/Bratislava",
+            "usr/share/zoneinfo/Europe/Brussels",
+            "usr/share/zoneinfo/Europe/Bucharest",
+            "usr/share/zoneinfo/Europe/Budapest",
+            "usr/share/zoneinfo/Europe/Busingen",
+            "usr/share/zoneinfo/Europe/Chisinau",
+            "usr/share/zoneinfo/Europe/Copenhagen",
+            "usr/share/zoneinfo/Europe/Dublin",
+            "usr/share/zoneinfo/Europe/Gibraltar",
+            "usr/share/zoneinfo/Europe/Guernsey",
+            "usr/share/zoneinfo/Europe/Helsinki",
+            "usr/share/zoneinfo/Europe/Isle_of_Man",
+            "usr/share/zoneinfo/Europe/Istanbul",
+            "usr/share/zoneinfo/Europe/Jersey",
+            "usr/share/zoneinfo/Europe/Kaliningrad",
+            "usr/share/zoneinfo/Europe/Kiev",
+            "usr/share/zoneinfo/Europe/Kirov",
+            "usr/share/zoneinfo/Europe/Kyiv",
+            "usr/share/zoneinfo/Europe/Lisbon",
+            "usr/share/zoneinfo/Europe/Ljubljana",
+            "usr/share/zoneinfo/Europe/London",
+            "usr/share/zoneinfo/Europe/Luxembourg",
+            "usr/share/zoneinfo/Europe/Madrid",
+            "usr/share/zoneinfo/Europe/Malta",
+            "usr/share/zoneinfo/Europe/Mariehamn",
+            "usr/share/zoneinfo/Europe/Minsk",
+            "usr/share/zoneinfo/Europe/Monaco",
+            "usr/share/zoneinfo/Europe/Moscow",
+            "usr/share/zoneinfo/Europe/Nicosia",
+            "usr/share/zoneinfo/Europe/Oslo",
+            "usr/share/zoneinfo/Europe/Paris",
+            "usr/share/zoneinfo/Europe/Podgorica",
+            "usr/share/zoneinfo/Europe/Prague",
+            "usr/share/zoneinfo/Europe/Riga",
+            "usr/share/zoneinfo/Europe/Rome",
+            "usr/share/zoneinfo/Europe/Samara",
+            "usr/share/zoneinfo/Europe/San_Marino",
+            "usr/share/zoneinfo/Europe/Sarajevo",
+            "usr/share/zoneinfo/Europe/Saratov",
+            "usr/share/zoneinfo/Europe/Simferopol",
+            "usr/share/zoneinfo/Europe/Skopje",
+            "usr/share/zoneinfo/Europe/Sofia",
+            "usr/share/zoneinfo/Europe/Stockholm",
+            "usr/share/zoneinfo/Europe/Tallinn",
+            "usr/share/zoneinfo/Europe/Tirane",
+            "usr/share/zoneinfo/Europe/Tiraspol",
+            "usr/share/zoneinfo/Europe/Ulyanovsk",
+            "usr/share/zoneinfo/Europe/Uzhgorod",
+            "usr/share/zoneinfo/Europe/Vaduz",
+            "usr/share/zoneinfo/Europe/Vatican",
+            "usr/share/zoneinfo/Europe/Vienna",
+            "usr/share/zoneinfo/Europe/Vilnius",
+            "usr/share/zoneinfo/Europe/Volgograd",
+            "usr/share/zoneinfo/Europe/Warsaw",
+            "usr/share/zoneinfo/Europe/Zagreb",
+            "usr/share/zoneinfo/Europe/Zaporozhye",
+            "usr/share/zoneinfo/Europe/Zurich",
+            "usr/share/zoneinfo/Indian/Antananarivo",
+            "usr/share/zoneinfo/Indian/Chagos",
+            "usr/share/zoneinfo/Indian/Christmas",
+            "usr/share/zoneinfo/Indian/Cocos",
+            "usr/share/zoneinfo/Indian/Comoro",
+            "usr/share/zoneinfo/Indian/Kerguelen",
+            "usr/share/zoneinfo/Indian/Mahe",
+            "usr/share/zoneinfo/Indian/Maldives",
+            "usr/share/zoneinfo/Indian/Mauritius",
+            "usr/share/zoneinfo/Indian/Mayotte",
+            "usr/share/zoneinfo/Indian/Reunion",
+            "usr/share/zoneinfo/Mexico/BajaNorte",
+            "usr/share/zoneinfo/Mexico/BajaSur",
+            "usr/share/zoneinfo/Mexico/General",
+            "usr/share/zoneinfo/Pacific/Apia",
+            "usr/share/zoneinfo/Pacific/Auckland",
+            "usr/share/zoneinfo/Pacific/Bougainville",
+            "usr/share/zoneinfo/Pacific/Chatham",
+            "usr/share/zoneinfo/Pacific/Chuuk",
+            "usr/share/zoneinfo/Pacific/Easter",
+            "usr/share/zoneinfo/Pacific/Efate",
+            "usr/share/zoneinfo/Pacific/Enderbury",
+            "usr/share/zoneinfo/Pacific/Fakaofo",
+            "usr/share/zoneinfo/Pacific/Fiji",
+            "usr/share/zoneinfo/Pacific/Funafuti",
+            "usr/share/zoneinfo/Pacific/Galapagos",
+            "usr/share/zoneinfo/Pacific/Gambier",
+            "usr/share/zoneinfo/Pacific/Guadalcanal",
+            "usr/share/zoneinfo/Pacific/Guam",
+            "usr/share/zoneinfo/Pacific/Honolulu",
+            "usr/share/zoneinfo/Pacific/Johnston",
+            "usr/share/zoneinfo/Pacific/Kanton",
+            "usr/share/zoneinfo/Pacific/Kiritimati",
+            "usr/share/zoneinfo/Pacific/Kosrae",
+            "usr/share/zoneinfo/Pacific/Kwajalein",
+            "usr/share/zoneinfo/Pacific/Majuro",
+            "usr/share/zoneinfo/Pacific/Marquesas",
+            "usr/share/zoneinfo/Pacific/Midway",
+            "usr/share/zoneinfo/Pacific/Nauru",
+            "usr/share/zoneinfo/Pacific/Niue",
+            "usr/share/zoneinfo/Pacific/Norfolk",
+            "usr/share/zoneinfo/Pacific/Noumea",
+            "usr/share/zoneinfo/Pacific/Pago_Pago",
+            "usr/share/zoneinfo/Pacific/Palau",
+            "usr/share/zoneinfo/Pacific/Pitcairn",
+            "usr/share/zoneinfo/Pacific/Pohnpei",
+            "usr/share/zoneinfo/Pacific/Ponape",
+            "usr/share/zoneinfo/Pacific/Port_Moresby",
+            "usr/share/zoneinfo/Pacific/Rarotonga",
+            "usr/share/zoneinfo/Pacific/Saipan",
+            "usr/share/zoneinfo/Pacific/Samoa",
+            "usr/share/zoneinfo/Pacific/Tahiti",
+            "usr/share/zoneinfo/Pacific/Tarawa",
+            "usr/share/zoneinfo/Pacific/Tongatapu",
+            "usr/share/zoneinfo/Pacific/Truk",
+            "usr/share/zoneinfo/Pacific/Wake",
+            "usr/share/zoneinfo/Pacific/Wallis",
+            "usr/share/zoneinfo/Pacific/Yap",
+            "usr/share/zoneinfo/US/Alaska",
+            "usr/share/zoneinfo/US/Aleutian",
+            "usr/share/zoneinfo/US/Arizona",
+            "usr/share/zoneinfo/US/Central",
+            "usr/share/zoneinfo/US/East-Indiana",
+            "usr/share/zoneinfo/US/Eastern",
+            "usr/share/zoneinfo/US/Hawaii",
+            "usr/share/zoneinfo/US/Indiana-Starke",
+            "usr/share/zoneinfo/US/Michigan",
+            "usr/share/zoneinfo/US/Mountain",
+            "usr/share/zoneinfo/US/Pacific",
+            "usr/share/zoneinfo/US/Samoa"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "zlib@1.4-r0",
+          "Name": "zlib",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/zlib@1.4-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "6db91fb760d7e217"
+          },
+          "Version": "1.4-r0",
+          "Arch": "x86_64",
+          "SrcName": "zlib",
+          "SrcVersion": "1.4-r0",
+          "Licenses": [
+            "Zlib"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "DependsOn": [
+            "musl@1.2.6-r3"
+          ],
+          "Layer": {
+            "Digest": "sha256:a362c81e76605c298c425e841e53e0ac8e78fcd72971bd0625bde15688c65f5f",
+            "DiffID": "sha256:d78b117bb12a5718009129327b575d99b86d66b43f33e77d63bf8e2ceaa8721d"
+          },
+          "Digest": "sha1:e23f9ce4e32cbdd27bf1c89d84e83ba61c4290bc",
+          "InstalledFiles": [
+            "usr/lib/libz.so.1",
+            "usr/lib/libz.so.1.4"
+          ],
+          "AnalyzedBy": "apk"
+        }
+      ]
+    },
+    {
+      "Target": "app/PointOfSale.API.deps.json",
+      "Class": "lang-pkgs",
+      "Type": "dotnet-core",
+      "Packages": [
+        {
+          "ID": "PointOfSale.API/1.0.0",
+          "Name": "PointOfSale.API",
+          "Identifier": {
+            "PURL": "pkg:nuget/PointOfSale.API@1.0.0",
+            "UID": "1e8cd6b738d0d9a6"
+          },
+          "Version": "1.0.0",
+          "Relationship": "root",
+          "DependsOn": [
+            "AWSSDK.S3/3.7.101",
+            "Hangfire.AspNetCore/1.8.23",
+            "Hangfire.PostgreSql/1.20.12",
+            "MassTransit.RabbitMQ/8.5.7",
+            "Microsoft.AspNetCore.Authentication.JwtBearer/10.0.15",
+            "Microsoft.AspNetCore.OpenApi/10.0.15",
+            "Microsoft.AspNetCore.SignalR.StackExchangeRedis/10.0.15",
+            "OpenTelemetry.Exporter.OpenTelemetryProtocol/1.15.3",
+            "OpenTelemetry.Exporter.Prometheus.AspNetCore/1.15.3-beta.1",
+            "OpenTelemetry.Extensions.Hosting/1.15.3",
+            "OpenTelemetry.Instrumentation.AspNetCore/1.15.2",
+            "PointOfSale.Core/1.0.0",
+            "PointOfSale.Infrastructure/1.0.0",
+            "Stripe.net/52.1.0"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 734,
+              "EndLine": 738
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "PointOfSale.Core/1.0.0",
+          "Name": "PointOfSale.Core",
+          "Identifier": {
+            "PURL": "pkg:nuget/PointOfSale.Core@1.0.0",
+            "UID": "577115a078b22b0a"
+          },
+          "Version": "1.0.0",
+          "Relationship": "workspace",
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 1173,
+              "EndLine": 1177
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "PointOfSale.Infrastructure/1.0.0",
+          "Name": "PointOfSale.Infrastructure",
+          "Identifier": {
+            "PURL": "pkg:nuget/PointOfSale.Infrastructure@1.0.0",
+            "UID": "d176fa316e2b3db5"
+          },
+          "Version": "1.0.0",
+          "Relationship": "workspace",
+          "DependsOn": [
+            "DnsClient/1.7.0",
+            "Hangfire.Core/1.8.23",
+            "MassTransit.EntityFrameworkCore/8.5.7",
+            "Microsoft.Extensions.Caching.StackExchangeRedis/10.0.15",
+            "Microsoft.Extensions.Http.Polly/10.0.15",
+            "MongoDB.Driver/3.8.0",
+            "Newtonsoft.Json/13.0.4",
+            "Npgsql.EntityFrameworkCore.PostgreSQL/10.0.3",
+            "OpenSearch.Client/2.3.0",
+            "PointOfSale.Core/1.0.0",
+            "SharpCompress/0.48.0",
+            "Snappier/1.3.1",
+            "StackExchange.Redis/2.8.24",
+            "libphonenumber-csharp/9.0.23"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 1178,
+              "EndLine": 1182
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "AWSSDK.S3/3.7.101",
+          "Name": "AWSSDK.S3",
+          "Identifier": {
+            "PURL": "pkg:nuget/AWSSDK.S3@3.7.101",
+            "UID": "69737e534ee83b99"
+          },
+          "Version": "3.7.101",
+          "Relationship": "direct",
+          "DependsOn": [
+            "AWSSDK.Core/3.7.100"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 746,
+              "EndLine": 752
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Hangfire.AspNetCore/1.8.23",
+          "Name": "Hangfire.AspNetCore",
+          "Identifier": {
+            "PURL": "pkg:nuget/Hangfire.AspNetCore@1.8.23",
+            "UID": "1d391dbf75b62244"
+          },
+          "Version": "1.8.23",
+          "Relationship": "direct",
+          "DependsOn": [
+            "Hangfire.NetCore/1.8.23"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 767,
+              "EndLine": 773
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Hangfire.PostgreSql/1.20.12",
+          "Name": "Hangfire.PostgreSql",
+          "Identifier": {
+            "PURL": "pkg:nuget/Hangfire.PostgreSql@1.20.12",
+            "UID": "e8a1b580974c85d5"
+          },
+          "Version": "1.20.12",
+          "Relationship": "direct",
+          "DependsOn": [
+            "Dapper/2.0.123",
+            "Hangfire.Core/1.8.23",
+            "Npgsql/10.0.3"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 788,
+              "EndLine": 794
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "MassTransit.RabbitMQ/8.5.7",
+          "Name": "MassTransit.RabbitMQ",
+          "Identifier": {
+            "PURL": "pkg:nuget/MassTransit.RabbitMQ@8.5.7",
+            "UID": "443daef8a931009a"
+          },
+          "Version": "8.5.7",
+          "Relationship": "direct",
+          "DependsOn": [
+            "MassTransit/8.5.7",
+            "RabbitMQ.Client/7.2.0"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 823,
+              "EndLine": 829
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.AspNetCore.Authentication.JwtBearer/10.0.15",
+          "Name": "Microsoft.AspNetCore.Authentication.JwtBearer",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.AspNetCore.Authentication.JwtBearer@10.0.15",
+            "UID": "3786ca4728c6e1e"
+          },
+          "Version": "10.0.15",
+          "Relationship": "direct",
+          "DependsOn": [
+            "Microsoft.IdentityModel.Protocols.OpenIdConnect/8.19.2"
+          ],
+          "Layer": {
+            "Digest": "sha256:aae3e40b7deba28390a09966b575f24d7b4f5810ef85a296ff0e0be373edff55",
+            "DiffID": "sha256:965c570a66685c1a23a61da8c184d34b31dd9d129f1aed39d71a134439d3851f"
+          },
+          "Locations": [
+            {
+              "StartLine": 844,
+              "EndLine": 850
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.AspNetCore.OpenApi/10.0.15",
+          "Name": "Microsoft.AspNetCore.OpenApi",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.AspNetCore.OpenApi@10.0.15",
+            "UID": "498e5eeeee398db9"
+          },
+          "Version": "10.0.15",
+          "Relationship": "direct",
+          "DependsOn": [
+            "Microsoft.OpenApi/2.13.0"
+          ],
+          "Layer": {
+            "Digest": "sha256:aae3e40b7deba28390a09966b575f24d7b4f5810ef85a296ff0e0be373edff55",
+            "DiffID": "sha256:965c570a66685c1a23a61da8c184d34b31dd9d129f1aed39d71a134439d3851f"
+          },
+          "Locations": [
+            {
+              "StartLine": 851,
+              "EndLine": 857
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.AspNetCore.SignalR.StackExchangeRedis/10.0.15",
+          "Name": "Microsoft.AspNetCore.SignalR.StackExchangeRedis",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.AspNetCore.SignalR.StackExchangeRedis@10.0.15",
+            "UID": "5a939e7a4a91d64a"
+          },
+          "Version": "10.0.15",
+          "Relationship": "direct",
+          "DependsOn": [
+            "MessagePack/2.5.303",
+            "StackExchange.Redis/2.8.24"
+          ],
+          "Layer": {
+            "Digest": "sha256:aae3e40b7deba28390a09966b575f24d7b4f5810ef85a296ff0e0be373edff55",
+            "DiffID": "sha256:965c570a66685c1a23a61da8c184d34b31dd9d129f1aed39d71a134439d3851f"
+          },
+          "Locations": [
+            {
+              "StartLine": 858,
+              "EndLine": 864
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "OpenTelemetry.Exporter.OpenTelemetryProtocol/1.15.3",
+          "Name": "OpenTelemetry.Exporter.OpenTelemetryProtocol",
+          "Identifier": {
+            "PURL": "pkg:nuget/OpenTelemetry.Exporter.OpenTelemetryProtocol@1.15.3",
+            "UID": "d7cc404dc52ffca7"
+          },
+          "Version": "1.15.3",
+          "Relationship": "direct",
+          "DependsOn": [
+            "OpenTelemetry/1.15.3"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 1033,
+              "EndLine": 1039
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "OpenTelemetry.Exporter.Prometheus.AspNetCore/1.15.3-beta.1",
+          "Name": "OpenTelemetry.Exporter.Prometheus.AspNetCore",
+          "Identifier": {
+            "PURL": "pkg:nuget/OpenTelemetry.Exporter.Prometheus.AspNetCore@1.15.3-beta.1",
+            "UID": "4e5ed845221bf7fd"
+          },
+          "Version": "1.15.3-beta.1",
+          "Relationship": "direct",
+          "DependsOn": [
+            "OpenTelemetry/1.15.3"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 1040,
+              "EndLine": 1046
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "OpenTelemetry.Extensions.Hosting/1.15.3",
+          "Name": "OpenTelemetry.Extensions.Hosting",
+          "Identifier": {
+            "PURL": "pkg:nuget/OpenTelemetry.Extensions.Hosting@1.15.3",
+            "UID": "3e518799ee630fb0"
+          },
+          "Version": "1.15.3",
+          "Relationship": "direct",
+          "DependsOn": [
+            "OpenTelemetry/1.15.3"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 1047,
+              "EndLine": 1053
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "OpenTelemetry.Instrumentation.AspNetCore/1.15.2",
+          "Name": "OpenTelemetry.Instrumentation.AspNetCore",
+          "Identifier": {
+            "PURL": "pkg:nuget/OpenTelemetry.Instrumentation.AspNetCore@1.15.2",
+            "UID": "951ba60c078ef0be"
+          },
+          "Version": "1.15.2",
+          "Relationship": "direct",
+          "DependsOn": [
+            "OpenTelemetry.Api.ProviderBuilderExtensions/1.15.3"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 1054,
+              "EndLine": 1060
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Stripe.net/52.1.0",
+          "Name": "Stripe.net",
+          "Identifier": {
+            "PURL": "pkg:nuget/Stripe.net@52.1.0",
+            "UID": "b37ae2c4504a4588"
+          },
+          "Version": "52.1.0",
+          "Relationship": "direct",
+          "DependsOn": [
+            "Newtonsoft.Json/13.0.4",
+            "System.Configuration.ConfigurationManager/9.0.0"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 1110,
+              "EndLine": 1116
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "AWSSDK.Core/3.7.100",
+          "Name": "AWSSDK.Core",
+          "Identifier": {
+            "PURL": "pkg:nuget/AWSSDK.Core@3.7.100",
+            "UID": "64fbc14c2f0a2373"
+          },
+          "Version": "3.7.100",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 739,
+              "EndLine": 745
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Dapper/2.0.123",
+          "Name": "Dapper",
+          "Identifier": {
+            "PURL": "pkg:nuget/Dapper@2.0.123",
+            "UID": "33111d2a517d5245"
+          },
+          "Version": "2.0.123",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 753,
+              "EndLine": 759
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "DnsClient/1.7.0",
+          "Name": "DnsClient",
+          "Identifier": {
+            "PURL": "pkg:nuget/DnsClient@1.7.0",
+            "UID": "7c4704bdb601515e"
+          },
+          "Version": "1.7.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 760,
+              "EndLine": 766
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Hangfire.Core/1.8.23",
+          "Name": "Hangfire.Core",
+          "Identifier": {
+            "PURL": "pkg:nuget/Hangfire.Core@1.8.23",
+            "UID": "affdea521ccc2e72"
+          },
+          "Version": "1.8.23",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Newtonsoft.Json/13.0.4"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 774,
+              "EndLine": 780
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Hangfire.NetCore/1.8.23",
+          "Name": "Hangfire.NetCore",
+          "Identifier": {
+            "PURL": "pkg:nuget/Hangfire.NetCore@1.8.23",
+            "UID": "47bc4876ac0cb71c"
+          },
+          "Version": "1.8.23",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Hangfire.Core/1.8.23"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 781,
+              "EndLine": 787
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "MassTransit/8.5.7",
+          "Name": "MassTransit",
+          "Identifier": {
+            "PURL": "pkg:nuget/MassTransit@8.5.7",
+            "UID": "75419f4d4a427535"
+          },
+          "Version": "8.5.7",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "MassTransit.Abstractions/8.5.7"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 802,
+              "EndLine": 808
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "MassTransit.Abstractions/8.5.7",
+          "Name": "MassTransit.Abstractions",
+          "Identifier": {
+            "PURL": "pkg:nuget/MassTransit.Abstractions@8.5.7",
+            "UID": "c2064ab044cb58ab"
+          },
+          "Version": "8.5.7",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 809,
+              "EndLine": 815
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "MassTransit.EntityFrameworkCore/8.5.7",
+          "Name": "MassTransit.EntityFrameworkCore",
+          "Identifier": {
+            "PURL": "pkg:nuget/MassTransit.EntityFrameworkCore@8.5.7",
+            "UID": "c33aa24b8c88d973"
+          },
+          "Version": "8.5.7",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "MassTransit/8.5.7",
+            "Microsoft.EntityFrameworkCore.Relational/10.0.15"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 816,
+              "EndLine": 822
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "MessagePack/2.5.303",
+          "Name": "MessagePack",
+          "Identifier": {
+            "PURL": "pkg:nuget/MessagePack@2.5.303",
+            "UID": "92bacb8296db1286"
+          },
+          "Version": "2.5.303",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "MessagePack.Annotations/2.5.303",
+            "Microsoft.NET.StringTools/17.6.3"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 830,
+              "EndLine": 836
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "MessagePack.Annotations/2.5.303",
+          "Name": "MessagePack.Annotations",
+          "Identifier": {
+            "PURL": "pkg:nuget/MessagePack.Annotations@2.5.303",
+            "UID": "1b1ce9e4934716d4"
+          },
+          "Version": "2.5.303",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 837,
+              "EndLine": 843
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.Bcl.Cryptography/10.0.2",
+          "Name": "Microsoft.Bcl.Cryptography",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.Bcl.Cryptography@10.0.2",
+            "UID": "4c126e94c42463f5"
+          },
+          "Version": "10.0.2",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 865,
+              "EndLine": 871
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.EntityFrameworkCore/10.0.15",
+          "Name": "Microsoft.EntityFrameworkCore",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.EntityFrameworkCore@10.0.15",
+            "UID": "db5ab9affaca3801"
+          },
+          "Version": "10.0.15",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.EntityFrameworkCore.Abstractions/10.0.15"
+          ],
+          "Layer": {
+            "Digest": "sha256:aae3e40b7deba28390a09966b575f24d7b4f5810ef85a296ff0e0be373edff55",
+            "DiffID": "sha256:965c570a66685c1a23a61da8c184d34b31dd9d129f1aed39d71a134439d3851f"
+          },
+          "Locations": [
+            {
+              "StartLine": 872,
+              "EndLine": 878
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.EntityFrameworkCore.Abstractions/10.0.15",
+          "Name": "Microsoft.EntityFrameworkCore.Abstractions",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.EntityFrameworkCore.Abstractions@10.0.15",
+            "UID": "5de0a0c6e30e02d6"
+          },
+          "Version": "10.0.15",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Layer": {
+            "Digest": "sha256:aae3e40b7deba28390a09966b575f24d7b4f5810ef85a296ff0e0be373edff55",
+            "DiffID": "sha256:965c570a66685c1a23a61da8c184d34b31dd9d129f1aed39d71a134439d3851f"
+          },
+          "Locations": [
+            {
+              "StartLine": 879,
+              "EndLine": 885
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.EntityFrameworkCore.Relational/10.0.15",
+          "Name": "Microsoft.EntityFrameworkCore.Relational",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.EntityFrameworkCore.Relational@10.0.15",
+            "UID": "91cfcbb4a927b495"
+          },
+          "Version": "10.0.15",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.EntityFrameworkCore/10.0.15"
+          ],
+          "Layer": {
+            "Digest": "sha256:aae3e40b7deba28390a09966b575f24d7b4f5810ef85a296ff0e0be373edff55",
+            "DiffID": "sha256:965c570a66685c1a23a61da8c184d34b31dd9d129f1aed39d71a134439d3851f"
+          },
+          "Locations": [
+            {
+              "StartLine": 886,
+              "EndLine": 892
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.Extensions.Caching.StackExchangeRedis/10.0.15",
+          "Name": "Microsoft.Extensions.Caching.StackExchangeRedis",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.Extensions.Caching.StackExchangeRedis@10.0.15",
+            "UID": "3847a0d5e4bb3478"
+          },
+          "Version": "10.0.15",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "StackExchange.Redis/2.8.24"
+          ],
+          "Layer": {
+            "Digest": "sha256:aae3e40b7deba28390a09966b575f24d7b4f5810ef85a296ff0e0be373edff55",
+            "DiffID": "sha256:965c570a66685c1a23a61da8c184d34b31dd9d129f1aed39d71a134439d3851f"
+          },
+          "Locations": [
+            {
+              "StartLine": 893,
+              "EndLine": 899
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.Extensions.Http.Polly/10.0.15",
+          "Name": "Microsoft.Extensions.Http.Polly",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.Extensions.Http.Polly@10.0.15",
+            "UID": "e152b085838399d4"
+          },
+          "Version": "10.0.15",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Polly.Extensions.Http/3.0.0",
+            "Polly/7.2.4"
+          ],
+          "Layer": {
+            "Digest": "sha256:aae3e40b7deba28390a09966b575f24d7b4f5810ef85a296ff0e0be373edff55",
+            "DiffID": "sha256:965c570a66685c1a23a61da8c184d34b31dd9d129f1aed39d71a134439d3851f"
+          },
+          "Locations": [
+            {
+              "StartLine": 900,
+              "EndLine": 906
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.IdentityModel.Abstractions/8.19.2",
+          "Name": "Microsoft.IdentityModel.Abstractions",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.IdentityModel.Abstractions@8.19.2",
+            "UID": "4079ad1ce30d29f0"
+          },
+          "Version": "8.19.2",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 907,
+              "EndLine": 913
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.IdentityModel.JsonWebTokens/8.19.2",
+          "Name": "Microsoft.IdentityModel.JsonWebTokens",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.IdentityModel.JsonWebTokens@8.19.2",
+            "UID": "6efcfc0e1bb16a65"
+          },
+          "Version": "8.19.2",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.IdentityModel.Tokens/8.19.2"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 914,
+              "EndLine": 920
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.IdentityModel.Logging/8.19.2",
+          "Name": "Microsoft.IdentityModel.Logging",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.IdentityModel.Logging@8.19.2",
+            "UID": "dc74ee682792e857"
+          },
+          "Version": "8.19.2",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.IdentityModel.Abstractions/8.19.2"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 921,
+              "EndLine": 927
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.IdentityModel.Protocols/8.19.2",
+          "Name": "Microsoft.IdentityModel.Protocols",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.IdentityModel.Protocols@8.19.2",
+            "UID": "994175548df6f855"
+          },
+          "Version": "8.19.2",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.IdentityModel.Tokens/8.19.2"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 928,
+              "EndLine": 934
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.IdentityModel.Protocols.OpenIdConnect/8.19.2",
+          "Name": "Microsoft.IdentityModel.Protocols.OpenIdConnect",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.IdentityModel.Protocols.OpenIdConnect@8.19.2",
+            "UID": "df11a4b378ed4c91"
+          },
+          "Version": "8.19.2",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.IdentityModel.Protocols/8.19.2",
+            "System.IdentityModel.Tokens.Jwt/8.19.2"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 935,
+              "EndLine": 941
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.IdentityModel.Tokens/8.19.2",
+          "Name": "Microsoft.IdentityModel.Tokens",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.IdentityModel.Tokens@8.19.2",
+            "UID": "aa18ece942917f88"
+          },
+          "Version": "8.19.2",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.Bcl.Cryptography/10.0.2",
+            "Microsoft.IdentityModel.Logging/8.19.2"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 942,
+              "EndLine": 948
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.NET.StringTools/17.6.3",
+          "Name": "Microsoft.NET.StringTools",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.NET.StringTools@17.6.3",
+            "UID": "4bcad77d2d1259ba"
+          },
+          "Version": "17.6.3",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 949,
+              "EndLine": 955
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.OpenApi/2.13.0",
+          "Name": "Microsoft.OpenApi",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.OpenApi@2.13.0",
+            "UID": "92933863cb6bb715"
+          },
+          "Version": "2.13.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Layer": {
+            "Digest": "sha256:aae3e40b7deba28390a09966b575f24d7b4f5810ef85a296ff0e0be373edff55",
+            "DiffID": "sha256:965c570a66685c1a23a61da8c184d34b31dd9d129f1aed39d71a134439d3851f"
+          },
+          "Locations": [
+            {
+              "StartLine": 956,
+              "EndLine": 962
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "MongoDB.Bson/3.8.0",
+          "Name": "MongoDB.Bson",
+          "Identifier": {
+            "PURL": "pkg:nuget/MongoDB.Bson@3.8.0",
+            "UID": "29cf473b10d00850"
+          },
+          "Version": "3.8.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 963,
+              "EndLine": 969
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "MongoDB.Driver/3.8.0",
+          "Name": "MongoDB.Driver",
+          "Identifier": {
+            "PURL": "pkg:nuget/MongoDB.Driver@3.8.0",
+            "UID": "44b38379f388efd4"
+          },
+          "Version": "3.8.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "DnsClient/1.7.0",
+            "MongoDB.Bson/3.8.0",
+            "SharpCompress/0.48.0",
+            "Snappier/1.3.1",
+            "ZstdSharp.Port/0.7.3"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 970,
+              "EndLine": 976
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Newtonsoft.Json/13.0.4",
+          "Name": "Newtonsoft.Json",
+          "Identifier": {
+            "PURL": "pkg:nuget/Newtonsoft.Json@13.0.4",
+            "UID": "dca5b8e277578afa"
+          },
+          "Version": "13.0.4",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 977,
+              "EndLine": 983
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Npgsql/10.0.3",
+          "Name": "Npgsql",
+          "Identifier": {
+            "PURL": "pkg:nuget/Npgsql@10.0.3",
+            "UID": "43db55f598c51aa8"
+          },
+          "Version": "10.0.3",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 984,
+              "EndLine": 990
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Npgsql.EntityFrameworkCore.PostgreSQL/10.0.3",
+          "Name": "Npgsql.EntityFrameworkCore.PostgreSQL",
+          "Identifier": {
+            "PURL": "pkg:nuget/Npgsql.EntityFrameworkCore.PostgreSQL@10.0.3",
+            "UID": "41051d807925b763"
+          },
+          "Version": "10.0.3",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.EntityFrameworkCore.Relational/10.0.15",
+            "Microsoft.EntityFrameworkCore/10.0.15",
+            "Npgsql/10.0.3"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 991,
+              "EndLine": 997
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "OpenSearch.Client/2.3.0",
+          "Name": "OpenSearch.Client",
+          "Identifier": {
+            "PURL": "pkg:nuget/OpenSearch.Client@2.3.0",
+            "UID": "fe42431aae92e983"
+          },
+          "Version": "2.3.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "OpenSearch.Net/2.3.0"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 998,
+              "EndLine": 1004
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "OpenSearch.Net/2.3.0",
+          "Name": "OpenSearch.Net",
+          "Identifier": {
+            "PURL": "pkg:nuget/OpenSearch.Net@2.3.0",
+            "UID": "65a875abca168ae7"
+          },
+          "Version": "2.3.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 1005,
+              "EndLine": 1011
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "OpenTelemetry/1.15.3",
+          "Name": "OpenTelemetry",
+          "Identifier": {
+            "PURL": "pkg:nuget/OpenTelemetry@1.15.3",
+            "UID": "b374cf41777b84c7"
+          },
+          "Version": "1.15.3",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "OpenTelemetry.Api.ProviderBuilderExtensions/1.15.3"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 1012,
+              "EndLine": 1018
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "OpenTelemetry.Api/1.15.3",
+          "Name": "OpenTelemetry.Api",
+          "Identifier": {
+            "PURL": "pkg:nuget/OpenTelemetry.Api@1.15.3",
+            "UID": "ea7ee35e0782fcd8"
+          },
+          "Version": "1.15.3",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 1019,
+              "EndLine": 1025
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "OpenTelemetry.Api.ProviderBuilderExtensions/1.15.3",
+          "Name": "OpenTelemetry.Api.ProviderBuilderExtensions",
+          "Identifier": {
+            "PURL": "pkg:nuget/OpenTelemetry.Api.ProviderBuilderExtensions@1.15.3",
+            "UID": "23816418c6622ba3"
+          },
+          "Version": "1.15.3",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "OpenTelemetry.Api/1.15.3"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 1026,
+              "EndLine": 1032
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Pipelines.Sockets.Unofficial/2.2.8",
+          "Name": "Pipelines.Sockets.Unofficial",
+          "Identifier": {
+            "PURL": "pkg:nuget/Pipelines.Sockets.Unofficial@2.2.8",
+            "UID": "e49d11888406ed01"
+          },
+          "Version": "2.2.8",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 1061,
+              "EndLine": 1067
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Polly/7.2.4",
+          "Name": "Polly",
+          "Identifier": {
+            "PURL": "pkg:nuget/Polly@7.2.4",
+            "UID": "1f675d4030d8c231"
+          },
+          "Version": "7.2.4",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 1068,
+              "EndLine": 1074
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Polly.Extensions.Http/3.0.0",
+          "Name": "Polly.Extensions.Http",
+          "Identifier": {
+            "PURL": "pkg:nuget/Polly.Extensions.Http@3.0.0",
+            "UID": "f1b5cb37bdc92796"
+          },
+          "Version": "3.0.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Polly/7.2.4"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 1075,
+              "EndLine": 1081
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "RabbitMQ.Client/7.2.0",
+          "Name": "RabbitMQ.Client",
+          "Identifier": {
+            "PURL": "pkg:nuget/RabbitMQ.Client@7.2.0",
+            "UID": "954543e2a09ed884"
+          },
+          "Version": "7.2.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 1082,
+              "EndLine": 1088
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "SharpCompress/0.48.0",
+          "Name": "SharpCompress",
+          "Identifier": {
+            "PURL": "pkg:nuget/SharpCompress@0.48.0",
+            "UID": "69213b8b8b6e43ab"
+          },
+          "Version": "0.48.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 1089,
+              "EndLine": 1095
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Snappier/1.3.1",
+          "Name": "Snappier",
+          "Identifier": {
+            "PURL": "pkg:nuget/Snappier@1.3.1",
+            "UID": "f3145e1a03b58309"
+          },
+          "Version": "1.3.1",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 1096,
+              "EndLine": 1102
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "StackExchange.Redis/2.8.24",
+          "Name": "StackExchange.Redis",
+          "Identifier": {
+            "PURL": "pkg:nuget/StackExchange.Redis@2.8.24",
+            "UID": "69bcf9eb3c4b4bc7"
+          },
+          "Version": "2.8.24",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Pipelines.Sockets.Unofficial/2.2.8"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 1103,
+              "EndLine": 1109
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Swashbuckle.AspNetCore.Swagger/10.0.1",
+          "Name": "Swashbuckle.AspNetCore.Swagger",
+          "Identifier": {
+            "PURL": "pkg:nuget/Swashbuckle.AspNetCore.Swagger@10.0.1",
+            "UID": "c45973386a99dba"
+          },
+          "Version": "10.0.1",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.OpenApi/2.13.0"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 1124,
+              "EndLine": 1130
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Swashbuckle.AspNetCore.SwaggerGen/10.0.1",
+          "Name": "Swashbuckle.AspNetCore.SwaggerGen",
+          "Identifier": {
+            "PURL": "pkg:nuget/Swashbuckle.AspNetCore.SwaggerGen@10.0.1",
+            "UID": "251a3feaa965967e"
+          },
+          "Version": "10.0.1",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Swashbuckle.AspNetCore.Swagger/10.0.1"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 1131,
+              "EndLine": 1137
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Swashbuckle.AspNetCore.SwaggerUI/10.0.1",
+          "Name": "Swashbuckle.AspNetCore.SwaggerUI",
+          "Identifier": {
+            "PURL": "pkg:nuget/Swashbuckle.AspNetCore.SwaggerUI@10.0.1",
+            "UID": "b690ff742e2cb14d"
+          },
+          "Version": "10.0.1",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 1138,
+              "EndLine": 1144
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "System.Configuration.ConfigurationManager/9.0.0",
+          "Name": "System.Configuration.ConfigurationManager",
+          "Identifier": {
+            "PURL": "pkg:nuget/System.Configuration.ConfigurationManager@9.0.0",
+            "UID": "732fabe870178dc0"
+          },
+          "Version": "9.0.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "System.Security.Cryptography.ProtectedData/9.0.0"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 1145,
+              "EndLine": 1151
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "System.IdentityModel.Tokens.Jwt/8.19.2",
+          "Name": "System.IdentityModel.Tokens.Jwt",
+          "Identifier": {
+            "PURL": "pkg:nuget/System.IdentityModel.Tokens.Jwt@8.19.2",
+            "UID": "fe3b5938ea2c6567"
+          },
+          "Version": "8.19.2",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.IdentityModel.JsonWebTokens/8.19.2",
+            "Microsoft.IdentityModel.Tokens/8.19.2"
+          ],
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 1152,
+              "EndLine": 1158
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "System.Security.Cryptography.ProtectedData/9.0.0",
+          "Name": "System.Security.Cryptography.ProtectedData",
+          "Identifier": {
+            "PURL": "pkg:nuget/System.Security.Cryptography.ProtectedData@9.0.0",
+            "UID": "572a4dc310400337"
+          },
+          "Version": "9.0.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 1159,
+              "EndLine": 1165
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "ZstdSharp.Port/0.7.3",
+          "Name": "ZstdSharp.Port",
+          "Identifier": {
+            "PURL": "pkg:nuget/ZstdSharp.Port@0.7.3",
+            "UID": "1e10e712aca1de44"
+          },
+          "Version": "0.7.3",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 1166,
+              "EndLine": 1172
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "libphonenumber-csharp/9.0.23",
+          "Name": "libphonenumber-csharp",
+          "Identifier": {
+            "PURL": "pkg:nuget/libphonenumber-csharp@9.0.23",
+            "UID": "6ce1bb5c902e7116"
+          },
+          "Version": "9.0.23",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Layer": {
+            "Digest": "sha256:aecd8e0f49ef9a2ca569d4e6249e892fed26131b71e0ca988050d09dd5fcf4dd",
+            "DiffID": "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed"
+          },
+          "Locations": [
+            {
+              "StartLine": 795,
+              "EndLine": 801
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        }
+      ]
+    },
+    {
+      "Target": "opt/shopixy-healthprobe/HealthProbe.deps.json",
+      "Class": "lang-pkgs",
+      "Type": "dotnet-core",
+      "Packages": [
+        {
+          "ID": "HealthProbe/1.0.0",
+          "Name": "HealthProbe",
+          "Identifier": {
+            "PURL": "pkg:nuget/HealthProbe@1.0.0",
+            "UID": "29d5d7cf7114700e"
+          },
+          "Version": "1.0.0",
+          "Relationship": "root",
+          "Layer": {
+            "Digest": "sha256:008e559d15837b6269251ea0dc93e2686e92e3208db3a7f0ba0c796d29ad2211",
+            "DiffID": "sha256:ea474ccf2e4938d9dc1630ee9725e2eb8377156c95c0e70aec0ef6e189df99bb"
+          },
+          "Locations": [
+            {
+              "StartLine": 17,
+              "EndLine": 21
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        }
+      ]
+    },
+    {
+      "Target": "usr/share/dotnet/shared/Microsoft.AspNetCore.App/10.0.15/Microsoft.AspNetCore.App.deps.json",
+      "Class": "lang-pkgs",
+      "Type": "dotnet-core",
+      "Packages": [
+        {
+          "ID": "Microsoft.AspNetCore.App.Runtime.linux-musl-x64/10.0.15",
+          "Name": "Microsoft.AspNetCore.App.Runtime.linux-musl-x64",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.AspNetCore.App.Runtime.linux-musl-x64@10.0.15",
+            "UID": "e9c131f539cff96e"
+          },
+          "Version": "10.0.15",
+          "Layer": {
+            "Digest": "sha256:e51fb473274ddac49cabc0c880f310e7081abc3673b0e7757f2ed583ff582bb7",
+            "DiffID": "sha256:0dc99d1494ea013fd5bc63aa7cce8a01b91b87ca34a4f444a7572698e2cf67d1"
+          },
+          "Locations": [
+            {
+              "StartLine": 581,
+              "EndLine": 586
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        }
+      ]
+    },
+    {
+      "Target": "usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.15/Microsoft.NETCore.App.deps.json",
+      "Class": "lang-pkgs",
+      "Type": "dotnet-core",
+      "Packages": [
+        {
+          "ID": "Microsoft.NETCore.App.Runtime.linux-musl-x64/10.0.15",
+          "Name": "Microsoft.NETCore.App.Runtime.linux-musl-x64",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.NETCore.App.Runtime.linux-musl-x64@10.0.15",
+            "UID": "9f72127dd5fe641a"
+          },
+          "Version": "10.0.15",
+          "Layer": {
+            "Digest": "sha256:e51fb473274ddac49cabc0c880f310e7081abc3673b0e7757f2ed583ff582bb7",
+            "DiffID": "sha256:0dc99d1494ea013fd5bc63aa7cce8a01b91b87ca34a4f444a7572698e2cf67d1"
+          },
+          "Locations": [
+            {
+              "StartLine": 749,
+              "EndLine": 754
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        }
+      ]
+    }
+  ]
+}

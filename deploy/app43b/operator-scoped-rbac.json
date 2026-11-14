@@ -1,0 +1,1418 @@
+{
+  "apiVersion": "v1",
+  "kind": "List",
+  "items": [
+    {
+      "apiVersion": "rbac.authorization.k8s.io/v1",
+      "kind": "ClusterRole",
+      "metadata": {
+        "name": "app43b-cnpg-manager",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        }
+      },
+      "rules": [
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "nodes"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "admissionregistration.k8s.io"
+          ],
+          "resources": [
+            "mutatingwebhookconfigurations",
+            "validatingwebhookconfigurations"
+          ],
+          "verbs": [
+            "get",
+            "patch"
+          ]
+        }
+      ]
+    },
+    {
+      "apiVersion": "rbac.authorization.k8s.io/v1",
+      "kind": "ClusterRoleBinding",
+      "metadata": {
+        "name": "app43b-cnpg-manager-rolebinding",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        }
+      },
+      "roleRef": {
+        "apiGroup": "rbac.authorization.k8s.io",
+        "kind": "ClusterRole",
+        "name": "app43b-cnpg-manager"
+      },
+      "subjects": [
+        {
+          "kind": "ServiceAccount",
+          "name": "cnpg-manager",
+          "namespace": "cnpg-system"
+        }
+      ]
+    },
+    {
+      "apiVersion": "rbac.authorization.k8s.io/v1",
+      "kind": "Role",
+      "metadata": {
+        "name": "app43b-cnpg-manager",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "cnpg-system"
+      },
+      "rules": [
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "configmaps",
+            "secrets",
+            "services"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "patch",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "configmaps/status",
+            "secrets/status"
+          ],
+          "verbs": [
+            "get",
+            "patch",
+            "update"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "events"
+          ],
+          "verbs": [
+            "create",
+            "patch"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "persistentvolumeclaims",
+            "pods",
+            "pods/exec"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "patch",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "pods/status"
+          ],
+          "verbs": [
+            "get"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "serviceaccounts"
+          ],
+          "verbs": [
+            "create",
+            "get",
+            "list",
+            "patch",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "apps"
+          ],
+          "resources": [
+            "deployments"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "patch",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "batch"
+          ],
+          "resources": [
+            "jobs"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "patch",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "coordination.k8s.io"
+          ],
+          "resources": [
+            "leases"
+          ],
+          "verbs": [
+            "create",
+            "get",
+            "list",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "discovery.k8s.io"
+          ],
+          "resources": [
+            "endpointslices"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "monitoring.coreos.com"
+          ],
+          "resources": [
+            "podmonitors"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "patch",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "policy"
+          ],
+          "resources": [
+            "poddisruptionbudgets"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "patch",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "postgresql.cnpg.io"
+          ],
+          "resources": [
+            "backups",
+            "clusters",
+            "databaseroles",
+            "databases",
+            "poolers",
+            "publications",
+            "scheduledbackups",
+            "subscriptions"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "patch",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "postgresql.cnpg.io"
+          ],
+          "resources": [
+            "backups/status",
+            "databases/status",
+            "publications/status",
+            "scheduledbackups/status",
+            "subscriptions/status"
+          ],
+          "verbs": [
+            "get",
+            "patch",
+            "update"
+          ]
+        },
+        {
+          "apiGroups": [
+            "postgresql.cnpg.io"
+          ],
+          "resources": [
+            "clusterimagecatalogs",
+            "imagecatalogs"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "postgresql.cnpg.io"
+          ],
+          "resources": [
+            "clusters/finalizers",
+            "databaseroles/finalizers",
+            "poolers/finalizers"
+          ],
+          "verbs": [
+            "update"
+          ]
+        },
+        {
+          "apiGroups": [
+            "postgresql.cnpg.io"
+          ],
+          "resources": [
+            "clusters/status",
+            "databaseroles/status",
+            "failoverquorums/status",
+            "poolers/status"
+          ],
+          "verbs": [
+            "get",
+            "patch",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "postgresql.cnpg.io"
+          ],
+          "resources": [
+            "failoverquorums"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "rbac.authorization.k8s.io"
+          ],
+          "resources": [
+            "rolebindings",
+            "roles"
+          ],
+          "verbs": [
+            "create",
+            "get",
+            "list",
+            "patch",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "snapshot.storage.k8s.io"
+          ],
+          "resources": [
+            "volumesnapshots"
+          ],
+          "verbs": [
+            "create",
+            "get",
+            "list",
+            "patch",
+            "watch"
+          ]
+        }
+      ]
+    },
+    {
+      "apiVersion": "rbac.authorization.k8s.io/v1",
+      "kind": "RoleBinding",
+      "metadata": {
+        "name": "app43b-cnpg-manager-rolebinding",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "cnpg-system"
+      },
+      "roleRef": {
+        "apiGroup": "rbac.authorization.k8s.io",
+        "kind": "Role",
+        "name": "app43b-cnpg-manager"
+      },
+      "subjects": [
+        {
+          "kind": "ServiceAccount",
+          "name": "cnpg-manager",
+          "namespace": "cnpg-system"
+        }
+      ]
+    },
+    {
+      "apiVersion": "rbac.authorization.k8s.io/v1",
+      "kind": "Role",
+      "metadata": {
+        "name": "app43b-cnpg-manager",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-data"
+      },
+      "rules": [
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "configmaps",
+            "secrets",
+            "services"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "patch",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "configmaps/status",
+            "secrets/status"
+          ],
+          "verbs": [
+            "get",
+            "patch",
+            "update"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "events"
+          ],
+          "verbs": [
+            "create",
+            "patch"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "persistentvolumeclaims",
+            "pods",
+            "pods/exec"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "patch",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "pods/status"
+          ],
+          "verbs": [
+            "get"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "serviceaccounts"
+          ],
+          "verbs": [
+            "create",
+            "get",
+            "list",
+            "patch",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "apps"
+          ],
+          "resources": [
+            "deployments"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "patch",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "batch"
+          ],
+          "resources": [
+            "jobs"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "patch",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "coordination.k8s.io"
+          ],
+          "resources": [
+            "leases"
+          ],
+          "verbs": [
+            "create",
+            "get",
+            "list",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "discovery.k8s.io"
+          ],
+          "resources": [
+            "endpointslices"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "monitoring.coreos.com"
+          ],
+          "resources": [
+            "podmonitors"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "patch",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "policy"
+          ],
+          "resources": [
+            "poddisruptionbudgets"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "patch",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "postgresql.cnpg.io"
+          ],
+          "resources": [
+            "backups",
+            "clusters",
+            "databaseroles",
+            "databases",
+            "poolers",
+            "publications",
+            "scheduledbackups",
+            "subscriptions"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "patch",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "postgresql.cnpg.io"
+          ],
+          "resources": [
+            "backups/status",
+            "databases/status",
+            "publications/status",
+            "scheduledbackups/status",
+            "subscriptions/status"
+          ],
+          "verbs": [
+            "get",
+            "patch",
+            "update"
+          ]
+        },
+        {
+          "apiGroups": [
+            "postgresql.cnpg.io"
+          ],
+          "resources": [
+            "clusterimagecatalogs",
+            "imagecatalogs"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "postgresql.cnpg.io"
+          ],
+          "resources": [
+            "clusters/finalizers",
+            "databaseroles/finalizers",
+            "poolers/finalizers"
+          ],
+          "verbs": [
+            "update"
+          ]
+        },
+        {
+          "apiGroups": [
+            "postgresql.cnpg.io"
+          ],
+          "resources": [
+            "clusters/status",
+            "databaseroles/status",
+            "failoverquorums/status",
+            "poolers/status"
+          ],
+          "verbs": [
+            "get",
+            "patch",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "postgresql.cnpg.io"
+          ],
+          "resources": [
+            "failoverquorums"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "rbac.authorization.k8s.io"
+          ],
+          "resources": [
+            "rolebindings",
+            "roles"
+          ],
+          "verbs": [
+            "create",
+            "get",
+            "list",
+            "patch",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "snapshot.storage.k8s.io"
+          ],
+          "resources": [
+            "volumesnapshots"
+          ],
+          "verbs": [
+            "create",
+            "get",
+            "list",
+            "patch",
+            "watch"
+          ]
+        }
+      ]
+    },
+    {
+      "apiVersion": "rbac.authorization.k8s.io/v1",
+      "kind": "RoleBinding",
+      "metadata": {
+        "name": "app43b-cnpg-manager-rolebinding",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-data"
+      },
+      "roleRef": {
+        "apiGroup": "rbac.authorization.k8s.io",
+        "kind": "Role",
+        "name": "app43b-cnpg-manager"
+      },
+      "subjects": [
+        {
+          "kind": "ServiceAccount",
+          "name": "cnpg-manager",
+          "namespace": "cnpg-system"
+        }
+      ]
+    },
+    {
+      "apiVersion": "rbac.authorization.k8s.io/v1",
+      "kind": "Role",
+      "metadata": {
+        "name": "app43b-rabbitmq-cluster-operator-role",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "rabbitmq-system"
+      },
+      "rules": [
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "configmaps",
+            "persistentvolumeclaims",
+            "secrets",
+            "serviceaccounts",
+            "services"
+          ],
+          "verbs": [
+            "create",
+            "get",
+            "list",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "endpoints"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "events"
+          ],
+          "verbs": [
+            "create",
+            "get",
+            "patch"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "pods"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "pods/exec"
+          ],
+          "verbs": [
+            "create"
+          ]
+        },
+        {
+          "apiGroups": [
+            "apps"
+          ],
+          "resources": [
+            "statefulsets"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "discovery.k8s.io"
+          ],
+          "resources": [
+            "endpointslices"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "rabbitmq.com"
+          ],
+          "resources": [
+            "rabbitmqclusters"
+          ],
+          "verbs": [
+            "create",
+            "get",
+            "list",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "rabbitmq.com"
+          ],
+          "resources": [
+            "rabbitmqclusters/finalizers"
+          ],
+          "verbs": [
+            "update"
+          ]
+        },
+        {
+          "apiGroups": [
+            "rabbitmq.com"
+          ],
+          "resources": [
+            "rabbitmqclusters/status"
+          ],
+          "verbs": [
+            "get",
+            "patch",
+            "update"
+          ]
+        },
+        {
+          "apiGroups": [
+            "rbac.authorization.k8s.io"
+          ],
+          "resources": [
+            "rolebindings",
+            "roles"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "update",
+            "watch"
+          ]
+        }
+      ]
+    },
+    {
+      "apiVersion": "rbac.authorization.k8s.io/v1",
+      "kind": "RoleBinding",
+      "metadata": {
+        "name": "app43b-rabbitmq-cluster-operator-rolebinding",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "rabbitmq-system"
+      },
+      "roleRef": {
+        "apiGroup": "rbac.authorization.k8s.io",
+        "kind": "Role",
+        "name": "app43b-rabbitmq-cluster-operator-role"
+      },
+      "subjects": [
+        {
+          "kind": "ServiceAccount",
+          "name": "rabbitmq-cluster-operator",
+          "namespace": "rabbitmq-system"
+        }
+      ]
+    },
+    {
+      "apiVersion": "rbac.authorization.k8s.io/v1",
+      "kind": "Role",
+      "metadata": {
+        "name": "app43b-rabbitmq-cluster-operator-role",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-messaging"
+      },
+      "rules": [
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "configmaps",
+            "persistentvolumeclaims",
+            "secrets",
+            "serviceaccounts",
+            "services"
+          ],
+          "verbs": [
+            "create",
+            "get",
+            "list",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "endpoints"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "events"
+          ],
+          "verbs": [
+            "create",
+            "get",
+            "patch"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "pods"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "pods/exec"
+          ],
+          "verbs": [
+            "create"
+          ]
+        },
+        {
+          "apiGroups": [
+            "apps"
+          ],
+          "resources": [
+            "statefulsets"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "discovery.k8s.io"
+          ],
+          "resources": [
+            "endpointslices"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "rabbitmq.com"
+          ],
+          "resources": [
+            "rabbitmqclusters"
+          ],
+          "verbs": [
+            "create",
+            "get",
+            "list",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "rabbitmq.com"
+          ],
+          "resources": [
+            "rabbitmqclusters/finalizers"
+          ],
+          "verbs": [
+            "update"
+          ]
+        },
+        {
+          "apiGroups": [
+            "rabbitmq.com"
+          ],
+          "resources": [
+            "rabbitmqclusters/status"
+          ],
+          "verbs": [
+            "get",
+            "patch",
+            "update"
+          ]
+        },
+        {
+          "apiGroups": [
+            "rbac.authorization.k8s.io"
+          ],
+          "resources": [
+            "rolebindings",
+            "roles"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "update",
+            "watch"
+          ]
+        }
+      ]
+    },
+    {
+      "apiVersion": "rbac.authorization.k8s.io/v1",
+      "kind": "RoleBinding",
+      "metadata": {
+        "name": "app43b-rabbitmq-cluster-operator-rolebinding",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-messaging"
+      },
+      "roleRef": {
+        "apiGroup": "rbac.authorization.k8s.io",
+        "kind": "Role",
+        "name": "app43b-rabbitmq-cluster-operator-role"
+      },
+      "subjects": [
+        {
+          "kind": "ServiceAccount",
+          "name": "rabbitmq-cluster-operator",
+          "namespace": "rabbitmq-system"
+        }
+      ]
+    },
+    {
+      "apiVersion": "rbac.authorization.k8s.io/v1",
+      "kind": "Role",
+      "metadata": {
+        "name": "app43b-plugin-barman-cloud",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "cnpg-system"
+      },
+      "rules": [
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "secrets"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "barmancloud.cnpg.io"
+          ],
+          "resources": [
+            "objectstores"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "patch",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "barmancloud.cnpg.io"
+          ],
+          "resources": [
+            "objectstores/finalizers"
+          ],
+          "verbs": [
+            "update"
+          ]
+        },
+        {
+          "apiGroups": [
+            "barmancloud.cnpg.io"
+          ],
+          "resources": [
+            "objectstores/status"
+          ],
+          "verbs": [
+            "get",
+            "patch",
+            "update"
+          ]
+        },
+        {
+          "apiGroups": [
+            "postgresql.cnpg.io"
+          ],
+          "resources": [
+            "backups"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "postgresql.cnpg.io"
+          ],
+          "resources": [
+            "clusters/finalizers"
+          ],
+          "verbs": [
+            "update"
+          ]
+        },
+        {
+          "apiGroups": [
+            "rbac.authorization.k8s.io"
+          ],
+          "resources": [
+            "rolebindings",
+            "roles"
+          ],
+          "verbs": [
+            "create",
+            "get",
+            "list",
+            "patch",
+            "update",
+            "watch"
+          ]
+        }
+      ]
+    },
+    {
+      "apiVersion": "rbac.authorization.k8s.io/v1",
+      "kind": "RoleBinding",
+      "metadata": {
+        "name": "app43b-plugin-barman-cloud-binding",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "cnpg-system"
+      },
+      "roleRef": {
+        "apiGroup": "rbac.authorization.k8s.io",
+        "kind": "Role",
+        "name": "app43b-plugin-barman-cloud"
+      },
+      "subjects": [
+        {
+          "kind": "ServiceAccount",
+          "name": "plugin-barman-cloud",
+          "namespace": "cnpg-system"
+        }
+      ]
+    },
+    {
+      "apiVersion": "rbac.authorization.k8s.io/v1",
+      "kind": "Role",
+      "metadata": {
+        "name": "app43b-plugin-barman-cloud",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-data"
+      },
+      "rules": [
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "secrets"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "barmancloud.cnpg.io"
+          ],
+          "resources": [
+            "objectstores"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "patch",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "barmancloud.cnpg.io"
+          ],
+          "resources": [
+            "objectstores/finalizers"
+          ],
+          "verbs": [
+            "update"
+          ]
+        },
+        {
+          "apiGroups": [
+            "barmancloud.cnpg.io"
+          ],
+          "resources": [
+            "objectstores/status"
+          ],
+          "verbs": [
+            "get",
+            "patch",
+            "update"
+          ]
+        },
+        {
+          "apiGroups": [
+            "postgresql.cnpg.io"
+          ],
+          "resources": [
+            "backups"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "postgresql.cnpg.io"
+          ],
+          "resources": [
+            "clusters/finalizers"
+          ],
+          "verbs": [
+            "update"
+          ]
+        },
+        {
+          "apiGroups": [
+            "rbac.authorization.k8s.io"
+          ],
+          "resources": [
+            "rolebindings",
+            "roles"
+          ],
+          "verbs": [
+            "create",
+            "get",
+            "list",
+            "patch",
+            "update",
+            "watch"
+          ]
+        }
+      ]
+    },
+    {
+      "apiVersion": "rbac.authorization.k8s.io/v1",
+      "kind": "RoleBinding",
+      "metadata": {
+        "name": "app43b-plugin-barman-cloud-binding",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-data"
+      },
+      "roleRef": {
+        "apiGroup": "rbac.authorization.k8s.io",
+        "kind": "Role",
+        "name": "app43b-plugin-barman-cloud"
+      },
+      "subjects": [
+        {
+          "kind": "ServiceAccount",
+          "name": "plugin-barman-cloud",
+          "namespace": "cnpg-system"
+        }
+      ]
+    }
+  ]
+}

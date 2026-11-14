@@ -1,0 +1,43 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: lets-encrypt-cloudflare-dns01-staging
+  labels:
+    app.kubernetes.io/part-of: shopixy-automatic-subdomains
+spec:
+  acme:
+    email: security@shopyxi.com
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: lets-encrypt-cloudflare-dns01-staging-account-key
+    solvers:
+      - selector:
+          dnsZones:
+            - shopyxi.com
+        dns01:
+          cloudflare:
+            apiTokenSecretRef:
+              name: cloudflare-dns01-token
+              key: api-token
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: lets-encrypt-cloudflare-dns01-production
+  labels:
+    app.kubernetes.io/part-of: shopixy-automatic-subdomains
+spec:
+  acme:
+    email: security@shopyxi.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: lets-encrypt-cloudflare-dns01-production-account-key
+    solvers:
+      - selector:
+          dnsZones:
+            - shopyxi.com
+        dns01:
+          cloudflare:
+            apiTokenSecretRef:
+              name: cloudflare-dns01-token
+              key: api-token

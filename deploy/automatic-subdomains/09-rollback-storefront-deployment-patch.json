@@ -1,0 +1,22 @@
+[
+  {
+    "op": "test",
+    "path": "/spec/replicas",
+    "value": 1
+  },
+  {
+    "op": "test",
+    "path": "/spec/strategy/type",
+    "value": "Recreate"
+  },
+  {
+    "op": "test",
+    "path": "/spec/template/spec/volumes/0/configMap/name",
+    "value": "shopixy-storefront-wildcard-r1"
+  },
+  {
+    "op": "replace",
+    "path": "/spec/template/spec/volumes/0/configMap/name",
+    "value": "shopixy-storefront-controlled-qa-r1"
+  }
+]

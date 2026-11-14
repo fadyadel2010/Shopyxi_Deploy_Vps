@@ -1,0 +1,2344 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
+using PointOfSale.Core.Interfaces;
+using PointOfSale.Core.Entities;
+using PointOfSale.Core.Entities.Affiliate;
+using PointOfSale.Core.Exceptions.Affiliate;
+using PointOfSale.Infrastructure.Data;
+using PointOfSale.Infrastructure.MongoDB.Documents.Affiliate;
+using PointOfSale.Infrastructure.MongoDB.Services;
+using PointOfSale.Core.Interfaces.Affiliate;
+using PointOfSale.Infrastructure.Elasticsearch.Services;
+using PointOfSale.Infrastructure.MongoDB.Documents;
+using PointOfSale.Core.Enums;
+using PointOfSale.Core.Pagination;
+using PointOfSale.Core.Tenancy;
+using PointOfSale.API.Services;
+using PointOfSale.Infrastructure.Services.Affiliate;
+
+namespace PointOfSale.API.Controllers;
+
+/// <summary>
+/// AF-4: Affiliate Portal read-only API.
+///
+/// RULES:
+/// - Financial totals come from the SQL commission ledger authority
+/// - MongoDB projections are display/search read models only
+/// - Never computes new commission
+/// - Affiliate can only access their own data
+/// - Tenant isolation enforced server-side
+///
+/// Affiliate identity comes from JWT affiliate_account_id.
+/// </summary>
+[Authorize(Policy = "AffiliateOnly")]
+[ApiController]
+[Route("api/affiliate")]
+public class AffiliatePortalController : ControllerBase
+{
+    private readonly ApplicationDbContext _dbContext;
+    private readonly MongoDbContext _mongoDbContext;
+    private readonly IAffiliateService _affiliateService;
+    private readonly IAffiliatePayoutService _payoutService;
+    private readonly ITenantContext _tenantContext;
+    private readonly StorefrontUrlResolver _storefrontUrlResolver;
+    private readonly ILogger<AffiliatePortalController> _logger;
+    private readonly int _lowStockThreshold;
+
+    public AffiliatePortalController(
+        ApplicationDbContext dbContext,
+        MongoDbContext mongoDbContext,
+        IAffiliateService affiliateService,
+        IAffiliatePayoutService payoutService,
+        ITenantContext tenantContext,
+        StorefrontUrlResolver storefrontUrlResolver,
+        ILogger<AffiliatePortalController> logger,
+        IConfiguration? configuration = null)
+    {
+        _dbContext = dbContext;
+        _mongoDbContext = mongoDbContext;
+        _affiliateService = affiliateService;
+        _payoutService = payoutService;
+        _tenantContext = tenantContext;
+        _storefrontUrlResolver = storefrontUrlResolver;
+        _logger = logger;
+        _lowStockThreshold = configuration?.GetValue<int>("AffiliateProductIntelligence:LowStockThreshold", 10) ?? 10;
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // DIAGNOSTIC ENDPOINT (AF-10 - AUDIT FIX F-A1: Only available in DEBUG builds)
+    // ═══════════════════════════════════════════════════════════════════
+
+#if DEBUG
+    /// <summary>
+    /// GET /api/affiliate/debug-claims
+    /// Returns all claims in the current JWT for debugging authorization issues.
+    /// SECURITY: Only available in DEBUG builds (gated by preprocessor directive).
+    /// </summary>
+    [HttpGet("debug-claims")]
+    public IActionResult DebugClaims()
+    {
+        var claims = User.Claims.Select(c => new { c.Type, c.Value }).ToList();
+        return Ok(new
+        {
+            IsAuthenticated = User.Identity?.IsAuthenticated ?? false,
+            AuthenticationType = User.Identity?.AuthenticationType,
+            Claims = claims,
+            HasRoleClaim = User.HasClaim(System.Security.Claims.ClaimTypes.Role, "Affiliate"),
+            RoleClaimValue = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value
+        });
+    }
+#endif
+
+    // ═══════════════════════════════════════════════════════════════════
+    // DASHBOARD
+    // ═══════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// GET /api/affiliate/dashboard
+    /// Returns aggregate dashboard metrics from the SQL commission ledger.
+    /// AF-19B: Global affiliates - queries by AffiliateAccountId only (no tenant filter).
+    /// </summary>
+    [HttpGet("dashboard")]
+    public async Task<ActionResult<AffiliateDashboardResponse>> GetDashboard(CancellationToken ct)
+    {
+        // AF-10 DIAGNOSTIC: Log incoming request claims
+        var roleClaim = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+        var affiliateAccountClaim = User.FindFirst("affiliate_account_id")?.Value;
+        _logger.LogInformation("Dashboard request - Role: {Role}, AffiliateAccountId: {AccountId}, IsAuthenticated: {IsAuth}", 
+            roleClaim ?? "MISSING", affiliateAccountClaim ?? "MISSING", User.Identity?.IsAuthenticated ?? false);
+        
+        var affiliateAccountId = await ResolveAffiliateAccountId(ct);
+        if (affiliateAccountId == null)
+            return NotFound(new { message = "No affiliate account found for this user" });
+
+        var ledgerTotals = await BuildAffiliateLedgerTotalsAsync(affiliateAccountId.Value, storeTenantId: null, ct);
+
+        // AF-19B FIX: Use per-currency earnings summary instead of collapsing currencies
+        // This prevents adding USD + EUR + other currencies as if they were the same
+        var earningsSummary = await BuildAffiliateLedgerEarningsSummaryAsync(affiliateAccountId.Value, storeTenantId: null, ct);
+
+        if (earningsSummary.Count == 0)
+        {
+            // Return empty dashboard — affiliate exists but has no activity yet
+            return Ok(new AffiliateDashboardResponse());
+        }
+
+        return Ok(new AffiliateDashboardResponse
+        {
+            EarningsByCurrency = earningsSummary,
+            TotalOrders = ledgerTotals.TotalOrders,
+            LastCommissionAtUtc = ledgerTotals.LastCommissionAtUtc
+        });
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // ORDERS
+    // ═══════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// GET /api/affiliate/orders?page=1&pageSize=20
+    /// Returns paginated, SQL-admitted canonical orders plus immutable commission snapshots.
+    /// Global affiliates may read their own stores; storeTenantId optionally narrows that scope.
+    /// </summary>
+    [HttpGet("orders")]
+    public async Task<ActionResult<AffiliateOrdersResponse>> GetOrders(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        [FromQuery] string? status = null,
+        [FromQuery] Guid? storeTenantId = null,
+        CancellationToken ct = default)
+    {
+        var affiliateAccountId = await ResolveAffiliateAccountId(ct);
+        if (affiliateAccountId == null)
+            return NotFound(new { message = "No affiliate account found for this user" });
+
+        page = Math.Clamp(page, 1, 1_000_000);
+        pageSize = Math.Clamp(pageSize, 1, 100);
+
+        IReadOnlyCollection<Guid>? statusOrderIds = null;
+
+        // Optional status filter — exact match on settlement status string
+        if (!string.IsNullOrWhiteSpace(status))
+        {
+            statusOrderIds = await BuildAffiliateOrderIdsForLedgerStatusAsync(
+                affiliateAccountId.Value,
+                storeTenantId,
+                status,
+                ct);
+
+            if (statusOrderIds.Count == 0)
+            {
+                return Ok(new AffiliateOrdersResponse
+                {
+                    Page = page,
+                    PageSize = pageSize,
+                    TotalCount = 0,
+                    TotalPages = 0
+                });
+            }
+        }
+
+        var canonicalOrderQuery = AffiliatePortalReadStore.Orders(_dbContext, affiliateAccountId.Value, storeTenantId);
+
+        if (statusOrderIds != null)
+        {
+            canonicalOrderQuery = canonicalOrderQuery.Where(order => statusOrderIds.Contains(order.Id));
+        }
+
+        var totalCount = await canonicalOrderQuery.CountAsync(ct);
+        var ids = await canonicalOrderQuery.OrderByDescending(o => o.CreatedAt).ThenByDescending(o => o.Id)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize).Select(o => o.Id).ToListAsync(ct);
+        var canonical = await AffiliatePortalReadStore.ReadOrdersAsync(_dbContext, affiliateAccountId.Value, ids, storeTenantId, ct);
+        var byId = canonical.ToDictionary(o => o.OrderId);
+        var docs = ids.Where(byId.ContainsKey).Select(id => byId[id]).ToList();
+
+        var ledgerSnapshots = await BuildAffiliateOrderLedgerSnapshotsAsync(
+            affiliateAccountId.Value,
+            storeTenantId,
+            docs.Select(d => d.OrderId).Distinct().ToList(),
+            ct);
+
+        return Ok(new AffiliateOrdersResponse
+        {
+            Orders = docs.Select(d =>
+            {
+                ledgerSnapshots.TryGetValue(d.OrderId, out var ledger);
+
+                return new AffiliateOrderDto
+                {
+                    OrderId = d.OrderId,
+                    OrderNumber = d.OrderNumber,
+                    IsSyntheticQa = d.IsSyntheticQa,
+                    CommissionProvenance = d.IsSyntheticQa ? SyntheticQaEvidence.ProvenanceLabel : null,
+                    Status = ledger?.Status ?? "Pending", // No ledger record; do not infer the customer's payment state.
+                    Canonical = d,
+                    OrderStatus = d.OrderStatus,
+                    FulfillmentStatus = d.FulfillmentStatus,
+                    PaymentMethod = d.PaymentMethod,
+                    PaidAmount = ledger?.PaidAmount ?? 0m, // Fallback: 0m (no commission base)
+                    TotalCommission = ledger?.TotalCommission ?? 0m, // Fallback: 0m (no commission)
+                    TotalApproved = ledger?.TotalApproved ?? 0m, // Fallback: 0m (no approved commission)
+                    TotalPaid = ledger?.TotalPaid ?? 0m, // Fallback: 0m (no paid commission)
+                    TotalReversed = ledger?.TotalReversed ?? 0m, // Fallback: 0m (no reversals)
+                    Currency = ledger?.Currency ?? d.OrderCurrency,
+                    CreatedAtUtc = d.CreatedAtUtc,
+                    Items = d.Items.Select(i =>
+                    {
+                        AffiliateOrderItemLedgerSnapshot? itemLedger = null;
+                        ledger?.Items.TryGetValue(i.OrderItemId, out itemLedger);
+
+                        return new AffiliateOrderItemDto
+                        {
+                            OrderItemId = i.OrderItemId,
+                            ProductId = i.ProductId,
+                            ProductName = i.ProductName,
+                            VariantName = i.VariantName,
+                            Quantity = i.Quantity,
+                            VariantId = i.VariantId,
+                            PaidAmount = itemLedger?.PaidAmount ?? 0m, // Fallback: 0m (no commission base)
+                            CommissionAmount = itemLedger?.CommissionAmount ?? 0m, // Fallback: 0m (no commission)
+                            ReversedAmount = itemLedger?.ReversedAmount ?? 0m,
+                            NetCommissionAmount = itemLedger?.NetCommissionAmount ?? 0m,
+                            IsReversed = itemLedger?.IsReversed ?? false, // Fallback: false (not reversed)
+                            IsPartiallyReversed = itemLedger?.IsPartiallyReversed ?? false,
+                            SettlementStatus = itemLedger?.SettlementStatus ?? "Pending" // Fallback: "Pending" (no settlement)
+                        };
+                    }).ToList()
+                };
+            }).ToList(),
+            Page = page,
+            PageSize = pageSize,
+            TotalCount = (int)totalCount,
+            TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize)
+        });
+    }
+
+    [HttpGet("orders/{orderId:guid}")]
+    public async Task<ActionResult<AffiliateCanonicalOrder>> GetSourceOrder(Guid orderId, [FromQuery] Guid? storeTenantId = null, CancellationToken ct = default)
+    {
+        var affiliateId = await ResolveAffiliateAccountId(ct);
+        if (!affiliateId.HasValue) return Unauthorized();
+        var orders = await AffiliatePortalReadStore.ReadOrdersAsync(_dbContext, affiliateId.Value, [orderId], storeTenantId, ct);
+        return orders.Count == 0 ? NotFound() : Ok(orders[0]);
+    }
+
+    [HttpGet("commission-activity")]
+    public async Task<ActionResult<AffiliateCommissionActivityPage>> GetCommissionActivity(
+        [FromQuery] int page = 1, [FromQuery] int pageSize = 20, [FromQuery] Guid? storeTenantId = null, CancellationToken ct = default)
+    {
+        var affiliateId = await ResolveAffiliateAccountId(ct);
+        if (!affiliateId.HasValue) return Unauthorized();
+        return Ok(await AffiliatePortalReadStore.ReadActivityAsync(_dbContext, affiliateId.Value, page, pageSize, storeTenantId, ct));
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // EARNINGS SUMMARY
+    // ═══════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// GET /api/affiliate/earnings-summary
+    /// Returns per-currency earnings breakdown from the SQL commission ledger.
+    /// AF-19B: Global affiliates - queries by AffiliateAccountId only (no tenant filter).
+    /// </summary>
+    [HttpGet("earnings-summary")]
+    public async Task<ActionResult<List<AffiliateEarningsSummaryDto>>> GetEarningsSummary(CancellationToken ct)
+    {
+        var affiliateAccountId = await ResolveAffiliateAccountId(ct);
+        if (affiliateAccountId == null)
+            return NotFound(new { message = "No affiliate account found for this user" });
+
+        // AF-19B: Query by AffiliateAccountId only (global affiliates)
+        return Ok(await BuildAffiliateLedgerEarningsSummaryAsync(
+            affiliateAccountId.Value,
+            storeTenantId: null,
+            ct));
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // PROFILE
+    // ═══════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// GET /api/affiliate/profile
+    /// Returns affiliate profile info (ReferralCode, DisplayName, Status, PayoutWallet).
+    /// AF-19B: Global affiliates - queries by AffiliateAccountId only (no tenant filter).
+    /// </summary>
+    [HttpGet("profile")]
+    public async Task<ActionResult<AffiliateProfileResponse>> GetProfile(CancellationToken ct)
+    {
+        var affiliateAccountId = await ResolveAffiliateAccountId(ct);
+        if (affiliateAccountId == null)
+            return Unauthorized();
+
+        // AF-19B: Query by AffiliateAccountId only (global affiliates)
+        var affiliate = await _dbContext.AffiliateAccounts
+            .IgnoreQueryFilters()
+            .Where(a => a.Id == affiliateAccountId.Value && !a.IsDeleted)
+            .Select(a => new AffiliateProfileResponse
+            {
+                AffiliateAccountId = a.Id,
+                ReferralCode = a.ReferralCode,
+                DisplayName = a.DisplayName,
+                Status = a.Status.ToString(),
+                ActivatedAtUtc = a.ActivatedAtUtc,
+                ClosedAtUtc = a.ClosedAtUtc,
+                CreatedAtUtc = a.CreatedAt,
+                PayoutWalletNumber = a.PayoutWalletNumber,
+                PayoutWalletType = a.PayoutWalletType,
+                PayoutWalletUpdatedAtUtc = a.PayoutWalletUpdatedAtUtc
+            })
+            .FirstOrDefaultAsync(ct);
+
+        if (affiliate == null)
+            return NotFound(new { message = "No affiliate account found for this user" });
+
+        var identity = await _dbContext.AffiliateUsers.IgnoreQueryFilters()
+            .Where(u => u.AffiliateAccountId == affiliateAccountId.Value && !u.IsDeleted)
+            .Select(u => new { u.Id, u.Email, u.EmailVerified })
+            .SingleOrDefaultAsync(ct);
+        if (identity == null) return Unauthorized();
+        affiliate.AffiliateUserId = identity.Id;
+        affiliate.Email = identity.Email;
+        affiliate.EmailVerified = identity.EmailVerified;
+
+        return Ok(affiliate);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // AF-16: PAYOUT WALLET MANAGEMENT
+    // ═══════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// PUT /api/affiliate/profile/payout-wallet
+    /// Updates affiliate's payout wallet information.
+    /// SECURITY: Affiliate can only update their own wallet.
+    /// AF-19B: Global affiliates - queries by AffiliateAccountId only (no tenant filter).
+    /// </summary>
+    [HttpPut("profile/payout-wallet")]
+    public async Task<ActionResult> UpdatePayoutWallet(
+        [FromBody] UpdatePayoutWalletRequest request,
+        CancellationToken ct)
+    {
+        var affiliateAccountId = await ResolveAffiliateAccountId(ct);
+        if (affiliateAccountId == null)
+            return Unauthorized();
+
+        // AF-19B: Fetch affiliate account by ID only (global affiliates)
+        var account = await _dbContext.AffiliateAccounts
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(a =>
+                a.Id == affiliateAccountId.Value &&
+                !a.IsDeleted, ct);
+
+        if (account == null)
+            return NotFound(new { message = "Affiliate account not found" });
+
+        // Store old value for audit (masked)
+        var oldWallet = account.PayoutWalletNumber != null
+            ? PayoutWallet.MaskWalletNumber(account.PayoutWalletNumber)
+            : null;
+
+        try
+        {
+            // Domain method validates and updates
+            account.UpdatePayoutWallet(request.WalletNumber, request.WalletType);
+            await _dbContext.SaveChangesAsync(ct);
+
+            // AF-16B: Audit log (masked values using centralized helper)
+            var newWallet = PayoutWallet.MaskWalletNumber(request.WalletNumber);
+            _logger.LogInformation(
+                "Affiliate {AffiliateId} updated payout wallet: {OldWallet} → {NewWallet} (Type: {Type})",
+                affiliateAccountId.Value, oldWallet ?? "none", newWallet, request.WalletType);
+
+            // AF-19B: Insert audit record (global affiliates use Guid.Empty for TenantId)
+            _dbContext.AuditLogs.Add(new AuditLog
+            {
+                TenantId = Guid.Empty, // AF-19B: Global affiliates have no tenant
+                ActionType = "AffiliateWalletUpdated",
+                EntityType = "AffiliateAccount",
+                EntityId = account.Id.ToString(),
+                Description = $"Payout wallet updated: {oldWallet ?? "none"} → {newWallet}",
+                BeforeDataJson = oldWallet,
+                AfterDataJson = newWallet,
+                UserId = affiliateAccountId.Value,
+                TimestampUtc = DateTime.UtcNow,
+                SuccessFlag = true
+            });
+            await _dbContext.SaveChangesAsync(ct);
+
+            return Ok(new { message = "Payout wallet updated successfully" });
+        }
+        catch (ArgumentException ex)
+        {
+            var error = AffiliateFinancialErrorContract.From(ex);
+            return StatusCode(error.StatusCode, new { code = error.Code, message = error.Message });
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // AF-27B §3: MY LANDING PAGES
+    // Makes landing pages first-class affiliate-controlled assets.
+    // MongoDB supplies candidates; SQL authority admits and recomposes them.
+    // ═══════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// GET /api/affiliate/landing-pages
+    /// Returns all affiliate-eligible products with pre-built landing page URLs.
+    /// AF-27B §3: Landing pages are affiliate-controlled assets, not just public routes.
+    /// MongoDB candidates are filtered and recomposed from current SQL authority.
+    /// </summary>
+    [HttpGet("landing-pages")]
+    public async Task<ActionResult<AffiliateLandingPagesResponse>> GetLandingPages(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        CancellationToken ct = default)
+    {
+        var affiliateAccountId = await ResolveAffiliateAccountId(ct);
+        if (affiliateAccountId == null)
+            return NotFound(new { message = "No affiliate account found for this user" });
+
+        page = Math.Max(1, page);
+        pageSize = Math.Clamp(pageSize, 1, 50);
+
+        // Resolve affiliate's referral code for URL building
+        var affiliate = await _dbContext.AffiliateAccounts
+            .AsNoTracking()
+            .IgnoreQueryFilters()
+            .Where(a => a.Id == affiliateAccountId.Value && !a.IsDeleted)
+            .Select(a => new { a.ReferralCode })
+            .FirstOrDefaultAsync(ct);
+
+        if (affiliate == null)
+            return NotFound(new { message = "Affiliate account not found" });
+
+        var admittedDocs = await LoadSqlAdmittedAffiliateIntelligenceDocumentsAsync(ct);
+        var visibleDocs = OrderAffiliateDocuments(admittedDocs, "commission_desc")
+            .Skip(PaginationGuard.GetSkip(page, pageSize))
+            .Take(pageSize)
+            .ToList();
+        var totalCount = admittedDocs.Count;
+
+        var designs = await _dbContext.AffiliateLandingPageDesigns.AsNoTracking()
+            .Where(d => d.AffiliateAccountId == affiliateAccountId.Value)
+            .ToDictionaryAsync(d => new { d.TenantId, d.ProductId }, ct);
+
+        var landingPages = visibleDocs.Select(d =>
+        {
+            designs.TryGetValue(new { d.TenantId, d.ProductId }, out var design);
+            var slug = !string.IsNullOrWhiteSpace(d.ProductSlug)
+                ? d.ProductSlug : d.ProductId.ToString();
+                
+            // AF-27C FIX: Extract just the tenant base URL (origin) from the full product StorefrontUrl
+            var storefrontBaseUrl = "";
+            if (!string.IsNullOrWhiteSpace(d.StorefrontUrl) && Uri.TryCreate(d.StorefrontUrl, UriKind.Absolute, out var uri))
+            {
+                storefrontBaseUrl = uri.GetLeftPart(UriPartial.Authority);
+            }
+
+            if (string.IsNullOrWhiteSpace(storefrontBaseUrl))
+            {
+                return null;
+            }
+
+            var absoluteUrl = StorefrontUrlAuthority.BuildUrl(
+                storefrontBaseUrl,
+                "p",
+                affiliate.ReferralCode,
+                slug);
+
+            var storefrontProductUrl = !string.IsNullOrWhiteSpace(d.StorefrontUrl)
+                ? $"{d.StorefrontUrl}?ref={Uri.EscapeDataString(affiliate.ReferralCode)}"
+                : null;
+
+            return new AffiliateLandingPageItem
+            {
+                ProductId = d.ProductId,
+                ProductName = d.ProductName,
+                ProductSlug = slug,
+                MainImage = d.Images?.FirstOrDefault(),
+                Price = d.BasePrice,
+                Currency = d.Currency,
+                // AF-27C §3: Accurate decimal & UI display representations mapping
+                CommissionRateDecimal = d.CommissionRate,
+                CommissionRatePercentage = Math.Round(d.CommissionRate * 100m, 2),
+                EstimatedCommission = d.EstimatedCommission,
+                IsOutOfStock = d.IsOutOfStock,
+                StoreName = d.StoreName,
+                StoreSlug = d.StoreSlug,
+                AbsoluteLandingUrl = absoluteUrl,
+                StorefrontBaseUrl = storefrontBaseUrl,
+                StorefrontProductUrl = storefrontProductUrl,
+                TemplateType = design?.TemplateType ?? d.TemplateType ?? PointOfSale.Core.Constants.LandingTemplates.ClassicV1,
+                HasSavedDesign = design != null
+            };
+        }).Where(item => item != null).Select(item => item!).ToList();
+
+        _logger.LogInformation(
+            "[AF-27B:LandingPages] Returned {Count} landing pages for affiliate {AffiliateAccountId}",
+            landingPages.Count, affiliateAccountId.Value);
+
+        return Ok(new AffiliateLandingPagesResponse
+        {
+            LandingPages = landingPages,
+            AffiliateCode = affiliate.ReferralCode,
+            Page = page,
+            PageSize = pageSize,
+            TotalCount = totalCount,
+            TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize)
+        });
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // P5.4: save a presentation preference for this admitted affiliate/product only.
+    // Uses the same current SQL admission as the landing-pages list. No financial writes.
+    [HttpPut("landing-pages/{productId:guid}/design")]
+    public async Task<IActionResult> SaveLandingPageDesign(Guid productId, [FromBody] SaveLandingPageDesignRequest request, CancellationToken ct)
+    {
+        var accountId = await ResolveAffiliateAccountId(ct);
+        if (accountId == null) return Unauthorized();
+        if (!PointOfSale.Core.Constants.LandingTemplates.Allowed.Contains(request.TemplateType))
+            return BadRequest(new { code = "INVALID_TEMPLATE" });
+        if (!await _dbContext.AffiliateAccounts.IgnoreQueryFilters().AnyAsync(a => a.Id == accountId.Value && a.Status == AffiliateStatus.Active && !a.IsDeleted, ct))
+            return Unauthorized();
+        var admitted = (await LoadSqlAdmittedAffiliateIntelligenceDocumentsAsync(ct)).SingleOrDefault(d => d.ProductId == productId);
+        if (admitted == null) return NotFound();
+
+        try
+        {
+            await AffiliateLandingPageDesignStore.SaveAsync(_dbContext, accountId.Value, admitted.TenantId, productId, request.TemplateType, User, ct);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Unauthorized();
+        }
+        return Ok(new { templateType = request.TemplateType, hasSavedDesign = true });
+    }
+
+    // AF-31: CATEGORY DISCOVERY (PUBLIC — Landing Page)
+    // ═══════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// GET /api/affiliate/discover/categories
+    /// Returns active main categories with at least one eligible public product.
+    /// Public endpoint — consumed by the landing page categories section.
+    /// PostgreSQL owns category, policy, product and tenant admission. Counts share
+    /// the public product-list filter; MongoDB supplies optional hydration only.
+    /// </summary>
+    [AllowAnonymous]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+    [HttpGet("discover/categories")]
+    public async Task<ActionResult<List<AffiliateCategoryDiscoveryItem>>> DiscoverCategories(
+        CancellationToken ct, [FromQuery] Guid? storeTenantId = null)
+    {
+        // Fetch active Level 1 (main) categories from PostgreSQL
+        var mainCategories = await _dbContext.AffiliateCategories
+            .AsNoTracking()
+            .Where(c => !c.IsDeleted && c.IsActive && c.Level == 1 && c.ParentId == null)
+            .OrderBy(c => c.DisplayOrder)
+            .Select(c => new
+            {
+                c.Id,
+                c.Name,
+                c.Slug,
+                c.DisplayOrder
+            })
+            .ToListAsync(ct);
+
+        if (mainCategories.Count == 0)
+        {
+            return Ok(new List<AffiliateCategoryDiscoveryItem>());
+        }
+
+        var visibleDocs = await LoadSqlAdmittedAffiliateIntelligenceDocumentsAsync(ct);
+        var productCounts = FilterPublicAffiliateDocuments(visibleDocs, search: null, categorySlug: null)
+            .Where(doc => !storeTenantId.HasValue || doc.TenantId == storeTenantId.Value)
+            .Select(ResolveAffiliateEffectiveCategorySlug)
+            .Where(slug => !string.IsNullOrWhiteSpace(slug))
+            .GroupBy(slug => slug!, StringComparer.Ordinal)
+            .ToDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal);
+
+        var result = mainCategories.Select(c => new AffiliateCategoryDiscoveryItem
+        {
+            Id = c.Id,
+            Name = c.Name,
+            Slug = c.Slug,
+            ProductCount = productCounts.GetValueOrDefault(c.Slug, 0),
+            IsActive = true
+        }).Where(c => c.ProductCount > 0).ToList();
+
+        _logger.LogInformation(
+            "[AF-31] Discover categories returned {Count} categories",
+            result.Count);
+
+        return Ok(result);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // AF-22: PRODUCT INTELLIGENCE (DISCOVER & LANDING)
+    // ═══════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// GET /api/affiliate/discover/products?page=1&pageSize=20&search=&minCommissionRate=&inStockOnly=&storeTenantId=&categorySlug=&sort=commission_desc
+    /// Returns enriched product intelligence for affiliate discovery.
+    /// SQL authority admits products before Mongo hydration and final pagination.
+    /// AF-30: Category filtering support.
+    /// Commission-bearing product intelligence is restricted to authenticated affiliates.
+    /// AF-33: Deterministic backend sorting with URL-driven sort parameter.
+    /// </summary>
+    [HttpGet("discover/products")]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+    public async Task<ActionResult<AffiliateProductDiscoveryResponse>> DiscoverProducts(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        [FromQuery] string? search = null,
+        [FromQuery] decimal? minCommissionRate = null,
+        [FromQuery] bool inStockOnly = false,
+        [FromQuery] Guid? storeTenantId = null,
+        [FromQuery] string? categorySlug = null,
+        [FromQuery] string sort = "commission_desc",
+        CancellationToken ct = default)
+    {
+        // AF-33: Validate sort parameter against allowlist
+        var allowedSorts = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "commission_desc", "commission_asc", "newest", "price_desc", "price_asc", "ranking"
+        };
+        if (!allowedSorts.Contains(sort))
+        {
+            return BadRequest(new { error = "Invalid sort parameter", allowed = allowedSorts });
+        }
+
+        page = Math.Max(1, page);
+        pageSize = Math.Clamp(pageSize, 1, 100);
+
+        // Retained for API compatibility; storefront-purchasable filtering is now mandatory.
+        _ = inStockOnly;
+
+        // AF-30: Category filter (matches both main category and subcategory)
+        HashSet<AffiliateAuthorityKey>? categoryProductKeys = null;
+        if (!string.IsNullOrWhiteSpace(categorySlug))
+        {
+            categoryProductKeys = (await ResolveLiveAffiliateCategoryProductKeysAsync(categorySlug, ct)).ToHashSet();
+        }
+
+        var admittedDocs = await LoadSqlAdmittedAffiliateIntelligenceDocumentsAsync(ct);
+        var filteredDocs = FilterAffiliateDocuments(
+                admittedDocs,
+                search,
+                minCommissionRate,
+                storeTenantId,
+                categoryProductKeys)
+            .ToList();
+        var totalCount = filteredDocs.Count;
+        var visibleDocs = OrderAffiliateDocuments(filteredDocs, sort)
+            .Skip(PaginationGuard.GetSkip(page, pageSize))
+            .Take(pageSize)
+            .ToList();
+
+        // AF-22 HARDENING: Defensive API contract (never return null, always return valid structure)
+        return Ok(new AffiliateProductDiscoveryResponse
+        {
+            Items = visibleDocs.Select(d => new AffiliateProductDiscoveryItem
+            {
+                ProductId = d.ProductId,
+                Name = d.ProductName,
+                Description = d.Description,
+                Images = (d.Images ?? []).Select(image => AffiliatePublicProductMedia.ResolveUrl(d.ProductId, image))
+                    .Where(image => !string.IsNullOrEmpty(image)).ToList(),
+                Price = d.BasePrice,
+                Currency = d.Currency,
+                CommissionRate = d.CommissionRate,
+                EstimatedCommission = d.EstimatedCommission,
+                IsOutOfStock = d.IsOutOfStock,
+                LowStock = d.LowStock,
+                TotalAvailableStock = d.TotalAvailableStock,
+                StoreName = d.StoreName,
+                StoreSlug = d.StoreSlug,
+                StorefrontUrl = d.StorefrontUrl,
+                CategoryName = d.AffiliateCategoryName,
+                CategorySlug = d.AffiliateCategorySlug
+            }).ToList(),
+            Page = page,
+            PageSize = pageSize,
+            TotalCount = totalCount,
+            TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize)
+        });
+    }
+
+    /// <summary>
+    /// GET /api/affiliate/discover/products/{productId}
+    /// Returns full product intelligence including variants and stock details.
+    /// SQL authority is recomposed over the Mongo display projection.
+    /// </summary>
+    [HttpGet("discover/products/{productId:guid}")]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+    public async Task<ActionResult<AffiliateProductDetailResponse>> GetProductDetail(
+        Guid productId,
+        CancellationToken ct)
+    {
+        // Resolve ownership from SQL, not a possibly missing/stale Mongo identity.
+        var owner = await _dbContext.Products.AsNoTracking().IgnoreQueryFilters()
+            .Where(p => p.Id == productId && !p.IsDeleted)
+            .Select(p => new { p.TenantId }).SingleOrDefaultAsync(ct);
+        var doc = owner == null ? null : await RecomposeAffiliateIntelligenceDocumentBySqlAuthorityAsync(
+            new AffiliateProductIntelligenceDocument { ProductId = productId, TenantId = owner.TenantId }, ct);
+        if (doc == null || doc.BasePrice <= 0m || doc.IsOutOfStock)
+            return NotFound(new { message = "Product not found" });
+
+        // Product-specific referral URLs are issued only by the promotion-link API.
+        return Ok(new AffiliateProductDetailResponse
+        {
+            ProductId = doc.ProductId,
+            TenantId = doc.TenantId,
+            Name = doc.ProductName,
+            Description = doc.Description,
+            Images = (doc.Images ?? []).Select(image => AffiliatePublicProductMedia.ResolveUrl(doc.ProductId, image))
+                .Where(image => !string.IsNullOrEmpty(image)).ToList(),
+            Price = doc.BasePrice,
+            Currency = doc.Currency,
+            CommissionRate = doc.CommissionRate,
+            EstimatedCommission = doc.EstimatedCommission,
+            IsOutOfStock = doc.IsOutOfStock,
+            LowStock = doc.LowStock,
+            TotalAvailableStock = doc.TotalAvailableStock,
+            StoreName = doc.StoreName,
+            StoreSlug = doc.StoreSlug,
+            StoreLogo = doc.StoreLogo,
+            StorefrontUrl = doc.StorefrontUrl,
+            Variants = doc.Variants.Select(v => new AffiliateProductVariantDto
+            {
+                VariantId = v.VariantId,
+                Name = v.Name,
+                Price = v.Price,
+                Stock = v.Stock
+            }).ToList()
+        });
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // AF-39: SANITIZED PUBLIC DISCOVERY BOUNDARY (ANONYMOUS)
+    //
+    // The public Hub cannot call the member discover/products actions
+    // (class-level AffiliateOnly policy). These actions are explicitly
+    // [AllowAnonymous] and share the SAME SQL-first admission path as
+    // DiscoverCategories (LoadSqlAdmittedAffiliateIntelligenceDocumentsAsync)
+    // so category counts and category pages can never disagree.
+    //
+    // SANITIZATION CONTRACT:
+    // - Public DTOs expose presentation fields only: no TenantId, no
+    //   commission rate/estimate/cap, no policy or category IDs, no stock
+    //   internals, no variants, no projection/event metadata.
+    // - Anonymous sort allowlist excludes commission ordering entirely.
+    // ═══════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Public-safe sort values for anonymous discovery. Commission-based
+    /// sorts (commission_desc/commission_asc) and the internal ranking score
+    /// are deliberately excluded so relative commission intelligence never
+    /// leaks through an anonymous channel.
+    /// </summary>
+    internal static readonly HashSet<string> AffiliatePublicDiscoverySortAllowlist =
+        new(StringComparer.OrdinalIgnoreCase)
+        {
+            "newest", "price_desc", "price_asc", "name_asc"
+        };
+
+    /// <summary>
+    /// GET /api/affiliate/discover/public-products?page=1&amp;pageSize=20&amp;search=&amp;categorySlug=&amp;sort=newest
+    /// Anonymous sanitized product list for the public Affiliate Hub.
+    /// Admission, search/pricing/stock gates, and category filtering all run
+    /// BEFORE totalCount, totalPages, Skip, and Take.
+    /// </summary>
+    [AllowAnonymous]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+    [HttpGet("discover/public-products")]
+    public async Task<ActionResult<AffiliatePublicProductDiscoveryResponse>> DiscoverPublicProducts(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        [FromQuery] string? search = null,
+        [FromQuery] string? categorySlug = null,
+        [FromQuery] string sort = "newest",
+        CancellationToken ct = default)
+    {
+        if (!AffiliatePublicDiscoverySortAllowlist.Contains(sort))
+        {
+            return BadRequest(new { error = "Invalid sort parameter", allowed = AffiliatePublicDiscoverySortAllowlist });
+        }
+
+        page = Math.Max(1, page);
+        pageSize = Math.Clamp(pageSize, 1, 100);
+
+        var admittedDocs = await LoadSqlAdmittedAffiliateIntelligenceDocumentsAsync(ct);
+        var filteredDocs = FilterPublicAffiliateDocuments(admittedDocs, search, categorySlug).ToList();
+        var totalCount = filteredDocs.Count;
+        var visibleDocs = OrderAffiliateDocumentsForPublicDiscovery(filteredDocs, sort)
+            .Skip(PaginationGuard.GetSkip(page, pageSize))
+            .Take(pageSize)
+            .ToList();
+
+        return Ok(new AffiliatePublicProductDiscoveryResponse
+        {
+            Items = visibleDocs.Select(MapAffiliatePublicProductItem).ToList(),
+            Page = page,
+            PageSize = pageSize,
+            TotalCount = totalCount,
+            TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize)
+        });
+    }
+
+    /// <summary>
+    /// GET /api/affiliate/discover/public-products/{productId}
+    /// Anonymous sanitized product detail for the public Affiliate Hub.
+    /// Resolves through the same SQL-admitted set as the public list (never
+    /// raw Mongo/Elasticsearch authority) and returns 404 for anything not
+    /// currently deliverable.
+    /// </summary>
+    [AllowAnonymous]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+    [HttpGet("discover/public-products/{productId:guid}")]
+    public async Task<ActionResult<AffiliatePublicProductItem>> DiscoverPublicProductDetail(
+        Guid productId,
+        CancellationToken ct)
+    {
+        var admittedDocs = await LoadSqlAdmittedAffiliateIntelligenceDocumentsAsync(ct);
+
+        var doc = FilterPublicAffiliateDocuments(admittedDocs, search: null, categorySlug: null)
+            .Where(item => item.ProductId == productId)
+            .OrderBy(item => item.TenantId)
+            .FirstOrDefault();
+
+        if (doc == null)
+        {
+            return NotFound(new { message = "Product not found" });
+        }
+
+        return Ok(MapAffiliatePublicProductItem(doc));
+    }
+
+    // Public media is a read of an admitted product, not a tenant/path selector.
+    // Reuse discovery admission and canonical storage; never relax upload tenancy.
+    [AllowAnonymous]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+    [HttpGet("discover/public-products/{productId:guid}/media/{fileName}")]
+    public async Task<IActionResult> GetPublicProductMedia(
+        Guid productId, string fileName, [FromServices] IR2StorageService storage, CancellationToken ct)
+    {
+        if (!AffiliatePublicProductMedia.IsImageFileName(fileName)) return NotFound();
+
+        var admitted = await LoadSqlAdmittedAffiliateIntelligenceDocumentsAsync(ct, productId);
+        var product = FilterPublicAffiliateDocuments(admitted, null, null).SingleOrDefault();
+        if (product == null) return NotFound();
+
+        var registeredUrl = $"/api/upload/product-media/{productId:D}/{fileName}";
+        if (!await _dbContext.ProductMedia.AsNoTracking().IgnoreQueryFilters().AnyAsync(media =>
+                media.TenantId == product.TenantId && media.ProductId == productId &&
+                media.Product.TenantId == product.TenantId && !media.Product.IsDeleted &&
+                media.MediaType == "image" && media.Url == registeredUrl, ct))
+            return NotFound();
+
+        try
+        {
+            var result = await storage.DownloadObjectAsync(
+                $"tenants/{product.TenantId:D}/products/{productId:D}/{fileName}", null, ct);
+            return File(result.Content, result.ContentType);
+        }
+        catch (Exception ex) when (ex is FileNotFoundException ||
+            ex is Amazon.S3.AmazonS3Exception { StatusCode: System.Net.HttpStatusCode.NotFound })
+        {
+            return NotFound();
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // AF-38: PAYOUTS / WITHDRAWALS
+    // ═══════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// GET /api/affiliate/payouts?page=1&amp;pageSize=20
+    /// Returns available balance and payout request history.
+    /// AF-38: Hybrid Withdrawal Engine — affiliate self-service.
+    /// </summary>
+    [HttpGet("payouts")]
+    public async Task<ActionResult<AffiliatePayoutBalanceResponse>> GetPayouts(
+        [FromQuery] Guid? storeTenantId = null,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        CancellationToken ct = default)
+    {
+        var affiliateAccountId = await ResolveAffiliateAccountId(ct);
+        if (affiliateAccountId == null)
+            return NotFound(new { message = "No affiliate account found for this user" });
+
+        AffiliateAvailableBalanceResult balance;
+        try
+        {
+            balance = storeTenantId.HasValue && storeTenantId.Value != Guid.Empty
+                ? await _payoutService.GetAvailableBalanceAsync(affiliateAccountId.Value, storeTenantId.Value, ct)
+                : await _payoutService.GetAvailableBalanceAsync(affiliateAccountId.Value, ct);
+        }
+        catch (AffiliatePayoutAuthorityException ex)
+        {
+            var error = AffiliateFinancialErrorContract.From(ex);
+            return StatusCode(error.StatusCode, new { code = error.Code, message = error.Message });
+        }
+        
+        var history = storeTenantId.HasValue && storeTenantId.Value != Guid.Empty
+            ? await _payoutService.GetPayoutHistoryAsync(affiliateAccountId.Value, storeTenantId.Value, page, pageSize, ct)
+            : await _payoutService.GetPayoutHistoryAsync(affiliateAccountId.Value, page, pageSize, ct);
+
+        var cancellable = await _payoutService.GetCancellablePayoutIdsAsync(affiliateAccountId.Value, history, ct);
+        return Ok(new AffiliatePayoutBalanceResponse
+        {
+            TotalApproved = balance.TotalApproved,
+            SyntheticApprovedExcluded = balance.SyntheticApprovedExcluded,
+            TotalPaid = balance.TotalPaid,
+            TotalPendingRequests = balance.TotalPendingRequests,
+            AvailableForWithdrawal = balance.AvailableForWithdrawal,
+            MinimumThreshold = balance.MinimumThreshold,
+            CanWithdraw = balance.CanWithdraw,
+            Currency = balance.Currency,
+            History = history.Select(r => new AffiliatePayoutRequestDto
+            {
+                Id = r.Id,
+                StoreTenantId = r.StoreTenantId,
+                RequestedAmount = r.RequestedAmount,
+                RemainingAmount = r.RemainingAmount,
+                ApprovedAmount = r.ApprovedAmount,
+                Status = r.Status.ToString(),
+                CanCancel = cancellable.Contains(r.Id),
+                RequestedAtUtc = r.RequestedAtUtc,
+                ApprovedAtUtc = r.ApprovedAtUtc,
+                PaidAtUtc = r.PaidAtUtc,
+                PaymentReference = r.PaymentReference,
+                Currency = r.Currency
+            }).ToList()
+        });
+    }
+
+    /// <summary>
+    /// POST /api/affiliate/payouts/request
+    /// Request a withdrawal.
+    /// AF-38: RequestedAmount must be >= 100 and &lt;= AvailableForWithdrawal.
+    /// </summary>
+    [HttpPost("payouts/request")]
+    public async Task<ActionResult<AffiliatePayoutRequestDto>> RequestPayout(
+        [FromBody] AffiliateRequestPayoutBody body,
+        CancellationToken ct)
+    {
+        var affiliateAccountId = await ResolveAffiliateAccountId(ct);
+        if (affiliateAccountId == null)
+            return NotFound(new { message = "No affiliate account found for this user" });
+
+        try
+        {
+            AffiliatePayoutRequest request;
+            var storeTenantId = body.StoreTenantId is { } requestedStore && requestedStore != Guid.Empty
+                ? requestedStore : (Guid?)null;
+            
+            if (body.Currency != null)
+            {
+                request = await _payoutService.RequestPayoutWithCurrencyAsync(affiliateAccountId.Value, body.Amount,
+                    storeTenantId, body.Currency, ct);
+            }
+            else if (storeTenantId.HasValue)
+            {
+                request = await _payoutService.RequestPayoutAsync(
+                    affiliateAccountId.Value, body.Amount, storeTenantId.Value, ct);
+            }
+            else
+            {
+                request = await _payoutService.RequestPayoutAsync(
+                    affiliateAccountId.Value, body.Amount, ct);
+            }
+
+            return Ok(new AffiliatePayoutRequestDto
+            {
+                Id = request.Id,
+                StoreTenantId = request.StoreTenantId,
+                RequestedAmount = request.RequestedAmount,
+                RemainingAmount = request.RemainingAmount,
+                Status = request.Status.ToString(),
+                RequestedAtUtc = request.RequestedAtUtc,
+                Currency = request.Currency
+            });
+        }
+        catch (AffiliatePayoutAuthorityException ex)
+        {
+            var error = AffiliateFinancialErrorContract.From(ex);
+            return StatusCode(error.StatusCode, new { code = error.Code, message = error.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            var error = AffiliateFinancialErrorContract.From(ex);
+            return StatusCode(error.StatusCode, new { code = error.Code, message = error.Message });
+        }
+        catch (ArgumentException ex)
+        {
+            var error = AffiliateFinancialErrorContract.From(ex);
+            return StatusCode(error.StatusCode, new { code = error.Code, message = error.Message });
+        }
+    }
+
+    [HttpPost("payouts/{requestId:guid}/cancel")]
+    public async Task<ActionResult> CancelPayout(Guid requestId, [FromBody] AffiliateCancelPayoutBody body, CancellationToken ct)
+    {
+        var affiliateId = await ResolveAffiliateAccountId(ct);
+        if (affiliateId == null || !Guid.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var actorId))
+            return StatusCode(403, new { code = "AFFILIATE_PAYOUT_CANCELLATION_FORBIDDEN" });
+        try
+        {
+            var store = _tenantContext.TenantId is { } id && id != Guid.Empty ? id : (Guid?)null;
+            var request = await _payoutService.CancelPayoutAsync(requestId, affiliateId.Value, actorId, body.Reason, store, ct);
+            return Ok(new { request.Id, Status = request.Status.ToString() });
+        }
+        catch (System.Security.SecurityException)
+        {
+            return StatusCode(403, new { code = "AFFILIATE_PAYOUT_CANCELLATION_FORBIDDEN" });
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or ArgumentException or DbUpdateException)
+        {
+            var error = AffiliateFinancialErrorContract.From(ex);
+            return StatusCode(error.StatusCode, new { code = error.Code, message = error.Message });
+        }
+    }
+
+    //
+    // AF-19B: Global affiliates - no tenant context required.
+    // Affiliate identity comes from JWT claims only (affiliate_account_id).
+    // ═══════════════════════════════════════════════════════════════════
+
+    private async Task<HashSet<Guid>> BuildAffiliateOrderIdsForLedgerStatusAsync(
+        Guid affiliateAccountId,
+        Guid? storeTenantId,
+        string status,
+        CancellationToken ct)
+    {
+        // Group in PostgreSQL; never materialize the affiliate's complete ledger for a status filter.
+        var normalizedStatus = status.Trim();
+        
+        // Get all ledger entries for this affiliate
+        var query = _dbContext.AffiliateCommissionLedger
+            .IgnoreQueryFilters()
+            .AsNoTracking()
+            .Where(entry => entry.AffiliateAccountId == affiliateAccountId);
+
+        if (storeTenantId.HasValue)
+        {
+            query = query.Where(entry => entry.StoreTenantId == storeTenantId.Value);
+        }
+
+        var items = query.GroupBy(e => new { e.OrderId, e.OrderItemId }).Select(g => new
+        {
+            g.Key.OrderId,
+            Earned = g.Sum(e => e.EntryType == CommissionEntryType.Earned ? e.CommissionAmount : 0m),
+            Reversed = g.Sum(e => e.EntryType == CommissionEntryType.Reversed ? e.CommissionAmount : 0m),
+            Approved = g.Any(e => e.EntryType == CommissionEntryType.Approved),
+            Paid = g.Any(e => e.EntryType == CommissionEntryType.Paid)
+        });
+        var statuses = items.GroupBy(i => i.OrderId).Select(g => new
+        {
+            OrderId = g.Key,
+            Status = g.All(i => i.Earned > 0m && i.Reversed >= i.Earned) ? "Reversed" :
+                g.Any(i => i.Reversed > 0m) ? "PartiallyReversed" :
+                g.All(i => i.Paid) ? "Paid" : g.All(i => i.Approved || i.Paid) ? "Approved" : "Earned"
+        });
+        return (await statuses.Where(s => s.Status.ToLower() == normalizedStatus.ToLower()).Select(s => s.OrderId).ToListAsync(ct)).ToHashSet();
+    }
+
+    private static string ComputeOrderStatusFromEntries(IEnumerable<dynamic> entries)
+    {
+        // Group by order item to determine per-item status
+        var itemStatuses = entries
+            .GroupBy(e => e.OrderItemId)
+            .Select(itemGroup =>
+            {
+                var entryTypes = itemGroup.Select(e => (CommissionEntryType)e.EntryType).ToList();
+                var earned = itemGroup
+                    .Where(e => (CommissionEntryType)e.EntryType == CommissionEntryType.Earned)
+                    .Sum(e => (decimal)e.CommissionAmount);
+                var reversed = itemGroup
+                    .Where(e => (CommissionEntryType)e.EntryType == CommissionEntryType.Reversed)
+                    .Sum(e => (decimal)e.CommissionAmount);
+
+                if (earned > 0m && reversed >= earned) return "Reversed";
+                if (reversed > 0m) return "PartiallyReversed";
+                if (entryTypes.Contains(CommissionEntryType.Paid)) return "Paid";
+                if (entryTypes.Contains(CommissionEntryType.Approved)) return "Approved";
+                if (entryTypes.Contains(CommissionEntryType.Earned)) return "Earned";
+                return "Pending";
+            })
+            .ToList();
+
+        // Determine order-level status from item statuses
+        if (itemStatuses.Count == 0) return "Pending";
+        if (itemStatuses.All(s => s == "Reversed")) return "Reversed";
+        if (itemStatuses.Any(s => s is "Reversed" or "PartiallyReversed")) return "PartiallyReversed";
+        if (itemStatuses.All(s => s == "Paid")) return "Paid";
+        if (itemStatuses.All(s => s is "Approved" or "Paid")) return "Approved";
+        return "Earned";
+    }
+
+    private async Task<Dictionary<Guid, AffiliateOrderLedgerSnapshot>> BuildAffiliateOrderLedgerSnapshotsAsync(
+        Guid affiliateAccountId,
+        Guid? storeTenantId,
+        IReadOnlyCollection<Guid>? orderIds,
+        CancellationToken ct)
+    {
+        if (orderIds is { Count: 0 })
+        {
+            return new Dictionary<Guid, AffiliateOrderLedgerSnapshot>();
+        }
+
+        var query = _dbContext.AffiliateCommissionLedger
+            .IgnoreQueryFilters()
+            .AsNoTracking()
+            .Where(entry => entry.AffiliateAccountId == affiliateAccountId);
+
+        if (storeTenantId.HasValue)
+        {
+            query = query.Where(entry => entry.StoreTenantId == storeTenantId.Value);
+        }
+
+        if (orderIds != null)
+        {
+            query = query.Where(entry => orderIds.Contains(entry.OrderId));
+        }
+
+        var rows = await query
+            .Select(entry => new AffiliateOrderLedgerEntryRow(
+                entry.OrderId,
+                entry.OrderItemId,
+                entry.EntryType,
+                entry.BaseAmount,
+                entry.CommissionAmount,
+                entry.Currency))
+            .ToListAsync(ct);
+
+        return rows
+            .GroupBy(row => row.OrderId)
+            .ToDictionary(
+                group => group.Key,
+                group =>
+                {
+                    var itemSnapshots = group
+                        .GroupBy(row => row.OrderItemId)
+                        .ToDictionary(
+                            itemGroup => itemGroup.Key,
+                            BuildAffiliateOrderItemLedgerSnapshot);
+
+                    var earnedRows = group.Where(row => row.EntryType == CommissionEntryType.Earned).ToList();
+                    var currency = NormalizeCurrency(
+                        earnedRows.Select(row => row.Currency).FirstOrDefault(currency => !string.IsNullOrWhiteSpace(currency))
+                        ?? group.Select(row => row.Currency).FirstOrDefault(currency => !string.IsNullOrWhiteSpace(currency)));
+
+                    return new AffiliateOrderLedgerSnapshot(
+                        PaidAmount: earnedRows.Sum(row => row.BaseAmount),
+                        TotalCommission: earnedRows.Sum(row => row.CommissionAmount),
+                        TotalApproved: group.Where(row => row.EntryType == CommissionEntryType.Approved).Sum(row => row.CommissionAmount),
+                        TotalPaid: group.Where(row => row.EntryType == CommissionEntryType.Paid).Sum(row => row.CommissionAmount),
+                        TotalReversed: group.Where(row => row.EntryType == CommissionEntryType.Reversed).Sum(row => row.CommissionAmount),
+                        Currency: currency,
+                        Status: DetermineLedgerOrderStatus(itemSnapshots.Values),
+                        Items: itemSnapshots);
+                });
+    }
+
+    private static AffiliateOrderItemLedgerSnapshot BuildAffiliateOrderItemLedgerSnapshot(
+        IEnumerable<AffiliateOrderLedgerEntryRow> rows)
+    {
+        var rowList = rows.ToList();
+        var earnedRows = rowList.Where(row => row.EntryType == CommissionEntryType.Earned).ToList();
+        var earnedCommission = earnedRows.Sum(row => row.CommissionAmount);
+        var reversedCommission = rowList
+            .Where(row => row.EntryType == CommissionEntryType.Reversed)
+            .Sum(row => row.CommissionAmount);
+        var isFullyReversed = earnedCommission > 0m && reversedCommission >= earnedCommission;
+        var isPartiallyReversed = reversedCommission > 0m && !isFullyReversed;
+        var status = isFullyReversed ? "Reversed" :
+            isPartiallyReversed ? "PartiallyReversed" :
+            rowList.Any(row => row.EntryType == CommissionEntryType.Paid) ? "Paid" :
+            rowList.Any(row => row.EntryType == CommissionEntryType.Approved) ? "Approved" :
+            rowList.Any(row => row.EntryType == CommissionEntryType.Earned) ? "Earned" :
+            "Pending";
+
+        return new AffiliateOrderItemLedgerSnapshot(
+            PaidAmount: earnedRows.Sum(row => row.BaseAmount),
+            CommissionAmount: earnedCommission,
+            ReversedAmount: reversedCommission,
+            NetCommissionAmount: Math.Max(earnedCommission - reversedCommission, 0m),
+            IsReversed: isFullyReversed,
+            IsPartiallyReversed: isPartiallyReversed,
+            SettlementStatus: status);
+    }
+
+    private static string DetermineLedgerOrderStatus(IEnumerable<AffiliateOrderItemLedgerSnapshot> items)
+    {
+        var itemList = items.ToList();
+        if (itemList.Count == 0) return "Pending";
+        
+        // Check for all-reversed first
+        if (itemList.All(item => item.IsReversed)) return "Reversed";
+        
+        // Check for partial reversals BEFORE checking mixed states that allow reversals
+        // This ensures mixed reversed+paid/approved orders return "PartiallyReversed"
+        if (itemList.Any(item => item.IsReversed || item.IsPartiallyReversed)) return "PartiallyReversed";
+        
+        // Now check non-reversed item statuses (no reversals at this point)
+        if (itemList.All(item => item.SettlementStatus == "Paid")) return "Paid";
+        if (itemList.All(item => item.SettlementStatus is "Approved" or "Paid")) return "Approved";
+        
+        return "Earned";
+    }
+
+    private async Task<AffiliateLedgerTotals> BuildAffiliateLedgerTotalsAsync(
+        Guid affiliateAccountId,
+        Guid? storeTenantId,
+        CancellationToken ct)
+    {
+        var eligibility = await AffiliateCommissionEligibility.LoadAsync(_dbContext, affiliateAccountId, storeTenantId, ct, _logger);
+        var eligibleIds = eligibility.RealEntries.Select(e => e.Id).ToArray();
+        var query = _dbContext.AffiliateCommissionLedger.IgnoreQueryFilters().AsNoTracking()
+            .Where(entry => eligibleIds.Contains(entry.Id));
+
+        var rows = await query
+            .GroupBy(entry => entry.EntryType)
+            .Select(group => new
+            {
+                EntryType = group.Key,
+                Amount = group.Sum(entry => entry.CommissionAmount)
+            })
+            .ToListAsync(ct);
+
+        var totalOrders = await query
+            .Where(entry => entry.EntryType == CommissionEntryType.Earned)
+            .Select(entry => entry.OrderId)
+            .Distinct()
+            .CountAsync(ct);
+
+        var lastCommissionAtUtc = await query
+            .Select(entry => (DateTime?)entry.RecordedAtUtc)
+            .MaxAsync(ct);
+
+        return new AffiliateLedgerTotals(
+            TotalEarned: rows.Where(row => row.EntryType == CommissionEntryType.Earned).Sum(row => row.Amount),
+            TotalApproved: eligibility.NetApproved,
+            TotalPaid: rows.Where(row => row.EntryType == CommissionEntryType.Paid).Sum(row => row.Amount),
+            TotalReversed: rows.Where(row => row.EntryType == CommissionEntryType.Reversed).Sum(row => row.Amount),
+            TotalOrders: totalOrders,
+            LastCommissionAtUtc: lastCommissionAtUtc);
+    }
+
+    private async Task<List<AffiliateEarningsSummaryDto>> BuildAffiliateLedgerEarningsSummaryAsync(
+        Guid affiliateAccountId,
+        Guid? storeTenantId,
+        CancellationToken ct)
+    {
+        var eligibility = await AffiliateCommissionEligibility.LoadAsync(_dbContext, affiliateAccountId, storeTenantId, ct, _logger);
+        var rows = eligibility.RealEntries.Concat(eligibility.SyntheticEntries)
+            .Select(entry => new { entry.Currency, entry.EntryType, Amount = entry.CommissionAmount,
+                Synthetic = eligibility.SyntheticEntries.Contains(entry), Entry = entry }).ToList();
+
+        return rows
+            .GroupBy(row => NormalizeCurrency(row.Currency))
+            .Select(group =>
+            {
+                var real = group.Where(row => !row.Synthetic).ToList();
+                var earned = real.Where(row => row.EntryType == CommissionEntryType.Earned).Sum(row => row.Amount);
+                var reversed = real.Where(row => row.EntryType == CommissionEntryType.Reversed).Sum(row => row.Amount);
+
+                return new AffiliateEarningsSummaryDto
+                {
+                    Currency = group.Key,
+                    TotalEarned = earned,
+                    TotalApproved = AffiliateCommissionEligibility.NetApprovedAmount(real.Select(row => row.Entry)),
+                    HistoricalApproved = real.Where(row => row.EntryType == CommissionEntryType.Approved).Sum(row => row.Amount),
+                    SyntheticApprovedExcluded = AffiliateCommissionEligibility.NetApprovedAmount(group.Where(row => row.Synthetic).Select(row => row.Entry)),
+                    TotalPaid = real.Where(row => row.EntryType == CommissionEntryType.Paid).Sum(row => row.Amount),
+                    TotalReversed = reversed,
+                    NetEarnings = earned - reversed
+                };
+            })
+            .OrderBy(summary => summary.Currency)
+            .ToList();
+    }
+
+    private static string NormalizeCurrency(string? currency)
+    {
+        return string.IsNullOrWhiteSpace(currency)
+            ? "UNKNOWN"
+            : currency.Trim().ToUpperInvariant();
+    }
+
+    private async Task<List<AffiliateProductIntelligenceDocument>> LoadSqlAdmittedAffiliateIntelligenceDocumentsAsync(
+        CancellationToken ct, Guid? productId = null)
+    {
+        var authorityKeys = await (
+                from policy in _dbContext.AffiliateProductPolicies.AsNoTracking().IgnoreQueryFilters()
+                join category in _dbContext.AffiliateCategories.AsNoTracking().IgnoreQueryFilters()
+                    on policy.AffiliateCategoryId equals (Guid?)category.Id
+                join product in _dbContext.Products.AsNoTracking().IgnoreQueryFilters()
+                    on new { policy.TenantId, policy.ProductId }
+                    equals new { product.TenantId, ProductId = product.Id }
+                join tenant in _dbContext.Tenants.AsNoTracking().IgnoreQueryFilters()
+                    on policy.TenantId equals tenant.Id
+                 where (!productId.HasValue || product.Id == productId.Value) &&
+                       policy.IsEnabled &&
+                      !policy.IsDeleted &&
+                      category.IsActive &&
+                      !category.IsDeleted &&
+                      ((category.Level == 1 && category.ParentId == null) ||
+                       (category.Level == 2 &&
+                        category.ParentId != null &&
+                        _dbContext.AffiliateCategories.IgnoreQueryFilters().Any(parent =>
+                            parent.Id == category.ParentId.Value &&
+                            parent.Level == 1 &&
+                            parent.ParentId == null &&
+                            parent.IsActive &&
+                            !parent.IsDeleted))) &&
+                      !product.IsDeleted &&
+                      product.IsActive &&
+                      product.IsOnlineVisible &&
+                      product.IsSearchable &&
+                      product.PublishStatus == PublishStatus.Published &&
+                      tenant.IsActive &&
+                      tenant.Status == TenantStatus.Active &&
+                      tenant.DeletedAtUtc == null
+                select new { policy.TenantId, policy.ProductId })
+            .Distinct()
+            .ToListAsync(ct);
+
+        if (authorityKeys.Count == 0)
+        {
+            return [];
+        }
+
+        var keySet = authorityKeys
+            .Select(key => (key.TenantId, key.ProductId))
+            .ToHashSet();
+        var productIds = authorityKeys
+            .Select(key => key.ProductId)
+            .Distinct()
+            .ToList();
+
+        // MongoDB is hydration/search metadata only. It receives the SQL-admitted
+        // identity set and never establishes a page boundary or total.
+        // Product-scoped media reads need SQL admission only, not optional search hydration.
+        var candidates = productId.HasValue ? new List<AffiliateProductIntelligenceDocument>() : await _mongoDbContext.AffiliateProductIntelligence
+            .Find(Builders<AffiliateProductIntelligenceDocument>.Filter.In(
+                document => document.ProductId,
+                productIds))
+            .ToListAsync(ct);
+        candidates = candidates
+            .Where(candidate => keySet.Contains((candidate.TenantId, candidate.ProductId)))
+            .GroupBy(candidate => (candidate.TenantId, candidate.ProductId))
+            .Select(group => group
+                .OrderByDescending(candidate => candidate.LastUpdatedUtc)
+                .ThenBy(candidate => candidate.Id)
+                .First())
+            .ToList();
+
+        // A delayed or absent Mongo projection must not make a currently valid SQL
+        // affiliate policy unreachable. Seed only the missing authority identities;
+        // the recomposition below hydrates all public product/category/pricing data
+        // from current SQL and still rejects anything no longer deliverable.
+        var projectedKeys = candidates
+            .Select(candidate => (candidate.TenantId, candidate.ProductId))
+            .ToHashSet();
+        candidates.AddRange(authorityKeys
+            .Where(key => !projectedKeys.Contains((key.TenantId, key.ProductId)))
+            .Select(key => new AffiliateProductIntelligenceDocument
+            {
+                TenantId = key.TenantId,
+                ProductId = key.ProductId,
+                Images = [],
+                Variants = []
+            }));
+
+        return await RecomposeAffiliateIntelligenceDocumentsBySqlAuthorityAsync(candidates, ct);
+    }
+
+    internal static IEnumerable<AffiliateProductIntelligenceDocument> FilterAffiliateDocuments(
+        IEnumerable<AffiliateProductIntelligenceDocument> documents,
+        string? search,
+        decimal? minCommissionRate,
+        Guid? storeTenantId,
+        IReadOnlySet<AffiliateAuthorityKey>? categoryProductKeys)
+    {
+        var searchTerm = search?.Trim();
+        return documents.Where(document =>
+            document.BasePrice > 0m &&
+            !document.IsOutOfStock &&
+            (!storeTenantId.HasValue || document.TenantId == storeTenantId.Value) &&
+            (string.IsNullOrWhiteSpace(searchTerm) ||
+             document.ProductName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) &&
+            (!minCommissionRate.HasValue || document.CommissionRate >= minCommissionRate.Value) &&
+            (categoryProductKeys == null ||
+             categoryProductKeys.Contains(new AffiliateAuthorityKey(document.TenantId, document.ProductId))));
+    }
+
+    internal static IOrderedEnumerable<AffiliateProductIntelligenceDocument> OrderAffiliateDocuments(
+        IEnumerable<AffiliateProductIntelligenceDocument> documents,
+        string sort)
+    {
+        var ordered = sort.ToLowerInvariant() switch
+        {
+            "commission_asc" => documents.OrderBy(document => document.CommissionRate),
+            "newest" => documents.OrderByDescending(document => document.CreatedAtUtc ?? document.LastUpdatedUtc),
+            "price_desc" => documents.OrderByDescending(document => document.BasePrice),
+            "price_asc" => documents.OrderBy(document => document.BasePrice),
+            "ranking" => documents.OrderByDescending(document => document.RankingScore),
+            _ => documents.OrderByDescending(document => document.CommissionRate)
+        };
+
+        return ordered
+            .ThenBy(document => document.TenantId)
+            .ThenBy(document => document.ProductId);
+    }
+
+    /// <summary>
+    /// AF-39: Public list filtering = member discovery gates (positive public
+    /// price, in stock, name search) plus category attribution. Category
+    /// matching uses the SAME effective-slug attribution DiscoverCategories
+    /// counts with, so a main-category slug includes eligible directly
+    /// assigned products and eligible child-category products identically.
+    /// </summary>
+    internal static IEnumerable<AffiliateProductIntelligenceDocument> FilterPublicAffiliateDocuments(
+        IEnumerable<AffiliateProductIntelligenceDocument> documents,
+        string? search,
+        string? categorySlug)
+    {
+        // Authoritative fixture ownership, NOT display-name heuristics:
+        // Development/AffiliatePhase51LocalDriver.Store owns this dedicated QA-only
+        // tenant. Do not exclude products merely because they participated in a QA
+        // order (SyntheticQaRuns can legitimately reference real-store products).
+        var qaOnlyTenant = Guid.Parse("51510000-2026-4022-a000-000000000001");
+        var filtered = FilterAffiliateDocuments(
+            documents,
+            search,
+            minCommissionRate: null,
+            storeTenantId: null,
+            categoryProductKeys: null).Where(document => document.TenantId != qaOnlyTenant);
+
+        if (string.IsNullOrWhiteSpace(categorySlug))
+        {
+            return filtered;
+        }
+
+        var requestedSlug = categorySlug.Trim();
+        return filtered.Where(document =>
+            string.Equals(
+                ResolveAffiliateEffectiveCategorySlug(document),
+                requestedSlug,
+                StringComparison.OrdinalIgnoreCase));
+    }
+
+    /// <summary>
+    /// AF-39: Main-category attribution used for both category counts and
+    /// public category filtering (parent slug wins for child-assigned docs).
+    /// </summary>
+    internal static string? ResolveAffiliateEffectiveCategorySlug(AffiliateProductIntelligenceDocument document)
+    {
+        return !string.IsNullOrWhiteSpace(document.AffiliateParentCategorySlug)
+            ? document.AffiliateParentCategorySlug
+            : document.AffiliateCategorySlug;
+    }
+
+    /// <summary>
+    /// AF-39: Deterministic public ordering over the allowlisted sorts only.
+    /// Never references CommissionRate or RankingScore; ties broken by
+    /// authority key (TenantId, ProductId).
+    /// </summary>
+    internal static IOrderedEnumerable<AffiliateProductIntelligenceDocument> OrderAffiliateDocumentsForPublicDiscovery(
+        IEnumerable<AffiliateProductIntelligenceDocument> documents,
+        string sort)
+    {
+        var ordered = sort.ToLowerInvariant() switch
+        {
+            "price_desc" => documents.OrderByDescending(document => document.BasePrice),
+            "price_asc" => documents.OrderBy(document => document.BasePrice),
+            "name_asc" => documents.OrderBy(document => document.ProductName, StringComparer.OrdinalIgnoreCase),
+            _ => documents.OrderByDescending(document => document.LastUpdatedUtc)
+        };
+
+        return ordered
+            .ThenBy(document => document.TenantId)
+            .ThenBy(document => document.ProductId);
+    }
+
+    private static AffiliatePublicProductItem MapAffiliatePublicProductItem(
+        AffiliateProductIntelligenceDocument d)
+    {
+        return new AffiliatePublicProductItem
+        {
+            ProductId = d.ProductId,
+            Slug = !string.IsNullOrWhiteSpace(d.ProductSlug) ? d.ProductSlug : d.ProductId.ToString(),
+            Name = d.ProductName,
+            Description = d.Description ?? string.Empty,
+            Images = (d.Images ?? []).Select(image => AffiliatePublicProductMedia.ResolveUrl(d.ProductId, image))
+                .Where(image => !string.IsNullOrEmpty(image)).ToList(),
+            Price = d.BasePrice,
+            Currency = d.Currency,
+            StoreName = d.StoreName,
+            StoreSlug = d.StoreSlug,
+            CategoryName = d.AffiliateParentCategoryName ?? d.AffiliateCategoryName,
+            CategorySlug = ResolveAffiliateEffectiveCategorySlug(d)
+        };
+    }
+
+    private async Task<List<AffiliateProductIntelligenceDocument>> RecomposeAffiliateIntelligenceDocumentsBySqlAuthorityAsync(
+        IReadOnlyCollection<AffiliateProductIntelligenceDocument> candidates,
+        CancellationToken ct)
+    {
+        var validCandidates = candidates
+            .Where(candidate => candidate.TenantId != Guid.Empty && candidate.ProductId != Guid.Empty)
+            .ToList();
+        var visible = new List<AffiliateProductIntelligenceDocument>(validCandidates.Count);
+        if (validCandidates.Count == 0)
+        {
+            return visible;
+        }
+
+        var tenantIds = validCandidates.Select(candidate => candidate.TenantId).Distinct().ToList();
+        var productIds = validCandidates.Select(candidate => candidate.ProductId).Distinct().ToList();
+        var candidateKeys = validCandidates.Select(candidate => (candidate.TenantId, candidate.ProductId)).ToHashSet();
+        var policyRows = await _dbContext.AffiliateProductPolicies
+            .AsNoTracking()
+            .IgnoreQueryFilters()
+            .Join(
+                _dbContext.AffiliateCategories.AsNoTracking().IgnoreQueryFilters(),
+                policy => policy.AffiliateCategoryId,
+                category => (Guid?)category.Id,
+                (policy, category) => new { Policy = policy, Category = category })
+            .Where(item =>
+                tenantIds.Contains(item.Policy.TenantId) &&
+                productIds.Contains(item.Policy.ProductId) &&
+                item.Policy.IsEnabled &&
+                !item.Policy.IsDeleted &&
+                item.Category.IsActive &&
+                !item.Category.IsDeleted)
+            .Select(item => new
+            {
+                item.Policy.TenantId,
+                item.Policy.ProductId,
+                CategoryId = item.Category.Id,
+                CategoryName = item.Category.Name,
+                CategorySlug = item.Category.Slug,
+                CategoryLevel = item.Category.Level,
+                CategoryParentId = item.Category.ParentId,
+                item.Policy.CommissionRate,
+                item.Policy.MaxCommissionPerItem,
+                item.Policy.TemplateType
+            })
+            .ToListAsync(ct);
+        var policiesByKey = policyRows
+            .Where(row => candidateKeys.Contains((row.TenantId, row.ProductId)))
+            .ToDictionary(row => (row.TenantId, row.ProductId));
+        var parentIds = policyRows
+            .Where(row => row.CategoryLevel == 2 && row.CategoryParentId.HasValue)
+            .Select(row => row.CategoryParentId!.Value)
+            .Distinct()
+            .ToList();
+        var parents = await _dbContext.AffiliateCategories
+            .AsNoTracking()
+            .IgnoreQueryFilters()
+            .Where(category =>
+                parentIds.Contains(category.Id) &&
+                category.Level == 1 &&
+                category.IsActive &&
+                !category.IsDeleted)
+            .Select(category => new { category.Id, category.Name, category.Slug })
+            .ToDictionaryAsync(category => category.Id, ct);
+        var tenants = await _dbContext.Tenants
+            .AsNoTracking()
+            .IgnoreQueryFilters()
+            .Where(tenant =>
+                tenantIds.Contains(tenant.Id) &&
+                tenant.IsActive &&
+                tenant.Status == TenantStatus.Active &&
+                tenant.DeletedAtUtc == null)
+            .Select(tenant => new { tenant.Id, tenant.Name, tenant.Slug, tenant.StorefrontBaseUrl, tenant.Currency })
+            .ToDictionaryAsync(tenant => tenant.Id, ct);
+        var placeholders = validCandidates
+            .Select(candidate => new ProductDocument
+            {
+                TenantId = candidate.TenantId,
+                ProductId = candidate.ProductId
+            })
+            .ToList();
+        var products = await ProductSearchSqlAuthorityOverlay.ApplyBatchByTenantAsync(
+            _dbContext,
+            placeholders,
+            ct);
+
+        for (var index = 0; index < validCandidates.Count; index++)
+        {
+            var candidate = validCandidates[index];
+            if (!policiesByKey.TryGetValue((candidate.TenantId, candidate.ProductId), out var policy) ||
+                !tenants.TryGetValue(candidate.TenantId, out var tenant))
+            {
+                continue;
+            }
+
+            string? parentCategoryName = null;
+            string? parentCategorySlug = null;
+            if (policy.CategoryLevel == 2 && policy.CategoryParentId.HasValue)
+            {
+                if (!parents.TryGetValue(policy.CategoryParentId.Value, out var parent))
+                {
+                    continue;
+                }
+
+                parentCategoryName = parent.Name;
+                parentCategorySlug = parent.Slug;
+            }
+            else if (policy.CategoryLevel != 1 || policy.CategoryParentId.HasValue)
+            {
+                continue;
+            }
+
+            var product = products[index];
+            if (product is not { IsActive: true, IsOnlineVisible: true, IsSearchable: true } ||
+                !product.IsAffiliateEnabled ||
+                !product.TryResolveAffiliatePublicPricing(out var pricing) ||
+                !pricing.InStock)
+            {
+                continue;
+            }
+
+            candidate.ProductName = product.Name;
+            candidate.ProductSlug = product.Slug ?? candidate.ProductId.ToString();
+            candidate.Description = product.Description ?? string.Empty;
+            candidate.Images = product.Media
+                .Where(media => string.Equals(media.Type, "image", StringComparison.OrdinalIgnoreCase))
+                .OrderBy(media => media.Position)
+                .Select(media => media.Url)
+                .Where(url => !string.IsNullOrWhiteSpace(url))
+                .ToList();
+            candidate.BasePrice = pricing.Price ?? pricing.MinVariantPrice ?? 0m;
+            var estimatedCommission = candidate.BasePrice * policy.CommissionRate;
+            candidate.CommissionRate = policy.CommissionRate;
+            candidate.EstimatedCommission = policy.MaxCommissionPerItem.HasValue
+                ? Math.Min(estimatedCommission, policy.MaxCommissionPerItem.Value)
+                : estimatedCommission;
+            candidate.TemplateType = policy.TemplateType;
+            candidate.Currency = tenant.Currency ?? candidate.Currency;
+            candidate.TotalAvailableStock = pricing.TotalAvailableStock;
+            candidate.IsOutOfStock = !pricing.InStock;
+            ApplyCurrentAffiliateVariants(candidate, product, _lowStockThreshold);
+            candidate.StoreName = tenant.Name;
+            candidate.StoreSlug = tenant.Slug ?? candidate.StoreSlug;
+            try
+            {
+                candidate.StorefrontUrl = _storefrontUrlResolver.BuildProductUrl(
+                    new Tenant
+                    {
+                        Id = tenant.Id,
+                        Slug = tenant.Slug,
+                        StorefrontBaseUrl = tenant.StorefrontBaseUrl
+                    },
+                    candidate.ProductSlug);
+            }
+            catch (InvalidOperationException)
+            {
+                continue;
+            }
+            candidate.AffiliateCategoryId = policy.CategoryId;
+            candidate.AffiliateCategoryName = policy.CategoryName;
+            candidate.AffiliateCategorySlug = policy.CategorySlug;
+            candidate.AffiliateParentCategoryName = parentCategoryName;
+            candidate.AffiliateParentCategorySlug = parentCategorySlug;
+            visible.Add(candidate);
+        }
+
+        return visible;
+    }
+
+    private async Task<AffiliateProductIntelligenceDocument?> RecomposeAffiliateIntelligenceDocumentBySqlAuthorityAsync(
+        AffiliateProductIntelligenceDocument candidate,
+        CancellationToken ct)
+    {
+        if (candidate.TenantId == Guid.Empty || candidate.ProductId == Guid.Empty)
+        {
+            return null;
+        }
+
+        var policyAuthority = await _dbContext.AffiliateProductPolicies
+            .AsNoTracking()
+            .IgnoreQueryFilters()
+            .Join(
+                _dbContext.AffiliateCategories.AsNoTracking().IgnoreQueryFilters(),
+                policy => policy.AffiliateCategoryId,
+                category => (Guid?)category.Id,
+                (policy, category) => new { Policy = policy, Category = category })
+            .Where(item =>
+                item.Policy.TenantId == candidate.TenantId &&
+                item.Policy.ProductId == candidate.ProductId &&
+                item.Policy.IsEnabled &&
+                !item.Policy.IsDeleted &&
+                item.Category.IsActive &&
+                !item.Category.IsDeleted)
+            .Select(item => new
+            {
+                item.Category.Id,
+                item.Category.Name,
+                item.Category.Slug,
+                item.Category.Level,
+                item.Category.ParentId,
+                item.Policy.CommissionRate,
+                item.Policy.MaxCommissionPerItem,
+                item.Policy.TemplateType
+            })
+            .FirstOrDefaultAsync(ct);
+
+        if (policyAuthority == null)
+        {
+            return null;
+        }
+
+        string? parentCategoryName = null;
+        string? parentCategorySlug = null;
+        if (policyAuthority.Level == 2 && policyAuthority.ParentId.HasValue)
+        {
+            var parent = await _dbContext.AffiliateCategories
+                .AsNoTracking()
+                .IgnoreQueryFilters()
+                .Where(item =>
+                    item.Id == policyAuthority.ParentId.Value &&
+                    item.Level == 1 &&
+                    item.IsActive &&
+                    !item.IsDeleted)
+                .Select(item => new { item.Name, item.Slug })
+                .FirstOrDefaultAsync(ct);
+            if (parent == null)
+            {
+                return null;
+            }
+
+            parentCategoryName = parent.Name;
+            parentCategorySlug = parent.Slug;
+        }
+        else if (policyAuthority.Level != 1 || policyAuthority.ParentId.HasValue)
+        {
+            return null;
+        }
+
+        var product = await ProductSearchSqlAuthorityOverlay.ApplyAsync(
+            _dbContext,
+            new ProductDocument
+            {
+                TenantId = candidate.TenantId,
+                ProductId = candidate.ProductId
+            },
+            candidate.TenantId,
+            ct);
+
+        if (product is not { IsActive: true, IsOnlineVisible: true, IsSearchable: true } ||
+            !product.IsAffiliateEnabled ||
+            !product.TryResolveAffiliatePublicPricing(out var pricing) ||
+            !pricing.InStock)
+        {
+            return null;
+        }
+
+        var tenant = await _dbContext.Tenants
+            .AsNoTracking()
+            .IgnoreQueryFilters()
+            .Where(item => item.Id == candidate.TenantId && item.IsActive && item.Status == TenantStatus.Active && item.DeletedAtUtc == null)
+            .Select(item => new { item.Id, item.Name, item.Slug, item.StorefrontBaseUrl, item.Currency })
+            .FirstOrDefaultAsync(ct);
+
+        if (tenant == null)
+        {
+            return null;
+        }
+
+        candidate.ProductName = product.Name;
+        candidate.ProductSlug = product.Slug ?? candidate.ProductId.ToString();
+        candidate.Description = product.Description ?? string.Empty;
+        candidate.Images = product.Media
+            .Where(media => string.Equals(media.Type, "image", StringComparison.OrdinalIgnoreCase))
+            .OrderBy(media => media.Position)
+            .Select(media => media.Url)
+            .Where(url => !string.IsNullOrWhiteSpace(url))
+            .ToList();
+        candidate.BasePrice = pricing.Price ?? pricing.MinVariantPrice ?? 0m;
+        var estimatedCommission = candidate.BasePrice * policyAuthority.CommissionRate;
+        candidate.CommissionRate = policyAuthority.CommissionRate;
+        candidate.EstimatedCommission = policyAuthority.MaxCommissionPerItem.HasValue
+            ? Math.Min(estimatedCommission, policyAuthority.MaxCommissionPerItem.Value)
+            : estimatedCommission;
+        candidate.TemplateType = policyAuthority.TemplateType;
+        candidate.Currency = tenant.Currency ?? candidate.Currency;
+        candidate.TotalAvailableStock = pricing.TotalAvailableStock;
+        candidate.IsOutOfStock = !pricing.InStock;
+        ApplyCurrentAffiliateVariants(candidate, product, _lowStockThreshold);
+        candidate.StoreName = tenant.Name;
+        candidate.StoreSlug = tenant.Slug ?? candidate.StoreSlug;
+        try
+        {
+            candidate.StorefrontUrl = _storefrontUrlResolver.BuildProductUrl(
+                new Tenant
+                {
+                    Id = tenant.Id,
+                    Slug = tenant.Slug,
+                    StorefrontBaseUrl = tenant.StorefrontBaseUrl
+                },
+                candidate.ProductSlug);
+        }
+        catch (InvalidOperationException)
+        {
+            return null;
+        }
+        candidate.AffiliateCategoryId = policyAuthority.Id;
+        candidate.AffiliateCategoryName = policyAuthority.Name;
+        candidate.AffiliateCategorySlug = policyAuthority.Slug;
+        candidate.AffiliateParentCategoryName = parentCategoryName;
+        candidate.AffiliateParentCategorySlug = parentCategorySlug;
+        return candidate;
+    }
+
+    internal static void ApplyCurrentAffiliateVariants(AffiliateProductIntelligenceDocument candidate, ProductDocument product, int lowStockThreshold = 10)
+    {
+        // Never retain projection-only variant prices/stock after SQL recomposition.
+        candidate.Variants = product.HasVariants
+            ? product.Variants.Where(v => v.IsActive && v.EffectivePrice > 0m)
+                .Select(v => new VariantStockSubDocument
+                {
+                    VariantId = v.VariantId,
+                    Name = string.Join(" - ", v.Attributes.Select(a => a.Value)),
+                    Price = v.EffectivePrice,
+                    Stock = Math.Max(0, (int)decimal.Truncate(v.TotalStock))
+                }).ToList()
+            : [];
+        candidate.LowStock = product.TrackStock && !product.AllowBackorder &&
+            candidate.TotalAvailableStock > 0 && candidate.TotalAvailableStock <= lowStockThreshold;
+        candidate.CreatedAtUtc = product.CreatedAtUtc;
+    }
+
+    private async Task<List<AffiliateAuthorityKey>> ResolveLiveAffiliateCategoryProductKeysAsync(
+        string categorySlug,
+        CancellationToken cancellationToken)
+    {
+        var category = await _dbContext.AffiliateCategories
+            .AsNoTracking()
+            .IgnoreQueryFilters()
+            .Where(item =>
+                item.Slug == categorySlug.Trim() &&
+                item.IsActive &&
+                !item.IsDeleted)
+            .Select(item => new { item.Id, item.Level, item.ParentId })
+            .FirstOrDefaultAsync(cancellationToken);
+        if (category == null)
+        {
+            return [];
+        }
+
+        List<Guid> categoryIds;
+        if (category.Level == 1 && !category.ParentId.HasValue)
+        {
+            categoryIds = await _dbContext.AffiliateCategories
+                .AsNoTracking()
+                .IgnoreQueryFilters()
+                .Where(item =>
+                    (item.Id == category.Id || item.ParentId == category.Id) &&
+                    item.IsActive &&
+                    !item.IsDeleted)
+                .Select(item => item.Id)
+                .ToListAsync(cancellationToken);
+        }
+        else if (category.Level == 2 && category.ParentId.HasValue &&
+                 await _dbContext.AffiliateCategories
+                     .AsNoTracking()
+                     .IgnoreQueryFilters()
+                     .AnyAsync(parent =>
+                         parent.Id == category.ParentId.Value &&
+                         parent.Level == 1 &&
+                         parent.IsActive &&
+                         !parent.IsDeleted,
+                         cancellationToken))
+        {
+            categoryIds = [category.Id];
+        }
+        else
+        {
+            return [];
+        }
+
+        var keys = await _dbContext.AffiliateProductPolicies
+            .AsNoTracking()
+            .IgnoreQueryFilters()
+            .Where(policy =>
+                policy.IsEnabled &&
+                !policy.IsDeleted &&
+                policy.AffiliateCategoryId.HasValue &&
+                categoryIds.Contains(policy.AffiliateCategoryId.Value))
+            .Select(policy => new { policy.TenantId, policy.ProductId })
+            .Distinct()
+            .ToListAsync(cancellationToken);
+
+        return keys
+            .Select(key => new AffiliateAuthorityKey(key.TenantId, key.ProductId))
+            .ToList();
+    }
+
+    internal readonly record struct AffiliateAuthorityKey(Guid TenantId, Guid ProductId);
+
+    private async Task<Guid?> ResolveAffiliateAccountId(CancellationToken ct)
+    {
+        // AF-19B: Read affiliate_account_id directly from JWT (global affiliates)
+        var affiliateAccountClaim = User.FindFirst("affiliate_account_id")?.Value;
+        if (!string.IsNullOrEmpty(affiliateAccountClaim) && Guid.TryParse(affiliateAccountClaim, out var affiliateId))
+        {
+            return affiliateId;
+        }
+
+        return null;
+    }
+
+    private sealed record AffiliateLedgerTotals(
+        decimal TotalEarned,
+        decimal TotalApproved,
+        decimal TotalPaid,
+        decimal TotalReversed,
+        int TotalOrders,
+        DateTime? LastCommissionAtUtc)
+    {
+        public decimal NetEarnings => TotalEarned - TotalReversed;
+    }
+
+    private sealed record AffiliateOrderLedgerEntryRow(
+        Guid OrderId,
+        Guid OrderItemId,
+        CommissionEntryType EntryType,
+        decimal BaseAmount,
+        decimal CommissionAmount,
+        string Currency);
+
+    private sealed record AffiliateOrderLedgerSnapshot(
+        decimal PaidAmount,
+        decimal TotalCommission,
+        decimal TotalApproved,
+        decimal TotalPaid,
+        decimal TotalReversed,
+        string Currency,
+        string Status,
+        IReadOnlyDictionary<Guid, AffiliateOrderItemLedgerSnapshot> Items);
+
+    private sealed record AffiliateOrderItemLedgerSnapshot(
+        decimal PaidAmount,
+        decimal CommissionAmount,
+        decimal ReversedAmount,
+        decimal NetCommissionAmount,
+        bool IsReversed,
+        bool IsPartiallyReversed,
+        string SettlementStatus);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// DTOs — Response shapes (read-only, no business logic)
+// ═══════════════════════════════════════════════════════════════════
+
+public class AffiliateDashboardResponse
+{
+    /// <summary>
+    /// Earnings broken down by currency.
+    /// Prevents collapsing USD + EUR + other currencies into a single meaningless total.
+    /// </summary>
+    public List<AffiliateEarningsSummaryDto> EarningsByCurrency { get; set; } = new();
+    
+    public int TotalOrders { get; set; }
+    public DateTime? LastCommissionAtUtc { get; set; }
+    
+    // DEPRECATED: Legacy single-currency fields kept for backward compatibility
+    // These aggregate across all currencies to maintain backward compatibility for multi-currency affiliates
+    [Obsolete("Use EarningsByCurrency instead. This field collapses multiple currencies incorrectly.")]
+    public decimal TotalEarned => EarningsByCurrency?.Sum(e => e.TotalEarned) ?? 0m;
+    
+    [Obsolete("Use EarningsByCurrency instead. This field collapses multiple currencies incorrectly.")]
+    public decimal TotalApproved => EarningsByCurrency?.Sum(e => e.TotalApproved) ?? 0m;
+    
+    [Obsolete("Use EarningsByCurrency instead. This field collapses multiple currencies incorrectly.")]
+    public decimal TotalPaid => EarningsByCurrency?.Sum(e => e.TotalPaid) ?? 0m;
+    
+    [Obsolete("Use EarningsByCurrency instead. This field collapses multiple currencies incorrectly.")]
+    public decimal TotalReversed => EarningsByCurrency?.Sum(e => e.TotalReversed) ?? 0m;
+    
+    [Obsolete("Use EarningsByCurrency instead. This field collapses multiple currencies incorrectly.")]
+    public decimal NetEarnings => EarningsByCurrency?.Sum(e => e.NetEarnings) ?? 0m;
+}
+
+public class AffiliateOrdersResponse
+{
+    public List<AffiliateOrderDto> Orders { get; set; } = new();
+    public int Page { get; set; }
+    public int PageSize { get; set; }
+    public int TotalCount { get; set; }
+    public int TotalPages { get; set; }
+}
+
+public class AffiliateOrderDto
+{
+    /// <summary>Canonical SQL order metadata. Nullable only for legacy admin consumers of this shared DTO.</summary>
+    public AffiliateCanonicalOrder? Canonical { get; set; }
+    public bool IsSyntheticQa { get; set; }
+    public string? CommissionProvenance { get; set; }
+    public Guid OrderId { get; set; }
+    public string OrderNumber { get; set; } = string.Empty;
+    
+    /// <summary>
+    /// Commission settlement status: Earned | PartiallyReversed | Reversed | Approved | Paid
+    /// </summary>
+    public string Status { get; set; } = string.Empty;
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // AF-21: ORDER LIFECYCLE STATUS FIELDS
+    // ═══════════════════════════════════════════════════════════════════
+    
+    /// <summary>
+    /// AF-21: Order status from POS Admin (Pending, Confirmed, Completed, Cancelled, etc.)
+    /// </summary>
+    public string OrderStatus { get; set; } = string.Empty;
+    
+    /// <summary>
+    /// AF-21: Fulfillment status from POS Admin (Created, Confirmed, Packed, OutForDelivery, Delivered, Completed, etc.)
+    /// </summary>
+    public string FulfillmentStatus { get; set; } = string.Empty;
+    
+    /// <summary>
+    /// AF-21: Payment method code (COD, Card, Wallet, etc.)
+    /// </summary>
+    public string PaymentMethod { get; set; } = string.Empty;
+    
+    /// <summary>
+    /// Legacy name: sum of Earned ledger base snapshots. NOT the order total or customer payment.
+    /// </summary>
+    public decimal PaidAmount { get; set; }
+    
+    // ═══════════════════════════════════════════════════════════════════
+    
+    public decimal TotalCommission { get; set; }
+    public decimal TotalApproved { get; set; }
+    public decimal TotalPaid { get; set; }
+    public decimal TotalReversed { get; set; }
+    public string Currency { get; set; } = string.Empty;
+    public DateTime CreatedAtUtc { get; set; }
+    public List<AffiliateOrderItemDto> Items { get; set; } = new();
+}
+
+public class AffiliateOrderItemDto
+{
+    public int? Quantity { get; set; }
+    public Guid? VariantId { get; set; }
+    public Guid OrderItemId { get; set; }
+    public Guid ProductId { get; set; }
+    public string ProductName { get; set; } = string.Empty;
+    public string? VariantName { get; set; }
+    public decimal PaidAmount { get; set; }
+    public decimal CommissionAmount { get; set; }
+    public decimal ReversedAmount { get; set; }
+    public decimal NetCommissionAmount { get; set; }
+    public bool IsReversed { get; set; }
+    public bool IsPartiallyReversed { get; set; }
+    public string SettlementStatus { get; set; } = "Earned";
+}
+
+public class AffiliateEarningsSummaryDto
+{
+    public decimal HistoricalApproved { get; set; }
+    public decimal SyntheticApprovedExcluded { get; set; }
+    public string SyntheticProvenance => SyntheticQaEvidence.ProvenanceLabel;
+    public string Currency { get; set; } = string.Empty;
+    public decimal TotalEarned { get; set; }
+    public decimal TotalApproved { get; set; }
+    public decimal TotalPaid { get; set; }
+    public decimal TotalReversed { get; set; }
+    public decimal NetEarnings { get; set; }
+}
+
+public class AffiliateRegisterRequest
+{
+    public string? DisplayName { get; set; }
+}
+
+public class AffiliateProfileResponse
+{
+    public Guid AffiliateAccountId { get; set; }
+    public Guid AffiliateUserId { get; set; }
+    public string Email { get; set; } = string.Empty;
+    public bool EmailVerified { get; set; }
+    public string ReferralCode { get; set; } = string.Empty;
+    public string DisplayName { get; set; } = string.Empty;
+    public string Status { get; set; } = string.Empty;
+    public DateTime? ActivatedAtUtc { get; set; }
+    public DateTime? ClosedAtUtc { get; set; }
+    public DateTime CreatedAtUtc { get; set; }
+    
+    // AF-16: Payout Wallet
+    public string? PayoutWalletNumber { get; set; }
+    public string? PayoutWalletType { get; set; }
+    public DateTime? PayoutWalletUpdatedAtUtc { get; set; }
+}
+
+// AF-16: Update Payout Wallet Request
+public class UpdatePayoutWalletRequest
+{
+    public string WalletNumber { get; set; } = string.Empty;
+    public string WalletType { get; set; } = string.Empty;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// AF-22: PRODUCT INTELLIGENCE DTOs
+// ═══════════════════════════════════════════════════════════════════
+
+public class AffiliateProductDiscoveryResponse
+{
+    public List<AffiliateProductDiscoveryItem> Items { get; set; } = new();
+    public int Page { get; set; }
+    public int PageSize { get; set; }
+    public int TotalCount { get; set; }
+    public int TotalPages { get; set; }
+}
+
+public class AffiliateProductDiscoveryItem
+{
+    public Guid ProductId { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public List<string> Images { get; set; } = new();
+    public decimal Price { get; set; }
+    public string Currency { get; set; } = string.Empty;
+    public decimal CommissionRate { get; set; }
+    public decimal EstimatedCommission { get; set; }
+    public bool IsOutOfStock { get; set; }
+    public bool LowStock { get; set; }
+    public int? TotalAvailableStock { get; set; }
+    public string StoreName { get; set; } = string.Empty;
+    public string StoreSlug { get; set; } = string.Empty;
+    public string StorefrontUrl { get; set; } = string.Empty;
+    public string? CategoryName { get; set; } // AF-30
+    public string? CategorySlug { get; set; } // AF-30
+}
+
+public class AffiliateProductDetailResponse
+{
+    public Guid ProductId { get; set; }
+    public Guid TenantId { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public List<string> Images { get; set; } = new();
+    public decimal Price { get; set; }
+    public string Currency { get; set; } = string.Empty;
+    public decimal CommissionRate { get; set; }
+    public decimal EstimatedCommission { get; set; }
+    public bool IsOutOfStock { get; set; }
+    public bool LowStock { get; set; }
+    public int? TotalAvailableStock { get; set; }
+    public string StoreName { get; set; } = string.Empty;
+    public string StoreSlug { get; set; } = string.Empty;
+    public string StoreLogo { get; set; } = string.Empty;
+    public string StorefrontUrl { get; set; } = string.Empty;
+    public List<AffiliateProductVariantDto> Variants { get; set; } = new();
+}
+
+public class AffiliateProductVariantDto
+{
+    public Guid VariantId { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public decimal Price { get; set; }
+    public int Stock { get; set; }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// AF-27B §3: LANDING PAGE DTOs
+// ═══════════════════════════════════════════════════════════════════
+
+public class AffiliateLandingPagesResponse
+{
+    public List<AffiliateLandingPageItem> LandingPages { get; set; } = new();
+    public string AffiliateCode { get; set; } = string.Empty;
+    public int Page { get; set; }
+    public int PageSize { get; set; }
+    public int TotalCount { get; set; }
+    public int TotalPages { get; set; }
+}
+
+public class AffiliateLandingPageItem
+{
+    public Guid ProductId { get; set; }
+    public string ProductName { get; set; } = string.Empty;
+    public string ProductSlug { get; set; } = string.Empty;
+    public string? MainImage { get; set; }
+    public decimal Price { get; set; }
+    public string Currency { get; set; } = string.Empty;
+    public decimal CommissionRateDecimal { get; set; }
+    public decimal CommissionRatePercentage { get; set; }
+    public decimal EstimatedCommission { get; set; }
+    public bool IsOutOfStock { get; set; }
+    public string StoreName { get; set; } = string.Empty;
+    public string StoreSlug { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Backend-driven absolute URL to inherently resolve correct tenant subdomain.
+    /// AF-27C §1: Fixes tenant boundary leak. Never generated by frontend window.location.
+    /// </summary>
+    public string AbsoluteLandingUrl { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Base URL for the store, resolving the correct tenant subdomain structure.
+    /// </summary>
+    public string StorefrontBaseUrl { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Direct storefront product link with ?ref= for attribution fallback
+    /// </summary>
+    public string? StorefrontProductUrl { get; set; }
+
+    /// <summary>
+    /// AF-28: Current template type assigned to this product's landing page.
+    /// Affiliates can override this by appending ?template= to their landing URL.
+    /// </summary>
+    public string TemplateType { get; set; } = "Classic:v1";
+    public bool HasSavedDesign { get; set; }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// AF-31: CATEGORY DISCOVERY DTOs
+// ═══════════════════════════════════════════════════════════════════
+
+public class AffiliateCategoryDiscoveryItem
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Slug { get; set; } = string.Empty;
+    public int ProductCount { get; set; }
+    public bool IsActive { get; set; }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// AF-39: SANITIZED PUBLIC DISCOVERY DTOs (anonymous)
+// Presentation fields ONLY. Must never expose TenantId, commission
+// rate/estimate/cap, policy/category IDs, stock internals, variants,
+// or projection/event metadata.
+// ═══════════════════════════════════════════════════════════════════
+
+public class AffiliatePublicProductDiscoveryResponse
+{
+    public List<AffiliatePublicProductItem> Items { get; set; } = new();
+    public int Page { get; set; }
+    public int PageSize { get; set; }
+    public int TotalCount { get; set; }
+    public int TotalPages { get; set; }
+}
+
+public class AffiliatePublicProductItem
+{
+    public Guid ProductId { get; set; }
+    public string Slug { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public List<string> Images { get; set; } = new();
+    public decimal Price { get; set; }
+    public string Currency { get; set; } = string.Empty;
+    public string StoreName { get; set; } = string.Empty;
+    public string StoreSlug { get; set; } = string.Empty;
+    public string? CategoryName { get; set; }
+    public string? CategorySlug { get; set; }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// AF-38: PAYOUT DTOs
+// ═══════════════════════════════════════════════════════════════════
+
+public class AffiliatePayoutBalanceResponse
+{
+    public decimal SyntheticApprovedExcluded { get; set; }
+    public string SyntheticProvenance => SyntheticQaEvidence.ProvenanceLabel;
+    public decimal TotalApproved { get; set; }
+    public decimal TotalPaid { get; set; }
+    public decimal TotalPendingRequests { get; set; }
+    public decimal AvailableForWithdrawal { get; set; }
+    public decimal MinimumThreshold { get; set; }
+    public bool CanWithdraw { get; set; }
+    public string Currency { get; set; } = string.Empty;
+    public List<AffiliatePayoutRequestDto> History { get; set; } = new();
+}
+
+public class AffiliatePayoutRequestDto
+{
+    public bool CanCancel { get; set; }
+    public Guid Id { get; set; }
+    public Guid StoreTenantId { get; set; }
+    public decimal RequestedAmount { get; set; }
+    public decimal RemainingAmount { get; set; }
+    public decimal? ApprovedAmount { get; set; }
+    public string Status { get; set; } = string.Empty;
+    public DateTime RequestedAtUtc { get; set; }
+    public DateTime? ApprovedAtUtc { get; set; }
+    public DateTime? PaidAtUtc { get; set; }
+    public string? PaymentReference { get; set; }
+    public string Currency { get; set; } = string.Empty;
+}
+
+public class AffiliateCancelPayoutBody
+{
+    [System.ComponentModel.DataAnnotations.MaxLength(1000)]
+    public string? Reason { get; set; }
+}
+
+public sealed class SaveLandingPageDesignRequest
+{
+    public string TemplateType { get; set; } = string.Empty;
+}
+
+public class AffiliateRequestPayoutBody
+{
+    public string? Currency { get; set; }
+    public decimal Amount { get; set; }
+    // Omitted by the amount-only portal form. The payout service resolves eligible store
+    // authority; a supplied ID remains a constraint, never client-owned balance authority.
+    public Guid? StoreTenantId { get; set; }
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "op": "test",
+    "path": "/spec/replicas",
+    "value": 1
+  },
+  {
+    "op": "test",
+    "path": "/spec/strategy/type",
+    "value": "Recreate"
+  },
+  {
+    "op": "test",
+    "path": "/spec/template/spec/containers/0/image",
+    "value": "docker.io/shopixy/api@sha256:860d691bb8c7a4dc463d4dfbd99dfe595e963cce3e32e6392d9e3ce8cb3dbc5a"
+  },
+  {
+    "op": "test",
+    "path": "/spec/template/spec/containers/0/env/52/name",
+    "value": "RuntimeAdmission__PrivateInternalOnly"
+  },
+  {
+    "op": "add",
+    "path": "/spec/template/spec/containers/0/env/-",
+    "value": {
+      "name": "PlatformSecurity__RegistrationEnabled",
+      "value": "false"
+    }
+  }
+]

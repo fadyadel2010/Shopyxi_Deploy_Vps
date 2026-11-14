@@ -1,0 +1,55 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: shopixy-api-edge-prometheus-r1
+  namespace: shopixy-app
+  labels:
+    app.kubernetes.io/part-of: shopixy-automatic-subdomains
+spec:
+  podSelector:
+    matchLabels:
+      app: shopixy-api
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/component: server
+              app.kubernetes.io/instance: shopixy-prometheus
+              app.kubernetes.io/name: prometheus
+      ports:
+        # The Service port remains 8080, but its reviewed client-IP edge target
+        # is the nginx sidecar on 18080. NetworkPolicy evaluates the pod port.
+        - port: 18080
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: shopixy-prometheus-api-edge-r1
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/part-of: shopixy-automatic-subdomains
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: server
+      app.kubernetes.io/instance: shopixy-prometheus
+      app.kubernetes.io/name: prometheus
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: shopixy-app
+          podSelector:
+            matchLabels:
+              app: shopixy-api
+      ports:
+        - port: 18080
+          protocol: TCP

@@ -1,0 +1,8 @@
+{
+  "base": "C:/Users/fadya/AppData/Local/Temp/opencode/shopixy-storefront-20261114-baileys",
+  "typescriptVersion": "5.9.3",
+  "files": {
+    "PointOfSale.WhatsApp.Baileys/src/services/SessionManager.ts": "371451b1c4c14e2219d3caa8eea8ff4ff1b5aadb2cfb075e5a4d92513d8f28c4",
+    "PointOfSale.WhatsApp.Baileys/src/services/AuthScratchDirectory.ts": "c1f4525e889671022326f3dcb01d5dea7f5599e72e5cf0628ca6fe5164d64360"
+  }
+}

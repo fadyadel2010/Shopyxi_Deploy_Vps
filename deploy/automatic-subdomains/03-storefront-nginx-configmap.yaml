@@ -1,0 +1,203 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shopixy-storefront-wildcard-r1
+  namespace: shopixy-app
+  labels:
+    app.kubernetes.io/part-of: shopixy-automatic-subdomains
+immutable: true
+data:
+  nginx.conf: |
+    load_module /usr/lib/nginx/modules/ngx_http_brotli_filter_module.so;
+    load_module /usr/lib/nginx/modules/ngx_http_brotli_static_module.so;
+    worker_processes 1;
+    error_log /dev/stderr warn;
+    pid /tmp/nginx.pid;
+    events { worker_connections 1024; }
+    http {
+        include /etc/nginx/mime.types;
+        default_type application/octet-stream;
+        access_log off;
+        sendfile on;
+        brotli on;
+        brotli_static on;
+        brotli_comp_level 1;
+        brotli_types text/css application/javascript application/json image/svg+xml;
+        gzip on;
+        gzip_vary on;
+        gzip_min_length 1024;
+        gzip_types text/css application/javascript application/json image/svg+xml;
+        server_tokens off;
+        client_body_temp_path /tmp/client_temp;
+        proxy_temp_path /tmp/proxy_temp;
+        fastcgi_temp_path /tmp/fastcgi_temp;
+        uwsgi_temp_path /tmp/uwsgi_temp;
+        scgi_temp_path /tmp/scgi_temp;
+
+        # Syntax admission only. PostgreSQL Tenant + StoreConfig lifecycle remains
+        # the final authority through the storefront bootstrap/API paths.
+        map $host $tenant_host_allowed {
+            default 0;
+            "~^[a-z0-9](?:[a-z0-9-]{1,61})[a-z0-9]\.shopyxi\.com$" 1;
+            "~^(?:[a-z0-9](?:[a-z0-9-]{1,61})[a-z0-9]\.localhost|shopixy-storefront(?:\.shopixy-app(?:\.svc(?:\.cluster\.local)?)?)?|127\.0\.0\.1|localhost)$" 1;
+        }
+
+        # Fail closed if an exact platform/mail/infrastructure label is ever
+        # accidentally sent to the wildcard storefront router. The two assurance
+        # labels remain governed by their higher-priority internal-only routes.
+        map $host $reserved_platform_host {
+            default 0;
+            www.shopyxi.com 1;
+            api.shopyxi.com 1;
+            admin.shopyxi.com 1;
+            affiliate.shopyxi.com 1;
+            commercehub.shopyxi.com 1;
+            notify.shopyxi.com 1;
+            # Canonically reserved for registration, but existing exact routes
+            # intentionally serve these to internal clients. Wildcard Traefik
+            # rules exclude them; their exact internal-only middleware remains.
+            app82-assurance-a.shopyxi.com 0;
+            app82-assurance-b.shopyxi.com 0;
+            rsend.shopyxi.com 1;
+            send.shopyxi.com 1;
+            resend.shopyxi.com 1;
+            app.shopyxi.com 1;
+            portal.shopyxi.com 1;
+            dashboard.shopyxi.com 1;
+            console.shopyxi.com 1;
+            panel.shopyxi.com 1;
+            domains.shopyxi.com 1;
+            static.shopyxi.com 1;
+            cdn.shopyxi.com 1;
+            assets.shopyxi.com 1;
+            media.shopyxi.com 1;
+            files.shopyxi.com 1;
+            img.shopyxi.com 1;
+            images.shopyxi.com 1;
+            upload.shopyxi.com 1;
+            uploads.shopyxi.com 1;
+            mail.shopyxi.com 1;
+            smtp.shopyxi.com 1;
+            imap.shopyxi.com 1;
+            pop.shopyxi.com 1;
+            mx.shopyxi.com 1;
+            email.shopyxi.com 1;
+            webmail.shopyxi.com 1;
+            dev.shopyxi.com 1;
+            staging.shopyxi.com 1;
+            test.shopyxi.com 1;
+            qa.shopyxi.com 1;
+            uat.shopyxi.com 1;
+            sandbox.shopyxi.com 1;
+            demo.shopyxi.com 1;
+            preview.shopyxi.com 1;
+            beta.shopyxi.com 1;
+            auth.shopyxi.com 1;
+            oauth.shopyxi.com 1;
+            sso.shopyxi.com 1;
+            login.shopyxi.com 1;
+            logout.shopyxi.com 1;
+            signin.shopyxi.com 1;
+            signout.shopyxi.com 1;
+            secure.shopyxi.com 1;
+            ssl.shopyxi.com 1;
+            certificate.shopyxi.com 1;
+            store.shopyxi.com 1;
+            shop.shopyxi.com 1;
+            buy.shopyxi.com 1;
+            sell.shopyxi.com 1;
+            ecommerce.shopyxi.com 1;
+            pos.shopyxi.com 1;
+            online.shopyxi.com 1;
+            web.shopyxi.com 1;
+            website.shopyxi.com 1;
+            localhost.shopyxi.com 1;
+            local.shopyxi.com 1;
+            internal.shopyxi.com 1;
+            intranet.shopyxi.com 1;
+            private.shopyxi.com 1;
+            help.shopyxi.com 1;
+            support.shopyxi.com 1;
+            contact.shopyxi.com 1;
+            about.shopyxi.com 1;
+            blog.shopyxi.com 1;
+            news.shopyxi.com 1;
+            status.shopyxi.com 1;
+            docs.shopyxi.com 1;
+            documentation.shopyxi.com 1;
+            legal.shopyxi.com 1;
+            terms.shopyxi.com 1;
+            privacy.shopyxi.com 1;
+            tos.shopyxi.com 1;
+            gdpr.shopyxi.com 1;
+            dmca.shopyxi.com 1;
+            platform.shopyxi.com 1;
+            saas.shopyxi.com 1;
+            tenant.shopyxi.com 1;
+            tenants.shopyxi.com 1;
+            account.shopyxi.com 1;
+            accounts.shopyxi.com 1;
+            billing.shopyxi.com 1;
+            payment.shopyxi.com 1;
+        }
+
+        map $http_upgrade $connection_upgrade { default upgrade; '' close; }
+        upstream canonical_api {
+            server shopixy-api.shopixy-app.svc.cluster.local:8080;
+            keepalive 8;
+        }
+        log_format tenant_edge '$remote_addr $host $request_method $uri $status $body_bytes_sent';
+
+        server {
+            listen 8080;
+            access_log /dev/stdout tenant_edge;
+            if ($tenant_host_allowed = 0) { return 421; }
+            if ($reserved_platform_host = 1) { return 421; }
+
+            root /usr/share/nginx/html;
+            index index.html;
+            add_header X-Content-Type-Options nosniff always;
+            add_header Referrer-Policy strict-origin-when-cross-origin always;
+            add_header X-Frame-Options DENY always;
+            add_header Content-Security-Policy "default-src 'self'; script-src 'self' https://js.stripe.com https://accounts.google.com https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: wss:; frame-src 'self' https:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'" always;
+            add_header Vary Host always;
+
+            location ~ ^/(api|hubs)(/|$) {
+                client_max_body_size 128m;
+                proxy_request_buffering off;
+                proxy_pass http://canonical_api;
+                proxy_http_version 1.1;
+                proxy_set_header Host $host;
+                proxy_set_header X-Forwarded-Host $host;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_set_header X-Forwarded-For $remote_addr;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection $connection_upgrade;
+                proxy_cache off;
+                proxy_buffering off;
+                proxy_connect_timeout 5s;
+                proxy_read_timeout 60s;
+                add_header Cache-Control "private, no-store, max-age=0" always;
+            }
+            location ~ /\. { deny all; }
+            location /assets/ {
+                try_files $uri =404;
+                expires 1y;
+                add_header Cache-Control "public, max-age=31536000, immutable" always;
+            }
+            location = /index.html {
+                try_files $uri =404;
+                expires -1;
+                add_header Cache-Control "private, no-store, max-age=0" always;
+                add_header Pragma "no-cache" always;
+                add_header Vary Host always;
+            }
+            location / {
+                try_files $uri $uri/ /index.html;
+                expires -1;
+                add_header Cache-Control "private, no-store, max-age=0" always;
+                add_header Pragma "no-cache" always;
+                add_header Vary Host always;
+            }
+        }
+    }

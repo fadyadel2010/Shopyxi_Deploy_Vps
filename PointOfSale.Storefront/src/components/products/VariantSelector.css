@@ -1,0 +1,245 @@
+/**
+ * VariantSelector Styles
+ * 
+ * PHASE 11.3 — STOREFRONT VARIANT SELECTION
+ * 
+ * Premium Shopify-grade styling for variant selection.
+ */
+
+.variant-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.variant-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+}
+
+.variant-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.variant-selected-value {
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: normal;
+    color: var(--color-muted);
+}
+
+.variant-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.variant-option {
+    position: relative;
+    min-width: 3rem;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text);
+    background-color: var(--color-background);
+    border: 2px solid var(--color-border);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.variant-option:hover:not(:disabled) {
+    border-color: var(--color-primary-text);
+    background-color: var(--color-surface);
+}
+
+.variant-option:focus-visible {
+    outline: 2px solid var(--color-primary-text);
+    outline-offset: 2px;
+}
+
+.variant-option.selected {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+}
+
+.variant-option.selected:hover {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary-text);
+}
+
+.variant-option.unavailable {
+    color: var(--color-muted);
+    background-color: var(--color-subtle);
+    border-color: var(--color-border);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Diagonal strike-through for unavailable options */
+.variant-option.unavailable::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: var(--color-muted);
+    transform: rotate(-15deg);
+}
+
+.unavailable-indicator {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+/* Color swatch variant (for Color attributes) */
+.variant-option[data-type="color"] {
+    width: 2.5rem;
+    height: 2.5rem;
+    min-width: auto;
+    padding: 0;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.variant-option[data-type="color"].selected {
+    box-shadow: 0 0 0 2px var(--color-background), 0 0 0 4px var(--color-primary-text);
+}
+
+/* Stock indicator badge */
+.stock-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 9999px;
+}
+
+.stock-badge.in-stock {
+    background-color: var(--success-bg, #dcfce7);
+    color: var(--success-color, #166534);
+}
+
+.stock-badge.out-of-stock {
+    background-color: var(--error-bg, #fee2e2);
+    color: var(--error-color, #dc2626);
+}
+
+.stock-badge.low-stock {
+    background-color: var(--warning-bg, #fef3c7);
+    color: var(--warning-color, #d97706);
+}
+
+/* Animation for selection */
+@keyframes variant-select {
+    0% { transform: scale(0.95); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+.variant-option.selected {
+    animation: variant-select 0.2s ease-out;
+}
+
+.variant-selector[data-purchase-experience="minimal"] {
+    gap: 1.5rem;
+}
+
+.variant-selector[data-purchase-experience="minimal"] .variant-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    color: var(--color-muted);
+}
+
+.variant-selector[data-purchase-experience="minimal"] .variant-option {
+    border-width: 1px;
+    border-radius: 0;
+    background: transparent;
+}
+
+.variant-selector[data-purchase-experience="minimal"] .variant-option.selected {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.variant-selector[data-purchase-experience="fashion"] .variant-label {
+    color: var(--color-text);
+    letter-spacing: 0.14em;
+}
+
+.variant-selector[data-purchase-experience="fashion"] .variant-option {
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: 0;
+    background: var(--color-background);
+    color: var(--color-text);
+}
+
+.variant-selector[data-purchase-experience="fashion"] .variant-option:hover:not(:disabled) {
+    border-color: var(--color-primary-text);
+    background: var(--color-surface);
+}
+
+.variant-selector[data-purchase-experience="fashion"] .variant-option.selected {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-on-primary);
+}
+
+.variant-selector[data-purchase-experience="pearl"] .variant-label {
+    color: var(--color-text);
+    letter-spacing: 0.12em;
+}
+
+.variant-selector[data-purchase-experience="pearl"] .variant-option {
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: 0;
+    background: var(--color-background);
+    color: var(--color-text);
+}
+
+.variant-selector[data-purchase-experience="pearl"] .variant-option:hover:not(:disabled) {
+    border-color: var(--color-primary-text);
+    background: var(--color-surface);
+}
+
+.variant-selector[data-purchase-experience="pearl"] .variant-option.selected {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-on-primary);
+}
+
+.variant-selector[data-purchase-experience="electronics"] .variant-label {
+    color: #0f172a;
+    letter-spacing: 0.08em;
+}
+
+.variant-selector[data-purchase-experience="electronics"] .variant-option {
+    border-color: #cbd5e1;
+    border-radius: 0.375rem;
+    background: #f8fafc;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.variant-selector[data-purchase-experience="electronics"] .variant-option:hover:not(:disabled) {
+    border-color: #0369a1;
+    background: #e0f2fe;
+}
+
+.variant-selector[data-purchase-experience="electronics"] .variant-option.selected {
+    background: #0369a1;
+    border-color: #0369a1;
+    color: #ffffff;
+}

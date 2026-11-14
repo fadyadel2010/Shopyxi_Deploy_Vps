@@ -1,0 +1,16 @@
+[
+  {
+    "repositoryPath": "validation/general-ledger-final-fix/FINAL-REPORT.md",
+    "originalLocalSha256": "721dc1b42b00c09b9525436517bcc4e2bd939f572a31b2373a7b871a097686f4",
+    "sanitizedGitSha256": "cdd4628a9ccda17197b2d86914b3e79f57ee05a3f5c7c0d1deb36a872fe5f834",
+    "originalPreservedInPlace": true,
+    "reason": "Keep technical conclusions, source/release identities and acceptance limits; omit Production business identifiers/financial rows and private data"
+  },
+  {
+    "repositoryPath": "validation/storefront-20261114/FINAL-REPORT.md",
+    "originalLocalSha256": "8044374b21efc9c1f4fe11bfc16fa294ce5e820e10beb74c04c17e3e53ab21a2",
+    "sanitizedGitSha256": "01dd2738af943672de20b2387f5717aec7ef63918949c0923a5fbbf1fc7bca93",
+    "originalPreservedInPlace": true,
+    "reason": "Keep technical conclusions, source/release identities and acceptance limits; omit Production business identifiers/financial rows and private data"
+  }
+]

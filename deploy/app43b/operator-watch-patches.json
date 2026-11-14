@@ -1,0 +1,52 @@
+[
+  {
+    "apiVersion": "apps/v1",
+    "kind": "Deployment",
+    "metadata": {
+      "name": "rabbitmq-cluster-operator",
+      "namespace": "rabbitmq-system"
+    },
+    "spec": {
+      "template": {
+        "spec": {
+          "containers": [
+            {
+              "name": "operator",
+              "env": [
+                {
+                  "name": "OPERATOR_SCOPE_NAMESPACE",
+                  "value": "shopixy-messaging"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "apiVersion": "apps/v1",
+    "kind": "Deployment",
+    "metadata": {
+      "name": "cnpg-controller-manager",
+      "namespace": "cnpg-system"
+    },
+    "spec": {
+      "template": {
+        "spec": {
+          "containers": [
+            {
+              "name": "manager",
+              "env": [
+                {
+                  "name": "WATCH_NAMESPACE",
+                  "value": "shopixy-data"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+]

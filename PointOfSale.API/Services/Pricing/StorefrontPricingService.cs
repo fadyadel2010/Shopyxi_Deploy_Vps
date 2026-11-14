@@ -1,0 +1,230 @@
+using PointOfSale.API.DTOs.Cart;
+using PointOfSale.API.DTOs.Checkout;
+using PointOfSale.Core.Financial;
+using PointOfSale.Infrastructure.MongoDB.Documents;
+using PointOfSale.API.Services.Checkout;
+using PointOfSale.Core.Helpers;
+using System.Text.Json;
+
+namespace PointOfSale.API.Services.Pricing;
+
+public interface IStorefrontPricingService
+{
+    Task<StorefrontPricingBreakdown> CalculateCartPreviewAsync(
+        Guid tenantId,
+        CartDto cart,
+        ShippingMethodDocument? shippingMethod,
+        PaymentMethodDocument? paymentMethod,
+        string? shippingCountry,
+        CancellationToken cancellationToken = default);
+
+    Task<StorefrontPricingBreakdown> CalculateCheckoutAsync(
+        Guid tenantId,
+        CartSnapshot snapshot,
+        ShippingMethodDocument? shippingMethod,
+        PaymentMethodDocument? paymentMethod,
+        string? shippingCountry,
+        CancellationToken cancellationToken = default);
+}
+
+public sealed class StorefrontPricingBreakdown
+{
+    public decimal Subtotal { get; init; }
+    public decimal Shipping { get; init; }
+    public decimal Tax { get; init; }
+    public decimal CouponDiscount { get; init; }
+    public decimal PromotionDiscount { get; init; }
+    public decimal ManualDiscount { get; init; }
+    public decimal TotalDiscount { get; init; }
+    public decimal CartPromotionDiscount { get; init; }
+    public decimal PaymentFee { get; init; }
+    public decimal FinalTotal { get; init; }
+    public decimal TaxRate { get; init; }
+    public string TaxSource { get; init; } = string.Empty;
+    public string? TaxCountryCode { get; init; }
+    public bool PricesRefreshed { get; init; }
+    public IReadOnlyList<ProductTaxSnapshot> TaxLines { get; init; } = [];
+
+    public decimal Discount => TotalDiscount;
+
+    public decimal Total => FinalTotal;
+}
+
+public sealed class StorefrontPricingService : IStorefrontPricingService
+{
+    private const int CurrencyScale = 2;
+    private readonly IShippingCalculationService _shippingCalculationService;
+    private readonly ITaxCalculationService _taxCalculationService;
+
+    public StorefrontPricingService(
+        IShippingCalculationService shippingCalculationService,
+        ITaxCalculationService taxCalculationService)
+    {
+        _shippingCalculationService = shippingCalculationService;
+        _taxCalculationService = taxCalculationService;
+    }
+
+    public async Task<StorefrontPricingBreakdown> CalculateCartPreviewAsync(
+        Guid tenantId,
+        CartDto cart,
+        ShippingMethodDocument? shippingMethod,
+        PaymentMethodDocument? paymentMethod,
+        string? shippingCountry,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(cart);
+
+        return await BuildBreakdownAsync(
+            tenantId,
+            new PricingRequestTotals(
+                Subtotal: RoundCurrency(cart.Items.Sum(item => item.UnitPrice * item.Quantity)),
+                TotalWeight: CalculateTotalWeight(cart.Items.Select(item => (item.Weight, item.Quantity))),
+                CouponDiscount: RoundCurrency(cart.DiscountTotal),
+                ItemPromotionDiscount: RoundCurrency(cart.PromotionDiscountTotal),
+                CartPromotionDiscount: RoundCurrency(cart.CartPromotionDiscountTotal),
+                ManualDiscount: 0m),
+            cart.Items.Select(item => new ProductTaxLine(item.ProductId, item.VariantId, RoundCurrency(item.UnitPrice * item.Quantity))).ToArray(),
+            shippingMethod,
+            paymentMethod,
+            shippingCountry,
+            pricesRefreshed: false,
+            cancellationToken);
+    }
+
+    public async Task<StorefrontPricingBreakdown> CalculateCheckoutAsync(
+        Guid tenantId,
+        CartSnapshot snapshot,
+        ShippingMethodDocument? shippingMethod,
+        PaymentMethodDocument? paymentMethod,
+        string? shippingCountry,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(snapshot);
+
+        return await BuildBreakdownAsync(
+            tenantId,
+            new PricingRequestTotals(
+                Subtotal: RoundCurrency(snapshot.Items.Sum(item => item.CurrentPrice * item.Quantity)),
+                TotalWeight: CalculateTotalWeight(snapshot.Items.Select(item => (item.Weight, item.Quantity))),
+                CouponDiscount: RoundCurrency(snapshot.CouponDiscountTotal > 0m ? snapshot.CouponDiscountTotal : snapshot.DiscountTotal),
+                ItemPromotionDiscount: RoundCurrency(snapshot.PromotionDiscountTotal),
+                CartPromotionDiscount: RoundCurrency(snapshot.CartPromotionDiscountTotal),
+                ManualDiscount: RoundCurrency(snapshot.ManualDiscountTotal)),
+            snapshot.Items.Select(item => new ProductTaxLine(item.ProductId, item.VariantId, RoundCurrency(item.CurrentPrice * item.Quantity))).ToArray(),
+            shippingMethod,
+            paymentMethod,
+            shippingCountry,
+            pricesRefreshed: false,
+            cancellationToken);
+    }
+
+    private async Task<StorefrontPricingBreakdown> BuildBreakdownAsync(
+        Guid tenantId,
+        PricingRequestTotals requestTotals,
+        IReadOnlyList<ProductTaxLine> taxLines,
+        ShippingMethodDocument? shippingMethod,
+        PaymentMethodDocument? paymentMethod,
+        string? shippingCountry,
+        bool pricesRefreshed,
+        CancellationToken cancellationToken)
+    {
+        ValidateShippingCountry(shippingMethod, shippingCountry);
+        var shipping = shippingMethod == null
+            ? 0m
+            : _shippingCalculationService.Calculate(
+                shippingMethod,
+                requestTotals.Subtotal,
+                requestTotals.TotalWeight);
+
+        var taxComputation = await _taxCalculationService.CalculateLinesAsync(
+            tenantId,
+            taxLines,
+            shippingCountry,
+            cancellationToken);
+
+        var paymentFee = paymentMethod == null
+            ? 0m
+            : CalculatePaymentFee(paymentMethod, requestTotals.Subtotal);
+
+        var aggregatePromotionDiscount = RoundCurrency(
+            Math.Max(0m, requestTotals.ItemPromotionDiscount + requestTotals.CartPromotionDiscount));
+        var breakdown = new DiscountBreakdown(
+            CouponDiscount: requestTotals.CouponDiscount,
+            PromotionDiscount: aggregatePromotionDiscount,
+            ManualDiscount: requestTotals.ManualDiscount);
+        var total = RoundCurrency(requestTotals.Subtotal - breakdown.TotalDiscount + shipping + taxComputation.TaxAmount + paymentFee);
+
+        return new StorefrontPricingBreakdown
+        {
+            Subtotal = requestTotals.Subtotal,
+            Shipping = shipping,
+            Tax = taxComputation.TaxAmount,
+            CouponDiscount = breakdown.CouponDiscount,
+            PromotionDiscount = breakdown.PromotionDiscount,
+            ManualDiscount = breakdown.ManualDiscount,
+            TotalDiscount = breakdown.TotalDiscount,
+            CartPromotionDiscount = requestTotals.CartPromotionDiscount,
+            PaymentFee = paymentFee,
+            FinalTotal = total,
+            TaxRate = taxComputation.TaxRate,
+            TaxSource = taxComputation.Source,
+            TaxCountryCode = taxComputation.CountryCode,
+            TaxLines = taxComputation.Lines,
+            PricesRefreshed = pricesRefreshed
+        };
+    }
+
+    public static decimal CalculatePaymentFee(PaymentMethodDocument method, decimal subtotal)
+    {
+        if (method.Fee <= 0m)
+        {
+            return 0m;
+        }
+
+        var calculatedFee = method.FeeType?.ToLowerInvariant() switch
+        {
+            "percentage" => subtotal * method.Fee / 100m,
+            "fixed" => method.Fee,
+            _ => method.Fee
+        };
+
+        return RoundCurrency(Math.Max(0m, calculatedFee));
+    }
+
+    private static void ValidateShippingCountry(ShippingMethodDocument? method, string? country)
+    {
+        if (method?.AvailableCountries == null) return; // Existing unrestricted policy.
+        try
+        {
+            var countries = JsonSerializer.Deserialize<string?[]>(method.AvailableCountries);
+            if (countries == null || countries.Length == 0 || countries.Any(code =>
+                code == null || !CountryCodeHelper.TryNormalizeCountryCode(code, out var normalized) || code != normalized))
+                throw new CheckoutShippingMethodException(method.ShippingMethodId, "Saved country scope is invalid");
+            // An incomplete cart preview may not yet know its destination. Final
+            // checkout requires an address and uses this same pricing authority.
+            if (!string.IsNullOrWhiteSpace(country) &&
+                (!CountryCodeHelper.TryNormalizeCountryCode(country, out var destination) || !countries.Contains(destination)))
+                throw new CheckoutShippingMethodException(method.ShippingMethodId, "Not available for the selected shipping country");
+        }
+        catch (JsonException)
+        {
+            throw new CheckoutShippingMethodException(method.ShippingMethodId, "Saved country scope is invalid");
+        }
+    }
+
+    private static decimal RoundCurrency(decimal value)
+    {
+        return Math.Round(value, CurrencyScale, MidpointRounding.AwayFromZero);
+    }
+
+    private static decimal CalculateTotalWeight(IEnumerable<(decimal Weight, int Quantity)> lines) =>
+        lines.Sum(line => Math.Max(0m, line.Weight) * Math.Max(0, line.Quantity));
+
+    private readonly record struct PricingRequestTotals(
+        decimal Subtotal,
+        decimal TotalWeight,
+        decimal CouponDiscount,
+        decimal ItemPromotionDiscount,
+        decimal CartPromotionDiscount,
+        decimal ManualDiscount);
+}

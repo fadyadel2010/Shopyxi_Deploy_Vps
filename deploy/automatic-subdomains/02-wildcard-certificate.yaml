@@ -1,0 +1,24 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: shopixy-wildcard-origin-r1
+  namespace: shopixy-app
+  labels:
+    app.kubernetes.io/part-of: shopixy-automatic-subdomains
+spec:
+  secretName: shopixy-wildcard-origin-r1-tls
+  issuerRef:
+    kind: ClusterIssuer
+    name: lets-encrypt-cloudflare-dns01-production
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+    rotationPolicy: Always
+  dnsNames:
+    - shopyxi.com
+    - "*.shopyxi.com"
+  usages:
+    - digital signature
+    - server auth
+  duration: 2160h
+  renewBefore: 720h

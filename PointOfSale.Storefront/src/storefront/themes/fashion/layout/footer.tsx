@@ -1,0 +1,88 @@
+import React from 'react';
+import { AffiliateLink } from '@/components/common/AffiliateLink';
+import { FooterSocialIcon } from '@/components/layout/FooterSocialIcon';
+import type { FooterPresentationProps } from '@/storefront/presentation/models';
+
+const FashionFooter: React.FC<FooterPresentationProps> = ({ model }) => {
+    const { copyright, labels, navigation, sections, socialLinks, storeName } = model;
+
+    return (
+        <footer className="mt-auto bg-[#161311] text-white">
+            <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 md:grid-cols-[1.3fr,1fr]">
+                <div>
+                    <h2 className="mt-4 max-w-xl text-3xl font-semibold uppercase tracking-[0.18em] md:text-4xl">
+                        {storeName}
+                    </h2>
+                    <p className="mt-4 max-w-xl text-sm leading-7 text-white/60">
+                        {copyright}
+                    </p>
+                </div>
+
+                <div className="grid gap-8 md:grid-cols-2">
+                    <div>
+                        <p className="text-xs uppercase tracking-[0.3em] text-white/50">{labels.quickLinks}</p>
+                        <div className="mt-4 space-y-3">
+                            {navigation.links.map((link) => (
+                                <AffiliateLink
+                                    key={link.key}
+                                    href={link.href}
+                                    target={link.openInNewTab ? '_blank' : undefined}
+                                    rel={link.openInNewTab ? 'noopener noreferrer' : undefined}
+                                    className="block min-w-0 break-words text-sm uppercase tracking-[0.18em] text-white/75 transition-colors hover:text-white"
+                                >
+                                    {link.label}
+                                </AffiliateLink>
+                            ))}
+                        </div>
+                        {sections.length > 0 ? (
+                            <div className="mt-6 space-y-6 border-t border-white/10 pt-5">
+                                {sections.map((section) => (
+                                    <section key={section.key} className="min-w-0 space-y-3">
+                                            <h3 className="text-xs uppercase tracking-[0.3em] text-white/80">{section.title}</h3>
+                                        {section.links.map((link) => (
+                                            <AffiliateLink
+                                                key={link.key}
+                                                href={link.href}
+                                                target={link.openInNewTab ? '_blank' : undefined}
+                                                rel={link.openInNewTab ? 'noopener noreferrer' : undefined}
+                                                className="block min-w-0 break-words text-sm uppercase tracking-[0.18em] text-white/55 transition-colors hover:text-white"
+                                            >
+                                                {link.label}
+                                            </AffiliateLink>
+                                        ))}
+                                    </section>
+                                ))}
+                            </div>
+                        ) : null}
+                    </div>
+
+                    <div>
+                        <p className="text-xs uppercase tracking-[0.3em] text-white/50">{storeName}</p>
+                        {socialLinks.length > 0 ? (
+                            <div className="mt-4 flex flex-wrap gap-3">
+                                {socialLinks.map((link) => (
+                                    <AffiliateLink
+                                        key={link.key}
+                                        href={link.href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-2 text-xs uppercase tracking-[0.18em] text-white/70 transition-colors hover:border-white/25 hover:text-white"
+                                    >
+                                        <FooterSocialIcon platform={link.icon || link.platform} className="h-4 w-4" />
+                                        {link.platform}
+                                    </AffiliateLink>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="mt-4 space-y-3 text-sm text-white/60">
+                                <p>{labels.customerService}</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </footer>
+    );
+};
+
+export default FashionFooter;

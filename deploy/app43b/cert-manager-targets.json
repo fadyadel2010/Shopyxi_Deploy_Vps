@@ -1,0 +1,30 @@
+{
+  "certificate_secret_targets": [
+    "cnpg-system/barman-cloud-client-tls",
+    "cnpg-system/barman-cloud-server-tls",
+    "rabbitmq-system/cluster-operator-webhook-server-cert",
+    "shopixy-cache/phase4j-redis-monitoring-tls",
+    "shopixy-cache/redis-ha-root-ca",
+    "shopixy-cache/shopixy-redis-a-tls",
+    "shopixy-cache/shopixy-redis-b-tls",
+    "shopixy-cache/shopixy-sentinel-a-tls",
+    "shopixy-cache/shopixy-sentinel-b-tls",
+    "shopixy-cache/shopixy-sentinel-c-tls",
+    "shopixy-messaging/rabbitmq-app-tls",
+    "shopixy-messaging/rabbitmq-root-ca",
+    "shopixy-messaging/rabbitmq-tls",
+    "shopixy-mongo/mongo-a-tls",
+    "shopixy-mongo/mongo-b-tls",
+    "shopixy-mongo/mongo-c-tls",
+    "shopixy-mongo/mongo-root-ca",
+    "shopixy-search/search-http-tls",
+    "shopixy-search/search-node-0-tls",
+    "shopixy-search/search-node-1-tls",
+    "shopixy-search/search-node-2-tls",
+    "shopixy-search/search-probe-tls",
+    "shopixy-search/search-root-ca"
+  ],
+  "read_access": "High-trust centralized PKI controller and cainjector read permission still requires approved supported informer scoping; not falsely removed by admission",
+  "temporary_key_exception": "CREATE only; generated name and Certificate owner required; authorized cert-manager principal remains a trusted issuer",
+  "new_application_certificates": "Add approved target names to this policy before provisioning; never copy CA private keys into application namespace"
+}

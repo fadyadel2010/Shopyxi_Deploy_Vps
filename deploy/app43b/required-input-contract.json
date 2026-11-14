@@ -1,0 +1,20 @@
+{
+  "release_gate": "NOT FOR APPLY until rendered and separately approved",
+  "required": [
+    "five rebuilt image digests",
+    "exact legacy ApplicationName",
+    "existing protected ring custody and restore attestation",
+    "active and every retained decryptor Secret/key references",
+    "Redis data/Sentinel and Rabbit workload identity Secret/key references",
+    "public trust CA bundle and hostname/SAN attestation",
+    "application settings ConfigMaps and provider endpoint allowlists",
+    "owner-approved backup encryption/escrow",
+    "operator scoped-cache reconcile proof"
+  ],
+  "no_secret_values_in_this_file": true,
+  "replicas": 1,
+  "api_strategy": "Recreate",
+  "dp_storage_class": "shopixy-search-retain",
+  "dp_pvc": "shopixy-api-dpkeys",
+  "storage_note": "new dedicated claim, no existing Search data reused; local RWO survives Pod loss, not disk loss"
+}

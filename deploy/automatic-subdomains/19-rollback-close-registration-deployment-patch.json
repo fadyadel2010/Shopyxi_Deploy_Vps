@@ -1,0 +1,26 @@
+[
+  {
+    "op": "test",
+    "path": "/spec/replicas",
+    "value": 1
+  },
+  {
+    "op": "test",
+    "path": "/spec/strategy/type",
+    "value": "Recreate"
+  },
+  {
+    "op": "test",
+    "path": "/spec/template/spec/containers/0/env/53/name",
+    "value": "PlatformSecurity__RegistrationEnabled"
+  },
+  {
+    "op": "test",
+    "path": "/spec/template/spec/containers/0/env/53/value",
+    "value": "false"
+  },
+  {
+    "op": "remove",
+    "path": "/spec/template/spec/containers/0/env/53"
+  }
+]

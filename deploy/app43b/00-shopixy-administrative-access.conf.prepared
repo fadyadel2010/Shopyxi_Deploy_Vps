@@ -1,0 +1,13 @@
+# OFFLINE ONLY. Install /etc/ssh/sshd_config.d/00-shopixy-administrative-access.conf
+# ONLY after independent named-admin public-key login AND sudo/provider-console
+# recovery are verified. Existing root session must remain open during validation.
+PubkeyAuthentication yes
+AuthenticationMethods publickey
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+PermitEmptyPasswords no
+PermitRootLogin no
+X11Forwarding no
+AllowAgentForwarding no
+# Do not disable forwarding until actual management/tunnel consumers are mapped.
+# Trusted management source CIDRs must be approved before changing nft rules.

@@ -1,0 +1,10 @@
+{
+  "base": "C:/Users/fadya/AppData/Local/Temp/opencode/shopixy-storefront-20261114-baileys-pairing",
+  "previous": "C:/Users/fadya/AppData/Local/Temp/opencode/shopixy-storefront-20261114-baileys",
+  "files": {
+    "PointOfSale.WhatsApp.Baileys/src/services/SessionManager.ts": "62f0c229552189384c76390fd211ec0850f454a95acad2ae2bb2ce94746c9f00",
+    "PointOfSale.WhatsApp.Baileys/src/services/SelfHealingService.ts": "760fcca69108d451f544a58a1464feed338c1a6c56ad0b3f6daf691ef70e7cf9",
+    "PointOfSale.WhatsApp.Baileys/src/services/PairingSessionPolicy.ts": "8e0a273c429d59aa511e5f55e475eab2336bab45695cc95c57c69a1b47308119"
+  },
+  "sessionManagerBaselineExecutableParity": true
+}

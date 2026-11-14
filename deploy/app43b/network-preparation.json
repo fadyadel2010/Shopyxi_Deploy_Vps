@@ -1,0 +1,782 @@
+{
+  "apiVersion": "v1",
+  "kind": "List",
+  "items": [
+    {
+      "apiVersion": "networking.k8s.io/v1",
+      "kind": "NetworkPolicy",
+      "metadata": {
+        "name": "app-default-deny",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-app"
+      },
+      "spec": {
+        "podSelector": {},
+        "policyTypes": [
+          "Ingress",
+          "Egress"
+        ]
+      }
+    },
+    {
+      "apiVersion": "networking.k8s.io/v1",
+      "kind": "NetworkPolicy",
+      "metadata": {
+        "name": "allow-shopixy-api-5432",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-data"
+      },
+      "spec": {
+        "podSelector": {
+          "matchLabels": {
+            "cnpg.io/cluster": "shopixy-postgres",
+            "cnpg.io/instanceRole": "primary"
+          }
+        },
+        "policyTypes": [
+          "Ingress"
+        ],
+        "ingress": [
+          {
+            "from": [
+              {
+                "namespaceSelector": {
+                  "matchLabels": {
+                    "kubernetes.io/metadata.name": "shopixy-app"
+                  }
+                },
+                "podSelector": {
+                  "matchLabels": {
+                    "app": "shopixy-api"
+                  }
+                }
+              }
+            ],
+            "ports": [
+              {
+                "protocol": "TCP",
+                "port": 5432
+              }
+            ]
+          },
+          {
+            "from": [
+              {
+                "namespaceSelector": {
+                  "matchLabels": {
+                    "kubernetes.io/metadata.name": "shopixy-data"
+                  }
+                },
+                "podSelector": {
+                  "matchLabels": {
+                    "cnpg.io/cluster": "shopixy-postgres"
+                  }
+                }
+              }
+            ],
+            "ports": [
+              {
+                "protocol": "TCP",
+                "port": 5432
+              }
+            ]
+          },
+          {
+            "from": [
+              {
+                "namespaceSelector": {
+                  "matchLabels": {
+                    "kubernetes.io/metadata.name": "cnpg-system"
+                  }
+                },
+                "podSelector": {
+                  "matchLabels": {}
+                }
+              }
+            ],
+            "ports": [
+              {
+                "protocol": "TCP",
+                "port": 8000
+              }
+            ]
+          },
+          {
+            "from": [
+              {
+                "namespaceSelector": {
+                  "matchLabels": {
+                    "kubernetes.io/metadata.name": "monitoring"
+                  }
+                },
+                "podSelector": {
+                  "matchLabels": {}
+                }
+              }
+            ],
+            "ports": [
+              {
+                "protocol": "TCP",
+                "port": 9187
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "networking.k8s.io/v1",
+      "kind": "NetworkPolicy",
+      "metadata": {
+        "name": "allow-shopixy-api-27017",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-mongo"
+      },
+      "spec": {
+        "podSelector": {
+          "matchLabels": {
+            "app.kubernetes.io/name": "mongodb"
+          }
+        },
+        "policyTypes": [
+          "Ingress"
+        ],
+        "ingress": [
+          {
+            "from": [
+              {
+                "namespaceSelector": {
+                  "matchLabels": {
+                    "kubernetes.io/metadata.name": "shopixy-app"
+                  }
+                },
+                "podSelector": {
+                  "matchLabels": {
+                    "app": "shopixy-api"
+                  }
+                }
+              }
+            ],
+            "ports": [
+              {
+                "protocol": "TCP",
+                "port": 27017
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "networking.k8s.io/v1",
+      "kind": "NetworkPolicy",
+      "metadata": {
+        "name": "allow-shopixy-api-6379",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-cache"
+      },
+      "spec": {
+        "podSelector": {
+          "matchLabels": {
+            "app.kubernetes.io/part-of": "shopixy-redis-ha",
+            "shopixy.component": "redis",
+            "shopixy.phase": "4f1r"
+          }
+        },
+        "policyTypes": [
+          "Ingress"
+        ],
+        "ingress": [
+          {
+            "from": [
+              {
+                "namespaceSelector": {
+                  "matchLabels": {
+                    "kubernetes.io/metadata.name": "shopixy-app"
+                  }
+                },
+                "podSelector": {
+                  "matchLabels": {
+                    "app": "shopixy-api"
+                  }
+                }
+              },
+              {
+                "namespaceSelector": {
+                  "matchLabels": {
+                    "kubernetes.io/metadata.name": "shopixy-app"
+                  }
+                },
+                "podSelector": {
+                  "matchLabels": {
+                    "app": "shopixy-baileys"
+                  }
+                }
+              }
+            ],
+            "ports": [
+              {
+                "protocol": "TCP",
+                "port": 6379
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "networking.k8s.io/v1",
+      "kind": "NetworkPolicy",
+      "metadata": {
+        "name": "allow-shopixy-api-26379",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-cache"
+      },
+      "spec": {
+        "podSelector": {
+          "matchLabels": {
+            "app.kubernetes.io/part-of": "shopixy-redis-ha",
+            "shopixy.component": "sentinel",
+            "shopixy.phase": "4f1r"
+          }
+        },
+        "policyTypes": [
+          "Ingress"
+        ],
+        "ingress": [
+          {
+            "from": [
+              {
+                "namespaceSelector": {
+                  "matchLabels": {
+                    "kubernetes.io/metadata.name": "shopixy-app"
+                  }
+                },
+                "podSelector": {
+                  "matchLabels": {
+                    "app": "shopixy-api"
+                  }
+                }
+              },
+              {
+                "namespaceSelector": {
+                  "matchLabels": {
+                    "kubernetes.io/metadata.name": "shopixy-app"
+                  }
+                },
+                "podSelector": {
+                  "matchLabels": {
+                    "app": "shopixy-baileys"
+                  }
+                }
+              }
+            ],
+            "ports": [
+              {
+                "protocol": "TCP",
+                "port": 26379
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "networking.k8s.io/v1",
+      "kind": "NetworkPolicy",
+      "metadata": {
+        "name": "allow-shopixy-api-5671",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-messaging"
+      },
+      "spec": {
+        "podSelector": {
+          "matchLabels": {
+            "app.kubernetes.io/name": "shopixy-rabbitmq"
+          }
+        },
+        "policyTypes": [
+          "Ingress"
+        ],
+        "ingress": [
+          {
+            "from": [
+              {
+                "namespaceSelector": {
+                  "matchLabels": {
+                    "kubernetes.io/metadata.name": "shopixy-app"
+                  }
+                },
+                "podSelector": {
+                  "matchLabels": {
+                    "app": "shopixy-api"
+                  }
+                }
+              }
+            ],
+            "ports": [
+              {
+                "protocol": "TCP",
+                "port": 5671
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "networking.k8s.io/v1",
+      "kind": "NetworkPolicy",
+      "metadata": {
+        "name": "allow-shopixy-api-9200",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-search"
+      },
+      "spec": {
+        "podSelector": {
+          "matchLabels": {
+            "app.kubernetes.io/instance": "shopixy-search",
+            "app.kubernetes.io/name": "opensearch"
+          }
+        },
+        "policyTypes": [
+          "Ingress"
+        ],
+        "ingress": [
+          {
+            "from": [
+              {
+                "namespaceSelector": {
+                  "matchLabels": {
+                    "kubernetes.io/metadata.name": "shopixy-app"
+                  }
+                },
+                "podSelector": {
+                  "matchLabels": {
+                    "app": "shopixy-api"
+                  }
+                }
+              }
+            ],
+            "ports": [
+              {
+                "protocol": "TCP",
+                "port": 9200
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "networking.k8s.io/v1",
+      "kind": "NetworkPolicy",
+      "metadata": {
+        "name": "api-dependencies",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-app"
+      },
+      "spec": {
+        "podSelector": {
+          "matchLabels": {
+            "app": "shopixy-api"
+          }
+        },
+        "policyTypes": [
+          "Egress"
+        ],
+        "egress": [
+          {
+            "to": [
+              {
+                "namespaceSelector": {
+                  "matchLabels": {
+                    "kubernetes.io/metadata.name": "shopixy-data"
+                  }
+                },
+                "podSelector": {
+                  "matchLabels": {
+                    "cnpg.io/cluster": "shopixy-postgres",
+                    "cnpg.io/instanceRole": "primary"
+                  }
+                }
+              }
+            ],
+            "ports": [
+              {
+                "protocol": "TCP",
+                "port": 5432
+              }
+            ]
+          },
+          {
+            "to": [
+              {
+                "namespaceSelector": {
+                  "matchLabels": {
+                    "kubernetes.io/metadata.name": "shopixy-mongo"
+                  }
+                },
+                "podSelector": {
+                  "matchLabels": {
+                    "app.kubernetes.io/name": "mongodb"
+                  }
+                }
+              }
+            ],
+            "ports": [
+              {
+                "protocol": "TCP",
+                "port": 27017
+              }
+            ]
+          },
+          {
+            "to": [
+              {
+                "namespaceSelector": {
+                  "matchLabels": {
+                    "kubernetes.io/metadata.name": "shopixy-cache"
+                  }
+                },
+                "podSelector": {
+                  "matchLabels": {
+                    "app.kubernetes.io/part-of": "shopixy-redis-ha",
+                    "shopixy.component": "redis",
+                    "shopixy.phase": "4f1r"
+                  }
+                }
+              }
+            ],
+            "ports": [
+              {
+                "protocol": "TCP",
+                "port": 6379
+              }
+            ]
+          },
+          {
+            "to": [
+              {
+                "namespaceSelector": {
+                  "matchLabels": {
+                    "kubernetes.io/metadata.name": "shopixy-cache"
+                  }
+                },
+                "podSelector": {
+                  "matchLabels": {
+                    "app.kubernetes.io/part-of": "shopixy-redis-ha",
+                    "shopixy.component": "sentinel",
+                    "shopixy.phase": "4f1r"
+                  }
+                }
+              }
+            ],
+            "ports": [
+              {
+                "protocol": "TCP",
+                "port": 26379
+              }
+            ]
+          },
+          {
+            "to": [
+              {
+                "namespaceSelector": {
+                  "matchLabels": {
+                    "kubernetes.io/metadata.name": "shopixy-messaging"
+                  }
+                },
+                "podSelector": {
+                  "matchLabels": {
+                    "app.kubernetes.io/name": "shopixy-rabbitmq"
+                  }
+                }
+              }
+            ],
+            "ports": [
+              {
+                "protocol": "TCP",
+                "port": 5671
+              }
+            ]
+          },
+          {
+            "to": [
+              {
+                "namespaceSelector": {
+                  "matchLabels": {
+                    "kubernetes.io/metadata.name": "shopixy-search"
+                  }
+                },
+                "podSelector": {
+                  "matchLabels": {
+                    "app.kubernetes.io/instance": "shopixy-search",
+                    "app.kubernetes.io/name": "opensearch"
+                  }
+                }
+              }
+            ],
+            "ports": [
+              {
+                "protocol": "TCP",
+                "port": 9200
+              }
+            ]
+          },
+          {
+            "to": [
+              {
+                "namespaceSelector": {
+                  "matchLabels": {
+                    "kubernetes.io/metadata.name": "kube-system"
+                  }
+                },
+                "podSelector": {
+                  "matchLabels": {
+                    "k8s-app": "kube-dns"
+                  }
+                }
+              }
+            ],
+            "ports": [
+              {
+                "protocol": "UDP",
+                "port": 53
+              },
+              {
+                "protocol": "TCP",
+                "port": 53
+              }
+            ]
+          },
+          {
+            "to": [
+              {
+                "namespaceSelector": {
+                  "matchLabels": {
+                    "kubernetes.io/metadata.name": "shopixy-app"
+                  }
+                },
+                "podSelector": {
+                  "matchLabels": {
+                    "app": "shopixy-baileys"
+                  }
+                }
+              }
+            ],
+            "ports": [
+              {
+                "protocol": "TCP",
+                "port": 3000
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "networking.k8s.io/v1",
+      "kind": "NetworkPolicy",
+      "metadata": {
+        "name": "api-internal-ingress",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-app"
+      },
+      "spec": {
+        "podSelector": {
+          "matchLabels": {
+            "app": "shopixy-api"
+          }
+        },
+        "policyTypes": [
+          "Ingress"
+        ],
+        "ingress": [
+          {
+            "from": [
+              {
+                "namespaceSelector": {
+                  "matchLabels": {
+                    "kubernetes.io/metadata.name": "shopixy-app"
+                  }
+                },
+                "podSelector": {
+                  "matchLabels": {
+                    "shopixy.io/api-consumer": "true"
+                  }
+                }
+              }
+            ],
+            "ports": [
+              {
+                "protocol": "TCP",
+                "port": 8080
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "networking.k8s.io/v1",
+      "kind": "NetworkPolicy",
+      "metadata": {
+        "name": "baileys-api-ingress",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-app"
+      },
+      "spec": {
+        "podSelector": {
+          "matchLabels": {
+            "app": "shopixy-baileys"
+          }
+        },
+        "policyTypes": [
+          "Ingress"
+        ],
+        "ingress": [
+          {
+            "from": [
+              {
+                "namespaceSelector": {
+                  "matchLabels": {
+                    "kubernetes.io/metadata.name": "shopixy-app"
+                  }
+                },
+                "podSelector": {
+                  "matchLabels": {
+                    "app": "shopixy-api"
+                  }
+                }
+              }
+            ],
+            "ports": [
+              {
+                "protocol": "TCP",
+                "port": 3000
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "networking.k8s.io/v1",
+      "kind": "NetworkPolicy",
+      "metadata": {
+        "name": "baileys-redis-dns-egress",
+        "annotations": {
+          "shopixy.io/review-status": "OFFLINE-NOT-FOR-APPLY"
+        },
+        "namespace": "shopixy-app"
+      },
+      "spec": {
+        "podSelector": {
+          "matchLabels": {
+            "app": "shopixy-baileys"
+          }
+        },
+        "policyTypes": [
+          "Egress"
+        ],
+        "egress": [
+          {
+            "to": [
+              {
+                "namespaceSelector": {
+                  "matchLabels": {
+                    "kubernetes.io/metadata.name": "shopixy-cache"
+                  }
+                },
+                "podSelector": {
+                  "matchLabels": {
+                    "app.kubernetes.io/part-of": "shopixy-redis-ha",
+                    "shopixy.component": "redis",
+                    "shopixy.phase": "4f1r"
+                  }
+                }
+              }
+            ],
+            "ports": [
+              {
+                "protocol": "TCP",
+                "port": 6379
+              }
+            ]
+          },
+          {
+            "to": [
+              {
+                "namespaceSelector": {
+                  "matchLabels": {
+                    "kubernetes.io/metadata.name": "shopixy-cache"
+                  }
+                },
+                "podSelector": {
+                  "matchLabels": {
+                    "app.kubernetes.io/part-of": "shopixy-redis-ha",
+                    "shopixy.component": "sentinel",
+                    "shopixy.phase": "4f1r"
+                  }
+                }
+              }
+            ],
+            "ports": [
+              {
+                "protocol": "TCP",
+                "port": 26379
+              }
+            ]
+          },
+          {
+            "to": [
+              {
+                "namespaceSelector": {
+                  "matchLabels": {
+                    "kubernetes.io/metadata.name": "kube-system"
+                  }
+                },
+                "podSelector": {
+                  "matchLabels": {
+                    "k8s-app": "kube-dns"
+                  }
+                }
+              }
+            ],
+            "ports": [
+              {
+                "protocol": "UDP",
+                "port": 53
+              },
+              {
+                "protocol": "TCP",
+                "port": 53
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "verifiedAtUtc": "2026-11-14T12:32:33.287276+00:00",
+  "localConfigMapComparisons": [
+    {
+      "path": "deploy/automatic-subdomains/03-storefront-nginx-configmap.yaml",
+      "configMap": "shopixy-storefront-wildcard-r1",
+      "existsLive": true,
+      "keys": [
+        {
+          "key": "nginx.conf",
+          "localSha256": "649e0d02393d6215596f9ce6272295171fdd958da5e17c5677c161beccf915f1",
+          "liveSha256": "649e0d02393d6215596f9ce6272295171fdd958da5e17c5677c161beccf915f1",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "path": "deploy/automatic-subdomains/04-api-edge-nginx-configmap.yaml",
+      "configMap": "shopixy-api-clientip-edge-wildcard-r1",
+      "existsLive": true,
+      "keys": [
+        {
+          "key": "nginx.conf",
+          "localSha256": "6d27c346ab83ecf018be48cc0bf8211e2772a54a067360bfd88e59c1c722b5e5",
+          "liveSha256": "6d27c346ab83ecf018be48cc0bf8211e2772a54a067360bfd88e59c1c722b5e5",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "path": "deploy/automatic-subdomains/08-monitoring-combined.yaml",
+      "configMap": "shopixy-alerting-automatic-subdomains-r2",
+      "existsLive": false,
+      "keys": [
+        {
+          "key": "app6e.yaml",
+          "localSha256": "5b7d8a40579a5f510e0adbfb8e68dc3a7901e7b89264754295736bb6ec7bd48c",
+          "liveSha256": null,
+          "matches": false
+        },
+        {
+          "key": "app82-r4.yaml",
+          "localSha256": "cb5bd67c1a02bf81a561727bd1b87af2319054ddc9ed8479362053924f58be07",
+          "liveSha256": null,
+          "matches": false
+        },
+        {
+          "key": "production.yaml",
+          "localSha256": "d234b81a09c753224bc4222b4dc6c96f3e3c34d4ddbb74e349fb6484e819c328",
+          "liveSha256": null,
+          "matches": false
+        },
+        {
+          "key": "automatic-subdomains.yaml",
+          "localSha256": "81cf9f0c55e9c691deb90f4d1ccb5659945298c4ee158fa98d3bdeef215f7782",
+          "liveSha256": null,
+          "matches": false
+        }
+      ]
+    },
+    {
+      "path": "deploy/automatic-subdomains/08-monitoring.yaml",
+      "configMap": "shopixy-automatic-subdomains-alerting-r1",
+      "existsLive": false,
+      "keys": [
+        {
+          "key": "automatic-subdomains.yaml",
+          "localSha256": "81cf9f0c55e9c691deb90f4d1ccb5659945298c4ee158fa98d3bdeef215f7782",
+          "liveSha256": null,
+          "matches": false
+        }
+      ]
+    }
+  ],
+  "workloadsCompared": [
+    "shopixy-api",
+    "shopixy-baileys",
+    "shopixy-commercehub",
+    "shopixy-r2-egress",
+    "shopixy-storefront",
+    "shopixy-web"
+  ],
+  "runtimeReferencesMatchLatestAcceptedReports": true,
+  "historicalOfflineTemplate": "deploy/app43b/application.template.json is explicitly OFFLINE-NOT-FOR-APPLY, not falsely asserted equal to live deployment",
+  "latestReleaseScript": "validation/general-ledger-final-fix/deploy-api.cjs sends deployment-driver.py through SSH stdin; no persistent driver copy on the VPS is required",
+  "preservedVpsScriptHashes": [
+    {
+      "path": "/var/lib/shopixy/assurance-r2-private/qa-storefront-cleanup-r12.py",
+      "bytes": 839,
+      "sha256": "d9bfe76a420d99d22254ba5e96754084eaa3939c6243d3502e0776787f8797f2"
+    },
+    {
+      "path": "/var/lib/shopixy/assurance-r2-private/qa-storefront-cleanup-r12b.py",
+      "bytes": 841,
+      "sha256": "421792e06eed6444d83c59a95857c3a9fa7f424ee33d87e5848bb602707d5a5f"
+    },
+    {
+      "path": "/var/lib/shopixy/assurance-r2-private/qa-storefront-cleanup-r12c.py",
+      "bytes": 841,
+      "sha256": "9db1ca97aa94b3bdecf4fbd1ecd3704b61a76d81f8f8b9cca4cf58c692bbb934"
+    },
+    {
+      "path": "/var/lib/shopixy/assurance-r2-private/qa-storefront-cleanup-r12d.py",
+      "bytes": 841,
+      "sha256": "a166015996fedc38311799eeb97b7fa85dcb94c37aba81741ea82e14afc05191"
+    },
+    {
+      "path": "/var/lib/shopixy/assurance-r2-private/qa-storefront-cleanup-r7.py",
+      "bytes": 837,
+      "sha256": "49d34d174453028a04e145893b4059a06ddea463ab393a968831a89728dccb10"
+    },
+    {
+      "path": "/var/lib/shopixy/assurance-r2-private/qa-storefront-cleanup-r7b.py",
+      "bytes": 838,
+      "sha256": "10b72ad54599404c2f5aab75f859289f7622e5c721572b9c96815406b8773bf4"
+    },
+    {
+      "path": "/var/lib/shopixy/assurance-r9-memory-policy-app-services-v1/rollback-memory-limits-v2.py",
+      "bytes": 2464,
+      "sha256": "2ccc84460c7801e09b1b5979dc47fb47f6a7adcc53ffead13fb3560dc305e642"
+    },
+    {
+      "path": "/var/lib/shopixy/assurance-r9-memory-policy-app-services-v1/rollback-memory-limits.py",
+      "bytes": 1910,
+      "sha256": "f6a67ac8a4ccb317b1d33bb3776ed8742f43282150496f6075d167bac5077e48"
+    },
+    {
+      "path": "/var/lib/shopixy/assurance-r9-ssh-admin/rollback.py",
+      "bytes": 693,
+      "sha256": "4f184d43410f85567f38b88584e88bd3cb4f9cc7dbae5fec030f8a1518a94b4f"
+    },
+    {
+      "path": "/var/lib/shopixy/public-admission-20261112-r1/admission-rollout.py",
+      "bytes": 5160,
+      "sha256": "d819427c76e6913b9c47028c78480a08a2cf1c68aea2b5212684b03085d8b78a"
+    },
+    {
+      "path": "/var/lib/shopixy/public-admission-web-20261112-r1/frontend-rollout.py",
+      "bytes": 4952,
+      "sha256": "75d07ad4619c17d6e5ecdad021136e848b7c429e6993a86831286039ecf76872"
+    }
+  ],
+  "privacy": "ConfigMap values not exported, only hashes. Secret resources/private files/database/PVC contents not requested."
+}

@@ -1,0 +1,107 @@
+[
+  {
+    "path": "PointOfSale.API/Controllers/PlatformController.cs",
+    "releaseSha256": "825affc110f80cc7fb778bdc07fa46b3f7c00e1d239229e8d0f6ae4e5c485d75",
+    "workingSha256": "7a3ee72a3e33307d7b25650518380809d2fd1ea564a29242ac955ea6aa15b3ab",
+    "workingState": "pre-existing different bytes retained",
+    "certifiedInputVerified": true
+  },
+  {
+    "path": "PointOfSale.API/DTOs/ExpenseDTOs.cs",
+    "releaseSha256": "dcd1b6da7c193f21ed01bfc1a2423c416100accabe4461689a21079520528685",
+    "workingSha256": "882736672abe4e4e9cbc5fbbd1d2bed183b3fb7a21ba5203c118dc51b3425727",
+    "workingState": "pre-existing different bytes retained",
+    "certifiedInputVerified": true
+  },
+  {
+    "path": "PointOfSale.API/Middleware/OwnerEmailVerificationMiddleware.cs",
+    "releaseSha256": "e60540ab38d71ad413a768c53da03b835471c3ad62623024a207189c60d15939",
+    "workingSha256": null,
+    "workingState": "pre-existing absence retained",
+    "certifiedInputVerified": true
+  },
+  {
+    "path": "PointOfSale.API/Program.cs",
+    "releaseSha256": "bc082d72c065f3e674e0be90beb11b10bf98986653428d92b1e5b9503cef79b7",
+    "workingSha256": "3fe7c78929f0dabdd087f3623885282ba5dd0a9c0f78f06f9a639da934814a57",
+    "workingState": "pre-existing different bytes retained",
+    "certifiedInputVerified": true
+  },
+  {
+    "path": "PointOfSale.API/Services/Platform/RateLimitService.cs",
+    "releaseSha256": "86040277c30e4710c1343e5cdfdb8857d37ebf6a4cf2424f1672753b5b61d73c",
+    "workingSha256": "6928e4ac108db5cbbe5e0cc87ebc1786b303334f7850b8956ded455590b00302",
+    "workingState": "pre-existing different bytes retained",
+    "certifiedInputVerified": true
+  },
+  {
+    "path": "validation/storefront-20261114/StorefrontRegression.csproj",
+    "releaseSha256": "aaf371d44cbf994e6e04765fa1fbd1046e1c02d76960dfdac835fd0e5d4f67d9",
+    "workingSha256": null,
+    "workingState": "pre-existing absence retained",
+    "certifiedInputVerified": true
+  },
+  {
+    "path": "PointOfSale.Web/src/components/EmailVerificationRequired.d.ts",
+    "releaseSha256": "011903a6bb062d8821ee84aea06fdf9d8d351fac6ad1bb4ad857242b94378994",
+    "workingSha256": null,
+    "workingState": "pre-existing absence retained",
+    "certifiedInputVerified": true
+  },
+  {
+    "path": "PointOfSale.Web/src/components/EmailVerificationRequired.jsx",
+    "releaseSha256": "5efc3bf8c4f2405c7546f2efdc70717afce96f4eba91dff667f0c32a59b972c5",
+    "workingSha256": null,
+    "workingState": "pre-existing absence retained",
+    "certifiedInputVerified": true
+  },
+  {
+    "path": "PointOfSale.Web/src/components/EmailVerificationRequired.test.tsx",
+    "releaseSha256": "42fed5139ba0863ca61e94abd0bdce089dba2bd25187155cd45869d7a73f2446",
+    "workingSha256": null,
+    "workingState": "pre-existing absence retained",
+    "certifiedInputVerified": true
+  },
+  {
+    "path": "PointOfSale.Web/src/components/ProtectedRoute.jsx",
+    "releaseSha256": "4f9790f1f27519ef8b8e5e70c976447acd52634f0bb0da138e5665fe88b3a80d",
+    "workingSha256": "9bb1d2300f4695ca2811c4d79d3bb07ea2a7bdffc03ae9ba0ed925d342e25a06",
+    "workingState": "pre-existing different bytes retained",
+    "certifiedInputVerified": true
+  },
+  {
+    "path": "PointOfSale.Web/src/components/ProtectedRoute.verification.test.tsx",
+    "releaseSha256": "2f64585d35fc28063e1b90db2e997b0ab670764208be2d8ec5c2408d9fc1410d",
+    "workingSha256": null,
+    "workingState": "pre-existing absence retained",
+    "certifiedInputVerified": true
+  },
+  {
+    "path": "PointOfSale.Web/src/marketplace/queryKeys.ts",
+    "releaseSha256": "303ee53648a34ae8d318d9138901134ab8280eba553e810081e03c8384d6655f",
+    "workingSha256": "0feb7136f2f10bce15c8604ce7b0be9c6d6a3305771c4e94c51ad5dd5a8b0ffb",
+    "workingState": "pre-existing different bytes retained",
+    "certifiedInputVerified": true
+  },
+  {
+    "path": "PointOfSale.Web/src/pages/Categories.jsx",
+    "releaseSha256": "5d86f16c5d69173b61bd7326528ce04ef27b6508be5ac811b495b1d3650bb33f",
+    "workingSha256": "5288374cbc4b368e41a67b13a412fddb152eae191f55fd2259027e721af673e0",
+    "workingState": "pre-existing different bytes retained",
+    "certifiedInputVerified": true
+  },
+  {
+    "path": "PointOfSale.Web/src/pages/Register.admission.test.tsx",
+    "releaseSha256": "3a8f1257c184cde7e77a1da45aa780b089fdb2309d1aa0f01d25cfa9bee599b8",
+    "workingSha256": null,
+    "workingState": "pre-existing absence retained",
+    "certifiedInputVerified": true
+  },
+  {
+    "path": "PointOfSale.Web/src/pages/Register.jsx",
+    "releaseSha256": "b0bdc11ffd7168caf8bf5f4919e00ef8991217d3f41c4af088d248a263d3083d",
+    "workingSha256": "9938d400b4e83ecbe8bc9252897d92bd4d2d82e28cf59ad82b448becd0ab2442",
+    "workingState": "pre-existing different bytes retained",
+    "certifiedInputVerified": true
+  }
+]

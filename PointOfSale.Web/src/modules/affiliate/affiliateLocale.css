@@ -1,0 +1,34 @@
+/* Scope legacy physical table alignment to affiliate screens only. */
+.affiliate-management .text-left,
+.affiliate-portal .text-left { text-align: start; }
+.affiliate-management .text-right,
+.affiliate-portal .text-right { text-align: end; }
+
+.affiliate-portal :is(button, a, input, select, textarea):focus-visible {
+    outline: 3px solid #817aff;
+    outline-offset: 3px;
+}
+.affiliate-portal button:disabled { cursor: not-allowed; }
+.affiliate-portal th { font-size: .75rem; letter-spacing: .02em; }
+.affiliate-portal td { vertical-align: top; }
+.affiliate-portal main { max-width: 1600px; width: 100%; margin-inline: auto; }
+.affiliate-portal :is(input, select) { max-width: 100%; }
+.affiliate-public :is(button, a, input, select):focus-visible { outline: 3px solid #817aff; outline-offset: 3px; }
+.affiliate-public { --affiliate-public-bg: #f9fafb; --affiliate-public-text: #111827; }
+.dark .affiliate-public { --affiliate-public-bg: #0b0f19; --affiliate-public-text: #f1f5f9; }
+.affiliate-public [dir="rtl"] :is(.lucide-arrow-right, .lucide-arrow-left, .lucide-chevron-right) { transform: scaleX(-1); }
+.affiliate-public [dir="rtl"] input { text-align: start; }
+.affiliate-public input:is([type="email"], [type="password"]) { direction: ltr; }
+.affiliate-public input[type="email"] { text-align: left; }
+.affiliate-public .text-right { text-align: end; }
+.affiliate-public :is(input, select) { max-width: 100%; }
+.affiliate-public .affiliate-product-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem; }
+@media (max-width: 640px) {
+    .affiliate-public .affiliate-product-grid { grid-template-columns: minmax(0, 1fr); }
+    .affiliate-public header > div { justify-content: center; }
+    .affiliate-public header a { white-space: nowrap; }
+}
+@media (max-width: 640px) {
+    .affiliate-portal table { min-width: 640px; }
+    .affiliate-portal main { padding: 1rem; }
+}

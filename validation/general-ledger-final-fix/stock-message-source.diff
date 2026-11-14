@@ -1,0 +1,21 @@
+--- /mnt/d/Shopixy-Automatic-Subdomains-Audit-R2-20261111/source/validation/general-ledger-final-fix/baseline/PointOfSale.API/Infrastructure/Mvc/ApiErrorResponseNormalizationFilter.cs	2026-11-10 19:22:29.699524900 +0200
++++ /mnt/d/Shopixy-Automatic-Subdomains-Audit-R2-20261111/source/PointOfSale.API/Infrastructure/Mvc/ApiErrorResponseNormalizationFilter.cs	2026-11-14 13:27:25.932390900 +0200
+@@ -52,6 +52,18 @@
+         if (context.HttpContext.RequestServices?.GetService<IHostEnvironment>()?.IsProduction() == true)
+         {
+             var candidate = TryExtractCode(context.Result);
++            // This reviewed workflow guidance is static, not a controller/provider
++            // message. Keep the stale-count failure actionable without exposing
++            // arbitrary messages or details or relaxing any other error boundary.
++            if (statusCode == StatusCodes.Status409Conflict && candidate == "STOCK_COUNT_STALE")
++            {
++                normalizedResult = new ObjectResult(new ApiErrorResponse(
++                    "STOCK_COUNT_STALE",
++                    "Inventory or reservations changed after the snapshot. Cancel this draft and create a fresh count; recount the affected physical units.",
++                    RequestContextMetadata.GetCorrelationId(context.HttpContext)))
++                { StatusCode = statusCode };
++                return true;
++            }
+             normalizedResult = new ObjectResult(new ApiErrorResponse(
+                 candidate is not null && ProductionErrorCodes.Contains(candidate) ? candidate : MapCode(statusCode),
+                 MapMessage(statusCode), RequestContextMetadata.GetCorrelationId(context.HttpContext)))

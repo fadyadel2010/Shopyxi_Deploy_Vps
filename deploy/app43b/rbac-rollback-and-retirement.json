@@ -1,0 +1,695 @@
+[
+  {
+    "binding": {
+      "kind": "ClusterRoleBinding",
+      "metadata": {
+        "name": "cnpg-manager-rolebinding",
+        "uid": "ace4ff48-fb69-4c33-8e6e-d412f9005de5",
+        "creationTimestamp": "2026-10-27T16:45:09Z"
+      },
+      "roleRef": {
+        "apiGroup": "rbac.authorization.k8s.io",
+        "kind": "ClusterRole",
+        "name": "cnpg-manager"
+      },
+      "subjects": [
+        {
+          "kind": "ServiceAccount",
+          "name": "cnpg-manager",
+          "namespace": "cnpg-system"
+        }
+      ]
+    },
+    "role": {
+      "kind": "ClusterRole",
+      "metadata": {
+        "name": "cnpg-manager",
+        "uid": "ec439907-56fe-48ae-a193-6e00325d5687",
+        "creationTimestamp": "2026-10-27T16:45:08Z"
+      },
+      "rules": [
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "configmaps",
+            "secrets",
+            "services"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "patch",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "configmaps/status",
+            "secrets/status"
+          ],
+          "verbs": [
+            "get",
+            "patch",
+            "update"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "events"
+          ],
+          "verbs": [
+            "create",
+            "patch"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "nodes"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "persistentvolumeclaims",
+            "pods",
+            "pods/exec"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "patch",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "pods/status"
+          ],
+          "verbs": [
+            "get"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "serviceaccounts"
+          ],
+          "verbs": [
+            "create",
+            "get",
+            "list",
+            "patch",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "admissionregistration.k8s.io"
+          ],
+          "resources": [
+            "mutatingwebhookconfigurations",
+            "validatingwebhookconfigurations"
+          ],
+          "verbs": [
+            "get",
+            "patch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "apps"
+          ],
+          "resources": [
+            "deployments"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "patch",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "batch"
+          ],
+          "resources": [
+            "jobs"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "patch",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "coordination.k8s.io"
+          ],
+          "resources": [
+            "leases"
+          ],
+          "verbs": [
+            "create",
+            "get",
+            "list",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "discovery.k8s.io"
+          ],
+          "resources": [
+            "endpointslices"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "monitoring.coreos.com"
+          ],
+          "resources": [
+            "podmonitors"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "patch",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "policy"
+          ],
+          "resources": [
+            "poddisruptionbudgets"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "patch",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "postgresql.cnpg.io"
+          ],
+          "resources": [
+            "backups",
+            "clusters",
+            "databaseroles",
+            "databases",
+            "poolers",
+            "publications",
+            "scheduledbackups",
+            "subscriptions"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "patch",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "postgresql.cnpg.io"
+          ],
+          "resources": [
+            "backups/status",
+            "databases/status",
+            "publications/status",
+            "scheduledbackups/status",
+            "subscriptions/status"
+          ],
+          "verbs": [
+            "get",
+            "patch",
+            "update"
+          ]
+        },
+        {
+          "apiGroups": [
+            "postgresql.cnpg.io"
+          ],
+          "resources": [
+            "clusterimagecatalogs",
+            "imagecatalogs"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "postgresql.cnpg.io"
+          ],
+          "resources": [
+            "clusters/finalizers",
+            "databaseroles/finalizers",
+            "poolers/finalizers"
+          ],
+          "verbs": [
+            "update"
+          ]
+        },
+        {
+          "apiGroups": [
+            "postgresql.cnpg.io"
+          ],
+          "resources": [
+            "clusters/status",
+            "databaseroles/status",
+            "failoverquorums/status",
+            "poolers/status"
+          ],
+          "verbs": [
+            "get",
+            "patch",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "postgresql.cnpg.io"
+          ],
+          "resources": [
+            "failoverquorums"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "rbac.authorization.k8s.io"
+          ],
+          "resources": [
+            "rolebindings",
+            "roles"
+          ],
+          "verbs": [
+            "create",
+            "get",
+            "list",
+            "patch",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "snapshot.storage.k8s.io"
+          ],
+          "resources": [
+            "volumesnapshots"
+          ],
+          "verbs": [
+            "create",
+            "get",
+            "list",
+            "patch",
+            "watch"
+          ]
+        }
+      ]
+    },
+    "remove_original_binding_only_after": "supported namespace-scoped caches and isolated reconciliation/backup tests PASS"
+  },
+  {
+    "binding": {
+      "kind": "ClusterRoleBinding",
+      "metadata": {
+        "name": "rabbitmq-cluster-operator-rolebinding",
+        "uid": "d0e89d81-10ee-4422-929d-fdff7a23ddef",
+        "creationTimestamp": "2026-10-28T12:32:04Z"
+      },
+      "roleRef": {
+        "apiGroup": "rbac.authorization.k8s.io",
+        "kind": "ClusterRole",
+        "name": "rabbitmq-cluster-operator-role"
+      },
+      "subjects": [
+        {
+          "kind": "ServiceAccount",
+          "name": "rabbitmq-cluster-operator",
+          "namespace": "rabbitmq-system"
+        }
+      ]
+    },
+    "role": {
+      "kind": "ClusterRole",
+      "metadata": {
+        "name": "rabbitmq-cluster-operator-role",
+        "uid": "3f26edb3-3127-49fd-b627-319a96e75d5a",
+        "creationTimestamp": "2026-10-28T12:32:04Z"
+      },
+      "rules": [
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "configmaps",
+            "persistentvolumeclaims",
+            "secrets",
+            "serviceaccounts",
+            "services"
+          ],
+          "verbs": [
+            "create",
+            "get",
+            "list",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "endpoints"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "events"
+          ],
+          "verbs": [
+            "create",
+            "get",
+            "patch"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "pods"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "pods/exec"
+          ],
+          "verbs": [
+            "create"
+          ]
+        },
+        {
+          "apiGroups": [
+            "apps"
+          ],
+          "resources": [
+            "statefulsets"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "discovery.k8s.io"
+          ],
+          "resources": [
+            "endpointslices"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "rabbitmq.com"
+          ],
+          "resources": [
+            "rabbitmqclusters"
+          ],
+          "verbs": [
+            "create",
+            "get",
+            "list",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "rabbitmq.com"
+          ],
+          "resources": [
+            "rabbitmqclusters/finalizers"
+          ],
+          "verbs": [
+            "update"
+          ]
+        },
+        {
+          "apiGroups": [
+            "rabbitmq.com"
+          ],
+          "resources": [
+            "rabbitmqclusters/status"
+          ],
+          "verbs": [
+            "get",
+            "patch",
+            "update"
+          ]
+        },
+        {
+          "apiGroups": [
+            "rbac.authorization.k8s.io"
+          ],
+          "resources": [
+            "rolebindings",
+            "roles"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "update",
+            "watch"
+          ]
+        }
+      ]
+    },
+    "remove_original_binding_only_after": "supported namespace-scoped caches and isolated reconciliation/backup tests PASS"
+  },
+  {
+    "binding": {
+      "kind": "ClusterRoleBinding",
+      "metadata": {
+        "name": "plugin-barman-cloud-binding",
+        "uid": "7a0fae63-3535-482c-82e3-2eec0126f60f",
+        "creationTimestamp": "2026-10-27T16:45:20Z"
+      },
+      "roleRef": {
+        "apiGroup": "rbac.authorization.k8s.io",
+        "kind": "ClusterRole",
+        "name": "plugin-barman-cloud"
+      },
+      "subjects": [
+        {
+          "kind": "ServiceAccount",
+          "name": "plugin-barman-cloud",
+          "namespace": "cnpg-system"
+        }
+      ]
+    },
+    "role": {
+      "kind": "ClusterRole",
+      "metadata": {
+        "name": "plugin-barman-cloud",
+        "uid": "80a43ee5-56b7-4759-a956-c5bf20cae8ff",
+        "creationTimestamp": "2026-10-27T16:45:20Z"
+      },
+      "rules": [
+        {
+          "apiGroups": [
+            ""
+          ],
+          "resources": [
+            "secrets"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "barmancloud.cnpg.io"
+          ],
+          "resources": [
+            "objectstores"
+          ],
+          "verbs": [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "patch",
+            "update",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "barmancloud.cnpg.io"
+          ],
+          "resources": [
+            "objectstores/finalizers"
+          ],
+          "verbs": [
+            "update"
+          ]
+        },
+        {
+          "apiGroups": [
+            "barmancloud.cnpg.io"
+          ],
+          "resources": [
+            "objectstores/status"
+          ],
+          "verbs": [
+            "get",
+            "patch",
+            "update"
+          ]
+        },
+        {
+          "apiGroups": [
+            "postgresql.cnpg.io"
+          ],
+          "resources": [
+            "backups"
+          ],
+          "verbs": [
+            "get",
+            "list",
+            "watch"
+          ]
+        },
+        {
+          "apiGroups": [
+            "postgresql.cnpg.io"
+          ],
+          "resources": [
+            "clusters/finalizers"
+          ],
+          "verbs": [
+            "update"
+          ]
+        },
+        {
+          "apiGroups": [
+            "rbac.authorization.k8s.io"
+          ],
+          "resources": [
+            "rolebindings",
+            "roles"
+          ],
+          "verbs": [
+            "create",
+            "get",
+            "list",
+            "patch",
+            "update",
+            "watch"
+          ]
+        }
+      ]
+    },
+    "remove_original_binding_only_after": "supported namespace-scoped caches and isolated reconciliation/backup tests PASS"
+  }
+]

@@ -1,0 +1,796 @@
+using System.Security.Cryptography;
+using System.Text;
+using Microsoft.EntityFrameworkCore;
+using PointOfSale.API.Helpers;
+using PointOfSale.API.Security;
+using PointOfSale.API.Services.Affiliate;
+using PointOfSale.Core.Entities;
+using PointOfSale.Core.Entities.Affiliate;
+using PointOfSale.Core.Enums;
+using PointOfSale.Core.Events.Affiliate;
+using PointOfSale.Core.Interfaces;
+using PointOfSale.Infrastructure.Data;
+using PointOfSale.Infrastructure.MultiTenancy;
+using PointOfSale.Infrastructure.Reliability;
+
+namespace PointOfSale.API.Middleware;
+
+/// <summary>
+/// AF-8 / AF-12 / AF-15 / AF-19: Affiliate Referral Click Tracking &amp; Affiliate Mode Activation.
+///
+/// Intercepts storefront requests with ?ref=CODE query parameter and:
+/// 1. AF-19: Resolves AffiliatePromotionLink or AffiliateAccount by ReferralCode GLOBALLY (no tenant filter)
+/// 2. Generates a session cookie (AFF_SESSION) if missing
+/// 3. Publishes AffiliateLinkClickedEvent (async, fire-and-forget)
+/// 4. AF-12: Activates Affiliate Mode (request-scoped)
+///
+/// AF-19 GLOBAL MARKETPLACE:
+/// - Affiliates are global (no tenant binding)
+/// - ReferralCode lookup is global (no tenant filter)
+/// - Affiliate can promote products from ANY store
+/// - StoreTenantId tracks which store the sale belongs to
+///
+/// DUAL COMPATIBILITY:
+/// - If PromotionLink found → v2 flow (sets PromotionLinkId, AffiliateUserId, AffiliateAccountId)
+/// - If PromotionLink NOT found → v1 flow (sets AffiliateAccountId only)
+/// - Emits telemetry counters: affiliate.v2.used / affiliate.v1.fallback
+///
+/// RULES:
+/// - NO database writes inside middleware — event-driven only
+/// - NO PII stored: IP is SHA-256 hashed
+/// - Cookie-based session tracking survives page refresh
+/// - Only runs on storefront paths (not admin/api paths)
+/// - Validation failures on checkout return retryable 503 rather than silently dropping attribution
+/// - Request-scoped Affiliate Mode is rebuilt from SQL and protected first-touch evidence
+/// </summary>
+public class AffiliateReferralMiddleware
+{
+    private readonly RequestDelegate _next;
+    private readonly ILogger<AffiliateReferralMiddleware> _logger;
+    private const string CookieName = "AFF_SESSION";
+    private const string AttributionCookieName = "AFF_ATTR";
+    private const string RefQueryParam = "ref";
+    private const string RefHeaderName = "X-Affiliate-Ref";
+    private readonly bool _allowInsecureHttp;
+
+    public AffiliateReferralMiddleware(RequestDelegate next, ILogger<AffiliateReferralMiddleware> logger,
+        IConfiguration? configuration = null, IHostEnvironment? environment = null)
+    {
+        _next = next;
+        _logger = logger;
+        // Never weaken production or HTTPS cookies. HTTP testing requires both
+        // an explicit opt-in and an explicitly non-production environment.
+        _allowInsecureHttp = configuration?.GetValue<bool>("AffiliateTracking:AllowInsecureHttp") == true &&
+            environment != null && (environment.IsDevelopment() || environment.IsEnvironment("QA"));
+    }
+
+    public async Task InvokeAsync(
+        HttpContext context,
+        TenantContext tenantContext,
+        ApplicationDbContext dbContext,
+        IEventPublisher eventPublisher,
+        IAffiliateModeMetricsService metricsService,
+        IAffiliateAttributionEvidenceTokenService attributionEvidenceTokens,
+        IAffiliateShoppingJourneyService shoppingJourneys)
+    {
+        var downstreamInvoked = false;
+
+        async Task InvokeNextAsync()
+        {
+            // Existing response contract, including an explicit negative verdict.
+            // A URL/storage candidate must never present itself as validated attribution.
+            context.Response.Headers["X-Affiliate-Mode"] = AffiliateModeResolver.IsAffiliateMode(context) ? "true" : "false";
+            if (AffiliateModeResolver.GetReferralCode(context) is { } acceptedCode)
+                context.Response.Headers[RefHeaderName] = acceptedCode;
+            downstreamInvoked = true;
+            await _next(context);
+        }
+
+        try
+        {
+            if (!context.Request.Path.StartsWithSegments("/api/storefront") &&
+                !context.Request.Path.StartsWithSegments("/products") &&
+                !context.Request.Path.StartsWithSegments("/p"))
+            {
+                await InvokeNextAsync();
+                return;
+            }
+            var tenantId = tenantContext.TenantId;
+            if (!tenantId.HasValue || tenantId.Value == Guid.Empty)
+            {
+                await InvokeNextAsync();
+                return;
+            }
+            var currentTenantId = tenantId.Value;
+
+            // AF-27E: Check THREE sources for referral code:
+            // 1. Query param ?ref= (legacy flow)
+            // 2. Header X-Affiliate-Ref (SPA flow)
+            // 3. Route param /p/{referralCode}/{slug} or /api/storefront/landing/{referralCode}/{slug} (landing flow)
+            // Priority: query param > header > route param (direct link takes precedence)
+            string? rawRef = null;
+            string? refSource = null;
+            AffiliateAttributionEvidence? protectedEvidence = null;
+            var activeJourney = await shoppingJourneys.GetActiveAsync(context, currentTenantId, context.RequestAborted);
+            context.Response.Headers["X-Affiliate-Journey"] = activeJourney == null ? "tracking" : "active";
+
+            if (context.Request.Cookies.TryGetValue(AttributionCookieName, out var existingAttributionRef) &&
+                !string.IsNullOrWhiteSpace(existingAttributionRef))
+            {
+                if (attributionEvidenceTokens.TryValidate(
+                        existingAttributionRef,
+                        currentTenantId,
+                        out var validatedEvidence))
+                {
+                    protectedEvidence = validatedEvidence;
+                    rawRef = validatedEvidence.ReferralCode;
+                    refSource = "Cookie:first-click-protected";
+                }
+                else
+                {
+                    context.Response.Cookies.Delete(AttributionCookieName);
+                    _logger.LogWarning(
+                        "[Affiliate:Referral] Rejected tampered, foreign-tenant, or expired attribution cookie | TenantId: {TenantId}",
+                        tenantId);
+                }
+            }
+
+            if (rawRef == null &&
+                context.Request.Query.TryGetValue(RefQueryParam, out var refCode) &&
+                !string.IsNullOrWhiteSpace(refCode))
+            {
+                rawRef = refCode.ToString();
+                refSource = "QueryParam";
+            }
+            else if (rawRef == null &&
+                     context.Request.Headers.TryGetValue(RefHeaderName, out var refHeader) &&
+                     !string.IsNullOrWhiteSpace(refHeader))
+            {
+                rawRef = refHeader.ToString();
+                refSource = "Header";
+            }
+            else if (rawRef == null)
+            {
+                // AF-27E: Extract referralCode from route parameter
+                var path = context.Request.Path.Value;
+                if (!string.IsNullOrEmpty(path))
+                {
+                    // Match: /p/{referralCode}/{slug}
+                    if (path.StartsWith("/p/", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var segments = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+                        if (segments.Length >= 2)
+                        {
+                            rawRef = segments[1]; // segments[0] = "p", segments[1] = referralCode
+                            refSource = "RouteParam:/p/";
+                        }
+                    }
+                    // Match: /api/storefront/landing/{referralCode}/{slug}
+                    else if (path.StartsWith("/api/storefront/landing/", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var segments = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+                        if (segments.Length >= 4)
+                        {
+                            rawRef = segments[3]; // segments[0] = "api", segments[1] = "storefront", segments[2] = "landing", segments[3] = referralCode
+                            refSource = "RouteParam:/api/storefront/landing/";
+                        }
+                    }
+                }
+            }
+
+            // Cookie evidence is a navigation fallback, not a 30-day cart lock.
+            // A valid new product entry may supersede it only when no canonical
+            // cart/checkout is bound. The normal SQL/product admission below
+            // still validates the candidate before a replacement cookie is issued.
+            if (activeJourney != null)
+            {
+                protectedEvidence = new AffiliateAttributionEvidence(currentTenantId,
+                    activeJourney.AffiliateAccountId, activeJourney.ReferralCode,
+                    activeJourney.PromotionLinkId, DateTime.UtcNow.AddDays(30));
+                rawRef = activeJourney.ReferralCode;
+                refSource = "Journey:first-touch";
+            }
+            else
+            {
+                var candidate = context.Request.Query[RefQueryParam].FirstOrDefault()
+                    ?? context.Request.Headers[RefHeaderName].FirstOrDefault();
+                var segments = context.Request.Path.Value?.Split('/', StringSplitOptions.RemoveEmptyEntries);
+                if (candidate == null && segments is { Length: >= 2 } && segments[0] == "p") candidate = segments[1];
+                if (candidate == null && segments is { Length: >= 5 } && segments[2] == "landing") candidate = segments[3];
+                // Only product-entry requests may start another journey. Header
+                // hints on categories/cart/checkout must not erase first touch.
+                if (!string.IsNullOrWhiteSpace(candidate) &&
+                    (context.Request.Path.StartsWithSegments("/api/storefront/products") ||
+                     context.Request.Path.StartsWithSegments("/products") ||
+                     context.Request.Path.StartsWithSegments("/p") ||
+                     context.Request.Path.StartsWithSegments("/api/storefront/landing")) &&
+                    !string.Equals(candidate.Trim(), rawRef, StringComparison.OrdinalIgnoreCase))
+                {
+                    rawRef = candidate;
+                    protectedEvidence = null;
+                    refSource = "NewJourney:product-candidate";
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(rawRef))
+            {
+                await InvokeNextAsync();
+                return;
+            }
+            var referralCode = rawRef.Trim().ToUpperInvariant();
+
+            if (referralCode.Length > 50 || !referralCode.All(char.IsAsciiLetterOrDigit))
+            {
+                await InvokeNextAsync();
+                return;
+            }
+
+            context.RequestAborted.ThrowIfCancellationRequested();
+
+            _logger.LogInformation(
+                "[AF-27E:AffiliateMW] Ref found: {Ref} | Source: {Source} | Path: {Path}",
+                referralCode, refSource, context.Request.Path);
+
+            // ═══════════════════════════════════════════════════════════════════
+            // AF-19: GLOBAL MARKETPLACE - Lookup affiliate by ReferralCode globally
+            // No tenant filter - affiliates can promote any store
+            // ═══════════════════════════════════════════════════════════════════
+            
+            _logger.LogInformation(
+                "[AF-19:GlobalLookup] V2 query starting | ReferralCode: {Ref} | CurrentTenant: {TenantId}",
+                referralCode, tenantId);
+            
+            // Storefront Admission: promotion links are URL-facing store entries.
+            // The referral code is globally unique, but a valid storefront entry must
+            // match the currently resolved tenant and current product lifecycle.
+            var promotionLink = await dbContext.AffiliatePromotionLinks
+                .AsNoTracking()
+                .IgnoreQueryFilters()
+                .Where(l => l.ReferralCode == referralCode
+                         && l.TenantId == currentTenantId
+                         && l.IsActive
+                         && !l.IsDeleted)
+                .Select(l => new
+                {
+                    l.Id,
+                    l.AffiliateUserId,
+                    l.AffiliateAccountId,
+                    l.ProductId,
+                    l.ReferralCode,
+                    l.TenantId
+                })
+                .FirstOrDefaultAsync(context.RequestAborted);
+
+            _logger.LogInformation(
+                "[AF-19:GlobalLookup] V2 query result | Found: {Found} | LinkId: {LinkId}",
+                promotionLink != null, promotionLink?.Id);
+
+            if (promotionLink != null)
+            {
+                var product = await dbContext.Products
+                    .AsNoTracking()
+                    .IgnoreQueryFilters()
+                    .FirstOrDefaultAsync(
+                        p => p.Id == promotionLink.ProductId &&
+                             p.TenantId == currentTenantId &&
+                             !p.IsDeleted,
+                        context.RequestAborted);
+
+                if (product == null ||
+                    !await IsProductCurrentlyAffiliateSelectableAsync(dbContext, product, context.RequestAborted))
+                {
+                    if (protectedEvidence != null)
+                    {
+                        context.Response.Cookies.Delete(AttributionCookieName);
+                    }
+
+                    _logger.LogWarning(
+                        "[Affiliate:Referral] Promotion link rejected by current storefront admission | LinkId: {LinkId} | TenantId: {TenantId} | ProductId: {ProductId} | Ref: {Ref}",
+                        promotionLink.Id,
+                        tenantId,
+                        promotionLink.ProductId,
+                        referralCode);
+                    await InvokeNextAsync();
+                    return;
+                }
+
+                // New touches must actually land on the link's product. Once captured,
+                // first-touch evidence remains store-scoped during subsequent browsing.
+                if (protectedEvidence == null &&
+                    !AffiliatePromotionAttributionAuthority.MatchesProductEntry(context.Request, product, referralCode))
+                {
+                    await InvokeNextAsync();
+                    return;
+                }
+
+                // V2 flow: PromotionLink found and admitted by current store/product authority.
+                _logger.LogInformation(
+                    "[AF-19:V2] Promotion link resolved | LinkId: {LinkId} | AffiliateUserId: {AffiliateUserId} | " +
+                    "AffiliateAccountId: {AffiliateAccountId} | ProductId: {ProductId} | LinkStore: {LinkStore} | " +
+                    "OrderStore: {OrderStore} | CrossStore: {CrossStore}",
+                    promotionLink.Id, promotionLink.AffiliateUserId,
+                    promotionLink.AffiliateAccountId, promotionLink.ProductId, promotionLink.TenantId, 
+                    tenantId, promotionLink.TenantId != tenantId);
+
+                // Resolve AffiliateAccountId — either from the link directly,
+                // or fall back to looking up the AffiliateUser's account
+                var affiliateAccountId = await AffiliatePromotionAttributionAuthority.ResolveProfileAsync(
+                    dbContext, promotionLink.AffiliateUserId, promotionLink.AffiliateAccountId, context.RequestAborted);
+
+                if (!affiliateAccountId.HasValue)
+                {
+                    if (protectedEvidence != null) context.Response.Cookies.Delete(AttributionCookieName);
+                    _logger.LogWarning(
+                        "[AF-15:V2] PromotionLink found but no AffiliateAccountId resolvable | LinkId: {LinkId} | AffiliateUserId: {AffiliateUserId}",
+                        promotionLink.Id, promotionLink.AffiliateUserId);
+                    await InvokeNextAsync();
+                    return;
+                }
+
+                if (protectedEvidence != null &&
+                    (protectedEvidence.PromotionLinkId != promotionLink.Id ||
+                     protectedEvidence.AffiliateAccountId != affiliateAccountId.Value))
+                {
+                    context.Response.Cookies.Delete(AttributionCookieName);
+                    _logger.LogWarning(
+                        "[Affiliate:Referral] Protected promotion-link evidence no longer matches SQL authority | TenantId: {TenantId} | PromotionLinkId: {PromotionLinkId}",
+                        tenantId,
+                        promotionLink.Id);
+                    await InvokeNextAsync();
+                    return;
+                }
+
+                var affiliateIdentity = await dbContext.AffiliateAccounts
+                    .AsNoTracking()
+                    .IgnoreQueryFilters()
+                    .Where(a => a.Id == affiliateAccountId.Value && a.Status == AffiliateStatus.Active && !a.IsDeleted)
+                    .Select(a => new { a.DisplayName })
+                    .FirstOrDefaultAsync(context.RequestAborted);
+
+                if (affiliateIdentity == null)
+                {
+                    if (protectedEvidence != null)
+                    {
+                        context.Response.Cookies.Delete(AttributionCookieName);
+                    }
+
+                    _logger.LogWarning(
+                        "[AF-15:V2] Affiliate account missing or inactive after PromotionLink resolution | AffiliateAccountId: {AffiliateAccountId}",
+                        affiliateAccountId.Value);
+                    await InvokeNextAsync();
+                    return;
+                }
+
+                // Set v2 affiliate mode (includes v1 AffiliateAccountId for compatibility)
+                if (activeJourney == null)
+                    await shoppingJourneys.BindActiveCartAsync(context, currentTenantId,
+                        new(currentTenantId, affiliateAccountId.Value, promotionLink.ReferralCode, promotionLink.Id), context.RequestAborted);
+                AffiliateModeResolver.SetAffiliateModeV2(
+                    context,
+                    affiliateAccountId.Value,
+                    promotionLink.ReferralCode, // AF-27E
+                    promotionLink.Id,
+                    promotionLink.AffiliateUserId,
+                    currentTenantId,
+                    affiliateIdentity.DisplayName);
+                EnsureAttributionCookie(
+                    context,
+                    attributionEvidenceTokens,
+                    currentTenantId,
+                    affiliateAccountId.Value,
+                    promotionLink.ReferralCode,
+                    promotionLink.Id);
+
+                // Session & click tracking
+                var sessionId = EnsureSession(context);
+                Guid? productId = promotionLink.ProductId;
+                var ipHash = HashIp(context.Connection.RemoteIpAddress?.ToString());
+                var userAgent = HashUserAgent(context.Request.Headers.UserAgent.ToString());
+
+                var clickEvent = new AffiliateLinkClickedEvent
+                {
+                    TenantId = tenantId,
+                    AffiliateAccountId = affiliateAccountId.Value,
+                    ReferralCode = promotionLink.ReferralCode,
+                    ProductId = productId,
+                    SessionId = sessionId,
+                    IpHash = ipHash,
+                    UserAgent = userAgent,
+                    OccurredAtUtc = DateTime.UtcNow
+                };
+
+                await eventPublisher.PublishAsync(clickEvent, context.RequestAborted);
+
+                // AF-12: Record metric
+                await metricsService.RecordAffiliateModeActivationAsync(
+                    currentTenantId,
+                    affiliateAccountId.Value,
+                    promotionLink.ReferralCode,
+                    context.RequestAborted);
+
+                _logger.LogInformation(
+                    "[AF-19:V2] Affiliate Mode activated (v2) | AffiliateAccountId: {AffiliateAccountId} | " +
+                    "PromotionLinkId: {PromotionLinkId} | Ref: {Ref} | LinkStore: {LinkStore} | " +
+                    "OrderStore: {OrderStore} | CrossStore: {CrossStore} | Telemetry: affiliate.v2.used",
+                    affiliateAccountId.Value, promotionLink.Id, referralCode, promotionLink.TenantId, 
+                    tenantId, promotionLink.TenantId != tenantId);
+            }
+            else
+            {
+                if (protectedEvidence?.PromotionLinkId.HasValue == true)
+                {
+                    context.Response.Cookies.Delete(AttributionCookieName);
+                    _logger.LogWarning(
+                        "[Affiliate:Referral] Protected promotion-link evidence has no current active SQL link | TenantId: {TenantId} | PromotionLinkId: {PromotionLinkId}",
+                        tenantId,
+                        protectedEvidence.PromotionLinkId.Value);
+                    await InvokeNextAsync();
+                    return;
+                }
+
+                // Profile codes remain supported only at the established legacy landing
+                // entry. They are not product-promotion codes or checkout identity hints.
+                if (protectedEvidence == null &&
+                    !context.Request.Path.StartsWithSegments("/p") &&
+                    !context.Request.Path.StartsWithSegments("/api/storefront/landing"))
+                {
+                    await InvokeNextAsync();
+                    return;
+                }
+
+                // ═══════════════════════════════════════════════════════════════════
+                // V1 FALLBACK — resolve via AffiliateAccounts (legacy flow)
+                // AF-19: GLOBAL MARKETPLACE - Lookup globally, no tenant filter
+                // ═══════════════════════════════════════════════════════════════════
+                
+                _logger.LogInformation(
+                    "[AF-19:GlobalLookup] V1 fallback query starting | ReferralCode: {Ref} | CurrentTenant: {TenantId} | " +
+                    "Looking for Status: {Status} (Active=1)",
+                    referralCode, tenantId, (int)AffiliateStatus.Active);
+                
+                // AF-19: Use IgnoreQueryFilters() - affiliates are global
+                var affiliateAccount = await dbContext.AffiliateAccounts
+                    .AsNoTracking()
+                    .IgnoreQueryFilters()
+                    .Where(a => a.ReferralCode == referralCode && a.Status == AffiliateStatus.Active && !a.IsDeleted)
+                    .Select(a => new { a.Id, a.ReferralCode, a.TenantId, a.DisplayName })
+                    .FirstOrDefaultAsync(context.RequestAborted);
+
+                _logger.LogInformation(
+                    "[AF-19:GlobalLookup] V1 fallback query result | Found: {Found} | AffiliateId: {AffiliateId}",
+                    affiliateAccount != null, affiliateAccount?.Id);
+
+                if (affiliateAccount == null)
+                {
+                    if (protectedEvidence != null)
+                    {
+                        context.Response.Cookies.Delete(AttributionCookieName);
+                    }
+
+                    _logger.LogDebug(
+                        "[Affiliate:Referral] Invalid referral code: {Code} | CurrentTenantId: {TenantId}",
+                        referralCode, tenantId);
+                    await InvokeNextAsync();
+                    return;
+                }
+
+                if (protectedEvidence != null &&
+                    (protectedEvidence.PromotionLinkId.HasValue ||
+                     protectedEvidence.AffiliateAccountId != affiliateAccount.Id))
+                {
+                    context.Response.Cookies.Delete(AttributionCookieName);
+                    _logger.LogWarning(
+                        "[Affiliate:Referral] Protected affiliate evidence no longer matches SQL authority | TenantId: {TenantId} | AffiliateAccountId: {AffiliateAccountId}",
+                        tenantId,
+                        affiliateAccount.Id);
+                    await InvokeNextAsync();
+                    return;
+                }
+
+                // AF-19: Log cross-store affiliate activation (affiliate's home store != order store)
+                if (affiliateAccount.TenantId != tenantId)
+                {
+                    _logger.LogInformation(
+                        "[AF-19:CrossStore] Affiliate from different store | AffiliateId: {AffiliateId} | " +
+                        "AffiliateHomeStore: {AffiliateStore} | OrderStore: {OrderStore} | Ref: {Ref}",
+                        affiliateAccount.Id, affiliateAccount.TenantId, tenantId, referralCode);
+                }
+
+                // Session & click tracking
+                var sessionId = EnsureSession(context);
+                Guid? productId = ExtractProductId(context.Request.Path);
+                var ipHash = HashIp(context.Connection.RemoteIpAddress?.ToString());
+                var userAgent = HashUserAgent(context.Request.Headers.UserAgent.ToString());
+
+                var clickEvent = new AffiliateLinkClickedEvent
+                {
+                    TenantId = tenantId,
+                    AffiliateAccountId = affiliateAccount.Id,
+                    ReferralCode = affiliateAccount.ReferralCode,
+                    ProductId = productId,
+                    SessionId = sessionId,
+                    IpHash = ipHash,
+                    UserAgent = userAgent,
+                    OccurredAtUtc = DateTime.UtcNow
+                };
+
+                await eventPublisher.PublishAsync(clickEvent, context.RequestAborted);
+
+                // AF-12: Activate v1 Affiliate Mode
+                if (activeJourney == null)
+                    await shoppingJourneys.BindActiveCartAsync(context, currentTenantId,
+                        new(currentTenantId, affiliateAccount.Id, affiliateAccount.ReferralCode, null), context.RequestAborted);
+                AffiliateModeResolver.SetAffiliateMode(
+                    context,
+                    affiliateAccount.Id,
+                    affiliateAccount.ReferralCode,
+                    affiliateAccount.DisplayName); // AF-27E
+                EnsureAttributionCookie(
+                    context,
+                    attributionEvidenceTokens,
+                    currentTenantId,
+                    affiliateAccount.Id,
+                    affiliateAccount.ReferralCode,
+                    promotionLinkId: null);
+
+                _logger.LogInformation(
+                    "[Affiliate:Mode] Activated (v1 fallback) | AffiliateId: {AffiliateId} | Ref: {Ref} | " +
+                    "AffiliateHomeStore: {AffiliateStore} | OrderStore: {OrderStore} | CrossStore: {CrossStore} | Telemetry: affiliate.v1.fallback",
+                    affiliateAccount.Id, referralCode, affiliateAccount.TenantId, tenantId, affiliateAccount.TenantId != tenantId);
+
+                // AF-12: Record metric
+                await metricsService.RecordAffiliateModeActivationAsync(
+                    currentTenantId,
+                    affiliateAccount.Id,
+                    referralCode,
+                    context.RequestAborted);
+            }
+        }
+        catch (OperationCanceledException) when (!downstreamInvoked && context.RequestAborted.IsCancellationRequested)
+        {
+            _logger.LogDebug(
+                "[Affiliate:Referral] Request canceled while processing referral | Path: {Path}",
+                context.Request.Path.Value ?? "unknown");
+            return;
+        }
+        catch (Exception ex) when (!downstreamInvoked)
+        {
+            // NEVER block the request — analytics failure is non-critical
+            _logger.LogWarning(ex,
+                "[Affiliate:Referral] Error processing referral (swallowed — non-critical)");
+            if (context.Request.Path.StartsWithSegments("/api/storefront") && !AffiliateModeResolver.IsAffiliateMode(context))
+            {
+                context.Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
+                await context.Response.WriteAsJsonAsync(new
+                {
+                    code = "AFFILIATE_ATTRIBUTION_UNAVAILABLE",
+                    message = "Referral validation is temporarily unavailable. Please retry checkout."
+                });
+                return;
+            }
+        }
+
+        await InvokeNextAsync();
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // HELPER METHODS
+    // ═══════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Persists the first accepted referral code for navigation-safe attribution.
+    /// The cookie is evidence only; checkout revalidates SQL authority before stamping an order.
+    /// </summary>
+    private void EnsureAttributionCookie(
+        HttpContext context,
+        IAffiliateAttributionEvidenceTokenService attributionEvidenceTokens,
+        Guid tenantId,
+        Guid affiliateAccountId,
+        string referralCode,
+        Guid? promotionLinkId)
+    {
+        if (context.Request.Cookies.TryGetValue(AttributionCookieName, out var existing) &&
+            !string.IsNullOrWhiteSpace(existing) &&
+            attributionEvidenceTokens.TryValidate(existing, tenantId, out var accepted) &&
+            accepted.AffiliateAccountId == affiliateAccountId && accepted.PromotionLinkId == promotionLinkId &&
+            accepted.ReferralCode == referralCode)
+        {
+            return;
+        }
+
+        var protectedEvidence = attributionEvidenceTokens.Create(
+            tenantId,
+            affiliateAccountId,
+            referralCode,
+            promotionLinkId);
+
+        context.Response.Cookies.Append(AttributionCookieName, protectedEvidence, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = context.Request.IsHttps || !_allowInsecureHttp,
+            SameSite = SameSiteMode.Lax,
+            MaxAge = TimeSpan.FromDays(30),
+            Path = "/"
+        });
+    }
+
+    /// <summary>
+    /// Gets or creates session ID from cookie.
+    /// </summary>
+    private string EnsureSession(HttpContext context)
+    {
+        if (context.Request.Cookies.TryGetValue(CookieName, out var existingSession) &&
+            !string.IsNullOrWhiteSpace(existingSession))
+        {
+            return existingSession;
+        }
+
+        // Reuse the existing anonymous shopping session on parallel initial requests;
+        // this is a deduplication identifier, never customer/authentication authority.
+        var sessionId = Guid.TryParse(context.Request.Headers["X-Session-Id"], out var shoppingSession)
+            ? shoppingSession.ToString("N")
+            : Guid.NewGuid().ToString("N");
+        context.Response.Cookies.Append(CookieName, sessionId, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = context.Request.IsHttps || !_allowInsecureHttp,
+            SameSite = SameSiteMode.Lax,
+            MaxAge = TimeSpan.FromDays(30),
+            Path = "/"
+        });
+        return sessionId;
+    }
+
+    /// <summary>
+    /// Attempts to extract a product ID from query params.
+    /// The middleware doesn't resolve slugs to IDs — that's the consumer's job.
+    /// </summary>
+    private static Guid? ExtractProductId(PathString path)
+    {
+        // Product pages may have ?productId= in the query
+        // Slug-based resolution is left to the frontend / storefront controller
+        return null;
+    }
+
+    private static async Task<bool> IsProductCurrentlyAffiliateSelectableAsync(
+        ApplicationDbContext dbContext,
+        Product product,
+        CancellationToken ct)
+    {
+        if (product.IsDeleted ||
+            !product.IsActive ||
+            product.PublishStatus != PublishStatus.Published ||
+            !product.IsOnlineVisible || !product.IsSearchable)
+        {
+            return false;
+        }
+
+        var policyWithActiveCategory = await dbContext.AffiliateProductPolicies
+            .AsNoTracking()
+            .IgnoreQueryFilters()
+            .Join(
+                dbContext.AffiliateCategories.AsNoTracking().IgnoreQueryFilters(),
+                policy => policy.AffiliateCategoryId,
+                category => category.Id,
+                (policy, category) => new { policy, category })
+            .AnyAsync(item =>
+                item.policy.ProductId == product.Id &&
+                item.policy.TenantId == product.TenantId &&
+                item.policy.IsEnabled &&
+                !item.policy.IsDeleted &&
+                item.category.IsActive &&
+                !item.category.IsDeleted &&
+                ((item.category.Level == 1 && item.category.ParentId == null) ||
+                 (item.category.Level == 2 &&
+                  item.category.ParentId != null &&
+                  dbContext.AffiliateCategories
+                      .IgnoreQueryFilters()
+                      .Any(parent =>
+                          parent.Id == item.category.ParentId.Value &&
+                          parent.Level == 1 &&
+                          parent.IsActive &&
+                          !parent.IsDeleted))),
+                ct);
+        if (!policyWithActiveCategory)
+        {
+            return false;
+        }
+
+        if (!await HasPositiveAffiliatePriceAsync(dbContext, product, ct))
+        {
+            return false;
+        }
+
+        return await HasAvailableAffiliateInventoryAsync(dbContext, product, ct) &&
+            await AffiliatePromotionAttributionAuthority.IsProductEligibleAsync(dbContext, product, ct);
+    }
+
+    private static async Task<bool> HasPositiveAffiliatePriceAsync(
+        ApplicationDbContext dbContext,
+        Product product,
+        CancellationToken ct)
+    {
+        if (product.HasVariants)
+        {
+            return await dbContext.ProductVariants
+                .AsNoTracking()
+                .IgnoreQueryFilters()
+                .WhereCurrentSemanticOwner()
+                .AnyAsync(variant =>
+                    variant.TenantId == product.TenantId &&
+                    variant.ProductId == product.Id &&
+                    !variant.IsDeleted &&
+                    variant.IsActive &&
+                    ((variant.OnlinePrice.HasValue && variant.OnlinePrice.Value > 0m) ||
+                     (!variant.OnlinePrice.HasValue && variant.Price > 0m) ||
+                     (variant.OnlinePrice.HasValue && variant.OnlinePrice.Value == 0m && variant.Price > 0m)),
+                    ct);
+        }
+
+        return await dbContext.ProductUnits
+            .AsNoTracking()
+            .IgnoreQueryFilters()
+            .AnyAsync(unit =>
+                unit.ProductId == product.Id &&
+                !unit.IsDeleted &&
+                unit.IsDefault &&
+                unit.SellingPrice.HasValue &&
+                unit.SellingPrice.Value > 0m,
+                ct);
+    }
+
+    private static async Task<bool> HasAvailableAffiliateInventoryAsync(
+        ApplicationDbContext dbContext,
+        Product product,
+        CancellationToken ct)
+    {
+        if (!product.TrackStock || product.AllowBackorder)
+        {
+            return true;
+        }
+
+        return await dbContext.ProductVariantStocks
+            .AsNoTracking()
+            .IgnoreQueryFilters()
+            .AnyAsync(stock =>
+                stock.TenantId == product.TenantId &&
+                !stock.IsDeleted &&
+                stock.Variant != null &&
+                stock.Variant.TenantId == product.TenantId &&
+                stock.Variant.ProductId == product.Id &&
+                !stock.Variant.IsDeleted &&
+                stock.Variant.IsActive &&
+                stock.Variant.SemanticLifecycleState == ProductVariantSemanticLifecycleState.Current &&
+                stock.Variant.SemanticSupersededAtUtc == null &&
+                stock.Variant.SemanticReplacementVariantId == null &&
+                (product.HasVariants || stock.Variant.IsDefault) &&
+                stock.Warehouse != null &&
+                stock.Warehouse.TenantId == product.TenantId &&
+                !stock.Warehouse.IsDeleted &&
+                stock.Warehouse.IsActive &&
+                stock.Quantity - stock.ReservedQuantity > 0m,
+                ct);
+    }
+
+    /// <summary>
+    /// SHA-256 hash of IP address for analytics without PII.
+    /// </summary>
+    private static string? HashIp(string? ip)
+    {
+        if (string.IsNullOrEmpty(ip)) return null;
+        var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(ip));
+        return Convert.ToHexString(bytes).ToLowerInvariant();
+    }
+
+    /// <summary>
+    /// AUDIT FIX F-SEC2: SHA-256 hash of user agent for analytics without PII.
+    /// Raw UserAgent combined with other data can constitute PII under GDPR.
+    /// Uses the same hashing approach as IP addresses for consistency.
+    /// </summary>
+    private static string HashUserAgent(string ua)
+    {
+        if (string.IsNullOrEmpty(ua)) return string.Empty;
+        var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(ua));
+        return Convert.ToHexString(bytes).ToLowerInvariant();
+    }
+}

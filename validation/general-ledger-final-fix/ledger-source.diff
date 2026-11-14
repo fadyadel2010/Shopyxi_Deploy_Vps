@@ -1,0 +1,78 @@
+--- /mnt/d/Shopixy-Automatic-Subdomains-Audit-R2-20261111/source/validation/general-ledger-final-fix/baseline/PointOfSale.Infrastructure/Accounting/FinancialReportService.cs	2026-11-10 19:23:09.399560700 +0200
++++ /mnt/d/Shopixy-Automatic-Subdomains-Audit-R2-20261111/source/PointOfSale.Infrastructure/Accounting/FinancialReportService.cs	2026-11-14 13:27:25.932390900 +0200
+@@ -141,21 +141,33 @@
+         if (account == null)
+             throw new InvalidOperationException($"Account {accountId} not found");
+         
+-        // Get opening balance (sum of all entries before fromDate)
+-        var openingBalance = await GetAccountBalanceAsOfAsync(tenantId, accountId, fromDate.AddDays(-1), ct);
+-        
+-        // Get entries in period
+-        var entries = await _db.LedgerEntries
++        var eligibleEntries = _db.LedgerEntries
+             .AsNoTracking()
+             .Where(l => l.AccountId == accountId &&
+                         l.TenantId == tenantId &&
++                        l.JournalEntry!.TenantId == tenantId &&
+                         (l.JournalEntry!.Status == JournalStatus.Posted ||
+-                         l.JournalEntry.Status == JournalStatus.Reversed) &&
+-                        l.JournalEntry.JournalDate >= fromDate &&
+-                        l.JournalEntry.JournalDate <= toDate)
++                         l.JournalEntry.Status == JournalStatus.Reversed));
++
++        // Apply the start-date filter only after including all earlier movements.
++        var openingTotals = await eligibleEntries
++            .Where(l => l.JournalEntry.JournalDate < fromDate)
++            .GroupBy(_ => 1)
++            .Select(g => new { Debits = g.Sum(l => l.DebitAmount), Credits = g.Sum(l => l.CreditAmount) })
++            .FirstOrDefaultAsync(ct);
++        var openingBalance = ComputeBalance(account.AccountType, openingTotals?.Debits ?? 0m, openingTotals?.Credits ?? 0m);
++
++        // Business-date chronology, then the posting authority's journal timestamp
++        // and tenant-sequential journal number, then its within-journal line sequence.
++        // Id is only a defensive final tie-breaker, never a posting sequence.
++        var lines = await eligibleEntries
++            .Where(l => l.JournalEntry.JournalDate >= fromDate && l.JournalEntry.JournalDate <= toDate)
+             .OrderBy(l => l.JournalEntry!.JournalDate)
++            .ThenBy(l => l.JournalEntry.PostedAtUtc)
++            .ThenBy(l => l.JournalEntry.JournalNumber)
+             .ThenBy(l => l.LineNumber)
+-            .Select(l => new GeneralLedgerEntry
++            .ThenBy(l => l.Id)
++            .Select(l => new
+             {
+                 JournalDate = l.JournalEntry!.JournalDate,
+                 JournalNumber = l.JournalEntry.JournalNumber,
+@@ -164,10 +176,30 @@
+                 SourceReference = l.JournalEntry.SourceReference,
+                 Description = l.LineDescription ?? l.JournalEntry.Description,
+                 DebitAmount = l.DebitAmount,
+-                CreditAmount = l.CreditAmount,
+-                BalanceAfter = l.BalanceAfter
++                CreditAmount = l.CreditAmount
+             })
+             .ToListAsync(ct);
++
++        // Persisted BalanceAfter is a posting-time audit snapshot. Backdating and
++        // date-range selection can differ from that history: calculate presentation
++        // balances in exactly the displayed order, in decimal, without writing data.
++        var runningBalance = openingBalance;
++        var entries = lines.Select(line =>
++        {
++            runningBalance += ComputeBalance(account.AccountType, line.DebitAmount, line.CreditAmount);
++            return new GeneralLedgerEntry
++            {
++                JournalDate = line.JournalDate,
++                JournalNumber = line.JournalNumber,
++                JournalId = line.JournalId,
++                SourceType = line.SourceType,
++                SourceReference = line.SourceReference,
++                Description = line.Description,
++                DebitAmount = line.DebitAmount,
++                CreditAmount = line.CreditAmount,
++                BalanceAfter = runningBalance
++            };
++        }).ToList();
+         
+         // Calculate closing balance
+         var closingBalance = await GetAccountBalanceAsOfAsync(tenantId, accountId, toDate, ct);

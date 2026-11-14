@@ -1,0 +1,32 @@
+[
+  {
+    "op": "test",
+    "path": "/spec/replicas",
+    "value": 1
+  },
+  {
+    "op": "test",
+    "path": "/spec/strategy/type",
+    "value": "Recreate"
+  },
+  {
+    "op": "test",
+    "path": "/spec/template/spec/containers/0/image",
+    "value": "docker.io/shopixy/api@sha256:5efeb7042bcaf6ea223f3df06c7983862e073787e78634fb996ffbf9c4cf266e"
+  },
+  {
+    "op": "replace",
+    "path": "/spec/template/spec/containers/0/image",
+    "value": "docker.io/shopixy/api@sha256:1185031a83553260e30f4acc63726469446341eb6c9e00452e102cd8817444aa"
+  },
+  {
+    "op": "test",
+    "path": "/spec/template/spec/volumes/9/configMap/name",
+    "value": "shopixy-api-clientip-edge-r2"
+  },
+  {
+    "op": "replace",
+    "path": "/spec/template/spec/volumes/9/configMap/name",
+    "value": "shopixy-api-clientip-edge-wildcard-r1"
+  }
+]
