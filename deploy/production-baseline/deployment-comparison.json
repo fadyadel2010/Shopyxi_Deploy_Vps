@@ -1,8 +1,11 @@
 {
   "verifiedAtUtc": "2026-11-14T12:32:33.287276+00:00",
+  "monitoringVerifiedAtUtc": "2026-11-14T13:12:55.381062+00:00",
+  "comparisonMethod": "Resolve each manifest ConfigMap in its declared namespace. The deployed combined R2 monitoring ConfigMap supersedes the standalone historical R1 template.",
   "localConfigMapComparisons": [
     {
       "path": "deploy/automatic-subdomains/03-storefront-nginx-configmap.yaml",
+      "namespace": "shopixy-app",
       "configMap": "shopixy-storefront-wildcard-r1",
       "existsLive": true,
       "keys": [
@@ -16,6 +19,7 @@
     },
     {
       "path": "deploy/automatic-subdomains/04-api-edge-nginx-configmap.yaml",
+      "namespace": "shopixy-app",
       "configMap": "shopixy-api-clientip-edge-wildcard-r1",
       "existsLive": true,
       "keys": [
@@ -29,37 +33,39 @@
     },
     {
       "path": "deploy/automatic-subdomains/08-monitoring-combined.yaml",
+      "namespace": "monitoring",
       "configMap": "shopixy-alerting-automatic-subdomains-r2",
-      "existsLive": false,
+      "existsLive": true,
       "keys": [
         {
           "key": "app6e.yaml",
           "localSha256": "5b7d8a40579a5f510e0adbfb8e68dc3a7901e7b89264754295736bb6ec7bd48c",
-          "liveSha256": null,
-          "matches": false
+          "liveSha256": "5b7d8a40579a5f510e0adbfb8e68dc3a7901e7b89264754295736bb6ec7bd48c",
+          "matches": true
         },
         {
           "key": "app82-r4.yaml",
           "localSha256": "cb5bd67c1a02bf81a561727bd1b87af2319054ddc9ed8479362053924f58be07",
-          "liveSha256": null,
-          "matches": false
+          "liveSha256": "cb5bd67c1a02bf81a561727bd1b87af2319054ddc9ed8479362053924f58be07",
+          "matches": true
         },
         {
           "key": "production.yaml",
           "localSha256": "d234b81a09c753224bc4222b4dc6c96f3e3c34d4ddbb74e349fb6484e819c328",
-          "liveSha256": null,
-          "matches": false
+          "liveSha256": "d234b81a09c753224bc4222b4dc6c96f3e3c34d4ddbb74e349fb6484e819c328",
+          "matches": true
         },
         {
           "key": "automatic-subdomains.yaml",
           "localSha256": "81cf9f0c55e9c691deb90f4d1ccb5659945298c4ee158fa98d3bdeef215f7782",
-          "liveSha256": null,
-          "matches": false
+          "liveSha256": "81cf9f0c55e9c691deb90f4d1ccb5659945298c4ee158fa98d3bdeef215f7782",
+          "matches": true
         }
       ]
     },
     {
       "path": "deploy/automatic-subdomains/08-monitoring.yaml",
+      "namespace": "monitoring",
       "configMap": "shopixy-automatic-subdomains-alerting-r1",
       "existsLive": false,
       "keys": [
