@@ -1,0 +1,15 @@
+{
+  "verifiedAtUtc": "2026-11-15T13:25:04.310280+00:00",
+  "repository": "https://github.com/fadyadel2010/Shopyxi_Deploy_Vps.git",
+  "private": true,
+  "pushPermission": true,
+  "defaultBranch": "main",
+  "credentialMethod": "Existing GCM credential in child-process memory only; no login or credential changes",
+  "localCommit": "13bcb260535dc9f7b5ace4d91fbb4e429b3e675f",
+  "remoteMainCommit": "13bcb260535dc9f7b5ace4d91fbb4e429b3e675f",
+  "remoteFeatureCommit": "13bcb260535dc9f7b5ace4d91fbb4e429b3e675f",
+  "bothBranchesMatch": true,
+  "completeRemoteTreeMatchesLocal": true,
+  "remoteBlobCount": 6636,
+  "verifiedImplementationCommit": "13bcb260535dc9f7b5ace4d91fbb4e429b3e675f"
+}

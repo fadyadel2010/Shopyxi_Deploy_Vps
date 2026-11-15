@@ -34,7 +34,11 @@ API/Web release candidates passed immutable file/dependency/dist parity, non-roo
 
 The first attempts stopped on a containerd column assumption and a BOM-prefixed SQL concatenation, without workload changes. A subsequent rollout exposed a missed schema-installation prerequisite: `__EFMigrationsHistory` advanced but the read-only `SystemSchemaVersions` contract still named the previous migration. The API startup guard correctly failed closed. **The API experienced a temporary outage, including the attempted old-image rollback; zero-downtime deployment is not claimed.**
 
-The authorized operational schema metadata was advanced with a guarded, idempotent installer, without business-data writes or weakened startup checks. The verified API/Web candidates then became Ready at `2026-11-15T13:04:47.847222Z`, with zero restarts in the successful rollout. A new isolated regression proves mismatch rejection, metadata installation, read-only startup admission and timestamp-preserving installer replay. Deployment/read-only evidence is retained; focused GitHub delivery is the remaining release-administration step.
+The authorized operational schema metadata was advanced with a guarded, idempotent installer, without business-data writes or weakened startup checks. The verified API/Web candidates then became Ready at `2026-11-15T13:04:47.847222Z`, with zero restarts in the successful rollout. A new isolated regression proves mismatch rejection, metadata installation, read-only startup admission and timestamp-preserving installer replay. Deployment/read-only evidence is retained.
+
+## GitHub delivery
+
+Implementation commit `13bcb260535dc9f7b5ace4d91fbb4e429b3e675f` and phase-one commit `bd25235` were pushed to the existing private repository. Remote `main` was fast-forwarded from the reviewed `0dfde49` baseline without force. Both `main` and `affiliate/production-acceptance-20261115`, plus all 6,636 remote blobs, were independently verified against that implementation commit. See `github-delivery.json`; the following documentation-only commit retains this delivery receipt without changing release inputs.
 
 Browser diagnostics also show the existing CSP refusing an injected Cloudflare analytics beacon. The policy was not weakened to enable third-party telemetry. This did not affect the nine tab reads.
 

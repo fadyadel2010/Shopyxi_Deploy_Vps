@@ -41,3 +41,7 @@ Read-only snapshots match phase one, including private merchant-ledger/cashbox c
 Earlier parser/BOM failures and the failed/resumed rollout receipts are retained. An existing CSP block on an injected Cloudflare beacon remains intentional; the policy was not weakened to enable external telemetry.
 
 See `STATUS.md`, `gate-summary.json`, `production-deployment.json`, `production-release-attempts.json`, `production-identity-verification.json`, `production-schema-verification.json`, the three post-release browser reports, and `business-state-post-release.json`.
+
+## Git delivery
+
+Implementation commit `13bcb260535dc9f7b5ace4d91fbb4e429b3e675f` was pushed to the existing private repository on both the feature branch and safely fast-forwarded `main`, without force. GitHub's complete tree matched all 6,636 local blobs. `github-delivery.json` retains this verified implementation-delivery receipt; a subsequent documentation-only commit records the receipt and this conclusion. Protected original working differences were not staged or discarded.
