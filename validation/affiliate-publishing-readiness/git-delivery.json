@@ -1,0 +1,15 @@
+{
+  "verifiedAtUtc": "2026-11-15T21:03:34.339461+00:00",
+  "repository": "https://github.com/fadyadel2010/Shopyxi_Deploy_Vps.git",
+  "implementationCommit": "27fc8a9464b26cf6b2513e0dcfb58770ed3726e6",
+  "observedLocalHead": "27fc8a9464b26cf6b2513e0dcfb58770ed3726e6",
+  "remoteHeads": {
+    "refs/heads/affiliate/publishing-readiness-20261115": "27fc8a9464b26cf6b2513e0dcfb58770ed3726e6",
+    "refs/heads/main": "27fc8a9464b26cf6b2513e0dcfb58770ed3726e6"
+  },
+  "bothRemoteHeadsMatchLocalHead": true,
+  "implementationIsAncestor": true,
+  "closureChangesEvidenceOnly": false,
+  "forcePushUsed": false,
+  "passed": true
+}

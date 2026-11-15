@@ -1,6 +1,6 @@
 # Affiliate merchant publishing readiness — 2026-11-15
 
-**Implementation and Production release: PASS. GitHub closure: pending the focused commit/push and verified remote heads.** The first rollout failed on a missing CRI archive-index alias and was safely rolled back. The bounded retry succeeded; fresh runtime identity and read-only Production UI verification passed. No failed rollout or incomplete browser attempt is counted as successful acceptance.
+**Final outcome: PASS — implemented, bounded acceptance passed, API/Admin Web deployed and GitHub delivery verified.** The first rollout failed on a missing CRI archive-index alias and was safely rolled back. The bounded retry succeeded; fresh runtime identity and read-only Production UI verification passed. No failed rollout or incomplete browser attempt is counted as successful acceptance.
 
 ## A. Existing Implementation
 
@@ -147,7 +147,9 @@ The retry completed at **2026-11-15T20:58:52Z**. API generation **53**, Web gene
 
 Read-only headed Production confirmation reused the established Owner session at `https://admin.shopyxi.com`: authenticated product-list HTTP **200**, two existing rows with complete server-derived readiness, compact eligibility and the actual four-section Manage panel. The inspected existing product showed current product/policy blockers; no Production prerequisite or product was changed to manufacture a ready offer. An initial browser read sampled a loading table; the final helper waits for the successful list response and nonbusy table. A sandbox-only `URL` helper error was corrected before the successful final read. `production-readonly.json` records **zero business mutation requests**, no blocked mutation attempts and no exported product identity, commission, cookies or credentials.
 
-Git commit/push and verified remote source parity remain **pending** at this implementation commit. `source-parity-index.json` freshly verifies all 2,651 API and 2,193 Web inputs plus the embedded theme against the staged index. The staged evidence scan has zero findings; three initial assembly-hash-key false positives were removed by unambiguous filename/hash record formatting, not by weakening scanner rules or suppressing credentials. All private fixture credentials/configuration, browser state, raw diagnostics and image archives remain outside Git.
+Implementation commit **`27fc8a9464b26cf6b2513e0dcfb58770ed3726e6`** was atomically pushed to the existing repository's `affiliate/publishing-readiness-20261115` and `main`, fast-forwarding main from `d273e6d7e470dc9f033bb83b78c0a6065fe3e4f6` without a force-push. A fresh `git ls-remote` verified both heads at that exact commit at **21:03:34Z** (`git-delivery.json`). `source-parity-commit.json` verifies all **2,651 API** and **2,193 Web** built inputs plus the embedded theme against the actual delivered implementation commit, not only local working files. This closure update changes documentation/evidence only; the final remote-head check is repeated after its push.
+
+The full implementation/evidence staged scan passed with **154 files**, zero findings and all 18 known private values absent. The documentation-only closure is rescanned before delivery. Three initial assembly-hash-key false positives were removed by unambiguous filename/hash record formatting, not by weakening scanner rules or suppressing credentials. All private fixture credentials/configuration, browser state, raw diagnostics and image archives remain outside Git. GitHub CLI authentication was unavailable, so delivery and independent verification used the already-working authenticated Git transport; no GitHub CLI success is claimed.
 
 ## J. Final Verdict
 
@@ -165,7 +167,7 @@ Git commit/push and verified remote source parity remain **pending** at this imp
 | Arabic/English UI | FIXED AND RE-TESTED |
 | Production API/Admin Web deployment | PASS |
 | Production read-only confirmation | PASS |
-| GitHub delivery | PENDING |
-| Overall Affiliate publishing readiness | PASS — GitHub closure pending |
+| GitHub delivery | PASS |
+| Overall Affiliate publishing readiness | PASS |
 
-The deployed readiness feature passes its bounded acceptance. Repository closure remains pending until the focused implementation and sanitized evidence are committed, pushed and independently verified on the existing remote; no registry push, zero-downtime release or repeated financial lifecycle is claimed.
+The deployed readiness feature passes its bounded acceptance and its implementation/source parity is verified on the existing GitHub remote. Scenarios A–K are reported separately above, including the distinction between headed historical-fixture acceptance and disposable corrupt-state regression tests. No registry push, zero-downtime release, repeated financial lifecycle or Production business mutation is claimed.

@@ -1,0 +1,11 @@
+{
+  "verifiedAtUtc": "2026-11-15T21:03:19.346233+00:00",
+  "authority": "27fc8a9464b26cf6b2513e0dcfb58770ed3726e6",
+  "builtInputsMatched": {
+    "api": 2651,
+    "web": 2193
+  },
+  "embeddedThemeMatches": true,
+  "unstagedAffectedSourceChanges": false,
+  "passed": true
+}
