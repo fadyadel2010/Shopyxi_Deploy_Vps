@@ -1,0 +1,28 @@
+{
+  "capturedAtUtc": "2026-11-15T14:46:52.983Z",
+  "orderId": "8f2866d0-cac0-4c0b-bd91-fe6f3c4c5e12",
+  "action": "confirm",
+  "previousStatus": "Created",
+  "nextStatus": "Confirmed",
+  "status": 200,
+  "correlationId": "5a8a86d7-4079-4176-8bfc-6ee086d4da24",
+  "data": {
+    "success": true,
+    "orderId": "8f2866d0-cac0-4c0b-bd91-fe6f3c4c5e12",
+    "orderNumber": "ORD-1515-2026-01000",
+    "oldStatus": "Created",
+    "newStatus": "Confirmed",
+    "transitionedAt": "2026-11-15T14:46:51.8615545Z"
+  },
+  "availableActions": [
+    {
+      "code": "pack",
+      "label": "Mark as Packed",
+      "targetStatus": "Packed",
+      "requiresConfirmation": false,
+      "requiredFields": [],
+      "iconHint": "package"
+    }
+  ],
+  "externalCarrierContacted": false
+}

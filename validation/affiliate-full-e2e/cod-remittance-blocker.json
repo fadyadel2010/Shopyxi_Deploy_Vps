@@ -1,0 +1,11 @@
+{
+  "capturedAtUtc": "2026-11-15T15:02:02.075Z",
+  "nativeUi": "Help\nSoon\nBack\nManual COD Settlement\n\nSettle whole Manual Fulfillment COD orders whose customer cash you collected and whose collection accounting is posted.\n\nUnable to load eligible orders or the authoritative Main Cashbox. Refresh to retry.\nRetry",
+  "status": 409,
+  "body": {
+    "code": "COD_MANUAL_CASHBOX_REQUIRED",
+    "message": "COD_MANUAL_CASHBOX_REQUIRED",
+    "traceId": "989c0ecb-35db-4202-8e59-6366d9410ab8"
+  },
+  "correlationId": "989c0ecb-35db-4202-8e59-6366d9410ab8"
+}

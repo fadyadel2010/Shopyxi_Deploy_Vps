@@ -1,0 +1,17 @@
+{
+  "verifiedAtUtc": "2026-11-15T17:59:16.976006+00:00",
+  "stage": "after-api-release",
+  "readOnlyRepeatableRead": true,
+  "businessDataWrites": false,
+  "fixtureCounts": {
+    "isolatedTenantRows": 0,
+    "isolatedOwnerRows": 0,
+    "isolatedAffiliateRows": 0,
+    "isolatedProductRows": 0,
+    "isolatedOrderRows": 0,
+    "isolatedJournalRows": 0,
+    "isolatedPayoutRows": 0,
+    "isolatedPayoutReturnRows": 0
+  },
+  "passed": true
+}

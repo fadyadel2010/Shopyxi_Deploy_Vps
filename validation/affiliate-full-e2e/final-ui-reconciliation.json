@@ -1,0 +1,27 @@
+{
+  "capturedAtUtc": "2026-11-15T16:32:34.999Z",
+  "orderReference": "ORD-1515-2026-01000",
+  "ownerView": {
+    "totalEarned": 110,
+    "approved": 0,
+    "paidEffective": 0,
+    "reversed": 110,
+    "netEarnings": 0,
+    "orderCommissionStatus": "Reversed"
+  },
+  "affiliateView": {
+    "totalEarned": 110,
+    "approved": 0,
+    "paidEffective": 0,
+    "reversed": 110,
+    "netEarnings": 0,
+    "availableToWithdraw": 0,
+    "pendingReserved": 0
+  },
+  "viewsAgree": true,
+  "screenshots": [
+    "affiliate-final-reconciliation.png",
+    "owner-affiliate-final-reconciliation.png"
+  ],
+  "credentialValuesOmitted": true
+}

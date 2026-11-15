@@ -1,0 +1,19 @@
+{
+  "verifiedAtUtc": "2026-11-15T17:55:53.104620+00:00",
+  "candidateImage": "docker.io/shopixy/api@sha256:8bd79c212714d258cdffb167617501cab8408b2645cef8dbffab9849e8249f02",
+  "failedRolloutGeneration": 48,
+  "candidateApiContainerStarted": false,
+  "kubernetesEventReason": "Failed",
+  "cause": "CRI checkpoint-image lookup normalized the imported image name to docker.io/library/import-2026-11-15@sha256:8bd79c212714d258cdffb167617501cab8408b2645cef8dbffab9849e8249f02, but only the unnormalized import alias and canonical API alias existed.",
+  "readinessTimeoutSeconds": 480,
+  "rollbackVerified": true,
+  "rollbackGeneration": 49,
+  "rollbackImage": "docker.io/shopixy/api@sha256:880c33e45a4e4a8cf236744b328706cac229e7b12284a7054ae9828b99aa34f3",
+  "rollbackReadyReplicas": 1,
+  "rollbackCurrentRestartCount": 0,
+  "webGenerationUnchanged": 15,
+  "storefrontGenerationUnchanged": 10,
+  "availabilityNote": "API availability was affected during the failed rollout. Final readiness is not a zero-downtime claim.",
+  "businessDataWrites": false,
+  "applicationCodeChangedDuringRecovery": false
+}

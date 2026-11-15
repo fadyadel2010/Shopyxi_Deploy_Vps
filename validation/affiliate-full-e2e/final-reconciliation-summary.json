@@ -1,0 +1,48 @@
+{
+  "result": "PASS",
+  "snapshot": "state-final-reconciliation-v2.json",
+  "order": {
+    "id": "8f2866d0-cac0-4c0b-bd91-fe6f3c4c5e12",
+    "total": 1110.0,
+    "paymentStatus": "Refunded"
+  },
+  "inventory": {
+    "opening": 3.0,
+    "final": 3.0,
+    "reserved": 0.0,
+    "returned": 1.0
+  },
+  "affiliate": {
+    "historicalEarned": 110.0,
+    "approved": 0,
+    "paidEffective": 0.0,
+    "reversed": 110.0,
+    "net": 0.0,
+    "available": 0,
+    "pendingReserved": 0
+  },
+  "money": {
+    "mainCashbox": 0.0,
+    "affiliateCashbox": 0.0,
+    "codClearing": 0.0,
+    "affiliatePayable": 0.0
+  },
+  "accounting": {
+    "journals": 11,
+    "lines": 22,
+    "allBalanced": true,
+    "outboxProcessed": 5
+  },
+  "historyPreserved": {
+    "settlements": 1,
+    "payouts": 1,
+    "payoutReturns": 1,
+    "refunds": 1,
+    "payoutRequests": 2
+  },
+  "analyticsProjectionNote": {
+    "clickPersisted": true,
+    "clickOrderId": null,
+    "financialAuthority": "SQL attribution and ledgers"
+  }
+}

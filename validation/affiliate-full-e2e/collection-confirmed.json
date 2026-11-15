@@ -1,0 +1,14 @@
+{
+  "capturedAtUtc": "2026-11-15T14:52:58.883Z",
+  "status": 200,
+  "correlationId": "ea0c61b7-c3bf-4467-8201-8f2623e41deb",
+  "data": {
+    "success": true,
+    "newStatus": "Collected",
+    "message": "COD order marked as delivered successfully"
+  },
+  "collectionReference": "ISOLATED-COD-COLLECTION-20261115-0001",
+  "actorRole": "isolated merchant Owner",
+  "actualPhysicalCashHandoff": false,
+  "workflow": "native COD collection UI"
+}

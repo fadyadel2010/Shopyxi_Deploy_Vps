@@ -1,0 +1,22 @@
+{
+  "capturedAtUtc": "2026-11-15T15:29:37.305Z",
+  "status": 200,
+  "correlationId": "73873c57-0783-40ab-a22d-f3a4058692ad",
+  "body": {
+    "batchId": "d9f90a42-8e4a-435a-844f-a7dc2dd95259",
+    "settlementId": "192e787d-de87-421a-a2bc-c5f6dcf04265",
+    "status": "Settled",
+    "settledOrderCount": 1,
+    "grossAmount": 1110,
+    "currency": "EGP",
+    "destinationAccountId": "01a1df8e-0c5d-7d9b-b148-b6817e9fe497",
+    "destinationAccountCode": "1010",
+    "destinationAccountName": "Cashbox Main",
+    "journalId": "01a1dfd4-07b1-7bf7-9e3e-6902b420bbad",
+    "journalReference": "JE-2026-000004",
+    "accountingOutcome": "Posted",
+    "wasIdempotent": false
+  },
+  "nativeUi": "Settlement posted successfully; EGP 1,110.00; 1 order; Accounting posted; journal JE-2026-000004",
+  "credentialValuesOmitted": true
+}

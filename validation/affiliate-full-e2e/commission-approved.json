@@ -1,0 +1,13 @@
+{
+  "capturedAtUtc": "2026-11-15T14:54:54.584Z",
+  "status": 200,
+  "data": {
+    "processedCount": 0,
+    "failedCount": 1,
+    "errors": [
+      "AFFILIATE_MANUAL_DELIVERY_EVIDENCE_REQUIRED: The commission operation conflicts with the current authoritative financial state."
+    ]
+  },
+  "correlationId": "18765a1f-1b78-4aa4-849a-63a6bf9f700b",
+  "actorRole": "same-store isolated Owner"
+}

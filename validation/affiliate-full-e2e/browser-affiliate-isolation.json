@@ -1,0 +1,11 @@
+{
+  "isolatedAtUtc": "2026-11-15T14:23:11.185Z",
+  "headed": true,
+  "allowedOrigins": [
+    "http://admin.localhost:18180",
+    "http://affiliate.localhost:18180",
+    "http://ahram.localhost:18181"
+  ],
+  "externalRequestsAbortedBeforeDispatch": true,
+  "authenticationStateImported": false
+}

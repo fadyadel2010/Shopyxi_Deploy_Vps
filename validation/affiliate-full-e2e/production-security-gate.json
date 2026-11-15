@@ -1,0 +1,12 @@
+{
+  "verifiedAtUtc": "2026-11-15T17:35:59.629576+00:00",
+  "image": "docker.io/shopixy/api@sha256:8bd79c212714d258cdffb167617501cab8408b2645cef8dbffab9849e8249f02",
+  "scanImageIdentityMatched": true,
+  "trivyReportSha256": "c6798935acdba407850e99776ee69303f11e21ad698fc52c299eab2f5d250ac7",
+  "trivyHighCriticalFindings": 0,
+  "scanResultGroups": 5,
+  "nugetAuditSha256": "14c1570864f4992cf1dc869ca34066a6cc52fc4bbdea964e28a820804eb9768c",
+  "nugetVulnerablePackages": 0,
+  "vulnerabilityDatabaseUpdatedDuringBuild": true,
+  "passed": true
+}

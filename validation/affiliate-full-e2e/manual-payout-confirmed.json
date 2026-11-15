@@ -1,0 +1,17 @@
+{
+  "capturedAtUtc": "2026-11-15T15:50:30.224Z",
+  "status": 200,
+  "correlationId": "2d6494e5-05ce-475e-9e2b-9853477fb6a0",
+  "requestId": "3df56374-eaea-4caf-9c99-0471843062ca",
+  "manualPayoutId": "9ed77774-b08d-4507-bdfa-4e8892eb52ea",
+  "amount": 110,
+  "currency": "EGP",
+  "sourceAccountCode": "1010-BA6E7A8B",
+  "journalId": "01a1dfe7-2191-76cc-b01c-7692f6896f14",
+  "journalReference": "JE-2026-000006",
+  "result": "Paid",
+  "wasIdempotentSkip": false,
+  "workflow": "Manual cash attestation; no electronic transfer was initiated",
+  "syntheticNoRealMoney": true,
+  "credentialValuesOmitted": true
+}

@@ -36,10 +36,14 @@ public static class ManualCodSettlementAuthority
             .Select(c => (int?)c.DecimalPlaces).SingleOrDefaultAsync(ct);
         Require(!string.IsNullOrWhiteSpace(currency) && precision.HasValue && precision <= 2,
             "COD_MANUAL_CURRENCY_UNSUPPORTED");
-        // Treasury mapping is authority. The ledger code constrains its intended Main Cashbox role.
+        // This workflow explicitly targets Main Cashbox 1010, not the operational
+        // default cashbox. Provisioning a dedicated Affiliate payout cashbox may
+        // legitimately move IsDefault to its own account without removing 1010.
+        // Require the active Treasury mapping and the exact canonical ledger role;
+        // never fall back to a bank, clearing account, or another default cashbox.
         var mappings = await db.TreasuryAccounts.IgnoreQueryFilters().AsNoTracking().Include(t => t.Account)
             .Where(t => t.TenantId == tenantId && !t.IsDeleted && t.IsActive &&
-                t.Type == TreasuryAccountType.Cashbox && t.IsDefault).ToListAsync(ct);
+                t.Type == TreasuryAccountType.Cashbox && t.Account != null && t.Account.AccountCode == "1010").ToListAsync(ct);
         Require(mappings.Count == 1, "COD_MANUAL_CASHBOX_REQUIRED");
         var cashbox = mappings[0].Account;
         Require(cashbox != null && cashbox.TenantId == tenantId && cashbox.IsActive && !cashbox.IsDeleted &&

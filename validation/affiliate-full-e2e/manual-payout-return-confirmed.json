@@ -1,0 +1,17 @@
+{
+  "capturedAtUtc": "2026-11-15T15:58:15.593Z",
+  "status": 200,
+  "correlationId": "32313084-dab0-4ee0-bfd3-171cbcd422a1",
+  "requestId": "3df56374-eaea-4caf-9c99-0471843062ca",
+  "manualPayoutId": "9ed77774-b08d-4507-bdfa-4e8892eb52ea",
+  "returnId": "ba48a6a9-2f03-4ea3-a90a-deb6466a60e7",
+  "amount": 110,
+  "currency": "EGP",
+  "journalId": "01a1dfee-34f2-7547-a9fb-d4b8a496cabc",
+  "journalReference": "JE-2026-000007",
+  "result": "Returned",
+  "wasIdempotentSkip": false,
+  "originalPaymentHistoryRetained": true,
+  "oldApprovalReopened": false,
+  "syntheticNoRealMoney": true
+}

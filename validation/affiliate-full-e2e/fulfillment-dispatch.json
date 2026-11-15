@@ -1,0 +1,16 @@
+{
+  "capturedAtUtc": "2026-11-15T14:48:17.900Z",
+  "status": 200,
+  "correlationId": "ae98453e-ce58-4a79-8f42-457ea2c4f48d",
+  "data": {
+    "success": true,
+    "orderId": "8f2866d0-cac0-4c0b-bd91-fe6f3c4c5e12",
+    "orderNumber": "ORD-1515-2026-01000",
+    "oldStatus": "Packed",
+    "newStatus": "OutForDelivery",
+    "transitionedAt": "2026-11-15T14:48:18.1100115Z"
+  },
+  "trackingReference": "ISOLATED-AFF-E2E-20261115-0001",
+  "physicalDispatch": false,
+  "realCarrierContact": false
+}

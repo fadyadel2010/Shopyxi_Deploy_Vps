@@ -1,0 +1,13 @@
+{
+  "capturedAtUtc": "2026-11-15T16:18:10.748Z",
+  "status": 200,
+  "correlationId": "af8f9c29-27c5-417d-a5f2-7faae974899d",
+  "amount": 110,
+  "currency": "EGP",
+  "fromAccountCode": "1010-BA6E7A8B",
+  "toAccountCode": "1010",
+  "journalId": "01a1e000-7d0c-747e-b043-da202f382833",
+  "journalReference": "JE-2026-000008",
+  "result": "Posted",
+  "syntheticNoRealMoney": true
+}

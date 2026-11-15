@@ -1,0 +1,235 @@
+{
+  "capturedAtUtc": "2026-11-15T14:21:11.747235+00:00",
+  "candidateNotYetAccepted": true,
+  "network": {
+    "name": "affiliate-full-e2e-20261115",
+    "internal": true,
+    "externalBridgeAttached": false
+  },
+  "database": {
+    "name": "affiliate_full_e2e",
+    "role": "affiliate_fixture",
+    "appliedMigrations": 78,
+    "productionDataImported": false
+  },
+  "externalBoundaries": {
+    "smtp": "dedicated local capture-only sink",
+    "baileys": "dedicated local fail-closed sink",
+    "realPaymentCarrierBankCredentialsImported": false
+  },
+  "containers": [
+    {
+      "component": "postgres",
+      "imageId": "sha256:e3d24f6906d0760bf4da0dae872415391ededefad23fd471c47dc53b0ddf3c42",
+      "running": true,
+      "exitCode": 0,
+      "onlyDedicatedNetwork": true,
+      "ports": {},
+      "productionConfigurationMounted": false
+    },
+    {
+      "component": "mongo",
+      "imageId": "sha256:3c64937121b9437095921c4bb2569911084c05f7b88e4a263d62a8959d2b2399",
+      "running": true,
+      "exitCode": 0,
+      "onlyDedicatedNetwork": true,
+      "ports": {},
+      "productionConfigurationMounted": false
+    },
+    {
+      "component": "redis",
+      "imageId": "sha256:fe9daae35cd4fd6ec22416aa4fe0cf6b3e36741e06ff45b9986253fe2a81c041",
+      "running": true,
+      "exitCode": 0,
+      "onlyDedicatedNetwork": true,
+      "ports": {},
+      "productionConfigurationMounted": false
+    },
+    {
+      "component": "rabbit",
+      "imageId": "sha256:425307007e5a54b20fe6b6da718c2e385999eddda28d44d329b7e7bfabe45610",
+      "running": true,
+      "exitCode": 0,
+      "onlyDedicatedNetwork": true,
+      "ports": {},
+      "productionConfigurationMounted": false
+    },
+    {
+      "component": "sink",
+      "imageId": "sha256:aaa4b5baf1ecff3b283486bb1f90405cdda225a3e6f79660d2c559fa510a7292",
+      "running": true,
+      "exitCode": 0,
+      "onlyDedicatedNetwork": true,
+      "ports": {},
+      "productionConfigurationMounted": false
+    },
+    {
+      "component": "search",
+      "imageId": "sha256:3b55f6b6249cfdb92b52ee59adc8a266203ba9ef9f5d82544fad6f1af2f3609e",
+      "running": true,
+      "exitCode": 0,
+      "onlyDedicatedNetwork": true,
+      "ports": {},
+      "productionConfigurationMounted": false
+    },
+    {
+      "component": "api",
+      "imageId": "sha256:880c33e45a4e4a8cf236744b328706cac229e7b12284a7054ae9828b99aa34f3",
+      "running": true,
+      "exitCode": 0,
+      "onlyDedicatedNetwork": true,
+      "ports": {},
+      "productionConfigurationMounted": false
+    },
+    {
+      "component": "web",
+      "imageId": "sha256:f224346ab401bfa77a59f0716f6f555499b994a22fd7980bb8423ee29735c991",
+      "running": true,
+      "exitCode": 0,
+      "onlyDedicatedNetwork": true,
+      "ports": {
+        "8080/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "18180"
+          }
+        ]
+      },
+      "productionConfigurationMounted": false
+    },
+    {
+      "component": "storefront",
+      "imageId": "sha256:e9333f609aa664d6de713d4db00b18deba054e3a8acbb559099d9ab245f9f3df",
+      "running": true,
+      "exitCode": 0,
+      "onlyDedicatedNetwork": true,
+      "ports": {
+        "8080/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "18181"
+          }
+        ]
+      },
+      "productionConfigurationMounted": false
+    }
+  ],
+  "readiness": {
+    "httpStatus": 503,
+    "status": "Unhealthy",
+    "checks": [
+      {
+        "name": "masstransit-bus",
+        "status": "Healthy"
+      },
+      {
+        "name": "projection_outbox",
+        "status": "Healthy"
+      },
+      {
+        "name": "integration_outbox_readiness",
+        "status": "Healthy"
+      },
+      {
+        "name": "payment_cancellation_outbox_readiness",
+        "status": "Healthy"
+      },
+      {
+        "name": "provider_delivery_outbox_readiness",
+        "status": "Healthy"
+      },
+      {
+        "name": "mass_transit_bus_outbox_readiness",
+        "status": "Healthy"
+      },
+      {
+        "name": "accounting_outbox_readiness",
+        "status": "Healthy"
+      },
+      {
+        "name": "canonical_identity_authority",
+        "status": "Healthy"
+      },
+      {
+        "name": "payout_external_truth_readiness",
+        "status": "Healthy"
+      },
+      {
+        "name": "commercehub_external_outcome_recovery",
+        "status": "Healthy"
+      },
+      {
+        "name": "postgresql",
+        "status": "Healthy"
+      },
+      {
+        "name": "redis",
+        "status": "Healthy"
+      },
+      {
+        "name": "mongodb",
+        "status": "Healthy"
+      },
+      {
+        "name": "elasticsearch",
+        "status": "Healthy"
+      },
+      {
+        "name": "rabbitmq",
+        "status": "Healthy"
+      },
+      {
+        "name": "r2",
+        "status": "Unhealthy"
+      },
+      {
+        "name": "dns_resolver",
+        "status": "Unhealthy"
+      },
+      {
+        "name": "certificate_provider",
+        "status": "Degraded"
+      },
+      {
+        "name": "caddy_edge",
+        "status": "Degraded"
+      },
+      {
+        "name": "certificate_renewal",
+        "status": "Healthy"
+      },
+      {
+        "name": "paymob_foundation",
+        "status": "Healthy"
+      },
+      {
+        "name": "paymob_operational_readiness",
+        "status": "Healthy"
+      },
+      {
+        "name": "stripe_operational_readiness",
+        "status": "Healthy"
+      },
+      {
+        "name": "fawry_foundation",
+        "status": "Healthy"
+      },
+      {
+        "name": "fawry_operational_readiness",
+        "status": "Healthy"
+      },
+      {
+        "name": "manual_payment_foundation",
+        "status": "Healthy"
+      },
+      {
+        "name": "manual_payment_operational_readiness",
+        "status": "Healthy"
+      },
+      {
+        "name": "cod_reference_workflow_foundation",
+        "status": "Healthy"
+      }
+    ]
+  }
+}

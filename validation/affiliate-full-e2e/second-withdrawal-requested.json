@@ -1,0 +1,12 @@
+{
+  "capturedAtUtc": "2026-11-15T16:06:17.070Z",
+  "status": 200,
+  "correlationId": "5ab112b0-b297-4c5c-82f0-ee1a5e5728b7",
+  "requestId": "e60f39f7-6e97-4974-b40c-628c8cc839ce",
+  "requestedAmount": 110,
+  "currency": "EGP",
+  "result": "Pending",
+  "availableAfterRequest": 0,
+  "pendingReservedAfterRequest": 110,
+  "proof": "Returned funds required a new Pending withdrawal and did not reopen the prior approval."
+}

@@ -1,0 +1,21 @@
+{
+  "capturedAtUtc": "2026-11-15T16:24:29.928Z",
+  "status": 200,
+  "correlationId": "7a5b966b-5023-466b-9771-59f755cd9bf8",
+  "orderId": "8f2866d0-cac0-4c0b-bd91-fe6f3c4c5e12",
+  "orderReference": "ORD-1515-2026-01000",
+  "refundId": "refund-6376ac21-9046-411c-99ff-e0f32049367e",
+  "amount": 1110,
+  "currency": "EGP",
+  "isFullRefund": true,
+  "isPostSettlementRefund": true,
+  "result": "Refunded",
+  "journals": [
+    {"reference": "JE-2026-000009", "sourceType": "Order_Refund"},
+    {"reference": "JE-2026-000010", "sourceType": "AffiliateCommissionReversed"},
+    {"reference": "JE-2026-000011", "sourceType": "Order_COGS_Reversal"}
+  ],
+  "inventory": {"opening": 3, "final": 3, "reserved": 0, "returned": 1},
+  "physicalFulfillmentHistoryRetained": true,
+  "syntheticNoRealMoney": true
+}

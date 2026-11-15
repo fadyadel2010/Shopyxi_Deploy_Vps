@@ -1,0 +1,686 @@
+{
+  "capturedAtUtc": "2026-11-15T14:37:25.948896+00:00",
+  "stage": "before-checkout",
+  "database": "affiliate_full_e2e",
+  "readOnlyRepeatableRead": true,
+  "onlySyntheticFixtureData": true,
+  "missingTables": [
+    "AffiliateShoppingJourneys",
+    "Carts",
+    "CartItems",
+    "OrderStatusHistory",
+    "OrderPaymentHistory",
+    "OrderShipments"
+  ],
+  "tables": {
+    "Tenants": [
+      {
+        "Id": "15150000-2026-4015-a000-000000000001",
+        "Name": "Ahram \u2014 ISOLATED SYNTHETIC E2E",
+        "Slug": "ahram",
+        "Status": 1,
+        "Currency": "EGP",
+        "IsActive": true,
+        "CreatedAtUtc": "2026-11-15T14:13:10.314199+00:00",
+        "UpdatedAtUtc": null
+      }
+    ],
+    "Users": [
+      {
+        "Id": "15150000-2026-4015-a000-000000000002",
+        "Role": 0,
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.736244+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": "2026-11-15T14:22:45.215932+00:00"
+      }
+    ],
+    "AffiliateAccounts": [
+      {
+        "Id": "01a1df98-5257-7282-9e19-f9f8ae5b6b74",
+        "Status": 1,
+        "UserId": "01a1df98-5293-7c63-85ab-9b4176abb7ac",
+        "TenantId": "00000000-0000-0000-0000-000000000000",
+        "CreatedAt": "2026-11-15T14:24:24.248924+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": "2026-11-15T14:25:06.113056+00:00",
+        "ReferralCode": "QAAFFI451826"
+      }
+    ],
+    "AffiliateUsers": [
+      {
+        "Id": "01a1df98-5293-7c63-85ab-9b4176abb7ac",
+        "TenantId": "00000000-0000-0000-0000-000000000000",
+        "CreatedAt": "2026-11-15T14:24:24.248925+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": "2026-11-15T14:26:21.190061+00:00",
+        "EmailVerified": true,
+        "AffiliateAccountId": "01a1df98-5257-7282-9e19-f9f8ae5b6b74"
+      }
+    ],
+    "Products": [
+      {
+        "Id": "37d9a1b6-6585-f655-0e55-824a517ce90c",
+        "SKU": "QA-AFF-E2E-20261115",
+        "Name": "QA-AHRAM-AFFILIATE-E2E-20261115",
+        "Slug": "qa-ahram-affiliate-e2e-20261115",
+        "TaxRate": 10.0,
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:26:47.803593+00:00",
+        "IsDeleted": false,
+        "SalePrice": 1000.0,
+        "UpdatedAt": "2026-11-15T14:27:41.558756+00:00",
+        "PurchasePrice": 100.0,
+        "PriceIncludesTax": false
+      }
+    ],
+    "ProductVariants": [
+      {
+        "Id": "b884c7bc-129f-41ca-8959-8e6d760b7cbb",
+        "SKU": "QA-AFF-E2E-20261115",
+        "Price": 1000.0,
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:26:47.803594+00:00",
+        "IsDeleted": false,
+        "ProductId": "37d9a1b6-6585-f655-0e55-824a517ce90c",
+        "UpdatedAt": "2026-11-15T14:27:41.47166+00:00"
+      }
+    ],
+    "ProductVariantStocks": [
+      {
+        "Id": "949ba583-1e44-49c9-a304-b88f391f8e37",
+        "Quantity": 3.0,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:27:41.328841+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": "2026-11-15T14:27:41.445481+00:00",
+        "VariantId": "b884c7bc-129f-41ca-8959-8e6d760b7cbb",
+        "WarehouseId": "15150000-2026-4015-a000-000000000005",
+        "DamagedQuantity": 0.0,
+        "ReservedQuantity": 0.0
+      }
+    ],
+    "AffiliateProductPolicies": [
+      {
+        "Id": "01a1df9f-ca48-7ad0-b0ed-3a5176535b0c",
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:32:33.633107+00:00",
+        "IsDeleted": false,
+        "IsEnabled": true,
+        "ProductId": "37d9a1b6-6585-f655-0e55-824a517ce90c",
+        "UpdatedAt": null,
+        "CommissionRate": 0.1,
+        "AffiliateCategoryId": "11111111-1111-1111-1111-111111111111",
+        "MaxCommissionPerItem": null
+      }
+    ],
+    "AffiliatePromotionLinks": [
+      {
+        "Id": "01a1dfa0-8334-755b-aeb8-c037243e70c0",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:33:20.980458+00:00",
+        "IsDeleted": false,
+        "ProductId": "37d9a1b6-6585-f655-0e55-824a517ce90c",
+        "UpdatedAt": null,
+        "ReferralCode": "WWC3NC7R9B",
+        "AffiliateUserId": "01a1df98-5293-7c63-85ab-9b4176abb7ac",
+        "AffiliateAccountId": "01a1df98-5257-7282-9e19-f9f8ae5b6b74"
+      }
+    ],
+    "AffiliateAttributions": [],
+    "Orders": [],
+    "OrderItems": [],
+    "Shipments": [],
+    "InventoryReservations": [],
+    "StockMovements": [
+      {
+        "Id": "d2c6e5bf-50fa-417e-aa4b-82c139c8f6db",
+        "Price": null,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:27:41.44548+00:00",
+        "IsDeleted": false,
+        "ProductId": "37d9a1b6-6585-f655-0e55-824a517ce90c",
+        "UpdatedAt": "2026-11-15T14:27:41.354547+00:00",
+        "ReferenceId": null,
+        "WarehouseId": "15150000-2026-4015-a000-000000000005",
+        "MovementType": 8,
+        "ReferenceType": null,
+        "ToWarehouseId": null,
+        "ProductVariantId": "b884c7bc-129f-41ca-8959-8e6d760b7cbb"
+      }
+    ],
+    "AffiliateCommissionLedger": [],
+    "AffiliateBalanceLedger": [],
+    "AffiliatePayoutRequests": [],
+    "AffiliateManualPayouts": [],
+    "AffiliateManualPayoutReturns": [],
+    "AffiliateManualPayoutReturnAllocations": [],
+    "LedgerJournalEntries": [],
+    "LedgerLines": [],
+    "Cashboxes": [],
+    "TreasuryAccounts": [
+      {
+        "Id": "01a1df8e-0d59-76bb-b9a3-f13be987bbc4",
+        "Name": "Main Cashbox",
+        "Type": 1,
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "AccountId": "01a1df8e-0c5d-7d9b-b148-b6817e9fe497",
+        "CreatedAt": "2026-11-15T14:13:11.231193+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null
+      },
+      {
+        "Id": "01a1df8e-0d68-7246-be5e-7c2cfc7dbb58",
+        "Name": "Primary Bank Account",
+        "Type": 2,
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "AccountId": "01a1df8e-0c63-7268-83dc-7abe259409b5",
+        "CreatedAt": "2026-11-15T14:13:11.231193+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null
+      },
+      {
+        "Id": "01a1df8e-0d69-7405-87fd-26e9caa464a3",
+        "Name": "Stripe Clearing",
+        "Type": 3,
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "AccountId": "01a1df8e-0c64-7324-a7a5-46b9a0f38980",
+        "CreatedAt": "2026-11-15T14:13:11.231192+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null
+      },
+      {
+        "Id": "01a1df8e-0d69-7813-bd02-a363b48e2cd3",
+        "Name": "Wallet Clearing",
+        "Type": 3,
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "AccountId": "01a1df8e-0c64-78a9-bcf4-c812fd4419a1",
+        "CreatedAt": "2026-11-15T14:13:11.231192+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null
+      },
+      {
+        "Id": "01a1df8e-0d69-7b34-a7b5-4a1c1bbe970a",
+        "Name": "COD Clearing",
+        "Type": 3,
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "AccountId": "01a1df8e-0c64-7c3c-b19a-e85530237c54",
+        "CreatedAt": "2026-11-15T14:13:11.231192+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null
+      },
+      {
+        "Id": "01a1df8e-0d69-7cb6-abbf-77be66981a25",
+        "Name": "Visa Clearing",
+        "Type": 3,
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "AccountId": "01a1df8e-0c63-7c61-9e22-c528c8d12ac4",
+        "CreatedAt": "2026-11-15T14:13:11.231192+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null
+      }
+    ],
+    "LedgerAccounts": [
+      {
+        "Id": "01a1df8e-0c34-7608-9472-f24caa5c53c6",
+        "Name": "Cash and Bank",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974656+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "1000",
+        "AccountType": 1,
+        "CreatedAtUtc": "2026-11-15T14:13:10.835165+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c5d-721c-be6c-d1759f5cc641",
+        "Name": "Clearing Accounts",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974656+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "1100",
+        "AccountType": 1,
+        "CreatedAtUtc": "2026-11-15T14:13:10.877153+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c64-708d-b8ba-ce4d2e2c255d",
+        "Name": "Opening Balance Equity",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974657+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "3010",
+        "AccountType": 3,
+        "CreatedAtUtc": "2026-11-15T14:13:10.884698+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c64-7105-9376-9e9f13038d92",
+        "Name": "Customer Deposits",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974657+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "2020",
+        "AccountType": 2,
+        "CreatedAtUtc": "2026-11-15T14:13:10.884616+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c64-71af-aeec-4d08c70cd056",
+        "Name": "E-commerce Sales",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974657+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "4020",
+        "AccountType": 4,
+        "CreatedAtUtc": "2026-11-15T14:13:10.884731+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c64-7240-a622-810c8473750d",
+        "Name": "POS Sales",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974657+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "4010",
+        "AccountType": 4,
+        "CreatedAtUtc": "2026-11-15T14:13:10.884714+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c64-72f1-a19d-84c833653b9d",
+        "Name": "Cost of Goods Sold",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974658+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "5010",
+        "AccountType": 6,
+        "CreatedAtUtc": "2026-11-15T14:13:10.884785+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c64-73ec-8682-7a7018c86f41",
+        "Name": "Inventory",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974652+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "1310",
+        "AccountType": 1,
+        "CreatedAtUtc": "2026-11-15T14:13:10.884528+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c64-7491-ae7e-bb0fa1fa0d6d",
+        "Name": "Affiliate Payable",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974657+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "2105",
+        "AccountType": 2,
+        "CreatedAtUtc": "2026-11-15T14:13:10.884683+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c64-7550-a5ef-83d56c8b6fbe",
+        "Name": "Accounts Receivable",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974652+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "1410",
+        "AccountType": 1,
+        "CreatedAtUtc": "2026-11-15T14:13:10.884566+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c64-77bc-aecb-8aa8c82f0abd",
+        "Name": "Supplier Payables",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974657+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "2010",
+        "AccountType": 2,
+        "CreatedAtUtc": "2026-11-15T14:13:10.884601+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c64-780a-a5e7-abfd0a8466bd",
+        "Name": "Shipping Revenue",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974657+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "4030",
+        "AccountType": 4,
+        "CreatedAtUtc": "2026-11-15T14:13:10.884748+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c64-7a00-8c77-85ce6d003149",
+        "Name": "Shipping Fees",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974658+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "6020",
+        "AccountType": 5,
+        "CreatedAtUtc": "2026-11-15T14:13:10.88484+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c64-7a99-a83b-112ba542c86f",
+        "Name": "General Expenses",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974658+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "6100",
+        "AccountType": 5,
+        "CreatedAtUtc": "2026-11-15T14:13:10.884872+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c64-7b73-bc31-4e8180dc122e",
+        "Name": "Marketplace Vendor Payable",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974657+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "2040",
+        "AccountType": 2,
+        "CreatedAtUtc": "2026-11-15T14:13:10.884649+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c64-7bc9-92ee-739421de2565",
+        "Name": "Treasury Suspense",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974657+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "2030",
+        "AccountType": 2,
+        "CreatedAtUtc": "2026-11-15T14:13:10.884634+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c64-7bd4-b360-a924300c87f6",
+        "Name": "Gateway Fees",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974658+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "6010",
+        "AccountType": 5,
+        "CreatedAtUtc": "2026-11-15T14:13:10.884821+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c64-7ca0-bf4d-96f53b662685",
+        "Name": "Marketplace Vendor Receivable",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974651+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "1420",
+        "AccountType": 1,
+        "CreatedAtUtc": "2026-11-15T14:13:10.884585+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c64-7cb0-a061-369ab988913c",
+        "Name": "Bank Fees",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974658+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "6030",
+        "AccountType": 5,
+        "CreatedAtUtc": "2026-11-15T14:13:10.884856+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c64-7d6b-8d24-4208a7b20188",
+        "Name": "Input Tax Receivable",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974652+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "1320",
+        "AccountType": 1,
+        "CreatedAtUtc": "2026-11-15T14:13:10.88455+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c64-7e97-a899-9bc717c4981b",
+        "Name": "Sales Tax Payable",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974657+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "2050",
+        "AccountType": 2,
+        "CreatedAtUtc": "2026-11-15T14:13:10.884667+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c5d-7d9b-b148-b6817e9fe497",
+        "Name": "Cashbox Main",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974656+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "1010",
+        "AccountType": 1,
+        "CreatedAtUtc": "2026-11-15T14:13:10.877647+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c63-703f-94cd-0187407c66b4",
+        "Name": "Cash Float Reserve",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974656+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "1040",
+        "AccountType": 1,
+        "CreatedAtUtc": "2026-11-15T14:13:10.883947+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c63-7268-83dc-7abe259409b5",
+        "Name": "Bank Account",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974656+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "1030",
+        "AccountType": 1,
+        "CreatedAtUtc": "2026-11-15T14:13:10.883919+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c63-7992-97af-f8f7026b75ee",
+        "Name": "POS Visa Account",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974656+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "1020",
+        "AccountType": 1,
+        "CreatedAtUtc": "2026-11-15T14:13:10.883839+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c63-7c61-9e22-c528c8d12ac4",
+        "Name": "Visa Clearing",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974656+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "1110",
+        "AccountType": 1,
+        "CreatedAtUtc": "2026-11-15T14:13:10.883971+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c64-7324-a7a5-46b9a0f38980",
+        "Name": "Stripe Clearing",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974652+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "1120",
+        "AccountType": 1,
+        "CreatedAtUtc": "2026-11-15T14:13:10.884434+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c64-74ec-a238-cfb3f68ee7c2",
+        "Name": "Accounts Receivable Adjustments",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974658+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "6120",
+        "AccountType": 5,
+        "CreatedAtUtc": "2026-11-15T14:13:10.884888+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c64-78a9-bcf4-c812fd4419a1",
+        "Name": "Wallet Clearing",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974652+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "1140",
+        "AccountType": 1,
+        "CreatedAtUtc": "2026-11-15T14:13:10.884506+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c64-798d-9622-141dac07165a",
+        "Name": "Accounts Payable Adjustments",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974658+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "6130",
+        "AccountType": 5,
+        "CreatedAtUtc": "2026-11-15T14:13:10.88491+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c64-79e8-a679-b7e05fb760f8",
+        "Name": "Affiliate Marketing Expense",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974658+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "6110",
+        "AccountType": 5,
+        "CreatedAtUtc": "2026-11-15T14:13:10.884929+00:00",
+        "UpdatedAtUtc": null
+      },
+      {
+        "Id": "01a1df8e-0c64-7c3c-b19a-e85530237c54",
+        "Name": "COD Clearing",
+        "IsActive": true,
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "CreatedAt": "2026-11-15T14:13:10.974652+00:00",
+        "IsDeleted": false,
+        "UpdatedAt": null,
+        "AccountCode": "1130",
+        "AccountType": 1,
+        "CreatedAtUtc": "2026-11-15T14:13:10.88448+00:00",
+        "UpdatedAtUtc": null
+      }
+    ],
+    "AccountingOutboxMessages": [],
+    "SyntheticQaOrders": [],
+    "SyntheticQaEvidence": [],
+    "SyntheticQaCommissionPostings": [],
+    "AuditLogs": [
+      {
+        "UserId": "15150000-2026-4015-a000-000000000002",
+        "EntityId": "15150000-2026-4015-a000-000000000002",
+        "TenantId": null,
+        "ActionType": "Login",
+        "EntityType": "User"
+      },
+      {
+        "UserId": "01a1df98-5293-7c63-85ab-9b4176abb7ac",
+        "EntityId": "01a1df98-5293-7c63-85ab-9b4176abb7ac",
+        "TenantId": null,
+        "ActionType": "EMAIL_VERIFIED",
+        "EntityType": "AffiliateIdentity"
+      },
+      {
+        "UserId": "15150000-2026-4015-a000-000000000002",
+        "EntityId": "37d9a1b6-6585-f655-0e55-824a517ce90c",
+        "TenantId": "15150000-2026-4015-a000-000000000001",
+        "ActionType": "Create",
+        "EntityType": "Product"
+      }
+    ]
+  },
+  "mongo": {
+    "clicks": [
+      {
+        "_id": "3de85e14-3e61-4b8d-a964-a49aeb3f1ba7"
+      }
+    ]
+  }
+}

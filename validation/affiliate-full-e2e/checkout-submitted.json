@@ -1,0 +1,18 @@
+{
+  "capturedAtUtc": "2026-11-15T14:42:40.627Z",
+  "visibleConfirmation": "🔗\nYou're browsing via a partner referral(WWC3NC7R9B)\nAhram — ISOLATED SYNTHETIC E2E\n🎯\naffiliate.storeBadge\nCtrl+K\nالعربية\nLogin\nSign Up\nOrder saved — cash on delivery pending\n\nPayment is due on delivery. No customer collection or merchant remittance has been confirmed.\n\nOrder Number\n\nORD-1515-2026-01000\n\nBackend status: PENDING\n\nAwaiting order processing\n\nThe backend controls order and delivery progress. This is not a gateway payment in progress.\n\nTrack Order\nRefresh Status\nContinue Shopping\nAhram — ISOLATED SYNTHETIC E2E\nCUSTOMER SERVICE\n\nNo customer service links have been published yet.\n\n© 2026 Ahram — ISOLATED SYNTHETIC E2E. All rights reserved.",
+  "network": [
+    {
+      "method": "POST",
+      "origin": "http://ahram.localhost:18181",
+      "path": "/api/storefront/checkout",
+      "status": 200,
+      "correlationId": "6d3347a4-cfaf-436d-a9c1-510ed2edef8e"
+    }
+  ],
+  "orderId": "8f2866d0-cac0-4c0b-bd91-fe6f3c4c5e12",
+  "orderNumber": "ORD-1515-2026-01000",
+  "submittedExactlyOnce": true,
+  "collectionConfirmed": false,
+  "toolingLimit": "Response waiter omitted the native ref query string. Reconciled the one persisted order and success page instead of resubmitting."
+}

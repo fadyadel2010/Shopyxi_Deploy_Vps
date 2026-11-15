@@ -1,0 +1,18 @@
+{
+  "capturedAtUtc": "2026-11-15T15:59:15.262Z",
+  "requestId": "3df56374-eaea-4caf-9c99-0471843062ca",
+  "exactReplay": {
+    "status": 200,
+    "correlationId": "4f65b68d-dd53-42ba-8e6a-69372f39b689",
+    "returnId": "ba48a6a9-2f03-4ea3-a90a-deb6466a60e7",
+    "result": "Returned",
+    "wasIdempotentSkip": true
+  },
+  "conflictingDuplicate": {
+    "status": 409,
+    "correlationId": "e758e983-bcad-4aea-9c44-edfc3ebfec2d",
+    "code": "AFFILIATE_PAYOUT_IDEMPOTENCY_CONFLICT"
+  },
+  "postReplayJournalCount": 7,
+  "postReplayLedgerLineCount": 14
+}

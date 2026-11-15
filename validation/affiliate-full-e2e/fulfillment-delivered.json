@@ -1,0 +1,20 @@
+{
+  "capturedAtUtc": "2026-11-15T14:51:04.433Z",
+  "status": 200,
+  "correlationId": "69c396c0-b99d-4b9e-b323-6e31e92ee7b8",
+  "data": {
+    "success": true,
+    "orderId": "8f2866d0-cac0-4c0b-bd91-fe6f3c4c5e12",
+    "orderNumber": "ORD-1515-2026-01000",
+    "oldStatus": "OutForDelivery",
+    "newStatus": "Delivered",
+    "transitionedAt": "2026-11-15T14:51:04.6160664Z"
+  },
+  "syntheticProof": {
+    "status": 200,
+    "text": "ISOLATED SYNTHETIC FULFILLMENT EVIDENCE — NOT A PHYSICAL DELIVERY RECEIPT\nDatabase: affiliate_full_e2e\nOrder: ORD-1515-2026-01000\nOrder ID: 8f2866d0-cac0-4c0b-bd91-fe6f3c4c5e12\nTracking reference: ISOLATED-AFF-E2E-20261115-0001\nQuantity: 1\nRecipient: ISOLATED SYNTHETIC CUSTOMER\nThis local test fixture represents the synthetic manual handoff event submitted\nthrough the native merchant fulfillment workflow. No physical dispatch, carrier,\nreal recipient, cash collection, bank transfer or external communication occurred.\n"
+  },
+  "proofUrl": "http://admin.localhost:18180/e2e-evidence/manual-delivery.txt",
+  "physicalDelivery": false,
+  "paymentCollection": false
+}

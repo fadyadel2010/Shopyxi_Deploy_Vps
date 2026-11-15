@@ -1,0 +1,30 @@
+{
+  "capturedAtUtc": "2026-11-15T14:47:17.907Z",
+  "orderId": "8f2866d0-cac0-4c0b-bd91-fe6f3c4c5e12",
+  "action": "pack",
+  "previousStatus": "Confirmed",
+  "nextStatus": "Packed",
+  "status": 200,
+  "correlationId": "a20919b4-2c12-4de2-83e1-290895f81c4f",
+  "data": {
+    "success": true,
+    "orderId": "8f2866d0-cac0-4c0b-bd91-fe6f3c4c5e12",
+    "orderNumber": "ORD-1515-2026-01000",
+    "oldStatus": "Confirmed",
+    "newStatus": "Packed",
+    "transitionedAt": "2026-11-15T14:47:17.1831998Z"
+  },
+  "availableActions": [
+    {
+      "code": "out-for-delivery",
+      "label": "Out for Delivery",
+      "targetStatus": "OutForDelivery",
+      "requiresConfirmation": false,
+      "requiredFields": [
+        "trackingNumber"
+      ],
+      "iconHint": "truck"
+    }
+  ],
+  "externalCarrierContacted": false
+}

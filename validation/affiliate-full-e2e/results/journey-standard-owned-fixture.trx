@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="9628260a-7af6-4690-9a0b-10e3ce9cf694" name="@2f6065d33acd 2026-11-15 17:26:27" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-11-15T17:26:27.3314765+00:00" queuing="2026-11-15T17:26:27.3314766+00:00" start="2026-11-15T17:26:07.7712299+00:00" finish="2026-11-15T17:26:29.4187203+00:00" />
+  <TestSettings name="default" id="effa0332-a6ea-48e0-a680-b0ae2e60371c">
+    <Deployment runDeploymentRoot="_2f6065d33acd_2026-11-15_17_26_27" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="b18fac5b-d93d-4024-8949-22d9056e2551" testId="be424ebb-435b-563e-d22c-39cce6f549c7" testName="PointOfSale.Tests.Affiliate.AffiliateJourneyCashboxAuthorityTests.UnavailableCanonicalMainCashbox_NeverFallsBackToDedicatedPayoutCashbox(fault: &quot;mapping-inactive&quot;)" computerName="2f6065d33acd" duration="00:00:00.7608146" startTime="2026-11-15T17:26:28.0856415+00:00" endTime="2026-11-15T17:26:28.0856415+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b18fac5b-d93d-4024-8949-22d9056e2551" />
+    <UnitTestResult executionId="e6d20fb3-15c7-489e-8092-af2ac335a3f2" testId="f98d667a-89f7-dbcc-d897-d2e8c5f9ae22" testName="PointOfSale.Tests.Affiliate.AffiliateJourneyCashboxAuthorityTests.DedicatedAffiliatePayoutCashbox_DoesNotStrandOriginalCodCollectionDestination" computerName="2f6065d33acd" duration="00:00:16.0852052" startTime="2026-11-15T17:26:27.3166322+00:00" endTime="2026-11-15T17:26:27.3166416+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e6d20fb3-15c7-489e-8092-af2ac335a3f2" />
+    <UnitTestResult executionId="5738dce3-fea7-40c6-b0b1-5ea2fc62a3b9" testId="c09b9e1c-f6ff-f20a-5ce7-f94dc218e726" testName="PointOfSale.Tests.Affiliate.AffiliateJourneyCashboxAuthorityTests.UnavailableCanonicalMainCashbox_NeverFallsBackToDedicatedPayoutCashbox(fault: &quot;account-inactive&quot;)" computerName="2f6065d33acd" duration="00:00:00.6234748" startTime="2026-11-15T17:26:28.7099800+00:00" endTime="2026-11-15T17:26:28.7099800+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5738dce3-fea7-40c6-b0b1-5ea2fc62a3b9" />
+    <UnitTestResult executionId="1fd3f431-a41b-4caa-9958-6340094b2f95" testId="92ab5397-226a-9325-07d2-1f25bf94bd9c" testName="PointOfSale.Tests.Affiliate.AffiliateJourneyCashboxAuthorityTests.UnavailableCanonicalMainCashbox_NeverFallsBackToDedicatedPayoutCashbox(fault: &quot;mapping-deleted&quot;)" computerName="2f6065d33acd" duration="00:00:00.6045004" startTime="2026-11-15T17:26:29.3151516+00:00" endTime="2026-11-15T17:26:29.3151517+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1fd3f431-a41b-4caa-9958-6340094b2f95" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="PointOfSale.Tests.Affiliate.AffiliateJourneyCashboxAuthorityTests.UnavailableCanonicalMainCashbox_NeverFallsBackToDedicatedPayoutCashbox(fault: &quot;mapping-inactive&quot;)" storage="/src/pointofsale.tests/bin/release/net10.0/pointofsale.tests.dll" id="be424ebb-435b-563e-d22c-39cce6f549c7">
+      <Execution id="b18fac5b-d93d-4024-8949-22d9056e2551" />
+      <TestMethod codeBase="/src/PointOfSale.Tests/bin/Release/net10.0/PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.Affiliate.AffiliateJourneyCashboxAuthorityTests" name="UnavailableCanonicalMainCashbox_NeverFallsBackToDedicatedPayoutCashbox" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.Affiliate.AffiliateJourneyCashboxAuthorityTests.UnavailableCanonicalMainCashbox_NeverFallsBackToDedicatedPayoutCashbox(fault: &quot;mapping-deleted&quot;)" storage="/src/pointofsale.tests/bin/release/net10.0/pointofsale.tests.dll" id="92ab5397-226a-9325-07d2-1f25bf94bd9c">
+      <Execution id="1fd3f431-a41b-4caa-9958-6340094b2f95" />
+      <TestMethod codeBase="/src/PointOfSale.Tests/bin/Release/net10.0/PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.Affiliate.AffiliateJourneyCashboxAuthorityTests" name="UnavailableCanonicalMainCashbox_NeverFallsBackToDedicatedPayoutCashbox" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.Affiliate.AffiliateJourneyCashboxAuthorityTests.UnavailableCanonicalMainCashbox_NeverFallsBackToDedicatedPayoutCashbox(fault: &quot;account-inactive&quot;)" storage="/src/pointofsale.tests/bin/release/net10.0/pointofsale.tests.dll" id="c09b9e1c-f6ff-f20a-5ce7-f94dc218e726">
+      <Execution id="5738dce3-fea7-40c6-b0b1-5ea2fc62a3b9" />
+      <TestMethod codeBase="/src/PointOfSale.Tests/bin/Release/net10.0/PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.Affiliate.AffiliateJourneyCashboxAuthorityTests" name="UnavailableCanonicalMainCashbox_NeverFallsBackToDedicatedPayoutCashbox" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.Affiliate.AffiliateJourneyCashboxAuthorityTests.DedicatedAffiliatePayoutCashbox_DoesNotStrandOriginalCodCollectionDestination" storage="/src/pointofsale.tests/bin/release/net10.0/pointofsale.tests.dll" id="f98d667a-89f7-dbcc-d897-d2e8c5f9ae22">
+      <Execution id="e6d20fb3-15c7-489e-8092-af2ac335a3f2" />
+      <TestMethod codeBase="/src/PointOfSale.Tests/bin/Release/net10.0/PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.Affiliate.AffiliateJourneyCashboxAuthorityTests" name="DedicatedAffiliatePayoutCashbox_DoesNotStrandOriginalCodCollectionDestination" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="be424ebb-435b-563e-d22c-39cce6f549c7" executionId="b18fac5b-d93d-4024-8949-22d9056e2551" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f98d667a-89f7-dbcc-d897-d2e8c5f9ae22" executionId="e6d20fb3-15c7-489e-8092-af2ac335a3f2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c09b9e1c-f6ff-f20a-5ce7-f94dc218e726" executionId="5738dce3-fea7-40c6-b0b1-5ea2fc62a3b9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="92ab5397-226a-9325-07d2-1f25bf94bd9c" executionId="1fd3f431-a41b-4caa-9958-6340094b2f95" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="4" executed="4" passed="4" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 10.0.15)
+[xUnit.net 00:00:01.17]   Discovering: PointOfSale.Tests
+[xUnit.net 00:00:02.19]   Discovered:  PointOfSale.Tests
+[xUnit.net 00:00:02.22]   Starting:    PointOfSale.Tests
+[xUnit.net 00:00:20.35]   Finished:    PointOfSale.Tests
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

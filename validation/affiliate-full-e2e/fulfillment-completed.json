@@ -1,0 +1,14 @@
+{
+  "capturedAtUtc": "2026-11-15T14:56:55.468Z",
+  "status": 200,
+  "data": {
+    "success": true,
+    "orderId": "8f2866d0-cac0-4c0b-bd91-fe6f3c4c5e12",
+    "orderNumber": "ORD-1515-2026-01000",
+    "oldStatus": "Delivered",
+    "newStatus": "Completed",
+    "transitionedAt": "2026-11-15T14:56:55.1987642Z"
+  },
+  "correlationId": "2a5980bf-f33a-43f9-bd36-84a1394154ac",
+  "businessRule": "Manual Affiliate approval additionally requires the authorized same-store completion audit, not a Delivered label or typed POD alone."
+}

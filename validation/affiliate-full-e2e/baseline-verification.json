@@ -1,0 +1,90 @@
+{
+  "verifiedAtUtc": "2026-11-15T17:59:24.835040+00:00",
+  "baselineCommit": "8365a92416463136418065f040e8b7f84bcff9fe",
+  "implementationCommit": "13bcb260535dc9f7b5ace4d91fbb4e429b3e675f",
+  "remoteRefs": {
+    "refs/heads/affiliate/production-acceptance-20261115": "8365a92416463136418065f040e8b7f84bcff9fe",
+    "refs/heads/main": "8365a92416463136418065f040e8b7f84bcff9fe"
+  },
+  "releaseInputBlobsMatched": 4633,
+  "protectedOriginalDifferences": [
+    {
+      "path": "PointOfSale.API/Controllers/PlatformController.cs",
+      "unchanged": true
+    },
+    {
+      "path": "PointOfSale.API/DTOs/ExpenseDTOs.cs",
+      "unchanged": true
+    },
+    {
+      "path": "PointOfSale.API/Middleware/OwnerEmailVerificationMiddleware.cs",
+      "unchanged": true
+    },
+    {
+      "path": "PointOfSale.API/Program.cs",
+      "unchanged": true
+    },
+    {
+      "path": "PointOfSale.API/Services/Platform/RateLimitService.cs",
+      "unchanged": true
+    },
+    {
+      "path": "validation/storefront-20261114/StorefrontRegression.csproj",
+      "unchanged": true
+    },
+    {
+      "path": "PointOfSale.Web/src/components/EmailVerificationRequired.d.ts",
+      "unchanged": true
+    },
+    {
+      "path": "PointOfSale.Web/src/components/EmailVerificationRequired.jsx",
+      "unchanged": true
+    },
+    {
+      "path": "PointOfSale.Web/src/components/EmailVerificationRequired.test.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "PointOfSale.Web/src/components/ProtectedRoute.jsx",
+      "unchanged": true
+    },
+    {
+      "path": "PointOfSale.Web/src/components/ProtectedRoute.verification.test.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "PointOfSale.Web/src/marketplace/queryKeys.ts",
+      "unchanged": true
+    },
+    {
+      "path": "PointOfSale.Web/src/pages/Categories.jsx",
+      "unchanged": true
+    },
+    {
+      "path": "PointOfSale.Web/src/pages/Register.admission.test.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "PointOfSale.Web/src/pages/Register.jsx",
+      "unchanged": true
+    },
+    {
+      "path": "validation/general-ledger-final-fix/FINAL-REPORT.md",
+      "unchanged": true
+    },
+    {
+      "path": "validation/storefront-20261114/FINAL-REPORT.md",
+      "unchanged": true
+    }
+  ],
+  "all17Unchanged": true,
+  "preservedPatchSha256": "f65a1fb038b4285e4ec7a7e41ee0271412933f70a4cd5b8816d8e67f7dd20468",
+  "precedingReports": {
+    "FINAL-REPORT.md": "9c6284d1a4c628df0e49325771db1426f4d87127fe16171a16e15a837faa4cbd",
+    "STATUS.md": "8c3f8f273586fe19cef8f460897663006dbb36584e8ebe3202828a1bec30fa68",
+    "gate-summary.json": "02337fe038b2729d06ad230e230681371c8a43a03741f87141cefdd1b5614e5a",
+    "production-deployment.json": "3e6d5aa62066eaf133f26818419ef350ede0e03df2c66c016b561b18f1415f68",
+    "production-identity-verification.json": "2b4dab01ae756e407532d416c9ea1615a17d16b84ae1983093848ac34da6dcb5",
+    "github-delivery.json": "9fc1b0c2dfeab324f849fea70291e6249d72e52be7d153c76e63dd9031b7f033"
+  }
+}

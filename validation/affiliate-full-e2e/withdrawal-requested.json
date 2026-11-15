@@ -1,0 +1,17 @@
+{
+  "capturedAtUtc": "2026-11-15T15:07:33.885Z",
+  "status": 200,
+  "data": {
+    "canCancel": false,
+    "id": "3df56374-eaea-4caf-9c99-0471843062ca",
+    "storeTenantId": "15150000-2026-4015-a000-000000000001",
+    "requestedAmount": 110,
+    "remainingAmount": 110,
+    "status": "Pending",
+    "requestedAtUtc": "2026-11-15T15:07:33.7466869Z",
+    "currency": "EGP"
+  },
+  "correlationId": "e986521a-e2f3-4a00-a9f2-6d1d918dee8f",
+  "actorRole": "normal isolated Affiliate",
+  "isPayment": false
+}
