@@ -1,0 +1,321 @@
+{
+  "roles": [
+    {
+      "rolname": "shopixy_api_runtime_dml_v1",
+      "rolsuper": false,
+      "rolcreaterole": false,
+      "rolcreatedb": false,
+      "rolbypassrls": false
+    },
+    {
+      "rolname": "shopixy_api_runtime",
+      "rolsuper": false,
+      "rolcreaterole": false,
+      "rolcreatedb": false,
+      "rolbypassrls": false
+    }
+  ],
+  "membership": true,
+  "permissions": [
+    {
+      "table_name": "AffiliateAccounts",
+      "role_name": "shopixy_api_runtime",
+      "privilege": "SELECT",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliateUsers",
+      "role_name": "shopixy_api_runtime",
+      "privilege": "SELECT",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliateEmailVerificationTokens",
+      "role_name": "shopixy_api_runtime",
+      "privilege": "SELECT",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliatePasswordResetTokens",
+      "role_name": "shopixy_api_runtime",
+      "privilege": "SELECT",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliateRefreshTokenReplayEntries",
+      "role_name": "shopixy_api_runtime",
+      "privilege": "SELECT",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliateAccounts",
+      "role_name": "shopixy_api_runtime_dml_v1",
+      "privilege": "SELECT",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliateUsers",
+      "role_name": "shopixy_api_runtime_dml_v1",
+      "privilege": "SELECT",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliateEmailVerificationTokens",
+      "role_name": "shopixy_api_runtime_dml_v1",
+      "privilege": "SELECT",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliatePasswordResetTokens",
+      "role_name": "shopixy_api_runtime_dml_v1",
+      "privilege": "SELECT",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliateRefreshTokenReplayEntries",
+      "role_name": "shopixy_api_runtime_dml_v1",
+      "privilege": "SELECT",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliateAccounts",
+      "role_name": "shopixy_api_runtime",
+      "privilege": "INSERT",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliateUsers",
+      "role_name": "shopixy_api_runtime",
+      "privilege": "INSERT",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliateEmailVerificationTokens",
+      "role_name": "shopixy_api_runtime",
+      "privilege": "INSERT",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliatePasswordResetTokens",
+      "role_name": "shopixy_api_runtime",
+      "privilege": "INSERT",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliateRefreshTokenReplayEntries",
+      "role_name": "shopixy_api_runtime",
+      "privilege": "INSERT",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliateAccounts",
+      "role_name": "shopixy_api_runtime_dml_v1",
+      "privilege": "INSERT",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliateUsers",
+      "role_name": "shopixy_api_runtime_dml_v1",
+      "privilege": "INSERT",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliateEmailVerificationTokens",
+      "role_name": "shopixy_api_runtime_dml_v1",
+      "privilege": "INSERT",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliatePasswordResetTokens",
+      "role_name": "shopixy_api_runtime_dml_v1",
+      "privilege": "INSERT",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliateRefreshTokenReplayEntries",
+      "role_name": "shopixy_api_runtime_dml_v1",
+      "privilege": "INSERT",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliateAccounts",
+      "role_name": "shopixy_api_runtime",
+      "privilege": "UPDATE",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliateUsers",
+      "role_name": "shopixy_api_runtime",
+      "privilege": "UPDATE",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliateEmailVerificationTokens",
+      "role_name": "shopixy_api_runtime",
+      "privilege": "UPDATE",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliatePasswordResetTokens",
+      "role_name": "shopixy_api_runtime",
+      "privilege": "UPDATE",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliateRefreshTokenReplayEntries",
+      "role_name": "shopixy_api_runtime",
+      "privilege": "UPDATE",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliateAccounts",
+      "role_name": "shopixy_api_runtime_dml_v1",
+      "privilege": "UPDATE",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliateUsers",
+      "role_name": "shopixy_api_runtime_dml_v1",
+      "privilege": "UPDATE",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliateEmailVerificationTokens",
+      "role_name": "shopixy_api_runtime_dml_v1",
+      "privilege": "UPDATE",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliatePasswordResetTokens",
+      "role_name": "shopixy_api_runtime_dml_v1",
+      "privilege": "UPDATE",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliateRefreshTokenReplayEntries",
+      "role_name": "shopixy_api_runtime_dml_v1",
+      "privilege": "UPDATE",
+      "allowed": true
+    },
+    {
+      "table_name": "AffiliateAccounts",
+      "role_name": "shopixy_api_runtime",
+      "privilege": "DELETE",
+      "allowed": false
+    },
+    {
+      "table_name": "AffiliateUsers",
+      "role_name": "shopixy_api_runtime",
+      "privilege": "DELETE",
+      "allowed": false
+    },
+    {
+      "table_name": "AffiliateEmailVerificationTokens",
+      "role_name": "shopixy_api_runtime",
+      "privilege": "DELETE",
+      "allowed": false
+    },
+    {
+      "table_name": "AffiliatePasswordResetTokens",
+      "role_name": "shopixy_api_runtime",
+      "privilege": "DELETE",
+      "allowed": false
+    },
+    {
+      "table_name": "AffiliateRefreshTokenReplayEntries",
+      "role_name": "shopixy_api_runtime",
+      "privilege": "DELETE",
+      "allowed": false
+    },
+    {
+      "table_name": "AffiliateAccounts",
+      "role_name": "shopixy_api_runtime_dml_v1",
+      "privilege": "DELETE",
+      "allowed": false
+    },
+    {
+      "table_name": "AffiliateUsers",
+      "role_name": "shopixy_api_runtime_dml_v1",
+      "privilege": "DELETE",
+      "allowed": false
+    },
+    {
+      "table_name": "AffiliateEmailVerificationTokens",
+      "role_name": "shopixy_api_runtime_dml_v1",
+      "privilege": "DELETE",
+      "allowed": false
+    },
+    {
+      "table_name": "AffiliatePasswordResetTokens",
+      "role_name": "shopixy_api_runtime_dml_v1",
+      "privilege": "DELETE",
+      "allowed": false
+    },
+    {
+      "table_name": "AffiliateRefreshTokenReplayEntries",
+      "role_name": "shopixy_api_runtime_dml_v1",
+      "privilege": "DELETE",
+      "allowed": false
+    },
+    {
+      "table_name": "AffiliateAccounts",
+      "role_name": "shopixy_api_runtime",
+      "privilege": "TRUNCATE",
+      "allowed": false
+    },
+    {
+      "table_name": "AffiliateUsers",
+      "role_name": "shopixy_api_runtime",
+      "privilege": "TRUNCATE",
+      "allowed": false
+    },
+    {
+      "table_name": "AffiliateEmailVerificationTokens",
+      "role_name": "shopixy_api_runtime",
+      "privilege": "TRUNCATE",
+      "allowed": false
+    },
+    {
+      "table_name": "AffiliatePasswordResetTokens",
+      "role_name": "shopixy_api_runtime",
+      "privilege": "TRUNCATE",
+      "allowed": false
+    },
+    {
+      "table_name": "AffiliateRefreshTokenReplayEntries",
+      "role_name": "shopixy_api_runtime",
+      "privilege": "TRUNCATE",
+      "allowed": false
+    },
+    {
+      "table_name": "AffiliateAccounts",
+      "role_name": "shopixy_api_runtime_dml_v1",
+      "privilege": "TRUNCATE",
+      "allowed": false
+    },
+    {
+      "table_name": "AffiliateUsers",
+      "role_name": "shopixy_api_runtime_dml_v1",
+      "privilege": "TRUNCATE",
+      "allowed": false
+    },
+    {
+      "table_name": "AffiliateEmailVerificationTokens",
+      "role_name": "shopixy_api_runtime_dml_v1",
+      "privilege": "TRUNCATE",
+      "allowed": false
+    },
+    {
+      "table_name": "AffiliatePasswordResetTokens",
+      "role_name": "shopixy_api_runtime_dml_v1",
+      "privilege": "TRUNCATE",
+      "allowed": false
+    },
+    {
+      "table_name": "AffiliateRefreshTokenReplayEntries",
+      "role_name": "shopixy_api_runtime_dml_v1",
+      "privilege": "TRUNCATE",
+      "allowed": false
+    }
+  ]
+}

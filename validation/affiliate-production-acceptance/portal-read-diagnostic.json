@@ -1,0 +1,55 @@
+{
+  "verifiedAtUtc": "2026-11-15T00:05:50.367290+00:00",
+  "errors": [
+    {
+      "atUtc": "2026-11-15 00:03:06.742 UTC",
+      "sqlState": "42501",
+      "message": "permission denied for table SyntheticQaEvidence"
+    },
+    {
+      "atUtc": "2026-11-15 00:03:38.897 UTC",
+      "sqlState": "42501",
+      "message": "permission denied for table SyntheticQaEvidence"
+    },
+    {
+      "atUtc": "2026-11-15 00:04:45.465 UTC",
+      "sqlState": "42501",
+      "message": "permission denied for table SyntheticQaEvidence"
+    },
+    {
+      "atUtc": "2026-11-15 00:04:47.936 UTC",
+      "sqlState": "42501",
+      "message": "permission denied for table SyntheticQaEvidence"
+    },
+    {
+      "atUtc": "2026-11-15 00:04:48.517 UTC",
+      "sqlState": "42501",
+      "message": "permission denied for table SyntheticQaEvidence"
+    },
+    {
+      "atUtc": "2026-11-15 00:04:48.756 UTC",
+      "sqlState": "42501",
+      "message": "permission denied for table SyntheticQaEvidence"
+    },
+    {
+      "atUtc": "2026-11-15 00:05:22.257 UTC",
+      "sqlState": "42501",
+      "message": "permission denied for table SyntheticQaEvidence"
+    },
+    {
+      "atUtc": "2026-11-15 00:05:24.547 UTC",
+      "sqlState": "42501",
+      "message": "permission denied for table SyntheticQaEvidence"
+    },
+    {
+      "atUtc": "2026-11-15 00:05:25.116 UTC",
+      "sqlState": "42501",
+      "message": "permission denied for table SyntheticQaEvidence"
+    },
+    {
+      "atUtc": "2026-11-15 00:05:25.298 UTC",
+      "sqlState": "42501",
+      "message": "permission denied for table SyntheticQaEvidence"
+    }
+  ]
+}

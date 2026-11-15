@@ -1,0 +1,80 @@
+{
+  "verifiedAtUtc": "2026-11-15T00:17:31.850Z",
+  "session": {
+    "status": 200,
+    "role": "Owner",
+    "tenantId": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0"
+  },
+  "catalog": "إدارة نقاط البيع / نظام العمولة / منتجات الأفلييت\nHelp\nSoon\nمنتجات الأفلييت\n\nإدارة سياسات منتجات هذا المتجر. نشاط المنتج أو نشره لا يعني أهليته للترويج. تفعيل السياسة يعني المشاركة فقط؛ تعرض الإعدادات أهلية الترويج الحالية.\n\nالبحث في المنتجات\nبحث\nحالة السياسة\nالكل\nمُمكّن\nمعطّل\nحالة المنتج\nالكل\nنشط\nغير نشط\nفئة الأفلييت\nجميع الفئات\nإلكترونيات\nإلكترونيات > Mobile Phones\nإلكترونيات > Laptops & Computers\nإلكترونيات > Tablets\nإلكترونيات > Audio & Headphones\nإلكترونيات > Cameras\nإلكترونيات > Smart Home\nأزياء\nأزياء > Men's Clothing\nأزياء > Women's Clothing\nأزياء > Shoes\nأزياء > Bags & Accessories\nأزياء > Watches\nالمنزل والمعيشة\nالمنزل والمعيشة > Furniture\nالمنزل والمعيشة > Kitchen & Dining\nالمنزل والمعيشة > Bedding\nالمنزل والمعيشة > Home Decor\nالمنزل والمعيشة > Appliances\nالجمال والصحة\nالجمال والصحة > Skincare\nالجمال والصحة > Makeup\nالجمال والصحة > Haircare\nالجمال والصحة > Fragrances\nالجمال والصحة > Supplements\nالرياضة والأنشطة الخارجية\nالرياضة والأنشطة الخارجية > Fitness Equipment\nالرياضة والأنشطة الخارجية > Sportswear\nالرياضة والأنشطة الخارجية > Camping & Hiking\nالرياضة والأنشطة الخارجية > Cycling\nالكتب والوسائط\nالأطعمة والمشروبات\nالألعاب والترفيه\nمنتجات الأفلييت\nاسم المنتج\tحالة المنتج\tحالة السياسة\tفئة الأفلييت\tنسبة العمولة\tالحد الأقصى للعمولة\tإجراءات\nQA-ERP-20261112-TRACKED\t\nغير نشط\n\nالنشر: مؤرشف\n\n\t\nمعطّل\n\nلا توجد سياسة\n\n\tغير محددة\t—\t—\tإدارة\nQA-ERP-R10-20261113-TRACKED\t\nغير نشط\n\nالنشر: مؤرشف\n\n\t\nمعطّل\n\nلا توجد سياسة\n\n\tغير محددة\t—\t—\tإدارة\n\nعرض ١–٢ من ٢\n\nالسابق\nصفحة ١ من ١\nالتالي",
+  "settingsStatus": 200,
+  "settings": {
+    "productId": "904b05b1-767b-59d8-98b0-40461b7667d6",
+    "isEnabled": false,
+    "isPolicyEnabled": false,
+    "templateType": "Classic:v1"
+  },
+  "configuration": "إعدادات الأفلييت\n\nQA-ERP-R10-20261113-TRACKED\n\n🤝\nتسويق الأفلييت\n\nفعّل الإحالات القائمة على العمولة لهذا المنتج\n\nمعطّل\n\nأهلية الترويج الحالية: غير مؤهل\n\nفئة السوق *\n— اختر فئة —\nإلكترونيات\nMobile Phones\nLaptops & Computers\nTablets\nAudio & Headphones\nCameras\nSmart Home\nأزياء\nMen's Clothing\nWomen's Clothing\nShoes\nBags & Accessories\nWatches\nالمنزل والمعيشة\nFurniture\nKitchen & Dining\nBedding\nHome Decor\nAppliances\nالجمال والصحة\nSkincare\nMakeup\nHaircare\nFragrances\nSupplements\nالرياضة والأنشطة الخارجية\nFitness Equipment\nSportswear\nCamping & Hiking\nCycling\nالكتب والوسائط\nالأطعمة والمشروبات\nالألعاب والترفيه\n\nاختر فئة السوق التي سيستخدمها هذا المنتج لإحالات الأفلييت.\n\nنسبة العمولة (%) *\n%\n\nنسبة المبلغ المدفوع التي يحصل عليها الأفلييت (0.01% – 50%)\n\nالحد الأقصى للعمولة لكل عنصر\n\nحد اختياري للعمولة لكل عنصر. اتركه فارغًا لعدم وجود حد.\n\nتُحتسب العمولة وقت الطلب. تغيير النسبة لا يؤثر على الطلبات السابقة أو العمولات المكتسبة.\n\nإلغاء\nتمكين تسويق الأفلييت",
+  "buttons": [
+    "",
+    "إلغاء",
+    "تمكين تسويق الأفلييت"
+  ],
+  "affiliates": "إدارة نقاط البيع / نظام العمولة / إدارة المسوقين بالعمولة\nHelp\nSoon\nإدارة المسوقين بالعمولة\n\nالمسوقون الذين حققوا عمولات لهذا المتجر فقط. هذه ليست قائمة التسجيل العامة للمسوقين.\n\nبحث\nكل الحالات\nنشط\nقيد الانتظار\nمعلق\nالمسوق\tرمز الإحالة\tالحالة\tمحفظة السحب\tإجمالي المكتسب\tمعتمد\tمدفوع\tصافي الأرباح\tالطلبات\n\n👥\nلا توجد أرباح للمسوقين في هذا المتجر بعد\n\nتعرض هذه الصفحة المسوقين بعد تحقيق عمولة لهذا المتجر فقط. التسجيل أو الترويج في المتاجر الأخرى لا يضيف المسوق هنا.",
+  "readiness": {
+    "status": 200,
+    "data": {
+      "isReady": true,
+      "storefrontLive": true,
+      "hasPaymentMethod": true,
+      "hasShippingMethod": true,
+      "missingRequirements": []
+    }
+  },
+  "network": [
+    {
+      "path": "/api/auth/session",
+      "status": 200,
+      "method": "GET",
+      "correlationId": "8c90ac9e-8a30-4f85-8563-4ee605130910"
+    },
+    {
+      "path": "/api/admin/affiliate/categories/tree",
+      "status": 200,
+      "method": "GET",
+      "correlationId": "3ec740f9-6a63-4655-b382-ea66bb31b949"
+    },
+    {
+      "path": "/api/admin/affiliate/readiness",
+      "status": 200,
+      "method": "GET",
+      "correlationId": "19abb1e0-8bd4-4c8b-825f-dde549149ce5"
+    },
+    {
+      "path": "/api/admin/products/904b05b1-767b-59d8-98b0-40461b7667d6/affiliate",
+      "status": 200,
+      "method": "GET",
+      "correlationId": "5701138f-107f-48d2-9fa1-4e1988baf7c4"
+    },
+    {
+      "path": "/api/admin/affiliate/readiness",
+      "status": 200,
+      "method": "GET",
+      "correlationId": "585a4f4e-8a8d-4bda-9f1a-0d0c3c4c0166"
+    },
+    {
+      "path": "/api/admin/affiliates",
+      "status": 200,
+      "method": "GET",
+      "correlationId": "0326a2c5-9360-453d-8061-e34286b2c939"
+    },
+    {
+      "path": "/api/admin/affiliate/readiness",
+      "status": 200,
+      "method": "GET",
+      "correlationId": "9f4c445e-ecd8-4c4c-9fd4-322d2f74a70f"
+    }
+  ],
+  "errors": [],
+  "mutationsSubmitted": false,
+  "reason": "No stock, publication or policy writes before a fully reversible synthetic financial/fulfillment journey is established"
+}

@@ -1,0 +1,35 @@
+{
+  "merchant": {
+    "name": "SHOPIXY SYNTHETIC QA - Ahram",
+    "slug": "ahram",
+    "tenantId": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0",
+    "currency": "EGP"
+  },
+  "affiliate": {
+    "userId": "01a1dc7c-3d0c-7ef6-9025-fcdc054ef8ca",
+    "accountId": "01a1dc7c-3cb5-7b17-a0f2-1d082c878a60",
+    "status": 1,
+    "emailVerified": true,
+    "isDeleted": false,
+    "posUserCount": 0
+  },
+  "qaOrders": 0,
+  "attributions": 0,
+  "links": 0,
+  "commissionEntries": 0,
+  "balanceEntries": 0,
+  "affiliateBalanceMovementNet": 0,
+  "payoutRequests": 0,
+  "manualPayouts": 0,
+  "verificationAuditCount": 1,
+  "qaProduct": {
+    "id": "904b05b1-767b-59d8-98b0-40461b7667d6",
+    "name": "QA-ERP-R10-20261113-TRACKED",
+    "isActive": false,
+    "publishStatus": 2
+  },
+  "qaProductStock": [],
+  "qaProductMovementCount": 16,
+  "verifiedAtUtc": "2026-11-15T00:20:24.291814+00:00",
+  "scope": "No QA order, stock receipt, payment or payout submitted. This snapshot does not prove a transaction/reversal workflow."
+}

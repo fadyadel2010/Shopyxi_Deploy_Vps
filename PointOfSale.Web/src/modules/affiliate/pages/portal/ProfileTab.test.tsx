@@ -25,7 +25,7 @@ const profile = (overrides = {}) => ({
     email: 'affiliate@example.test',
     referralCode: 'AFF123',
     status: 'Active',
-    createdAt: '2026-06-25T00:00:00Z',
+    createdAtUtc: '2026-06-25T00:00:00Z',
     payoutWalletNumber: '01012345678',
     payoutWalletType: 'VodafoneCash',
     payoutWalletUpdatedAtUtc: '2026-06-25T00:00:00Z',
@@ -47,6 +47,24 @@ describe('Affiliate ProfileTab candidate authority', () => {
         localStorage.setItem('affiliate_lang', 'en')
         getProfileMock.mockReset()
         updatePayoutWalletMock.mockReset()
+    })
+
+    it('renders Member Since from the actual profile API createdAtUtc contract', async () => {
+        getProfileMock.mockResolvedValue(profile({ createdAt: '2000-01-01T00:00:00Z' }))
+
+        render(<LanguageProvider><ProfileTab /></LanguageProvider>)
+
+        expect(await screen.findByText('6/25/2026')).toBeInTheDocument()
+        expect(screen.queryByText('1/1/2000')).not.toBeInTheDocument()
+    })
+
+    it('keeps the safe date placeholder when the API timestamp is missing', async () => {
+        getProfileMock.mockResolvedValue(profile({ createdAtUtc: null }))
+
+        render(<LanguageProvider><ProfileTab /></LanguageProvider>)
+
+        await screen.findAllByText('Backend Affiliate')
+        expect(screen.getByText('—')).toBeInTheDocument()
     })
 
     it('promotes payout wallet edits only after a fresh backend profile baseline is accepted', async () => {

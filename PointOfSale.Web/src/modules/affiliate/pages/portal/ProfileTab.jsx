@@ -134,7 +134,7 @@ export default function ProfileTab() {
         { icon: User, label: t('portal.profileTab.displayName'), value: data.displayName || '—' },
         { icon: Mail, label: t('portal.profileTab.email'), value: data.email || '—' },
         { icon: Shield, label: t('portal.profileTab.status'), value: data.status ? t(`ui.statuses.${data.status}`) : '—' },
-        { icon: Calendar, label: t('portal.profileTab.memberSince'), value: formatDate(data.createdAt) },
+        { icon: Calendar, label: t('portal.profileTab.memberSince'), value: formatDate(data.createdAtUtc) },
     ]
 
     return (

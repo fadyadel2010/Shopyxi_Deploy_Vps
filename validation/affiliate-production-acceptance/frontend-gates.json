@@ -1,0 +1,22 @@
+{
+  "node": "v22.23.4",
+  "baselineCommit": "0dfde49d9b9442c5a77277b399df50774fb631a2",
+  "testFiles": [
+    "src/modules/affiliate/pages/portal/ProfileTab.test.tsx",
+    "src/modules/affiliate/pages/AffiliateRegister.test.tsx",
+    "src/modules/affiliate/pages/portal/PayoutsTab.request.test.tsx",
+    "src/modules/affiliate/pages/portal/PayoutsTab.cancellation.test.tsx",
+    "src/modules/affiliate/pages/AdminManualPayoutDialog.test.tsx"
+  ],
+  "tests": true,
+  "testCounts": {
+    "total": 32,
+    "passed": 32,
+    "failed": 0,
+    "pending": 0
+  },
+  "typescript": true,
+  "build": true,
+  "inputsUnchanged": true,
+  "sourceIndexSha256": "0de9f025e0825ad1a9b726d80dbaca487a6e2f0658ef938a95e212a9b95dc11b"
+}

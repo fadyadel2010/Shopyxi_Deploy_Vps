@@ -1,0 +1,1 @@
+{"build":true,"nonroot":true,"nginxConfiguration":true,"distParity":true,"vulnerabilityGate":true,"registryPush":false,"registryError":"insufficient_scope: authorization failed","releaseTransport":"Established OCI archive import into existing k3s; not a successful registry push"}

@@ -1,0 +1,9 @@
+{
+  "attempt": "grant-apply-started.json",
+  "result": "Transaction rejected by the table-owner precondition before GRANT",
+  "expectedOwnerInFirstAttempt": "postgres",
+  "authoritativeOwnerObservedAfterRejection": "app",
+  "deleteAllowedAfterRejection": false,
+  "businessWrites": false,
+  "resolution": "Correct the metadata guard to the observed existing owner, rehearse again, and explicitly start a new bounded deployment attempt. Original attempt receipt retained."
+}

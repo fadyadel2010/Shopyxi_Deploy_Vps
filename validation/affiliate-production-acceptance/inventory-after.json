@@ -1,0 +1,24 @@
+{
+  "sourceOfTruth": "ProductVariantStocks (WarehouseStocks is compatibility only)",
+  "stock": [
+    {
+      "WarehouseId": "6fd97bc1-e6c7-4d67-8e45-1d25ab8b2bdd",
+      "VariantId": "4c0faed0-ed21-49ee-a823-85e9bb2fffed",
+      "Quantity": 0.0,
+      "ReservedQuantity": 0.0,
+      "DamagedQuantity": 0.0
+    },
+    {
+      "WarehouseId": "05db0b00-5c92-47cc-b4c4-d06e36927fb2",
+      "VariantId": "4c0faed0-ed21-49ee-a823-85e9bb2fffed",
+      "Quantity": 0.0,
+      "ReservedQuantity": 0.0,
+      "DamagedQuantity": 0.0
+    }
+  ],
+  "remainingReserved": 0,
+  "historicalMovementCount": 16,
+  "historicalQuantityNet": 0.0,
+  "verifiedAtUtc": "2026-11-15T00:32:01.808528+00:00",
+  "unchangedSinceBefore": true
+}

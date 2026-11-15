@@ -1,0 +1,26 @@
+{
+  "verifiedAtUtc": "2026-11-15T00:03:37.837Z",
+  "verificationScreen": null,
+  "logins": [
+    {
+      "status": 200,
+      "source": "First native login succeeded; UI portal confirmed after capture interrupted"
+    },
+    {
+      "status": 200,
+      "code": null,
+      "affiliateAccountId": "01a1dc7c-3cb5-7b17-a0f2-1d082c878a60",
+      "emailVerified": true,
+      "correlationId": "5e5473dc-f6f3-48b7-a584-745b45f68146",
+      "claims": {
+        "role": "Affiliate",
+        "subject": "01a1dc7c-3d0c-7ef6-9025-fcdc054ef8ca",
+        "affiliateAccountId": "01a1dc7c-3cb5-7b17-a0f2-1d082c878a60",
+        "hasTenantClaim": false
+      }
+    }
+  ],
+  "logoutStatus": 200,
+  "route": "/affiliate/portal",
+  "outcome": "Native login, logout and second login completed"
+}

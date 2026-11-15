@@ -1,0 +1,10 @@
+ ?column?
+----------
+(0 rows)
+
+ OrderId
+---------
+(0 rows)
+
+{"passed":true,"engine":"PostgreSQL18.6","network":"none","productionDataUsed":false,"checks":["pre-fix zero-row DELETE denied","exact grant applied twice","grant leaves rows unchanged","same-user outstanding-token replacement succeeds","other-user and consumed tokens retained","unrelated DELETE and TRUNCATE denied","ACL rollback restores denial without deleting rows"]}
+{"classificationPassed":true,"checks":["pre-fix classification SELECT denied","column-only grants applied twice","exact classification union succeeds","signature and amount access denied","synthetic writes denied","column grant rollback restores denial"]}

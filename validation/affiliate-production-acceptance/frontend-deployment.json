@@ -1,0 +1,77 @@
+{
+  "startedAtUtc": "2026-11-15T00:28:57.057320+00:00",
+  "before": {
+    "uid": "f70122dc-ff87-4ec6-a1ab-28c49b0e2905",
+    "resourceVersion": "3822087",
+    "generation": 13,
+    "observedGeneration": 13,
+    "index": 0,
+    "image": "docker.io/shopixy/web@sha256:756879210827a50c84d8d42da66e2d6e2235907e1af33930a2a450cab0f46682",
+    "specSha256": "6357d3f2f633f921558be0860facecb66c1f24d31528044b5a8049aeeafa5c64",
+    "expectedImageOnlySpecSha256": "d1d33b9c506003cd1919871b014e4c6d054074a7c2c5ea0a34c42ad478d9fdcf",
+    "replicas": 1,
+    "strategy": "Recreate",
+    "readyReplicas": 1,
+    "updatedReplicas": 1,
+    "availableReplicas": 1,
+    "pods": [
+      {
+        "name": "shopixy-web-6dfb7fb849-xczs6",
+        "node": "shopixy",
+        "containers": [
+          {
+            "name": "web",
+            "imageID": "docker.io/library/import-2026-11-14@sha256:755f6631a56643d730c796cb61c47a80bea8adc719a244b825f5d504af7a24c7",
+            "ready": true,
+            "restartCount": 0
+          }
+        ]
+      }
+    ]
+  },
+  "intendedImage": "docker.io/shopixy/web@sha256:1a594262000458743141e30bc416a51d05d7717aa565a33621b961507a3670d9",
+  "rollbackImage": "docker.io/shopixy/web@sha256:756879210827a50c84d8d42da66e2d6e2235907e1af33930a2a450cab0f46682",
+  "archiveSha256": "10096bf675b64af495ebab19925c1422973f693c72cc25529833c951cedaeeaf",
+  "sourceIndexSha256": "0de9f025e0825ad1a9b726d80dbaca487a6e2f0658ef938a95e212a9b95dc11b",
+  "releaseTransport": "OCI archive import; registry push rejected",
+  "imageOnly": true,
+  "businessDataWrites": false,
+  "schemaOrInfrastructureChanged": false,
+  "after": {
+    "uid": "f70122dc-ff87-4ec6-a1ab-28c49b0e2905",
+    "resourceVersion": "4039750",
+    "generation": 14,
+    "observedGeneration": 14,
+    "index": 0,
+    "image": "docker.io/shopixy/web@sha256:1a594262000458743141e30bc416a51d05d7717aa565a33621b961507a3670d9",
+    "specSha256": "d1d33b9c506003cd1919871b014e4c6d054074a7c2c5ea0a34c42ad478d9fdcf",
+    "expectedImageOnlySpecSha256": "d1d33b9c506003cd1919871b014e4c6d054074a7c2c5ea0a34c42ad478d9fdcf",
+    "replicas": 1,
+    "strategy": "Recreate",
+    "readyReplicas": 1,
+    "updatedReplicas": 1,
+    "availableReplicas": 1,
+    "pods": [
+      {
+        "name": "shopixy-web-d49c8fd88-dtn74",
+        "node": "shopixy",
+        "containers": [
+          {
+            "name": "web",
+            "imageID": "docker.io/library/import-2026-11-15@sha256:fc6537745242621751e75499939e2a582972e528a381dbdad1421c5ed181f8f2",
+            "ready": true,
+            "restartCount": 0
+          }
+        ]
+      }
+    ]
+  },
+  "runtimeConfigId": "sha256:39e98c6cf0af8468ba4e2fae1bf788a04ba3b345911a3edde5be74ccc2f98e52",
+  "verifiedRepoDigests": [
+    "docker.io/library/import-2026-11-15@sha256:fc6537745242621751e75499939e2a582972e528a381dbdad1421c5ed181f8f2",
+    "docker.io/shopixy/web@sha256:1a594262000458743141e30bc416a51d05d7717aa565a33621b961507a3670d9"
+  ],
+  "otherWorkloadImagesUnchanged": true,
+  "immutableIdentityVerified": true,
+  "completedAtUtc": "2026-11-15T00:29:02.323197+00:00"
+}

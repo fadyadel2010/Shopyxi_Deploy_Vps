@@ -1,0 +1,31 @@
+{
+  "startedAtUtc": "2026-11-15T00:07:58.954131+00:00",
+  "sqlSha256": "002150740effc8cf5463472cbdd98b0832370e30e51a50114192432f735e16c4",
+  "before": [
+    {
+      "name": "SyntheticQaCommissionPostings",
+      "can_read_order_id": false,
+      "can_read_whole_table": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    },
+    {
+      "name": "SyntheticQaEvidence",
+      "can_read_order_id": false,
+      "can_read_whole_table": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    },
+    {
+      "name": "SyntheticQaOrders",
+      "can_read_order_id": true,
+      "can_read_whole_table": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    }
+  ],
+  "scope": "SELECT(OrderId) only on SyntheticQaEvidence and SyntheticQaCommissionPostings; existing SyntheticQaOrders grant preserved; no writes or role changes"
+}

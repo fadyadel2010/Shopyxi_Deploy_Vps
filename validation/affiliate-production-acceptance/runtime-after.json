@@ -1,0 +1,69 @@
+{
+  "verifiedAtUtc": "2026-11-15T00:33:31.136462+00:00",
+  "namespace": "shopixy-app",
+  "method": "Read-only kubectl GET; allowlisted process flags only; CRI image inspection. No rollout, no secrets, no business writes.",
+  "workloads": [
+    {
+      "name": "shopixy-api",
+      "generation": 44,
+      "observedGeneration": 44,
+      "desired": 1,
+      "ready": 1,
+      "available": 1,
+      "images": [
+        {
+          "name": "api",
+          "image": "docker.io/shopixy/api@sha256:d3f10ae2cc93eb1fdddb7bd89c55726ca3f6d0ea1e4dbbf7825f47aaa19dbcb9"
+        },
+        {
+          "name": "clientip-edge",
+          "image": "docker.io/shopixy/web@sha256:f35e1b9cd384244049d0008af9476ee3d6fb974ca7fbb8e7e1f9fe70c11b0a42"
+        }
+      ],
+      "explicitSafeFlags": [
+        {
+          "name": "ASPNETCORE_ENVIRONMENT",
+          "value": "Production"
+        }
+      ],
+      "processSafeFlags": {
+        "status": "Unavailable; no configuration inferred"
+      },
+      "runtimeIdentity": {
+        "id": "sha256:c091044dfd93dd1e92639486b0deb13fa3ccbc6f5d92fbc1db80c087b808c1ca",
+        "repoDigests": [
+          "docker.io/library/import-2026-11-14@sha256:c3a8c62a709ac580c736793f7260f1612fc6d1854f28dc0661ab9c9c2c0d0c3d",
+          "docker.io/shopixy/api@sha256:d3f10ae2cc93eb1fdddb7bd89c55726ca3f6d0ea1e4dbbf7825f47aaa19dbcb9"
+        ]
+      }
+    },
+    {
+      "name": "shopixy-web",
+      "generation": 14,
+      "observedGeneration": 14,
+      "desired": 1,
+      "ready": 1,
+      "available": 1,
+      "images": [
+        {
+          "name": "web",
+          "image": "docker.io/shopixy/web@sha256:1a594262000458743141e30bc416a51d05d7717aa565a33621b961507a3670d9"
+        }
+      ]
+    },
+    {
+      "name": "shopixy-storefront",
+      "generation": 10,
+      "observedGeneration": 10,
+      "desired": 1,
+      "ready": 1,
+      "available": 1,
+      "images": [
+        {
+          "name": "storefront",
+          "image": "docker.io/shopixy/storefront@sha256:e9333f609aa664d6de713d4db00b18deba054e3a8acbb559099d9ab245f9f3df"
+        }
+      ]
+    }
+  ]
+}

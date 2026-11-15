@@ -1,0 +1,350 @@
+{
+  "verifiedAtUtc": "2026-11-15T00:08:49.729Z",
+  "identity": "new normal QA Affiliate; existing session only",
+  "navigation": [
+    "Dashboard",
+    "Promote",
+    "My Links",
+    "My Landing Pages",
+    "Orders",
+    "Earnings",
+    "Withdrawals",
+    "Analytics",
+    "Settings"
+  ],
+  "observations": [
+    {
+      "tab": "dashboard",
+      "route": "/affiliate/portal?tab=dashboard",
+      "actions": [
+        "Real sidebar navigation",
+        "Backend read 200",
+        "Loading/empty state inspection"
+      ],
+      "content": "Your affiliate performance\n\nAuthoritative commission totals, with analytics shown separately.\n\nNo affiliate activity yet.\n\nPromote\nWithdrawals\nWithdrawals\n\nAvailable to withdraw\n\nEGP 0.00\n\nReserved for withdrawals\n\nEGP 0.00\n\nEarned is historical commission. Approved is eligible approval after reversals, not a withdrawal balance. Pending/unpaid orders are not withdrawable.\n\nTraffic & attributed orders · last 30 days\n\nAnalytics are tracking projections, may include QA activity, and are not payable earnings. Conversion is reported only when tracked clicks exist.\n\nCommission-history orders · all time\n\n0\n\nTracked clicks\n\n0\n\nTracked orders\n\n0\n\nTracked conversion\n\n—\n\nClicks (Last 30 Days)\n\nNo tracked clicks in this period.\n\nShare a product link to start tracking activity.\n\nMy Links\nOrders (Last 30 Days)\n\nNo tracked orders in this period.\n\nShare a product link to start tracking activity.\n\nMy Links\nRecent attributed orders\nView all orders\nNo Orders Yet\nOrders\nEarnings\nMy Links\nWithdrawals",
+      "buttons": [],
+      "inputs": []
+    },
+    {
+      "tab": "discover",
+      "route": "/affiliate/portal?tab=discover",
+      "actions": [
+        "Real sidebar navigation",
+        "Backend read 200",
+        "Loading/empty state inspection"
+      ],
+      "content": "In Stock\nBest Match\nHighest Commission\nLowest Commission\nNewest First\nPrice: High to Low\nPrice: Low to High\nNo Products Found\n\nNo products available at the moment",
+      "buttons": [
+        "In Stock"
+      ],
+      "inputs": [
+        {
+          "type": "text",
+          "placeholder": "Search products to promote...",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "type": "select-one",
+          "placeholder": null,
+          "value": "commission_desc",
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "tab": "links",
+      "route": "/affiliate/portal?tab=links",
+      "actions": [
+        "Real sidebar navigation",
+        "Backend read 200",
+        "Loading/empty state inspection"
+      ],
+      "content": "No Promotion Links Yet\n\nGo to the Promote tab and click \"Promote\" on a product to generate your first referral link.",
+      "buttons": [],
+      "inputs": []
+    },
+    {
+      "tab": "landing-pages",
+      "route": "/affiliate/portal?tab=landing-pages",
+      "actions": [
+        "Real sidebar navigation",
+        "Backend read 200",
+        "Loading/empty state inspection"
+      ],
+      "content": "No Landing Pages Yet\n\nLanding pages appear when products are available for promotion. Visit Discover to explore products.",
+      "buttons": [],
+      "inputs": []
+    },
+    {
+      "tab": "orders",
+      "route": "/affiliate/portal?tab=orders",
+      "actions": [
+        "Real sidebar navigation",
+        "Backend read 200",
+        "Loading/empty state inspection"
+      ],
+      "content": "No Orders Yet\n\nOrders will appear here when customers purchase through your referral link.",
+      "buttons": [],
+      "inputs": []
+    },
+    {
+      "tab": "earnings",
+      "route": "/affiliate/portal?tab=earnings",
+      "actions": [
+        "Real sidebar navigation",
+        "Backend read 200",
+        "Loading/empty state inspection"
+      ],
+      "content": "Earned is historical commission. Approved is eligible approval after reversals, not a withdrawal balance. Pending/unpaid orders are not withdrawable.\n\nNo Earnings Yet\n\nYour earnings breakdown will appear once you start earning commissions.\n\nChronological commission ledger\n\nNewest recorded events first. Amounts are immutable event values, not additive wallet credits. “Paid” is a commission lifecycle event, not proof of a withdrawal. QA history is never payable.\n\nNo commission ledger events recorded.\n\nRecent attributed orders\nView all orders\n\nPer-order commission history, not a chronological accounting ledger. No eligibility or reversal reason is supplied by this API.\n\nNo Orders Yet",
+      "buttons": [],
+      "inputs": []
+    },
+    {
+      "tab": "payouts",
+      "route": "/affiliate/portal?tab=payouts",
+      "actions": [
+        "Real sidebar navigation",
+        "Backend read 200",
+        "Loading/empty state inspection"
+      ],
+      "content": "AVAILABLE FOR WITHDRAWAL\n\nEGP 0.00\n\nTOTAL APPROVED\n\nEGP 0.00\n\nTOTAL PAID\n\nEGP 0.00\n\nPENDING RESERVED\n\nEGP 0.00\n\nWithdrawals\nMinimum Withdrawal:\nEGP 100.00\nRequest Withdrawal\n\nBelow minimum threshold\n\nWithdrawal History\n\nNo Withdrawal History\n\nYour withdrawal requests will appear here.",
+      "buttons": [
+        "Request Withdrawal"
+      ],
+      "inputs": []
+    },
+    {
+      "tab": "analytics",
+      "route": "/affiliate/portal?tab=analytics",
+      "actions": [
+        "Real sidebar navigation",
+        "Backend read 200",
+        "Loading/empty state inspection"
+      ],
+      "content": "Performance Analytics\n\nReal-time insights across all stores\n\n7 Days\n14 Days\n30 Days\n90 Days\n1 Year",
+      "buttons": [
+        "7 Days",
+        "14 Days",
+        "30 Days",
+        "90 Days",
+        "1 Year"
+      ],
+      "inputs": []
+    },
+    {
+      "tab": "profile",
+      "route": "/affiliate/portal?tab=profile",
+      "actions": [
+        "Real sidebar navigation",
+        "Backend read 200",
+        "Loading/empty state inspection"
+      ],
+      "content": "QA-AFFILIATE-E2E-20261115\n\n[mailbox withheld]\n\nYOUR REFERRAL CODE\nQAAFFI578568\n\nDISPLAY NAME\n\nQA-AFFILIATE-E2E-20261115\n\nEMAIL\n\n[mailbox withheld]\n\nSTATUS\n\nActive\n\nMEMBER SINCE\n\n—\n\nPayout Wallet\n\nWhere you receive commission payments\n\nNo payout wallet configured\n\nClick edit to add your wallet",
+      "buttons": [
+        "",
+        ""
+      ],
+      "inputs": []
+    },
+    {
+      "tab": "profile-refresh",
+      "route": "/affiliate/portal?tab=profile",
+      "actions": [
+        "Hard refresh retains authenticated identity and selected tab"
+      ],
+      "content": "QA-AFFILIATE-E2E-20261115\n\n[mailbox withheld]\n\nYOUR REFERRAL CODE\nQAAFFI578568\n\nDISPLAY NAME\n\nQA-AFFILIATE-E2E-20261115\n\nEMAIL\n\n[mailbox withheld]\n\nSTATUS\n\nActive\n\nMEMBER SINCE\n\n—\n\nPayout Wallet\n\nWhere you receive commission payments\n\nNo payout wallet configured\n\nClick edit to add your wallet",
+      "buttons": [
+        "",
+        ""
+      ],
+      "inputs": []
+    }
+  ],
+  "network": [
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/trend",
+      "status": 200,
+      "correlationId": "7ec2fef9-327a-4feb-9734-27bdab501d57"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/summary",
+      "status": 200,
+      "correlationId": "20b33db3-7c7a-4a30-aeac-527c4fd8286d"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/dashboard",
+      "status": 200,
+      "correlationId": "63678cda-0ae6-4693-9191-5b553f50eb35"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/orders",
+      "status": 200,
+      "correlationId": "955db361-d5b5-452f-90db-4739f011883f"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/payouts",
+      "status": 200,
+      "correlationId": "70f5ddd7-392b-4bd0-bf68-db2ab6724bdc"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/discover/products",
+      "status": 200,
+      "correlationId": "c1eabc78-7dee-4f56-be4d-8d7f0184b0b0"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/discover/categories",
+      "status": 200,
+      "correlationId": "26e84c01-c473-4f40-9de0-e2c16ffe5160"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/promotion-links",
+      "status": 200,
+      "correlationId": "ae23f189-2411-43bd-beae-28c922edefc4"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/landing-pages",
+      "status": 200,
+      "correlationId": "32cab359-cc5e-4913-b1f3-7f0efe227fc9"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/orders",
+      "status": 200,
+      "correlationId": "21b75159-1cf8-4eb1-a861-48cc8bee5d04"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/earnings-summary",
+      "status": 200,
+      "correlationId": "f8fc23d4-0197-49ec-8c47-fa8bc6915d70"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/orders",
+      "status": 200,
+      "correlationId": "cba67bde-3a50-45ff-bbf9-bf3941cdb89b"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/commission-activity",
+      "status": 200,
+      "correlationId": "7e2e6b01-d905-4fc6-bf72-038a705749de"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/payouts",
+      "status": 200,
+      "correlationId": "f70898c7-94ba-4f81-86c1-aef92ed02d34"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/top-products",
+      "status": 200,
+      "correlationId": "03637566-fcef-4356-9c79-f577f1894f19"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/trend",
+      "status": 200,
+      "correlationId": "0f173219-75dc-4100-8e16-4e139a2f3a68"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/top-stores",
+      "status": 200,
+      "correlationId": "72be88e4-46ad-4fc0-bd60-e7cba74abc3e"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/summary",
+      "status": 200,
+      "correlationId": "7d6e5593-410c-45ea-9f53-6584c6272c00"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/profile",
+      "status": 200,
+      "correlationId": "b21c1b62-eb98-4c26-8391-398ebc55c1ae"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/profile",
+      "status": 200,
+      "correlationId": "8730a344-3372-4133-9937-fbc2785c97e0"
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/affiliates",
+      "status": 400,
+      "correlationId": "8720623c-9460-4218-b078-d22181f68be7"
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/session",
+      "status": 401,
+      "correlationId": "fc8955c7-a13c-467a-9253-3f6b4799fac4"
+    },
+    {
+      "path": "https://affiliate.shopyxi.com/api/auth/session",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "path": "https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092",
+      "failure": "csp"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/profile",
+      "status": 200,
+      "correlationId": "80608143-ec13-4b11-b9ec-a454c0767198"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/profile",
+      "status": 200,
+      "correlationId": "7f79b969-3464-4f68-aeca-c1edc1f3b5c0"
+    }
+  ],
+  "errors": [
+    {
+      "type": "error",
+      "message": "Failed to load resource: the server responded with a status of 400 ()"
+    },
+    {
+      "type": "error",
+      "message": "Failed to load resource: the server responded with a status of 401 ()"
+    },
+    {
+      "type": "error",
+      "message": "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked."
+    },
+    {
+      "type": "error",
+      "message": "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked."
+    }
+  ],
+  "boundaries": [
+    {
+      "path": "/api/affiliate/profile",
+      "status": 200
+    },
+    {
+      "path": "/api/admin/affiliates",
+      "status": 400
+    },
+    {
+      "path": "/api/auth/session",
+      "status": 401
+    }
+  ]
+}

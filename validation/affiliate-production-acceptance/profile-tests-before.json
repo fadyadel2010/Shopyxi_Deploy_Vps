@@ -1,0 +1,12 @@
+{
+  "component": "ProfileTab",
+  "testFile": "PointOfSale.Web/src/modules/affiliate/pages/portal/ProfileTab.test.tsx",
+  "engine": "Vitest 4.1.12, Node 22.23.4",
+  "baselineCommit": "0dfde49d9b9442c5a77277b399df50774fb631a2",
+  "total": 3,
+  "passed": 2,
+  "failed": 1,
+  "failedTest": "renders Member Since from the actual profile API createdAtUtc contract",
+  "failure": "Unable to find an element with the text: 6/25/2026",
+  "rootCause": "API returns createdAtUtc; the UI read createdAt and rendered a dash for the actual QA account."
+}

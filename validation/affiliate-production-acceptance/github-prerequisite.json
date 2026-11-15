@@ -1,0 +1,8 @@
+{
+  "verifiedAtUtc": "2026-11-15T00:37:09.536649+00:00",
+  "repository": "https://github.com/fadyadel2010/Shopyxi_Deploy_Vps.git",
+  "private": true,
+  "pushPermission": true,
+  "defaultBranch": "main",
+  "credentialMethod": "Existing GCM credential in child-process memory only; no login or credential changes"
+}

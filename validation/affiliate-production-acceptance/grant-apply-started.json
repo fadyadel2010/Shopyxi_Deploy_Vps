@@ -1,0 +1,28 @@
+{
+  "startedAtUtc": "2026-11-14T23:53:24.005815+00:00",
+  "sqlSha256": "cd18c69d4d4e8ab21eedc4a4b11ca9abe4b2d9acda473e3f064b3ed125e08095",
+  "before": {
+    "tokenRows": 0,
+    "canDeleteToken": false,
+    "canTruncateToken": false,
+    "canDeleteUser": false,
+    "canDeleteAccount": false,
+    "roles": [
+      {
+        "rolname": "shopixy_api_runtime",
+        "rolsuper": false,
+        "rolcreaterole": false,
+        "rolcreatedb": false,
+        "rolbypassrls": false
+      },
+      {
+        "rolname": "shopixy_api_runtime_dml_v1",
+        "rolsuper": false,
+        "rolcreaterole": false,
+        "rolcreatedb": false,
+        "rolbypassrls": false
+      }
+    ]
+  },
+  "scope": "One existing runtime DML role; DELETE only on ephemeral AffiliateEmailVerificationTokens. No business data/role/member/default grants."
+}

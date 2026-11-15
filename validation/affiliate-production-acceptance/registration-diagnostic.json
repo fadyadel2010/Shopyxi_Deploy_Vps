@@ -1,0 +1,550 @@
+{
+  "verifiedAtUtc": "2026-11-15T00:08:30.646752+00:00",
+  "method": "Bounded log metadata and BEGIN READ ONLY exact approved QA identity query; no raw logs, mailbox, hashes or tokens exported",
+  "registrationErrors": [],
+  "safeApplicationErrors": [
+    {
+      "Timestamp": "2026-11-14T23:45:09.6049273+00:00",
+      "ExceptionCategory": "PostgresException",
+      "OperationalFields": {
+        "StatusCode": 503
+      }
+    },
+    {
+      "Timestamp": "2026-11-14T23:45:41.4913636+00:00",
+      "ExceptionCategory": "PostgresException",
+      "OperationalFields": {
+        "StatusCode": 503
+      }
+    },
+    {
+      "Timestamp": "2026-11-15T00:03:06.7245843+00:00",
+      "ExceptionCategory": "PostgresException",
+      "OperationalFields": {
+        "StatusCode": 503
+      }
+    },
+    {
+      "Timestamp": "2026-11-15T00:03:06.7246584+00:00",
+      "ExceptionCategory": "PostgresException",
+      "OperationalFields": {
+        "StatusCode": 503
+      }
+    },
+    {
+      "Timestamp": "2026-11-15T00:03:06.7464897+00:00",
+      "ExceptionCategory": "PostgresException",
+      "OperationalFields": {
+        "StatusCode": 503
+      }
+    },
+    {
+      "Timestamp": "2026-11-15T00:03:38.8846144+00:00",
+      "ExceptionCategory": "PostgresException",
+      "OperationalFields": {
+        "StatusCode": 503
+      }
+    },
+    {
+      "Timestamp": "2026-11-15T00:03:38.8876326+00:00",
+      "ExceptionCategory": "PostgresException",
+      "OperationalFields": {
+        "StatusCode": 503
+      }
+    },
+    {
+      "Timestamp": "2026-11-15T00:03:38.8992187+00:00",
+      "ExceptionCategory": "PostgresException",
+      "OperationalFields": {
+        "StatusCode": 503
+      }
+    },
+    {
+      "Timestamp": "2026-11-15T00:04:45.4680681+00:00",
+      "ExceptionCategory": "PostgresException",
+      "OperationalFields": {
+        "StatusCode": 503
+      }
+    },
+    {
+      "Timestamp": "2026-11-15T00:04:45.469847+00:00",
+      "ExceptionCategory": "PostgresException",
+      "OperationalFields": {
+        "StatusCode": 503
+      }
+    },
+    {
+      "Timestamp": "2026-11-15T00:04:45.4703328+00:00",
+      "ExceptionCategory": "PostgresException",
+      "OperationalFields": {
+        "StatusCode": 503
+      }
+    },
+    {
+      "Timestamp": "2026-11-15T00:04:47.9375551+00:00",
+      "ExceptionCategory": "PostgresException",
+      "OperationalFields": {
+        "StatusCode": 503
+      }
+    },
+    {
+      "Timestamp": "2026-11-15T00:04:48.5188379+00:00",
+      "ExceptionCategory": "PostgresException",
+      "OperationalFields": {
+        "StatusCode": 503
+      }
+    },
+    {
+      "Timestamp": "2026-11-15T00:04:48.5296688+00:00",
+      "ExceptionCategory": "PostgresException",
+      "OperationalFields": {
+        "StatusCode": 503
+      }
+    },
+    {
+      "Timestamp": "2026-11-15T00:04:48.7593558+00:00",
+      "ExceptionCategory": "PostgresException",
+      "OperationalFields": {
+        "StatusCode": 503
+      }
+    },
+    {
+      "Timestamp": "2026-11-15T00:04:49.1008358+00:00",
+      "ExceptionCategory": "PostgresException",
+      "OperationalFields": {
+        "StatusCode": 503
+      }
+    },
+    {
+      "Timestamp": "2026-11-15T00:05:22.2589822+00:00",
+      "ExceptionCategory": "PostgresException",
+      "OperationalFields": {
+        "StatusCode": 503
+      }
+    },
+    {
+      "Timestamp": "2026-11-15T00:05:22.2592277+00:00",
+      "ExceptionCategory": "PostgresException",
+      "OperationalFields": {
+        "StatusCode": 503
+      }
+    },
+    {
+      "Timestamp": "2026-11-15T00:05:22.2602361+00:00",
+      "ExceptionCategory": "PostgresException",
+      "OperationalFields": {
+        "StatusCode": 503
+      }
+    },
+    {
+      "Timestamp": "2026-11-15T00:05:24.5489446+00:00",
+      "ExceptionCategory": "PostgresException",
+      "OperationalFields": {
+        "StatusCode": 503
+      }
+    },
+    {
+      "Timestamp": "2026-11-15T00:05:25.1168556+00:00",
+      "ExceptionCategory": "PostgresException",
+      "OperationalFields": {
+        "StatusCode": 503
+      }
+    },
+    {
+      "Timestamp": "2026-11-15T00:05:25.1172648+00:00",
+      "ExceptionCategory": "PostgresException",
+      "OperationalFields": {
+        "StatusCode": 503
+      }
+    },
+    {
+      "Timestamp": "2026-11-15T00:05:25.2998214+00:00",
+      "ExceptionCategory": "PostgresException",
+      "OperationalFields": {
+        "StatusCode": 503
+      }
+    },
+    {
+      "Timestamp": "2026-11-15T00:05:25.6865035+00:00",
+      "ExceptionCategory": "PostgresException",
+      "OperationalFields": {
+        "StatusCode": 503
+      }
+    }
+  ],
+  "postgresAffiliateErrors": [
+    {
+      "log_time": "2026-11-14 23:45:09.583 UTC",
+      "sql_state_code": "42501",
+      "constraint_name": null,
+      "table_name": null,
+      "column_name": null,
+      "message": "permission denied for table AffiliateEmailVerificationTokens"
+    },
+    {
+      "log_time": "2026-11-14 23:45:41.488 UTC",
+      "sql_state_code": "42501",
+      "constraint_name": null,
+      "table_name": null,
+      "column_name": null,
+      "message": "permission denied for table AffiliateEmailVerificationTokens"
+    },
+    {
+      "log_time": "2026-11-14 23:53:27.307 UTC",
+      "sql_state_code": "P0001",
+      "constraint_name": null,
+      "table_name": null,
+      "column_name": null,
+      "message": "Expected existing PostgreSQL-owned verification-token table"
+    }
+  ],
+  "state": {
+    "schema": [
+      {
+        "table_name": "AffiliateAccounts",
+        "column_name": "Id",
+        "data_type": "uuid"
+      },
+      {
+        "table_name": "AffiliateAccounts",
+        "column_name": "TenantId",
+        "data_type": "uuid"
+      },
+      {
+        "table_name": "AffiliateAccounts",
+        "column_name": "UserId",
+        "data_type": "uuid"
+      },
+      {
+        "table_name": "AffiliateAccounts",
+        "column_name": "ReferralCode",
+        "data_type": "character varying"
+      },
+      {
+        "table_name": "AffiliateAccounts",
+        "column_name": "Status",
+        "data_type": "integer"
+      },
+      {
+        "table_name": "AffiliateAccounts",
+        "column_name": "DisplayName",
+        "data_type": "character varying"
+      },
+      {
+        "table_name": "AffiliateAccounts",
+        "column_name": "ActivatedAtUtc",
+        "data_type": "timestamp with time zone"
+      },
+      {
+        "table_name": "AffiliateAccounts",
+        "column_name": "SuspendedAtUtc",
+        "data_type": "timestamp with time zone"
+      },
+      {
+        "table_name": "AffiliateAccounts",
+        "column_name": "SuspensionReason",
+        "data_type": "character varying"
+      },
+      {
+        "table_name": "AffiliateAccounts",
+        "column_name": "ClosedAtUtc",
+        "data_type": "timestamp with time zone"
+      },
+      {
+        "table_name": "AffiliateAccounts",
+        "column_name": "ClosureReason",
+        "data_type": "character varying"
+      },
+      {
+        "table_name": "AffiliateAccounts",
+        "column_name": "PayoutWalletNumber",
+        "data_type": "text"
+      },
+      {
+        "table_name": "AffiliateAccounts",
+        "column_name": "PayoutWalletType",
+        "data_type": "text"
+      },
+      {
+        "table_name": "AffiliateAccounts",
+        "column_name": "PayoutWalletUpdatedAtUtc",
+        "data_type": "timestamp with time zone"
+      },
+      {
+        "table_name": "AffiliateAccounts",
+        "column_name": "CreatedAt",
+        "data_type": "timestamp with time zone"
+      },
+      {
+        "table_name": "AffiliateAccounts",
+        "column_name": "UpdatedAt",
+        "data_type": "timestamp with time zone"
+      },
+      {
+        "table_name": "AffiliateAccounts",
+        "column_name": "CreatedBy",
+        "data_type": "uuid"
+      },
+      {
+        "table_name": "AffiliateAccounts",
+        "column_name": "UpdatedBy",
+        "data_type": "uuid"
+      },
+      {
+        "table_name": "AffiliateAccounts",
+        "column_name": "IsDeleted",
+        "data_type": "boolean"
+      },
+      {
+        "table_name": "AffiliateEmailVerificationTokens",
+        "column_name": "Id",
+        "data_type": "uuid"
+      },
+      {
+        "table_name": "AffiliateEmailVerificationTokens",
+        "column_name": "AffiliateUserId",
+        "data_type": "uuid"
+      },
+      {
+        "table_name": "AffiliateEmailVerificationTokens",
+        "column_name": "TokenHash",
+        "data_type": "character varying"
+      },
+      {
+        "table_name": "AffiliateEmailVerificationTokens",
+        "column_name": "ExpiresAtUtc",
+        "data_type": "timestamp with time zone"
+      },
+      {
+        "table_name": "AffiliateEmailVerificationTokens",
+        "column_name": "ConsumedAtUtc",
+        "data_type": "timestamp with time zone"
+      },
+      {
+        "table_name": "AffiliateEmailVerificationTokens",
+        "column_name": "CreatedAt",
+        "data_type": "timestamp with time zone"
+      },
+      {
+        "table_name": "AffiliateEmailVerificationTokens",
+        "column_name": "UpdatedAt",
+        "data_type": "timestamp with time zone"
+      },
+      {
+        "table_name": "AffiliateEmailVerificationTokens",
+        "column_name": "CreatedBy",
+        "data_type": "uuid"
+      },
+      {
+        "table_name": "AffiliateEmailVerificationTokens",
+        "column_name": "UpdatedBy",
+        "data_type": "uuid"
+      },
+      {
+        "table_name": "AffiliateEmailVerificationTokens",
+        "column_name": "IsDeleted",
+        "data_type": "boolean"
+      },
+      {
+        "table_name": "AffiliateUsers",
+        "column_name": "Id",
+        "data_type": "uuid"
+      },
+      {
+        "table_name": "AffiliateUsers",
+        "column_name": "TenantId",
+        "data_type": "uuid"
+      },
+      {
+        "table_name": "AffiliateUsers",
+        "column_name": "Email",
+        "data_type": "character varying"
+      },
+      {
+        "table_name": "AffiliateUsers",
+        "column_name": "PasswordHash",
+        "data_type": "character varying"
+      },
+      {
+        "table_name": "AffiliateUsers",
+        "column_name": "AffiliateAccountId",
+        "data_type": "uuid"
+      },
+      {
+        "table_name": "AffiliateUsers",
+        "column_name": "EmailVerified",
+        "data_type": "boolean"
+      },
+      {
+        "table_name": "AffiliateUsers",
+        "column_name": "RefreshToken",
+        "data_type": "character varying"
+      },
+      {
+        "table_name": "AffiliateUsers",
+        "column_name": "PreviousRefreshToken",
+        "data_type": "character varying"
+      },
+      {
+        "table_name": "AffiliateUsers",
+        "column_name": "RefreshTokenExpiryTime",
+        "data_type": "timestamp with time zone"
+      },
+      {
+        "table_name": "AffiliateUsers",
+        "column_name": "TokensValidAfterUtc",
+        "data_type": "timestamp with time zone"
+      },
+      {
+        "table_name": "AffiliateUsers",
+        "column_name": "CreatedAt",
+        "data_type": "timestamp with time zone"
+      },
+      {
+        "table_name": "AffiliateUsers",
+        "column_name": "UpdatedAt",
+        "data_type": "timestamp with time zone"
+      },
+      {
+        "table_name": "AffiliateUsers",
+        "column_name": "CreatedBy",
+        "data_type": "uuid"
+      },
+      {
+        "table_name": "AffiliateUsers",
+        "column_name": "UpdatedBy",
+        "data_type": "uuid"
+      },
+      {
+        "table_name": "AffiliateUsers",
+        "column_name": "IsDeleted",
+        "data_type": "boolean"
+      }
+    ],
+    "identity": [
+      {
+        "affiliateUserId": "01a1dc7c-3d0c-7ef6-9025-fcdc054ef8ca",
+        "affiliateAccountId": "01a1dc7c-3cb5-7b17-a0f2-1d082c878a60",
+        "emailVerified": true,
+        "isDeleted": false,
+        "createdAt": "2026-11-14T23:54:52.051194+00:00",
+        "displayName": "QA-AFFILIATE-E2E-20261115",
+        "status": 1
+      }
+    ],
+    "constraints": [
+      {
+        "conname": "AffiliateAccounts_CreatedAt_not_null",
+        "definition": "NOT NULL \"CreatedAt\""
+      },
+      {
+        "conname": "AffiliateAccounts_DisplayName_not_null",
+        "definition": "NOT NULL \"DisplayName\""
+      },
+      {
+        "conname": "AffiliateAccounts_Id_not_null",
+        "definition": "NOT NULL \"Id\""
+      },
+      {
+        "conname": "AffiliateAccounts_IsDeleted_not_null",
+        "definition": "NOT NULL \"IsDeleted\""
+      },
+      {
+        "conname": "AffiliateAccounts_ReferralCode_not_null",
+        "definition": "NOT NULL \"ReferralCode\""
+      },
+      {
+        "conname": "AffiliateAccounts_Status_not_null",
+        "definition": "NOT NULL \"Status\""
+      },
+      {
+        "conname": "AffiliateAccounts_TenantId_not_null",
+        "definition": "NOT NULL \"TenantId\""
+      },
+      {
+        "conname": "AffiliateAccounts_UserId_not_null",
+        "definition": "NOT NULL \"UserId\""
+      },
+      {
+        "conname": "CK_AffiliateAccounts_Status",
+        "definition": "CHECK ((\"Status\" = ANY (ARRAY[0, 1, 2, 3])))"
+      },
+      {
+        "conname": "PK_AffiliateAccounts",
+        "definition": "PRIMARY KEY (\"Id\")"
+      },
+      {
+        "conname": "AffiliateUsers_AffiliateAccountId_not_null",
+        "definition": "NOT NULL \"AffiliateAccountId\""
+      },
+      {
+        "conname": "AffiliateUsers_CreatedAt_not_null",
+        "definition": "NOT NULL \"CreatedAt\""
+      },
+      {
+        "conname": "AffiliateUsers_EmailVerified_not_null",
+        "definition": "NOT NULL \"EmailVerified\""
+      },
+      {
+        "conname": "AffiliateUsers_Email_not_null",
+        "definition": "NOT NULL \"Email\""
+      },
+      {
+        "conname": "AffiliateUsers_Id_not_null",
+        "definition": "NOT NULL \"Id\""
+      },
+      {
+        "conname": "AffiliateUsers_IsDeleted_not_null",
+        "definition": "NOT NULL \"IsDeleted\""
+      },
+      {
+        "conname": "AffiliateUsers_PasswordHash_not_null",
+        "definition": "NOT NULL \"PasswordHash\""
+      },
+      {
+        "conname": "AffiliateUsers_TenantId_not_null",
+        "definition": "NOT NULL \"TenantId\""
+      },
+      {
+        "conname": "FK_AffiliateUsers_AffiliateAccounts_AffiliateAccountId",
+        "definition": "FOREIGN KEY (\"AffiliateAccountId\") REFERENCES \"AffiliateAccounts\"(\"Id\") ON DELETE RESTRICT"
+      },
+      {
+        "conname": "PK_AffiliateUsers",
+        "definition": "PRIMARY KEY (\"Id\")"
+      },
+      {
+        "conname": "AffiliateEmailVerificationTokens_AffiliateUserId_not_null",
+        "definition": "NOT NULL \"AffiliateUserId\""
+      },
+      {
+        "conname": "AffiliateEmailVerificationTokens_CreatedAt_not_null",
+        "definition": "NOT NULL \"CreatedAt\""
+      },
+      {
+        "conname": "AffiliateEmailVerificationTokens_ExpiresAtUtc_not_null",
+        "definition": "NOT NULL \"ExpiresAtUtc\""
+      },
+      {
+        "conname": "AffiliateEmailVerificationTokens_Id_not_null",
+        "definition": "NOT NULL \"Id\""
+      },
+      {
+        "conname": "AffiliateEmailVerificationTokens_IsDeleted_not_null",
+        "definition": "NOT NULL \"IsDeleted\""
+      },
+      {
+        "conname": "AffiliateEmailVerificationTokens_TokenHash_not_null",
+        "definition": "NOT NULL \"TokenHash\""
+      },
+      {
+        "conname": "FK_AffiliateEmailVerificationTokens_AffiliateUsers_AffiliateUs~",
+        "definition": "FOREIGN KEY (\"AffiliateUserId\") REFERENCES \"AffiliateUsers\"(\"Id\") ON DELETE CASCADE"
+      },
+      {
+        "conname": "PK_AffiliateEmailVerificationTokens",
+        "definition": "PRIMARY KEY (\"Id\")"
+      }
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "status": 503,
+  "code": "DEPENDENCY_UNAVAILABLE",
+  "correlationId": "969b722f-b608-4a48-bbb7-a748b451c845",
+  "ui": "Registration failed. Please try again.",
+  "browserRegistrationPostsObserved": 2,
+  "submissionNote": "One intended enrollment action was scripted; two failed POSTs were observed. No automatic retry after the result; exact persistence was checked before further action.",
+  "accountCreatedFromResponse": null,
+  "accountExistsFromSubsequentReadOnlyQuery": false,
+  "verificationEmailReached": false,
+  "databaseSqlState": "42501",
+  "databaseError": "permission denied for table AffiliateEmailVerificationTokens"
+}

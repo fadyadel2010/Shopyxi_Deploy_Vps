@@ -1,0 +1,360 @@
+{
+  "verifiedAtUtc": "2026-11-15T00:09:56.860Z",
+  "identity": "anonymous dedicated headed msedge",
+  "observations": [
+    {
+      "name": "registration-validation",
+      "route": "/affiliate/register",
+      "title": "Join as Affiliate | Shopixy Affiliate",
+      "actions": {
+        "emptyInvalid": 4,
+        "emailInvalid": true,
+        "weakPasswordErrorVisible": true,
+        "registrationSubmitted": false
+      },
+      "text": "العربية\nShopixy Affiliate\nJoin as Affiliate\n\nCreate your account and start earning\n\nUse 8 or more characters with uppercase, lowercase, number, and special character.\nDISPLAY NAME\nEMAIL\nPASSWORD\nCONFIRM\nCreate Affiliate Account\nTrack commissions on eligible referred orders\nDashboard activity and click tracking\nCreate unique referral links for eligible products\n\nAlready have an account? Sign in\n\nBack to Shopixy Affiliate",
+      "links": [
+        {
+          "label": "Shopixy Affiliate",
+          "href": "/affiliate"
+        },
+        {
+          "label": "Sign in",
+          "href": "/affiliate/login"
+        },
+        {
+          "label": "Back to Shopixy Affiliate",
+          "href": "/affiliate"
+        }
+      ]
+    },
+    {
+      "name": "login",
+      "route": "/affiliate/login",
+      "title": "Welcome Back | Shopixy Affiliate",
+      "actions": [
+        "UI navigation from registration; no credentials entered"
+      ],
+      "text": "العربية\nShopixy Affiliate\nWelcome Back\n\nSign in to your affiliate account\n\nEMAIL\nPASSWORD\nForgot password?\nSign In\n\nDon't have an account? Sign up for free",
+      "links": [
+        {
+          "label": "Shopixy Affiliate",
+          "href": "/affiliate"
+        },
+        {
+          "label": "Forgot password?",
+          "href": "/affiliate/forgot-password"
+        },
+        {
+          "label": "Sign up for free",
+          "href": "/affiliate/register"
+        }
+      ]
+    },
+    {
+      "name": "forgot-password",
+      "route": "/affiliate/forgot-password",
+      "title": "Reset your password | Shopixy Affiliate",
+      "actions": [
+        "UI navigation; no email submitted or reset issued"
+      ],
+      "text": "العربية\nShopixy Affiliate\nReset your password\n\nEnter your affiliate email to receive reset instructions.\n\nEmail\nSend reset instructions\n\nBack to Shopixy Affiliate",
+      "links": [
+        {
+          "label": "Shopixy Affiliate",
+          "href": "/affiliate"
+        },
+        {
+          "label": "Back to Shopixy Affiliate",
+          "href": "/affiliate"
+        }
+      ]
+    },
+    {
+      "name": "verify-email-no-token",
+      "route": "/affiliate/verify-email",
+      "title": "Verify your email | Shopixy Affiliate",
+      "actions": [
+        "Missing-token safe error; no token supplied"
+      ],
+      "text": "العربية\nShopixy Affiliate\nVerify your email\n\nConfirm your affiliate identity to activate sign-in.\n\nThis verification link is missing its token.\n\nSign in\n\nBack to Shopixy Affiliate",
+      "links": [
+        {
+          "label": "Shopixy Affiliate",
+          "href": "/affiliate"
+        },
+        {
+          "label": "Sign in",
+          "href": "/affiliate/login"
+        },
+        {
+          "label": "Back to Shopixy Affiliate",
+          "href": "/affiliate"
+        }
+      ]
+    },
+    {
+      "name": "reset-password-no-token",
+      "route": "/affiliate/reset-password",
+      "title": "Choose a new password | Shopixy Affiliate",
+      "actions": [
+        "No token supplied; no password submitted"
+      ],
+      "text": "العربية\nShopixy Affiliate\nChoose a new password\n\nUse a strong password for your affiliate account.\n\nThis reset link is missing its token.\n\nNew password\nConfirm password\nReset password\n\nBack to Shopixy Affiliate",
+      "links": [
+        {
+          "label": "Shopixy Affiliate",
+          "href": "/affiliate"
+        },
+        {
+          "label": "Back to Shopixy Affiliate",
+          "href": "/affiliate"
+        }
+      ]
+    },
+    {
+      "name": "landing",
+      "route": "/affiliate",
+      "title": "Shopixy Affiliate",
+      "actions": [
+        "Landing, categories and product results after loading"
+      ],
+      "text": "Shopixy Affiliate\nالعربية\nLogin\nBecome an Affiliate\nShopixy Affiliate\nDiscover. Share.\nTrack Your Referrals.\n\nFind eligible products, share referral links, and follow your activity with Shopixy Affiliate. Commissions depend on product policy and order status.\n\nBecome an Affiliate\nLogin\n\nPick a Product\n\nShare Your Link\n\nCommission Activity\n\nHow It Works\n\nThree simple steps to start earning.\n\n1\nPick a Product\n\nBrowse our catalog of affiliate-enabled products. Choose what matches your audience.\n\n2\nShare Your Link\n\nGet a unique referral link. Share it on social media, blogs, or with your network.\n\n3\nEarn Commission\n\nTrack referred orders and commission activity. Eligibility and payment depend on product policy and order status.\n\nBrowse Categories\n\nExplore eligible products by category with Shopixy Affiliate.\n\nNo categories available yet\n\nCategories appear when eligible products are available.\n\nFeatured Products\n\nStart promoting today. Pick a product that resonates with your audience.\n\nNo Products Found\n\nTry adjusting your search or check back later.\n\nWhy Join Our Program?\n\nTools to manage your affiliate promotions and follow your activity.\n\nCommission Activity\n\nReview commission status and eligible balances in your portal.\n\nAccount Access\n\nSign in to manage your referral links and account settings.\n\nActivity Overview\n\nReview available click, order, and commission activity in your dashboard.\n\nProduct Discovery\n\nBrowse available affiliate-enabled products by category.\n\nProduct Policies\n\nReview product-specific commission terms before promoting.\n\nUnique Links\n\nGet personalized referral links for every product.\n\nReady to Start\nEarning?\n\nCreate your Shopixy Affiliate account, verify your email, and explore products to promote.\n\nCreate Your Account\nShopixy Affiliate\n\n© 2026 All rights reserved.",
+      "links": [
+        {
+          "label": "Shopixy Affiliate",
+          "href": "/affiliate"
+        },
+        {
+          "label": "Login",
+          "href": "/affiliate/login"
+        },
+        {
+          "label": "Become an Affiliate",
+          "href": "/affiliate/register"
+        },
+        {
+          "label": "Login",
+          "href": "/affiliate/login"
+        }
+      ]
+    },
+    {
+      "name": "landing-search-empty",
+      "route": "/affiliate",
+      "title": "Shopixy Affiliate",
+      "actions": [
+        "Safe search empty state"
+      ],
+      "text": "Shopixy Affiliate\nالعربية\nLogin\nBecome an Affiliate\nShopixy Affiliate\nDiscover. Share.\nTrack Your Referrals.\n\nFind eligible products, share referral links, and follow your activity with Shopixy Affiliate. Commissions depend on product policy and order status.\n\nBecome an Affiliate\nLogin\n\nPick a Product\n\nShare Your Link\n\nCommission Activity\n\nHow It Works\n\nThree simple steps to start earning.\n\n1\nPick a Product\n\nBrowse our catalog of affiliate-enabled products. Choose what matches your audience.\n\n2\nShare Your Link\n\nGet a unique referral link. Share it on social media, blogs, or with your network.\n\n3\nEarn Commission\n\nTrack referred orders and commission activity. Eligibility and payment depend on product policy and order status.\n\nBrowse Categories\n\nExplore eligible products by category with Shopixy Affiliate.\n\nNo categories available yet\n\nCategories appear when eligible products are available.\n\nFeatured Products\n\nStart promoting today. Pick a product that resonates with your audience.\n\nNo Products Found\n\nTry adjusting your search or check back later.\n\nWhy Join Our Program?\n\nTools to manage your affiliate promotions and follow your activity.\n\nCommission Activity\n\nReview commission status and eligible balances in your portal.\n\nAccount Access\n\nSign in to manage your referral links and account settings.\n\nActivity Overview\n\nReview available click, order, and commission activity in your dashboard.\n\nProduct Discovery\n\nBrowse available affiliate-enabled products by category.\n\nProduct Policies\n\nReview product-specific commission terms before promoting.\n\nUnique Links\n\nGet personalized referral links for every product.\n\nReady to Start\nEarning?\n\nCreate your Shopixy Affiliate account, verify your email, and explore products to promote.\n\nCreate Your Account\nShopixy Affiliate\n\n© 2026 All rights reserved.",
+      "links": [
+        {
+          "label": "Shopixy Affiliate",
+          "href": "/affiliate"
+        },
+        {
+          "label": "Login",
+          "href": "/affiliate/login"
+        },
+        {
+          "label": "Become an Affiliate",
+          "href": "/affiliate/register"
+        },
+        {
+          "label": "Login",
+          "href": "/affiliate/login"
+        }
+      ]
+    },
+    {
+      "name": "portal-anonymous-guard",
+      "route": "/affiliate/login?returnUrl=%2Faffiliate%2Fportal",
+      "title": "Welcome Back | Shopixy Affiliate",
+      "actions": [
+        "Anonymous portal redirects to login with preserved returnUrl; no auth state copied"
+      ],
+      "text": "العربية\nShopixy Affiliate\nWelcome Back\n\nSign in to your affiliate account\n\nEMAIL\nPASSWORD\nForgot password?\nSign In\n\nDon't have an account? Sign up for free",
+      "links": [
+        {
+          "label": "Shopixy Affiliate",
+          "href": "/affiliate"
+        },
+        {
+          "label": "Forgot password?",
+          "href": "/affiliate/forgot-password"
+        },
+        {
+          "label": "Sign up for free",
+          "href": "/affiliate/register"
+        }
+      ]
+    }
+  ],
+  "network": [
+    {
+      "method": "GET",
+      "url": "https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092",
+      "failure": "csp"
+    },
+    {
+      "method": "GET",
+      "url": "https://affiliate.shopyxi.com/api/affiliate/profile",
+      "status": 401,
+      "correlationId": "493b74d3-6d19-4d05-a9e4-7433e9441fda"
+    },
+    {
+      "method": "POST",
+      "url": "https://affiliate.shopyxi.com/api/affiliate/auth/refresh",
+      "status": 400,
+      "correlationId": "153e7b0d-3080-4574-9714-b08b6d27fe9c"
+    },
+    {
+      "method": "GET",
+      "url": "https://affiliate.shopyxi.com/api/affiliate/profile",
+      "status": 401,
+      "correlationId": "e7eabe02-b0de-454c-81a4-6062f4cbc26a"
+    },
+    {
+      "method": "POST",
+      "url": "https://affiliate.shopyxi.com/api/affiliate/auth/refresh",
+      "status": 400,
+      "correlationId": "953ec935-f0a4-4f22-9f22-6f887aa5132d"
+    },
+    {
+      "method": "GET",
+      "url": "https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092",
+      "failure": "csp"
+    },
+    {
+      "method": "GET",
+      "url": "https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092",
+      "failure": "csp"
+    },
+    {
+      "method": "GET",
+      "url": "https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092",
+      "failure": "csp"
+    },
+    {
+      "method": "GET",
+      "url": "https://affiliate.shopyxi.com/api/affiliate/discover/categories",
+      "status": 200,
+      "correlationId": "ccc73cc0-680c-4e92-8d2e-e692cf23c258"
+    },
+    {
+      "method": "GET",
+      "url": "https://affiliate.shopyxi.com/api/affiliate/discover/public-products",
+      "status": 200,
+      "correlationId": "0bcb64b1-6709-46dd-bfa5-41f5c1273afa"
+    },
+    {
+      "method": "GET",
+      "url": "https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092",
+      "failure": "csp"
+    },
+    {
+      "method": "GET",
+      "url": "https://affiliate.shopyxi.com/api/affiliate/discover/categories",
+      "status": 200,
+      "correlationId": "91c8e9df-2aa0-4768-aa37-4348ca3ae43c"
+    },
+    {
+      "method": "GET",
+      "url": "https://affiliate.shopyxi.com/api/affiliate/discover/public-products",
+      "status": 200,
+      "correlationId": "a184548e-5a4f-462e-830f-d743b5001803"
+    },
+    {
+      "method": "GET",
+      "url": "https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092",
+      "failure": "csp"
+    },
+    {
+      "method": "GET",
+      "url": "https://affiliate.shopyxi.com/api/affiliate/profile",
+      "status": 401,
+      "correlationId": "f09d9ce9-ff43-40a4-806e-55751c3a7886"
+    },
+    {
+      "method": "POST",
+      "url": "https://affiliate.shopyxi.com/api/affiliate/auth/refresh",
+      "status": 400,
+      "correlationId": "c2f99abb-b4a4-4357-bdab-3f4dc29845ce"
+    }
+  ],
+  "consoleMessages": [
+    {
+      "type": "error",
+      "text": "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked."
+    },
+    {
+      "type": "error",
+      "text": "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked."
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 401 ()"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 401 ()"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()"
+    },
+    {
+      "type": "error",
+      "text": "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked."
+    },
+    {
+      "type": "error",
+      "text": "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked."
+    },
+    {
+      "type": "error",
+      "text": "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked."
+    },
+    {
+      "type": "error",
+      "text": "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked."
+    },
+    {
+      "type": "error",
+      "text": "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked."
+    },
+    {
+      "type": "error",
+      "text": "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked."
+    },
+    {
+      "type": "error",
+      "text": "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked."
+    },
+    {
+      "type": "error",
+      "text": "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked."
+    },
+    {
+      "type": "error",
+      "text": "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked."
+    },
+    {
+      "type": "error",
+      "text": "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked."
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 401 ()"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()"
+    }
+  ],
+  "deniedMutations": []
+}

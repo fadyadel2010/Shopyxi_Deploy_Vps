@@ -1,0 +1,375 @@
+{
+  "verifiedAtUtc": "2026-11-15T00:05:27.051Z",
+  "identity": "new normal QA Affiliate; existing session only",
+  "navigation": [
+    "Dashboard",
+    "Promote",
+    "My Links",
+    "My Landing Pages",
+    "Orders",
+    "Earnings",
+    "Withdrawals",
+    "Analytics",
+    "Settings"
+  ],
+  "observations": [
+    {
+      "tab": "dashboard",
+      "route": "/affiliate/portal?tab=dashboard",
+      "actions": [
+        "Real sidebar navigation",
+        "Backend read 503",
+        "Loading/empty state inspection"
+      ],
+      "content": "",
+      "buttons": [],
+      "inputs": []
+    },
+    {
+      "tab": "discover",
+      "route": "/affiliate/portal?tab=discover",
+      "actions": [
+        "Real sidebar navigation",
+        "Backend read 200",
+        "Loading/empty state inspection"
+      ],
+      "content": "In Stock\nBest Match\nHighest Commission\nLowest Commission\nNewest First\nPrice: High to Low\nPrice: Low to High\nNo Products Found\n\nNo products available at the moment",
+      "buttons": [
+        "In Stock"
+      ],
+      "inputs": [
+        {
+          "type": "text",
+          "placeholder": "Search products to promote...",
+          "value": "",
+          "disabled": false
+        },
+        {
+          "type": "select-one",
+          "placeholder": null,
+          "value": "commission_desc",
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "tab": "links",
+      "route": "/affiliate/portal?tab=links",
+      "actions": [
+        "Real sidebar navigation",
+        "Backend read 200",
+        "Loading/empty state inspection"
+      ],
+      "content": "No Promotion Links Yet\n\nGo to the Promote tab and click \"Promote\" on a product to generate your first referral link.",
+      "buttons": [],
+      "inputs": []
+    },
+    {
+      "tab": "landing-pages",
+      "route": "/affiliate/portal?tab=landing-pages",
+      "actions": [
+        "Real sidebar navigation",
+        "Backend read 200",
+        "Loading/empty state inspection"
+      ],
+      "content": "No Landing Pages Yet\n\nLanding pages appear when products are available for promotion. Visit Discover to explore products.",
+      "buttons": [],
+      "inputs": []
+    },
+    {
+      "tab": "orders",
+      "route": "/affiliate/portal?tab=orders",
+      "actions": [
+        "Real sidebar navigation",
+        "Backend read 503",
+        "Loading/empty state inspection"
+      ],
+      "content": "Unable to load data. Please retry.\n\nRetry",
+      "buttons": [
+        "Retry"
+      ],
+      "inputs": []
+    },
+    {
+      "tab": "earnings",
+      "route": "/affiliate/portal?tab=earnings",
+      "actions": [
+        "Real sidebar navigation",
+        "Backend read 503",
+        "Loading/empty state inspection"
+      ],
+      "content": "Unable to load data. Please retry.\n\nRetry\n\nEarned is historical commission. Approved is eligible approval after reversals, not a withdrawal balance. Pending/unpaid orders are not withdrawable.\n\nChronological commission ledger\n\nNewest recorded events first. Amounts are immutable event values, not additive wallet credits. “Paid” is a commission lifecycle event, not proof of a withdrawal. QA history is never payable.\n\nLoading...\n\nRecent attributed orders\nView all orders\n\nPer-order commission history, not a chronological accounting ledger. No eligibility or reversal reason is supplied by this API.\n\nOrder activity could not be loaded.",
+      "buttons": [
+        "Retry"
+      ],
+      "inputs": []
+    },
+    {
+      "tab": "payouts",
+      "route": "/affiliate/portal?tab=payouts",
+      "actions": [
+        "Real sidebar navigation",
+        "Backend read 503",
+        "Loading/empty state inspection"
+      ],
+      "content": "The real eligible balance could not be verified. Withdrawals are unavailable. Please retry or contact support.",
+      "buttons": [],
+      "inputs": []
+    },
+    {
+      "tab": "analytics",
+      "route": "/affiliate/portal?tab=analytics",
+      "actions": [
+        "Real sidebar navigation",
+        "Backend read 200",
+        "Loading/empty state inspection"
+      ],
+      "content": "Performance Analytics\n\nReal-time insights across all stores\n\n7 Days\n14 Days\n30 Days\n90 Days\n1 Year",
+      "buttons": [
+        "7 Days",
+        "14 Days",
+        "30 Days",
+        "90 Days",
+        "1 Year"
+      ],
+      "inputs": []
+    },
+    {
+      "tab": "profile",
+      "route": "/affiliate/portal?tab=profile",
+      "actions": [
+        "Real sidebar navigation",
+        "Backend read 200",
+        "Loading/empty state inspection"
+      ],
+      "content": "QA-AFFILIATE-E2E-20261115\n\n[mailbox withheld]\n\nYOUR REFERRAL CODE\nQAAFFI578568\n\nDISPLAY NAME\n\nQA-AFFILIATE-E2E-20261115\n\nEMAIL\n\n[mailbox withheld]\n\nSTATUS\n\nActive\n\nMEMBER SINCE\n\n—\n\nPayout Wallet\n\nWhere you receive commission payments\n\nNo payout wallet configured\n\nClick edit to add your wallet",
+      "buttons": [
+        "",
+        ""
+      ],
+      "inputs": []
+    },
+    {
+      "tab": "profile-refresh",
+      "route": "/affiliate/portal?tab=profile",
+      "actions": [
+        "Hard refresh retains authenticated identity and selected tab"
+      ],
+      "content": "",
+      "buttons": [],
+      "inputs": []
+    }
+  ],
+  "network": [
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/trend",
+      "status": 200,
+      "correlationId": "3674f9fb-6d1e-4068-8022-5a9cab48cf60"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/dashboard",
+      "status": 503,
+      "correlationId": "2a341d7d-f9c0-4af6-8440-9edb6483aa70"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/payouts",
+      "status": 503,
+      "correlationId": "499aed34-bbb7-4c61-8ed5-c9ec7145de54"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/orders",
+      "status": 503,
+      "correlationId": "b86a0d8f-f671-4c6e-8c00-b742fcc52906"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/summary",
+      "status": 200,
+      "correlationId": "2b705c83-9c7f-4822-bef4-5afa9d4ed421"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/discover/categories",
+      "status": 200,
+      "correlationId": "b04fad98-5285-4890-947d-b1ab7a2ee4c1"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/discover/products",
+      "status": 200,
+      "correlationId": "b320e208-025e-44e5-8e02-5e710cb31ffd"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/promotion-links",
+      "status": 200,
+      "correlationId": "19b2be4d-74b6-4ecc-a5bb-a8a8ac18e84e"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/landing-pages",
+      "status": 200,
+      "correlationId": "43b4226f-66c1-49f2-b2ef-61c621130304"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/orders",
+      "status": 503,
+      "correlationId": "9505ef7d-b0ce-4bef-b570-afe40f632b70"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/earnings-summary",
+      "status": 503,
+      "correlationId": "001a9887-5fb0-4129-b640-ec4f78b1bcc9"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/orders",
+      "status": 503,
+      "correlationId": "bad31b83-1c90-448b-9102-1ba502af62df"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/commission-activity",
+      "status": 503,
+      "correlationId": "b01d43bd-6bbe-48b2-8ac6-4b7b12279e10"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/payouts",
+      "status": 503,
+      "correlationId": "b0efb233-3160-49f7-9b34-6e8169b7ee01"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/trend",
+      "status": 200,
+      "correlationId": "e7ea9225-ea05-4316-8ac9-b44c747681d6"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/top-stores",
+      "status": 200,
+      "correlationId": "4e4a9bf1-7026-4611-94d7-19464d1a9471"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/summary",
+      "status": 200,
+      "correlationId": "be1699ff-fe23-4d6b-b563-56fdcf08fddb"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/top-products",
+      "status": 200,
+      "correlationId": "fcf33f3c-7038-4bca-9b32-6b20f0f32141"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/profile",
+      "status": 200,
+      "correlationId": "11819c14-17e5-4b1d-b50e-f13cda5efb0b"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/profile",
+      "status": 200,
+      "correlationId": "835b01f2-51fa-4c55-b2fb-a62b40b80264"
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/affiliates",
+      "status": 400,
+      "correlationId": "54c99570-606a-4e81-9c53-5c5f2f8879bb"
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/session",
+      "status": 401,
+      "correlationId": "283a6f3b-010e-47cf-8b7a-022c877d54e4"
+    },
+    {
+      "path": "https://affiliate.shopyxi.com/api/auth/session",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "path": "https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092",
+      "failure": "csp"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/profile",
+      "status": 200,
+      "correlationId": "a948b58b-6ed2-4e40-af5c-72fb809c6ba6"
+    }
+  ],
+  "errors": [
+    {
+      "type": "error",
+      "message": "Failed to load resource: the server responded with a status of 503 ()"
+    },
+    {
+      "type": "error",
+      "message": "Failed to load resource: the server responded with a status of 503 ()"
+    },
+    {
+      "type": "error",
+      "message": "Failed to load resource: the server responded with a status of 503 ()"
+    },
+    {
+      "type": "error",
+      "message": "Failed to load resource: the server responded with a status of 503 ()"
+    },
+    {
+      "type": "error",
+      "message": "Failed to load resource: the server responded with a status of 503 ()"
+    },
+    {
+      "type": "error",
+      "message": "Failed to load resource: the server responded with a status of 503 ()"
+    },
+    {
+      "type": "error",
+      "message": "Failed to load resource: the server responded with a status of 503 ()"
+    },
+    {
+      "type": "error",
+      "message": "Failed to load resource: the server responded with a status of 503 ()"
+    },
+    {
+      "type": "error",
+      "message": "Failed to load resource: the server responded with a status of 400 ()"
+    },
+    {
+      "type": "error",
+      "message": "Failed to load resource: the server responded with a status of 401 ()"
+    },
+    {
+      "type": "error",
+      "message": "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked."
+    },
+    {
+      "type": "error",
+      "message": "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked."
+    }
+  ],
+  "boundaries": [
+    {
+      "path": "/api/affiliate/profile",
+      "status": 200
+    },
+    {
+      "path": "/api/admin/affiliates",
+      "status": 400
+    },
+    {
+      "path": "/api/auth/session",
+      "status": 401
+    }
+  ]
+}

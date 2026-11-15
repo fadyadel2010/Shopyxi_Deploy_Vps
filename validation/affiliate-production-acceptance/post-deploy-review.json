@@ -1,0 +1,194 @@
+{
+  "verifiedAtUtc": "2026-11-15T00:32:06.804Z",
+  "profileStatus": 200,
+  "createdAtUtc": "2026-11-14T23:54:52.051194Z",
+  "expectedMemberSince": "11/15/2026",
+  "displayedMemberSince": "MEMBER SINCE\n\n11/15/2026",
+  "memberSinceMatchesApi": true,
+  "accountId": "01a1dc7c-3cb5-7b17-a0f2-1d082c878a60",
+  "walletUnconfigured": true,
+  "controls": [
+    {
+      "control": "Empty wallet save",
+      "validation": "Wallet number is required",
+      "persistentWriteSubmitted": false
+    },
+    {
+      "control": "Discovery search",
+      "content": "In Stock\nBest Match\nHighest Commission\nLowest Commission\nNewest First\nPrice: High to Low\nPrice: Low to High\nNo Products Found\n\nTry adjusting your search or filters"
+    },
+    {
+      "control": "Discovery newest sort",
+      "selected": "newest"
+    },
+    {
+      "control": "Analytics range 7 Days",
+      "content": "Performance Analytics\n\nReal-time insights across all stores\n\n7 Days\n14 Days\n30 Days\n90 Days\n1 Year"
+    },
+    {
+      "control": "Analytics range 90 Days",
+      "content": "Performance Analytics\n\nReal-time insights across all stores\n\n7 Days\n14 Days\n30 Days\n90 Days\n1 Year\nTOTAL CLICKS\n\n0\n\nTOTAL ORDERS\n\n0\n\nTOTAL EARNINGS\n\nEGP 0.00\n\nCONVERSION RATE\n\n0.00%\n\nEarnings Trend\nEarnings\nOrders\nNo data in this period\nClicks vs Conversions\nNo data in this period\nTop Products by Earnings\nNo product earnings yet\nTop Stores by Earnings\nNo store earnings yet"
+    },
+    {
+      "control": "Analytics range 30 Days",
+      "content": "Performance Analytics\n\nReal-time insights across all stores\n\n7 Days\n14 Days\n30 Days\n90 Days\n1 Year\nTOTAL CLICKS\n\n0\n\nTOTAL ORDERS\n\n0\n\nTOTAL EARNINGS\n\nEGP 0.00\n\nCONVERSION RATE\n\n0.00%\n\nEarnings Trend\nEarnings\nOrders\nNo data in this period\nClicks vs Conversions\nNo data in this period\nTop Products by Earnings\nNo product earnings yet\nTop Stores by Earnings\nNo store earnings yet"
+    }
+  ],
+  "responses": [
+    {
+      "method": "GET",
+      "path": "/api/affiliate/profile",
+      "status": 200,
+      "correlationId": "7431f6d6-9be2-44c8-9cad-3bd992eeba90"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/profile",
+      "status": 200,
+      "correlationId": "27970e6c-cc64-4714-ae88-c14ed50852af"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/discover/products?inStockOnly=false&sort=commission_desc&page=1&pageSize=20",
+      "status": 200,
+      "correlationId": "2a66a4ba-795a-49cd-afb4-4920292385f1"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/discover/categories",
+      "status": 200,
+      "correlationId": "61ec0eee-584a-41b2-989f-b547583b9805"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/discover/products?search=QA-AFFILIATE&inStockOnly=false&sort=commission_desc&page=1&pageSize=20",
+      "status": 200,
+      "correlationId": "7314740e-8187-47bc-b4c9-8dddaba55ee8"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/discover/products?search=QA-AFFILIATE&inStockOnly=false&sort=newest&page=1&pageSize=20",
+      "status": 200,
+      "correlationId": "a32f09e6-7eda-417e-878a-1430222292b2"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/discover/products?inStockOnly=false&sort=newest&page=1&pageSize=20",
+      "status": 200,
+      "correlationId": "00d6c230-7ad1-4d86-8a68-5c7cf31f74eb"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/discover/products?inStockOnly=false&sort=commission_desc&page=1&pageSize=20",
+      "status": 200,
+      "correlationId": "cbc1c898-f54e-41cf-b5e9-1fa1a605d34f"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/top-products?range=30&limit=10",
+      "status": 200,
+      "correlationId": "10104741-43b9-4b20-a228-38bb44cf36df"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/trend?range=30",
+      "status": 200,
+      "correlationId": "1c9a676d-fbd9-428d-83de-3a472194b191"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/summary?range=30",
+      "status": 200,
+      "correlationId": "2dbc0b53-5a30-4154-a8b2-ea0fadcb002a"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/top-stores?range=30&limit=10",
+      "status": 200,
+      "correlationId": "d373484b-5950-4b30-9dfe-c8fcdf429647"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/trend?range=7",
+      "status": 200,
+      "correlationId": "ae4011d7-e8dd-4028-b6b1-67e4605fbe77"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/summary?range=7",
+      "status": 200,
+      "correlationId": "375f21c0-8936-4d0c-91be-9918cd0d2666"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/top-products?range=7&limit=10",
+      "status": 200,
+      "correlationId": "115245a1-f944-4e67-9cc6-549c904d46a3"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/top-stores?range=7&limit=10",
+      "status": 200,
+      "correlationId": "7f13eeba-b551-4dec-856a-f685a89d5fa4"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/trend?range=90",
+      "status": 200,
+      "correlationId": "f38c0ff3-2e39-4092-a030-c6078c77b3c7"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/top-stores?range=90&limit=10",
+      "status": 200,
+      "correlationId": "4eac43e4-7cdd-45ff-9204-4e1cc6fea92a"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/top-products?range=90&limit=10",
+      "status": 200,
+      "correlationId": "b50ea687-8f61-472f-ba20-490e23c3bc94"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/summary?range=90",
+      "status": 200,
+      "correlationId": "d38ed9db-acdc-42c8-a777-e992aba75563"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/trend?range=30",
+      "status": 200,
+      "correlationId": "d3637b4d-31fa-4cb2-8730-1784aa3ba542"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/top-products?range=30&limit=10",
+      "status": 200,
+      "correlationId": "31b92eaf-b746-4fc2-80da-34d7eacf6a13"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/top-stores?range=30&limit=10",
+      "status": 200,
+      "correlationId": "bc85afbd-a1db-48db-baff-afc8bc4baef7"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/summary?range=30",
+      "status": 200,
+      "correlationId": "e5e62e02-b38c-4862-af3b-719bd781bfdc"
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/profile",
+      "status": 200,
+      "correlationId": "e9d3d9e3-c67f-450e-b05a-011450c72c21"
+    }
+  ],
+  "errors": [
+    "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked.",
+    "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked."
+  ],
+  "mutationRequestsObserved": 0
+}

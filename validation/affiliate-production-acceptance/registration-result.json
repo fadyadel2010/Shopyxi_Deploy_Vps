@@ -1,0 +1,13 @@
+{
+  "status": 200,
+  "affiliateAccountId": "01a1dc7c-3cb5-7b17-a0f2-1d082c878a60",
+  "referralCode": "QAAFFI578568",
+  "displayName": "QA-AFFILIATE-E2E-20261115",
+  "emailVerified": false,
+  "code": null,
+  "accountCreated": true,
+  "verificationSubmittedOnce": true,
+  "correlationId": "5a529dc1-4741-4c81-8f7f-681cba4ee88f",
+  "route": "/affiliate/login",
+  "mailbox": "operator-approved QA verification mailbox (withheld)"
+}
