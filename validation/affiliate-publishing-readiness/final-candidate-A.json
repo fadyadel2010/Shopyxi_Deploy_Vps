@@ -1,0 +1,29 @@
+{
+  "scenario": "A",
+  "before": {
+    "status": 200,
+    "isPolicyEnabled": true,
+    "readiness": {
+      "productFound": true,
+      "storefrontReady": true,
+      "paymentReady": true,
+      "shippingReady": true,
+      "productSellable": true,
+      "policyEnabled": true,
+      "categoryReady": true,
+      "blockerCodes": [],
+      "prerequisitesReady": true,
+      "isPromotionEligible": true
+    }
+  },
+  "buttons": [
+    "",
+    "Cancel",
+    "Disable Affiliate",
+    "Save Changes"
+  ],
+  "console": {
+    "errorCount": 1,
+    "rawMessagesOmitted": true
+  }
+}

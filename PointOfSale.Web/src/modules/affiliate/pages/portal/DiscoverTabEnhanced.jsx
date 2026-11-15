@@ -211,6 +211,21 @@ export default function DiscoverTabEnhanced() {
 
     useEffect(() => { fetchProducts() }, [fetchProducts])
 
+    // Readiness is live authority, not a session-long catalog promise. Returning
+    // from merchant setup or reconnecting must retire any previously open offer.
+    useEffect(() => {
+        const refresh = () => { setSelectedProductId(null); fetchProducts() }
+        const onVisible = () => { if (document.visibilityState === 'visible') refresh() }
+        window.addEventListener('focus', refresh)
+        window.addEventListener('online', refresh)
+        document.addEventListener('visibilitychange', onVisible)
+        return () => {
+            window.removeEventListener('focus', refresh)
+            window.removeEventListener('online', refresh)
+            document.removeEventListener('visibilitychange', onVisible)
+        }
+    }, [fetchProducts])
+
     // ── Category filter change handler ──
     // AF-32H FIX: Use functional setSearchParams to avoid stale searchParams closure
     const handleCategoryChange = useCallback((slug) => {

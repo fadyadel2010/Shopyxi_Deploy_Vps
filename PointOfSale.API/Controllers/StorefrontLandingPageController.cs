@@ -12,6 +12,7 @@ using PointOfSale.Infrastructure.MongoDB.Services;
 using PointOfSale.Infrastructure.MultiTenancy;
 using PointOfSale.Infrastructure.Data;
 using PointOfSale.Infrastructure.Elasticsearch.Services;
+using PointOfSale.Core.Interfaces.Affiliate;
 
 namespace PointOfSale.API.Controllers;
 
@@ -52,13 +53,16 @@ public class StorefrontLandingPageController : ControllerBase
     private readonly TenantContext _tenantContext;
     private readonly ApplicationDbContext _dbContext;
     private readonly ILogger<StorefrontLandingPageController> _logger;
+    private readonly IAffiliatePromotionReadiness? _promotionReadiness;
 
     public StorefrontLandingPageController(
         IProductReadRepository productRepository,
         TenantContext tenantContext,
         ApplicationDbContext dbContext,
-        ILogger<StorefrontLandingPageController> logger)
+        ILogger<StorefrontLandingPageController> logger,
+        IAffiliatePromotionReadiness? promotionReadiness = null)
     {
+        _promotionReadiness = promotionReadiness;
         _productRepository = productRepository;
         _tenantContext = tenantContext;
         _dbContext = dbContext;
@@ -206,7 +210,8 @@ public class StorefrontLandingPageController : ControllerBase
             .Select(item => new { item.Policy.TemplateType })
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (affiliatePolicy == null)
+        if (affiliatePolicy == null || _promotionReadiness == null ||
+            !(await _promotionReadiness.EvaluateAsync(tenantId.Value, product.ProductId, cancellationToken)).IsPromotionEligible)
         {
             _logger.LogInformation(
                 "[AF-27A:LandingPage] Product not affiliate-enabled | Slug: {Slug} | ProductId: {ProductId} | TraceId: {TraceId}",

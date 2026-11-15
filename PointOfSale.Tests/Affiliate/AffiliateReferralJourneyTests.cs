@@ -17,6 +17,7 @@ using PointOfSale.Core.Entities.Affiliate;
 using PointOfSale.Core.Enums;
 using PointOfSale.Core.Events.Affiliate;
 using PointOfSale.Core.Interfaces;
+using PointOfSale.Core.Interfaces.Affiliate;
 using PointOfSale.Infrastructure.Data;
 using PointOfSale.Infrastructure.MultiTenancy;
 
@@ -325,6 +326,7 @@ public sealed class AffiliateReferralJourneyTests
         await using var f = await Fixture.Create();
         var checkout = (CheckoutService)RuntimeHelpers.GetUninitializedObject(typeof(CheckoutService));
         typeof(CheckoutService).GetField("_dbContext", BindingFlags.Instance | BindingFlags.NonPublic)!.SetValue(checkout, f.Db);
+        typeof(CheckoutService).GetField("_promotionReadiness", BindingFlags.Instance | BindingFlags.NonPublic)!.SetValue(checkout, f.Readiness);
         var method = typeof(CheckoutService).GetMethod("ResolveMiddlewareAffiliateAuthorityAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
         async Task<object?> Resolve()
         {
@@ -351,6 +353,7 @@ public sealed class AffiliateReferralJourneyTests
         await using var f = await Fixture.Create();
         var checkout = (CheckoutService)RuntimeHelpers.GetUninitializedObject(typeof(CheckoutService));
         typeof(CheckoutService).GetField("_dbContext", BindingFlags.Instance | BindingFlags.NonPublic)!.SetValue(checkout, f.Db);
+        typeof(CheckoutService).GetField("_promotionReadiness", BindingFlags.Instance | BindingFlags.NonPublic)!.SetValue(checkout, f.Readiness);
         var resolve = typeof(CheckoutService).GetMethod("ResolveMiddlewareAffiliateAuthorityAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
         var resolvedTask = (Task)resolve.Invoke(checkout, [f.Product.TenantId, f.Account.Id, f.Link.Id, new[] { f.Product.Id }, CancellationToken.None])!;
         await resolvedTask;
@@ -386,6 +389,7 @@ public sealed class AffiliateReferralJourneyTests
         public required AffiliatePromotionLink Link { get; init; }
         public required AffiliateProductPolicy Policy { get; init; }
         public required AffiliateCategory Category { get; init; }
+        public required IAffiliatePromotionReadiness Readiness { get; init; }
         public IAffiliateAttributionEvidenceTokenService Tokens { get; } = new AffiliateAttributionEvidenceTokenService(new EphemeralDataProtectionProvider(), TimeProvider.System, NullLogger<AffiliateAttributionEvidenceTokenService>.Instance);
         public List<AffiliateLinkClickedEvent> Clicks { get; } = [];
         public AffiliateShoppingJourney? ActiveJourney { get; set; }
@@ -395,20 +399,32 @@ public sealed class AffiliateReferralJourneyTests
 
         public static async Task<Fixture> Create()
         {
-            var db = new ApplicationDbContext(new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options);
+            // Referral authority now includes operational merchant readiness. Reuse
+            // the focused ready fixture rather than assuming a product row is enough.
+            var ready = await AffiliatePublishingReadinessTests.Fixture.Create();
+            var db = ready.Db;
             var userId = Guid.NewGuid();
             var account = AffiliateAccount.Create(Guid.Empty, userId, "GLOBALCODE", "QA"); account.Id = Guid.NewGuid(); account.Activate();
             var user = AffiliateUser.Create(Guid.Empty, "qa@example.test", "hash", account.Id); user.Id = userId; user.VerifyEmail();
-            var merchant = new Tenant { Id = Guid.NewGuid(), Name = "Merchant", IsActive = true, Status = TenantStatus.Active };
-            var category = AffiliateCategory.CreateMainCategory("Electronics", "electronics"); category.Id = Guid.NewGuid();
-            var product = new Product { Id = Guid.NewGuid(), TenantId = merchant.Id, Name = "First", SKU = "FIRST", Slug = "first", IsActive = true, PublishStatus = PublishStatus.Published, IsOnlineVisible = true, IsSearchable = true, TrackStock = false };
-            var unit = new PointOfSale.Core.Entities.Unit { Id = Guid.NewGuid(), TenantId = merchant.Id, Name = "Piece", IsActive = true };
-            var policy = AffiliateProductPolicy.Create(merchant.Id, product.Id, .1m, categoryId: category.Id);
+            var merchant = ready.Tenant;
+            var category = await db.AffiliateCategories.IgnoreQueryFilters().SingleAsync(c => c.Id == ready.Policy.AffiliateCategoryId);
+            var product = ready.Product;
+            product.Name = "First"; product.SKU = "FIRST"; product.Slug = "first";
+            ready.ProductUnit.SellingPrice = 25.75m; ready.Variant.Price = 25.75m;
+            var policy = ready.Policy;
             var link = AffiliatePromotionLink.Create(merchant.Id, userId, product.Id, "LINKFIRST1", account.Id); link.Id = Guid.NewGuid();
-            db.AddRange(account, user, merchant, category, product, unit, policy, link,
-                new ProductUnit { Id = Guid.NewGuid(), ProductId = product.Id, UnitId = unit.Id, Unit = unit, IsDefault = true, IsBaseUnit = true, SellingPrice = 25.75m, ConversionFactor = 1 });
+            db.AddRange(account, user, link);
             await db.SaveChangesAsync();
-            return new Fixture { Db = db, Account = account, User = user, Merchant = merchant, Product = product, Policy = policy, Category = category, Link = link };
+            var readiness = new Mock<IAffiliatePromotionReadiness>();
+            readiness.Setup(r => r.EvaluateAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+                .Returns<Guid, Guid, CancellationToken>(ready.Service.EvaluateAsync);
+            readiness.Setup(r => r.EvaluateMerchantAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+                .Returns<Guid, CancellationToken>(ready.Service.EvaluateMerchantAsync);
+            // This preexisting suite is in-memory. Actual PostgreSQL transaction
+            // and concurrency admission is certified by the focused relational suite.
+            readiness.Setup(r => r.EvaluateForMutationAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+                .Returns<Guid, Guid, CancellationToken>(ready.Service.EvaluateAsync);
+            return new Fixture { Db = db, Account = account, User = user, Merchant = merchant, Product = product, Policy = policy, Category = category, Link = link, Readiness = readiness.Object };
         }
 
         public async Task<HttpContext> Request(string path, string? code, string? cookie = null, Guid? tenant = null, string method = "GET",
@@ -429,7 +445,7 @@ public sealed class AffiliateReferralJourneyTests
             var journeys = new Mock<IAffiliateShoppingJourneyService>();
             journeys.Setup(j => j.GetActiveAsync(c, It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(ActiveJourney);
-            await middleware.InvokeAsync(c, tenantContext, Db, publisher.Object, Mock.Of<IAffiliateModeMetricsService>(), Tokens, journeys.Object);
+            await middleware.InvokeAsync(c, tenantContext, Db, publisher.Object, Mock.Of<IAffiliateModeMetricsService>(), Tokens, journeys.Object, Readiness);
             return c;
         }
         public string Cookie(HttpContext c) => c.Response.Headers.SetCookie.First(x => x!.StartsWith("AFF_ATTR=") && !x.StartsWith("AFF_ATTR=;"))!.Split(';')[0]["AFF_ATTR=".Length..];

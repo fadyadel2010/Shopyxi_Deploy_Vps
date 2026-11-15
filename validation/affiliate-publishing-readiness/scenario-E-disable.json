@@ -1,0 +1,9 @@
+{
+  "scenario": "E",
+  "result": {
+    "status": 204,
+    "carrier": "manual"
+  },
+  "text": "Not ready for Affiliate promotion\n\nStorefront: READY\nPayment: READY\nShipping: BLOCKED\nAt least one usable checkout shipping method is required. Shipping Methods\nProduct: READY",
+  "navigation": "/ecommerce/shipping-methods"
+}

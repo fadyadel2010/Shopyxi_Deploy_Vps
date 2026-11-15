@@ -1910,6 +1910,7 @@ builder.Services.AddHostedService<PointOfSale.Infrastructure.Services.Affiliate.
 
 // AF-23: Affiliate Readiness Gate Service
 builder.Services.AddScoped<PointOfSale.Core.Interfaces.Affiliate.IAffiliateReadinessService, PointOfSale.Infrastructure.Services.Affiliate.AffiliateReadinessService>();
+builder.Services.AddScoped<PointOfSale.Core.Interfaces.Affiliate.IAffiliatePromotionReadiness, PointOfSale.API.Services.Affiliate.AffiliatePromotionReadinessService>();
 
 // AF-34: Ranking Score Service (click/conversion signal tracking + daily recalculation)
 builder.Services.AddScoped<PointOfSale.Infrastructure.Services.Affiliate.AffiliateRankingService>();

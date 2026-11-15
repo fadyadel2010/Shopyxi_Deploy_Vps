@@ -1,0 +1,26 @@
+{
+  "verifiedAtUtc": "2026-11-15T20:59:59.449Z",
+  "origin": "https://admin.shopyxi.com",
+  "path": "/admin/affiliates/products",
+  "headedSessionReused": true,
+  "authenticatedOwnerSurface": true,
+  "listHttpStatus": 200,
+  "serverRowsLoaded": 2,
+  "serverReadinessShapeVerified": true,
+  "existingProductRows": 2,
+  "serverDerivedEligibilityVisible": true,
+  "fourSectionPanelVerified": true,
+  "blockerCodes": [
+    "PRODUCT_NOT_ACTIVE",
+    "PRODUCT_ARCHIVED",
+    "PRODUCT_NOT_PUBLISHED",
+    "PRODUCT_NOT_SELLABLE",
+    "PRODUCT_CONFIGURATION_INVALID",
+    "AFFILIATE_POLICY_DISABLED"
+  ],
+  "businessMutationRequestsSent": 0,
+  "blockedMutationRequests": [],
+  "authenticationOnlyRefreshRequests": 0,
+  "screenshotSaved": false,
+  "privateProductIdentityOrCommissionExported": false
+}

@@ -39,14 +39,17 @@ public class AdminProductAffiliateController : ControllerBase
     private readonly IAffiliateReadinessService _affiliateReadiness;
     private readonly ITenantContext _tenantContext;
     private readonly ILogger<AdminProductAffiliateController> _logger;
+    private readonly IAffiliatePromotionReadiness? _promotionReadiness;
 
     public AdminProductAffiliateController(
         ApplicationDbContext dbContext,
         IAffiliateService affiliateService,
         IAffiliateReadinessService affiliateReadiness,
         ITenantContext tenantContext,
-        ILogger<AdminProductAffiliateController> logger)
+        ILogger<AdminProductAffiliateController> logger,
+        IAffiliatePromotionReadiness? promotionReadiness = null)
     {
+        _promotionReadiness = promotionReadiness;
         _dbContext = dbContext;
         _affiliateService = affiliateService;
         _affiliateReadiness = affiliateReadiness;
@@ -77,6 +80,10 @@ public class AdminProductAffiliateController : ControllerBase
         if (!productExists)
             return NotFound(new { message = "Product not found" });
 
+        Response.Headers.CacheControl = "no-store";
+        var promotionReadiness = _promotionReadiness == null ? null :
+            await _promotionReadiness.EvaluateAsync(tenantId, productId, ct);
+
         // Fetch policy from Postgres
         var policy = await _dbContext.AffiliateProductPolicies
             .Where(p => p.ProductId == productId && p.TenantId == tenantId)
@@ -97,6 +104,7 @@ public class AdminProductAffiliateController : ControllerBase
                 ProductId = productId,
                 IsEnabled = false,
                 IsPolicyEnabled = false,
+                Readiness = promotionReadiness,
                 CommissionRate = null,
                 MaxCommissionPerItem = null,
                 TemplateType = PointOfSale.Core.Constants.LandingTemplates.ClassicV1,
@@ -114,7 +122,8 @@ public class AdminProductAffiliateController : ControllerBase
         return Ok(new ProductAffiliateSettingsResponse
         {
             ProductId = productId,
-            IsEnabled = isEffectivelyEnabled,
+            IsEnabled = isEffectivelyEnabled && promotionReadiness?.IsPromotionEligible == true,
+            Readiness = promotionReadiness,
             IsPolicyEnabled = policy.IsEnabled,
             CommissionRate = policy.CommissionRate,
             MaxCommissionPerItem = policy.MaxCommissionPerItem,
@@ -149,23 +158,7 @@ public class AdminProductAffiliateController : ControllerBase
         if (!productExists)
             return NotFound(new { message = "Product not found" });
 
-        // Readiness gates entry/re-entry only. Preserve the same authority rule as
-        // the combined endpoint for legacy callers editing an enabled policy.
-        var policyIsAlreadyEnabled = await _dbContext.AffiliateProductPolicies
-            .AnyAsync(p => p.ProductId == productId && p.TenantId == tenantId && p.IsEnabled, ct);
-        if (!policyIsAlreadyEnabled)
-        {
-            var readiness = await _affiliateReadiness.CheckAsync(tenantId, ct);
-            if (!readiness.IsReady)
-            {
-                return BadRequest(new
-                {
-                    code = "AFFILIATE_NOT_READY",
-                    message = "Affiliate system is not ready",
-                    missing = readiness.MissingRequirements
-                });
-            }
-        }
+        // The service rechecks and locks current prerequisites at mutation time.
 
         // Validate rate range
         if (request.CommissionRate < 0.0001m || request.CommissionRate > 0.50m)
@@ -191,10 +184,15 @@ public class AdminProductAffiliateController : ControllerBase
                     productId, tenantId, policy.AffiliateCategoryId, ct),
                 IsPolicyEnabled = true,
                 CommissionRate = policy.CommissionRate,
+                Readiness = _promotionReadiness == null ? null : await _promotionReadiness.EvaluateAsync(tenantId, productId, ct),
                 MaxCommissionPerItem = policy.MaxCommissionPerItem,
                 TemplateType = policy.TemplateType,
                 AffiliateCategoryId = policy.AffiliateCategoryId
             });
+        }
+        catch (AffiliatePromotionNotReadyException ex)
+        {
+            return BadRequest(new { code = "AFFILIATE_PROMOTION_NOT_READY", readiness = ex.Readiness });
         }
         catch (Exception ex) when (ex is InvalidOperationException or ArgumentException)
         {
@@ -227,23 +225,8 @@ public class AdminProductAffiliateController : ControllerBase
         if (!productExists)
             return NotFound(new { message = "Product not found" });
 
-        // Readiness gates the transition into Affiliate participation. An already
-        // enabled policy remains editable even if tenant readiness later degrades.
-        var policyIsAlreadyEnabled = await _dbContext.AffiliateProductPolicies
-            .AnyAsync(p => p.ProductId == productId && p.TenantId == tenantId && p.IsEnabled, ct);
-        if (!policyIsAlreadyEnabled)
-        {
-            var readiness = await _affiliateReadiness.CheckAsync(tenantId, ct);
-            if (!readiness.IsReady)
-            {
-                return BadRequest(new
-                {
-                    code = "AFFILIATE_NOT_READY",
-                    message = "Affiliate system is not ready",
-                    missing = readiness.MissingRequirements
-                });
-            }
-        }
+        // Entry/re-entry is admitted transactionally by the service. Existing
+        // enabled participation remains editable even when readiness degrades.
 
         // AF-30A: Validate category is provided
         if (request.CategoryId == Guid.Empty)
@@ -271,12 +254,17 @@ public class AdminProductAffiliateController : ControllerBase
                 ProductId = productId,
                 IsEnabled = result.Policy.IsEnabled && await IsProductEffectivelyAffiliateEligibleAsync(
                     productId, tenantId, result.Policy.AffiliateCategoryId, ct),
+                Readiness = _promotionReadiness == null ? null : await _promotionReadiness.EvaluateAsync(tenantId, productId, ct),
                 IsPolicyEnabled = true,
                 CommissionRate = result.Policy.CommissionRate,
                 MaxCommissionPerItem = result.Policy.MaxCommissionPerItem,
                 TemplateType = result.Policy.TemplateType,
                 AffiliateCategoryId = result.Policy.AffiliateCategoryId
             });
+        }
+        catch (AffiliatePromotionNotReadyException ex)
+        {
+            return BadRequest(new { code = "AFFILIATE_PROMOTION_NOT_READY", readiness = ex.Readiness });
         }
         catch (DbUpdateConcurrencyException ex)
         {
@@ -343,6 +331,7 @@ public class AdminProductAffiliateController : ControllerBase
             ProductId = productId,
             IsEnabled = false,
             IsPolicyEnabled = policy?.IsEnabled ?? false,
+            Readiness = _promotionReadiness == null ? null : await _promotionReadiness.EvaluateAsync(tenantId, productId, ct),
             // AF-30B GAP-4 FIX: Return actual values (not null) so UI shows
             // what's saved and what will be restored on re-enable.
             CommissionRate = policy?.CommissionRate,
@@ -393,6 +382,7 @@ public class AdminProductAffiliateController : ControllerBase
                 IsEnabled = policy.IsEnabled && await IsProductEffectivelyAffiliateEligibleAsync(
                     productId, tenantId, policy.AffiliateCategoryId, ct),
                 IsPolicyEnabled = policy.IsEnabled,
+                Readiness = _promotionReadiness == null ? null : await _promotionReadiness.EvaluateAsync(tenantId, productId, ct),
                 CommissionRate = policy.CommissionRate,
                 MaxCommissionPerItem = policy.MaxCommissionPerItem,
                 TemplateType = policy.TemplateType,
@@ -447,6 +437,7 @@ public class AdminProductAffiliateController : ControllerBase
                 IsEnabled = result.Policy.IsEnabled && await IsProductEffectivelyAffiliateEligibleAsync(
                     productId, tenantId, result.Policy.AffiliateCategoryId, ct),
                 IsPolicyEnabled = result.Policy.IsEnabled,
+                Readiness = _promotionReadiness == null ? null : await _promotionReadiness.EvaluateAsync(tenantId, productId, ct),
                 CommissionRate = result.Policy.CommissionRate,
                 MaxCommissionPerItem = result.Policy.MaxCommissionPerItem,
                 TemplateType = result.Policy.TemplateType,
@@ -484,6 +475,9 @@ public class AdminProductAffiliateController : ControllerBase
         Guid? affiliateCategoryId,
         CancellationToken ct)
     {
+        if (_promotionReadiness == null ||
+            !(await _promotionReadiness.EvaluateAsync(tenantId, productId, ct)).IsPromotionEligible)
+            return false;
         if (!affiliateCategoryId.HasValue)
         {
             return false;
@@ -612,6 +606,7 @@ public class AdminProductAffiliateController : ControllerBase
 
 public class ProductAffiliateSettingsResponse
 {
+    public AffiliatePromotionReadiness? Readiness { get; set; }
     public Guid ProductId { get; set; }
     /// <summary>
     /// Effective eligibility retained for backward compatibility with existing

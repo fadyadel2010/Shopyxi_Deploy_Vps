@@ -276,6 +276,7 @@ public class CheckoutService : ICheckoutService
     
     // AF-12: Affiliate Mode Detection
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly PointOfSale.Core.Interfaces.Affiliate.IAffiliatePromotionReadiness? _promotionReadiness;
     private readonly IProductReadRepository _productRepository;
     private readonly CommerceReliabilityTelemetry? _reliabilityTelemetry;
     
@@ -339,8 +340,10 @@ public class CheckoutService : ICheckoutService
         IAddressAdmissionService? addressAdmissionService = null,
         ICarrierIntegrationAuthority? carrierIntegrationAuthority = null,
         IServiceScopeFactory? scopeFactory = null,
-        SyntheticQaCertificationAuthority? syntheticQa = null)
+        SyntheticQaCertificationAuthority? syntheticQa = null,
+        PointOfSale.Core.Interfaces.Affiliate.IAffiliatePromotionReadiness? promotionReadiness = null)
     {
+        _promotionReadiness = promotionReadiness;
         _syntheticQa = syntheticQa;
         _scopeFactory = scopeFactory;
         // CRITICAL: Purpose string MUST match PaymentMethodsAdminController.DataProtectionPurpose
@@ -8385,6 +8388,14 @@ public class CheckoutService : ICheckoutService
 
         if (!resolvedAuthority.PromotionLinkId.HasValue)
         {
+            // Legacy profile attribution is store-scoped. Recheck the merchant
+            // under the same authority locks without requiring unrelated cart
+            // items to participate in the Affiliate policy.
+            var current = _promotionReadiness == null || checkoutProductIds.Count == 0 ? null :
+                await _promotionReadiness.EvaluateForMutationAsync(tenantId, checkoutProductIds.First(), cancellationToken);
+            if (current is not { ProductFound: true, StorefrontReady: true, PaymentReady: true, ShippingReady: true })
+                throw new CheckoutException("AFFILIATE_AUTHORITY_STALE",
+                    "Affiliate promotion is no longer available for this store. Refresh the cart before continuing.", "AffiliateAttribution");
             return new AffiliateAttributionAuthority(
                 account.Id,
                 null,
@@ -8414,9 +8425,16 @@ public class CheckoutService : ICheckoutService
             promotionLink.AffiliateUserId, promotionLink.AffiliateAccountId, cancellationToken);
         var promotedProduct = await _dbContext.Products.AsNoTracking().IgnoreQueryFilters()
             .SingleOrDefaultAsync(p => p.Id == promotionLink.ProductId && p.TenantId == tenantId && !p.IsDeleted, cancellationToken);
+        // Admission is scoped to the promoted offer, not unrelated ordinary items
+        // a customer may also have in the cart. Never turn Affiliate participation
+        // into a requirement for normal Storefront purchases.
+        if (_promotionReadiness == null ||
+            !(await _promotionReadiness.EvaluateForMutationAsync(tenantId, promotionLink.ProductId, cancellationToken)).IsPromotionEligible)
+            throw new CheckoutException("AFFILIATE_PROMOTION_LINK_STALE",
+                "The Affiliate offer is no longer available. Refresh the cart before continuing.", "AffiliateAttribution");
         if (credentialAccountId != account.Id || promotionAccountId != account.Id ||
             promotedProduct == null ||
-            !await AffiliatePromotionAttributionAuthority.IsProductEligibleAsync(_dbContext, promotedProduct, cancellationToken))
+            !await AffiliatePromotionAttributionAuthority.IsProductEligibleAsync(_dbContext, promotedProduct, cancellationToken, _promotionReadiness))
         {
             throw new CheckoutException(
                 "AFFILIATE_PROMOTION_LINK_STALE",

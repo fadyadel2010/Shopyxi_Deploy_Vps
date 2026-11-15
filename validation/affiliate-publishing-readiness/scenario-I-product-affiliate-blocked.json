@@ -1,0 +1,59 @@
+{
+  "scenarios": [
+    "G",
+    "H",
+    "I"
+  ],
+  "results": [
+    {
+      "path": "/api/affiliate/discover/products",
+      "method": "GET",
+      "crossTenant": false,
+      "status": 200,
+      "cacheControl": "no-store,no-cache",
+      "count": 0,
+      "code": null
+    },
+    {
+      "path": "/api/affiliate/discover/products/37d9a1b6-6585-f655-0e55-824a517ce90c",
+      "method": "GET",
+      "crossTenant": false,
+      "status": 404,
+      "cacheControl": "no-store,no-cache",
+      "code": "NOT_FOUND"
+    },
+    {
+      "path": "/api/affiliate/promotion-links",
+      "method": "GET",
+      "crossTenant": false,
+      "status": 200,
+      "cacheControl": "no-store,no-cache",
+      "count": 0,
+      "code": null
+    },
+    {
+      "path": "/api/affiliate/promotion-links/01a1dfa0-8334-755b-aeb8-c037243e70c0",
+      "method": "GET",
+      "crossTenant": false,
+      "status": 404,
+      "cacheControl": "no-store,no-cache",
+      "code": "NOT_FOUND"
+    },
+    {
+      "path": "/api/affiliate/promotion-links",
+      "method": "POST",
+      "crossTenant": false,
+      "status": 400,
+      "cacheControl": "no-store,no-cache",
+      "code": "AFFILIATE_PROMOTION_NOT_READY"
+    },
+    {
+      "path": "/api/affiliate/promotion-links",
+      "method": "POST",
+      "crossTenant": true,
+      "status": 404,
+      "cacheControl": "no-store,no-cache",
+      "code": "NOT_FOUND"
+    }
+  ]
+}

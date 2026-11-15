@@ -1,0 +1,108 @@
+{
+  "api": {
+    "index": "sha256:39a79e0baaa7a6a935e2f84b6e77a7d4b22618c6f5d9b5e59a5d8f1ebbc9856b",
+    "leaves": [
+      {
+        "digest": "sha256:28a357c8638fba18cad64476a32d0b6f070e726482c2f37b92f22bb8e9512d4d",
+        "config": "sha256:e6671572d11bf35d6d44bede48386452b61bdb7b955f580034d11920ea3f7c61",
+        "layers": 23
+      },
+      {
+        "digest": "sha256:c742b33fd71aa9fdc9bbe918f829e938b9251ddf8d9b6d4078374203e18d5f6e",
+        "config": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "layers": 1
+      }
+    ],
+    "references": [
+      [
+        "docker.io/library/import-2026-11-15@sha256:39a79e0baaa7a6a935e2f84b6e77a7d4b22618c6f5d9b5e59a5d8f1ebbc9856b",
+        "application/vnd.oci.image.index.v1+json",
+        "sha256:39a79e0baaa7a6a935e2f84b6e77a7d4b22618c6f5d9b5e59a5d8f1ebbc9856b"
+      ],
+      [
+        "docker.io/shopixy/api@sha256:39a79e0baaa7a6a935e2f84b6e77a7d4b22618c6f5d9b5e59a5d8f1ebbc9856b",
+        "application/vnd.oci.image.index.v1+json",
+        "sha256:39a79e0baaa7a6a935e2f84b6e77a7d4b22618c6f5d9b5e59a5d8f1ebbc9856b"
+      ],
+      [
+        "import-2026-11-15@sha256:39a79e0baaa7a6a935e2f84b6e77a7d4b22618c6f5d9b5e59a5d8f1ebbc9856b",
+        "application/vnd.oci.image.index.v1+json",
+        "sha256:39a79e0baaa7a6a935e2f84b6e77a7d4b22618c6f5d9b5e59a5d8f1ebbc9856b"
+      ],
+      [
+        "sha256:e6671572d11bf35d6d44bede48386452b61bdb7b955f580034d11920ea3f7c61",
+        "application/vnd.oci.image.index.v1+json",
+        "sha256:39a79e0baaa7a6a935e2f84b6e77a7d4b22618c6f5d9b5e59a5d8f1ebbc9856b"
+      ]
+    ],
+    "criStatus": {
+      "id": "sha256:e6671572d11bf35d6d44bede48386452b61bdb7b955f580034d11920ea3f7c61",
+      "pinned": false,
+      "repoDigests": [
+        "docker.io/library/import-2026-11-15@sha256:128ea3d56d790eccaaef2c94799ae2163df0fb7d714af214f1e42889a91bf018",
+        "docker.io/library/import-2026-11-15@sha256:39a79e0baaa7a6a935e2f84b6e77a7d4b22618c6f5d9b5e59a5d8f1ebbc9856b",
+        "docker.io/shopixy/api@sha256:39a79e0baaa7a6a935e2f84b6e77a7d4b22618c6f5d9b5e59a5d8f1ebbc9856b"
+      ],
+      "repoTags": [],
+      "size": "274401327",
+      "uid": {
+        "value": "1654"
+      },
+      "username": ""
+    },
+    "criInspectExitCode": 0
+  },
+  "web": {
+    "index": "sha256:ee6f3d73e076221dd600ea44c178afc8b811e2a32758eae9890553cd38486abd",
+    "leaves": [
+      {
+        "digest": "sha256:14abeeab09503f68df3a1390951451120c5f4fe20e8ca3becd92053c581b01d2",
+        "config": "sha256:dc8ed0e5b9ace5a1481c6ad6830f1874000287a9b1722a71439eaa8bf196e4da",
+        "layers": 28
+      },
+      {
+        "digest": "sha256:0258a44c3b6efc3d79bbc364ab41e62f8d998f7993c48f25d915b498e033bc8e",
+        "config": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "layers": 1
+      }
+    ],
+    "references": [
+      [
+        "docker.io/library/import-2026-11-15@sha256:ee6f3d73e076221dd600ea44c178afc8b811e2a32758eae9890553cd38486abd",
+        "application/vnd.oci.image.index.v1+json",
+        "sha256:ee6f3d73e076221dd600ea44c178afc8b811e2a32758eae9890553cd38486abd"
+      ],
+      [
+        "docker.io/shopixy/web@sha256:ee6f3d73e076221dd600ea44c178afc8b811e2a32758eae9890553cd38486abd",
+        "application/vnd.oci.image.index.v1+json",
+        "sha256:ee6f3d73e076221dd600ea44c178afc8b811e2a32758eae9890553cd38486abd"
+      ],
+      [
+        "import-2026-11-15@sha256:ee6f3d73e076221dd600ea44c178afc8b811e2a32758eae9890553cd38486abd",
+        "application/vnd.oci.image.index.v1+json",
+        "sha256:ee6f3d73e076221dd600ea44c178afc8b811e2a32758eae9890553cd38486abd"
+      ],
+      [
+        "sha256:dc8ed0e5b9ace5a1481c6ad6830f1874000287a9b1722a71439eaa8bf196e4da",
+        "application/vnd.oci.image.index.v1+json",
+        "sha256:ee6f3d73e076221dd600ea44c178afc8b811e2a32758eae9890553cd38486abd"
+      ]
+    ],
+    "criStatus": {
+      "id": "sha256:dc8ed0e5b9ace5a1481c6ad6830f1874000287a9b1722a71439eaa8bf196e4da",
+      "pinned": false,
+      "repoDigests": [
+        "docker.io/library/import-2026-11-15@sha256:64813fd865c734552b63f32407dc326f8e13811242c56ebf4a5bb1d66b0fef23",
+        "docker.io/library/import-2026-11-15@sha256:ee6f3d73e076221dd600ea44c178afc8b811e2a32758eae9890553cd38486abd",
+        "docker.io/shopixy/web@sha256:ee6f3d73e076221dd600ea44c178afc8b811e2a32758eae9890553cd38486abd"
+      ],
+      "repoTags": [],
+      "size": "29820388",
+      "uid": {
+        "value": "101"
+      },
+      "username": ""
+    },
+    "criInspectExitCode": 0
+  }
+}

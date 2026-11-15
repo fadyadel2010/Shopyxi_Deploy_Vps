@@ -1,0 +1,88 @@
+{
+  "allGatesPassed": true,
+  "components": {
+    "api": {
+      "verifiedAtUtc": "2026-11-15T20:22:18.825541+00:00",
+      "image": "docker.io/shopixy/api@sha256:39a79e0baaa7a6a935e2f84b6e77a7d4b22618c6f5d9b5e59a5d8f1ebbc9856b",
+      "runtimeConfigId": "sha256:e6671572d11bf35d6d44bede48386452b61bdb7b955f580034d11920ea3f7c61",
+      "sourceInputSha256": "eacda4b4d4f0de57bf3be8207e3dd32cbe9d82ba3a64904372bd09b14066d6d0",
+      "sourceInputsMatchStagedIndex": true,
+      "sourceInputsMatched": 2651,
+      "assemblySha256": [
+        {
+          "filename": "PointOfSale.API.dll",
+          "sha256": "0eee889756bd97d865161b7ad59e2cc636dca532c47ea6cbf4cb74cdd800c719"
+        },
+        {
+          "filename": "PointOfSale.Core.dll",
+          "sha256": "6f92ca63f5562a0f3e3b95155dd28512fdd75f30913601d71a41125197b5150f"
+        },
+        {
+          "filename": "PointOfSale.Infrastructure.dll",
+          "sha256": "0d19323a0bce50bd613ff6d1ae74e94e00b26a7dfb7003e92a6530bfdd451133"
+        }
+      ],
+      "archiveSha256": "ca805f9a96686643aaeaf9782eb8602128f9c09ce406b49e9e5cc06f5236a571",
+      "securityGatePassed": true,
+      "nugetVulnerablePackages": 0,
+      "trivyHighCriticalFindings": 0,
+      "trivyReportSha256": "7528c21074368e922f701a04b35912f4d6aa5c3a58b809c6c412efff9892f5c7",
+      "nugetAuditSha256": "14c1570864f4992cf1dc869ca34066a6cc52fc4bbdea964e28a820804eb9768c",
+      "runtimeVersion": "10.0.15",
+      "uid": 1654,
+      "productionDeployment": false,
+      "deliveryMethod": "not delivered; local archive only",
+      "runtimeHashes": [
+        {
+          "path": "/app/PointOfSale.API.dll",
+          "sha256": "0eee889756bd97d865161b7ad59e2cc636dca532c47ea6cbf4cb74cdd800c719"
+        },
+        {
+          "path": "/app/PointOfSale.Core.dll",
+          "sha256": "6f92ca63f5562a0f3e3b95155dd28512fdd75f30913601d71a41125197b5150f"
+        },
+        {
+          "path": "/app/PointOfSale.Infrastructure.dll",
+          "sha256": "0d19323a0bce50bd613ff6d1ae74e94e00b26a7dfb7003e92a6530bfdd451133"
+        }
+      ],
+      "probe": {
+        "path": "/app/PointOfSale.API.dll",
+        "sha256": "0eee889756bd97d865161b7ad59e2cc636dca532c47ea6cbf4cb74cdd800c719"
+      }
+    },
+    "web": {
+      "verifiedAtUtc": "2026-11-15T20:20:17.656872+00:00",
+      "component": "web",
+      "image": "docker.io/shopixy/web@sha256:ee6f3d73e076221dd600ea44c178afc8b811e2a32758eae9890553cd38486abd",
+      "tag": "shopixy/web:affiliate-publishing-readiness-b294ce49b0fb",
+      "baseImage": "sha256:f224346ab401bfa77a59f0716f6f555499b994a22fd7980bb8423ee29735c991",
+      "sourceInputSha256": "b294ce49b0fb1dd15ca99f44a4928330ce1b48a2677a027813c9f97e56733da6",
+      "sourceInputCount": 2193,
+      "distSha256": "f39bf3d994f031509a12e6efee8930a7c0c866546010c167182fa439c0278d28",
+      "distFiles": 73,
+      "imageContentsMatchBuild": true,
+      "nonRoot": true,
+      "nginxConfigValid": true,
+      "trivyHighCriticalFindings": 0,
+      "securityGatePassed": true,
+      "productionDeployment": false,
+      "deliveryMethod": "not delivered; local archive only",
+      "runtimeConfigId": "sha256:dc8ed0e5b9ace5a1481c6ad6830f1874000287a9b1722a71439eaa8bf196e4da",
+      "archiveSha256": "099254f5c702ac513d28ef9afc72463d85186babd055808d739f6eaea031a3fc",
+      "runtimeHashes": [
+        {
+          "path": "/usr/share/nginx/html/index.html",
+          "sha256": "3dee01355c65615f2c6e3d8e2533bd443a3905dc78c5ae8a1fc8d9d18dcb4b06"
+        }
+      ],
+      "probe": {
+        "path": "/usr/share/nginx/html/index.html",
+        "sha256": "3dee01355c65615f2c6e3d8e2533bd443a3905dc78c5ae8a1fc8d9d18dcb4b06"
+      }
+    }
+  },
+  "deploymentScriptSha256": "ca50e25919ca585042960a35ab3ad6c9fd7f302dbfbd4e31eb28bd85547f155b",
+  "originalDeploymentScriptSha256": "640629caaad54c03a8dbf50727dd1371f3ed95ec9ced337bbe30e30e476984d5",
+  "retryReason": "Preserve the exact outer archive index alias retained in the CRI config-ID cache; verify all repoDigests before deployment."
+}

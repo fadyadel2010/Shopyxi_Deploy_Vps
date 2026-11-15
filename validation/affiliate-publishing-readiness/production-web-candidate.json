@@ -1,0 +1,18 @@
+{
+  "verifiedAtUtc": "2026-11-15T20:20:17.656872+00:00",
+  "component": "web",
+  "image": "docker.io/shopixy/web@sha256:ee6f3d73e076221dd600ea44c178afc8b811e2a32758eae9890553cd38486abd",
+  "tag": "shopixy/web:affiliate-publishing-readiness-b294ce49b0fb",
+  "baseImage": "sha256:f224346ab401bfa77a59f0716f6f555499b994a22fd7980bb8423ee29735c991",
+  "sourceInputSha256": "b294ce49b0fb1dd15ca99f44a4928330ce1b48a2677a027813c9f97e56733da6",
+  "sourceInputCount": 2193,
+  "distSha256": "f39bf3d994f031509a12e6efee8930a7c0c866546010c167182fa439c0278d28",
+  "distFiles": 73,
+  "imageContentsMatchBuild": true,
+  "nonRoot": true,
+  "nginxConfigValid": true,
+  "trivyHighCriticalFindings": 0,
+  "securityGatePassed": true,
+  "productionDeployment": false,
+  "deliveryMethod": "not delivered; local archive only"
+}

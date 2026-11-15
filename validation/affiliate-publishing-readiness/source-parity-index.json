@@ -1,0 +1,11 @@
+{
+  "verifiedAtUtc": "2026-11-15T20:59:42.129321+00:00",
+  "authority": "exact staged index",
+  "builtInputsMatched": {
+    "api": 2651,
+    "web": 2193
+  },
+  "embeddedThemeMatches": true,
+  "unstagedAffectedSourceChanges": false,
+  "passed": true
+}

@@ -1,0 +1,9 @@
+{
+  "scenario": "I",
+  "result": {
+    "ordinaryProductStatus": 404,
+    "referralAccepted": false,
+    "affiliateLandingStatus": 404
+  },
+  "checkoutSubmitted": false
+}

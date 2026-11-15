@@ -1,0 +1,81 @@
+{
+  "verifiedAtUtc": "2026-11-15T20:59:39.955817+00:00",
+  "originalWorktreeEditedOrStagedByThisContinuation": false,
+  "originalHead": "8365a92416463136418065f040e8b7f84bcff9fe",
+  "observedWorkingEntries": 35,
+  "statusSha256": "184de2c97118f8e71f461e10015e6077dd79086671e98df3da687d21d294318e",
+  "preservedPatchSha256": "f65a1fb038b4285e4ec7a7e41ee0271412933f70a4cd5b8816d8e67f7dd20468",
+  "preservedPatchUnchanged": true,
+  "historicalProtectedFileChecks": [
+    {
+      "path": "PointOfSale.API/Controllers/PlatformController.cs",
+      "matchesHistoricalFullFileHash": true
+    },
+    {
+      "path": "PointOfSale.API/DTOs/ExpenseDTOs.cs",
+      "matchesHistoricalFullFileHash": true
+    },
+    {
+      "path": "PointOfSale.API/Middleware/OwnerEmailVerificationMiddleware.cs",
+      "matchesHistoricalFullFileHash": true
+    },
+    {
+      "path": "PointOfSale.API/Program.cs",
+      "matchesHistoricalFullFileHash": false
+    },
+    {
+      "path": "PointOfSale.API/Services/Platform/RateLimitService.cs",
+      "matchesHistoricalFullFileHash": true
+    },
+    {
+      "path": "validation/storefront-20261114/StorefrontRegression.csproj",
+      "matchesHistoricalFullFileHash": true
+    },
+    {
+      "path": "PointOfSale.Web/src/components/EmailVerificationRequired.d.ts",
+      "matchesHistoricalFullFileHash": true
+    },
+    {
+      "path": "PointOfSale.Web/src/components/EmailVerificationRequired.jsx",
+      "matchesHistoricalFullFileHash": true
+    },
+    {
+      "path": "PointOfSale.Web/src/components/EmailVerificationRequired.test.tsx",
+      "matchesHistoricalFullFileHash": true
+    },
+    {
+      "path": "PointOfSale.Web/src/components/ProtectedRoute.jsx",
+      "matchesHistoricalFullFileHash": true
+    },
+    {
+      "path": "PointOfSale.Web/src/components/ProtectedRoute.verification.test.tsx",
+      "matchesHistoricalFullFileHash": true
+    },
+    {
+      "path": "PointOfSale.Web/src/marketplace/queryKeys.ts",
+      "matchesHistoricalFullFileHash": true
+    },
+    {
+      "path": "PointOfSale.Web/src/pages/Categories.jsx",
+      "matchesHistoricalFullFileHash": true
+    },
+    {
+      "path": "PointOfSale.Web/src/pages/Register.admission.test.tsx",
+      "matchesHistoricalFullFileHash": true
+    },
+    {
+      "path": "PointOfSale.Web/src/pages/Register.jsx",
+      "matchesHistoricalFullFileHash": true
+    },
+    {
+      "path": "validation/general-ledger-final-fix/FINAL-REPORT.md",
+      "matchesHistoricalFullFileHash": true
+    },
+    {
+      "path": "validation/storefront-20261114/FINAL-REPORT.md",
+      "matchesHistoricalFullFileHash": true
+    }
+  ],
+  "historicalDriftWasNotReset": true,
+  "note": "Overlapping readiness edits were already present in the original directory at continuation start. Historical full-file hash drift is reported, not discarded."
+}

@@ -1,0 +1,6 @@
+{
+  "scenario": "I",
+  "action": "isolated product archival",
+  "text": "Not ready for Affiliate promotion\n\nStorefront: READY\nPayment: READY\nShipping: READY\nProduct: BLOCKED\nThe product is inactive. Manage product\nThe product is archived. Manage product\nThe product is not published. Manage product\nThe product is not currently sellable under Storefront pricing, visibility or availability rules. Manage product",
+  "correctiveProductNavigation": "http://admin.localhost:18180/products/37d9a1b6-6585-f655-0e55-824a517ce90c/edit"
+}

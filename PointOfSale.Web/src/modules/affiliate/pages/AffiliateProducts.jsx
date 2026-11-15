@@ -22,6 +22,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import adminProductAffiliateApi from '../../../services/adminProductAffiliateApi'
 import ProductAffiliateSettingsCard from '../../../components/ProductAffiliateSettingsCard'
+import AffiliatePromotionReadiness from '../../../components/AffiliatePromotionReadiness'
 import { useConfirmDialog } from '../../../common/confirm/ConfirmDialogProvider'
 import { useSettings } from '../../../contexts/SettingsContext'
 import { adminCategoryDisplayName } from '../lib/adminCategoryDisplayName'
@@ -169,6 +170,16 @@ export default function AffiliateProducts() {
 
     useEffect(() => {
         void fetchProducts()
+    }, [fetchProducts])
+
+    useEffect(() => {
+        const refresh = () => { void fetchProducts({ showLoading: false }) }
+        window.addEventListener('focus', refresh)
+        window.addEventListener('online', refresh)
+        return () => {
+            window.removeEventListener('focus', refresh)
+            window.removeEventListener('online', refresh)
+        }
     }, [fetchProducts])
 
     useEffect(() => () => {
@@ -485,6 +496,7 @@ export default function AffiliateProducts() {
                                                             : t('affiliateProducts.affiliateStatusDisabled')}
                                                     />
                                                     {item.hasAffiliatePolicy === false && <p className="mt-1 text-xs text-gray-500">{t('affiliateProducts.noPolicy')}</p>}
+                                                    <AffiliatePromotionReadiness readiness={item.readiness} productId={item.productId} compact />
                                                 </td>
                                                 <td className="px-4 py-3 text-sm text-gray-700">
                                                     {categoryLabels.get(item.affiliateCategoryId) || (item.affiliateCategoryName

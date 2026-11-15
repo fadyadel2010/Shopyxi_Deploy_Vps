@@ -1,0 +1,147 @@
+{
+  "scenarios": [
+    "F",
+    "J"
+  ],
+  "method": "normal optimistic-versioned product bulk authoring APIs; headed Manage readback",
+  "rows": [
+    {
+      "action": "unpublish",
+      "mutation": {
+        "status": 200,
+        "data": {
+          "requested": 1,
+          "accepted": 1,
+          "processed": 1,
+          "unchanged": 0,
+          "failed": 0,
+          "correlationId": "1a8eae80-9cb7-4233-8202-421aabbd1bdb",
+          "results": [
+            {
+              "productId": "37d9a1b6-6585-f655-0e55-824a517ce90c",
+              "status": "Processed",
+              "previousVersion": "19167",
+              "newVersion": "49380"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "action": "unpublish",
+      "readiness": {
+        "productFound": true,
+        "storefrontReady": true,
+        "paymentReady": true,
+        "shippingReady": true,
+        "productSellable": false,
+        "policyEnabled": true,
+        "categoryReady": true,
+        "blockerCodes": [
+          "PRODUCT_NOT_PUBLISHED",
+          "PRODUCT_NOT_SELLABLE"
+        ],
+        "prerequisitesReady": false,
+        "isPromotionEligible": false
+      },
+      "isPolicyEnabled": true,
+      "commissionRate": 0.1,
+      "text": "Not ready for Affiliate promotion\n\nStorefront: READY\nPayment: READY\nShipping: READY\nProduct: BLOCKED\nThe product is not published. Manage product\nThe product is not currently sellable under Storefront pricing, visibility or availability rules. Manage product",
+      "links": [
+        "/products/37d9a1b6-6585-f655-0e55-824a517ce90c/edit",
+        "/products/37d9a1b6-6585-f655-0e55-824a517ce90c/edit"
+      ]
+    },
+    {
+      "action": "unpublish-restored",
+      "readiness": {
+        "productFound": true,
+        "storefrontReady": true,
+        "paymentReady": true,
+        "shippingReady": true,
+        "productSellable": true,
+        "policyEnabled": true,
+        "categoryReady": true,
+        "blockerCodes": [],
+        "prerequisitesReady": true,
+        "isPromotionEligible": true
+      },
+      "isPolicyEnabled": true,
+      "commissionRate": 0.1,
+      "text": "Ready for Affiliate promotion\n\nStorefront: READY\nPayment: READY\nShipping: READY\nProduct: READY",
+      "links": []
+    },
+    {
+      "action": "deactivate",
+      "mutation": {
+        "status": 200,
+        "data": {
+          "requested": 1,
+          "accepted": 1,
+          "processed": 1,
+          "unchanged": 0,
+          "failed": 0,
+          "correlationId": "e4804d51-913d-4cb3-9230-5d703acd126a",
+          "results": [
+            {
+              "productId": "37d9a1b6-6585-f655-0e55-824a517ce90c",
+              "status": "Processed",
+              "previousVersion": "49406",
+              "newVersion": "49432"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "action": "deactivate",
+      "readiness": {
+        "productFound": true,
+        "storefrontReady": true,
+        "paymentReady": true,
+        "shippingReady": true,
+        "productSellable": false,
+        "policyEnabled": true,
+        "categoryReady": true,
+        "blockerCodes": [
+          "PRODUCT_NOT_ACTIVE",
+          "PRODUCT_ARCHIVED",
+          "PRODUCT_NOT_PUBLISHED",
+          "PRODUCT_NOT_SELLABLE"
+        ],
+        "prerequisitesReady": false,
+        "isPromotionEligible": false
+      },
+      "isPolicyEnabled": true,
+      "commissionRate": 0.1,
+      "text": "Not ready for Affiliate promotion\n\nStorefront: READY\nPayment: READY\nShipping: READY\nProduct: BLOCKED\nThe product is inactive. Manage product\nThe product is archived. Manage product\nThe product is not published. Manage product\nThe product is not currently sellable under Storefront pricing, visibility or availability rules. Manage product",
+      "links": [
+        "/products/37d9a1b6-6585-f655-0e55-824a517ce90c/edit",
+        "/products/37d9a1b6-6585-f655-0e55-824a517ce90c/edit",
+        "/products/37d9a1b6-6585-f655-0e55-824a517ce90c/edit",
+        "/products/37d9a1b6-6585-f655-0e55-824a517ce90c/edit"
+      ]
+    },
+    {
+      "action": "deactivate-restored",
+      "readiness": {
+        "productFound": true,
+        "storefrontReady": true,
+        "paymentReady": true,
+        "shippingReady": true,
+        "productSellable": true,
+        "policyEnabled": true,
+        "categoryReady": true,
+        "blockerCodes": [],
+        "prerequisitesReady": true,
+        "isPromotionEligible": true
+      },
+      "isPolicyEnabled": true,
+      "commissionRate": 0.1,
+      "text": "Ready for Affiliate promotion\n\nStorefront: READY\nPayment: READY\nShipping: READY\nProduct: READY",
+      "links": []
+    }
+  ],
+  "finalReady": true,
+  "deletedHistoryNotRemoved": true
+}

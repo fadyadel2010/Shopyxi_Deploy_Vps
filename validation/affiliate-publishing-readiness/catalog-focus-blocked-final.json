@@ -1,0 +1,8 @@
+{
+  "scenario": "I",
+  "headed": true,
+  "sameCatalogPage": true,
+  "focusRefetchedCurrentReadiness": true,
+  "staleOfferRemoved": true,
+  "noOpenOfferAfterRefresh": true
+}

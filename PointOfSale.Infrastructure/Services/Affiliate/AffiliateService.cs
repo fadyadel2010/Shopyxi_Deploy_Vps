@@ -52,6 +52,7 @@ public partial class AffiliateService : IAffiliateService
     private readonly IAffiliateSettlementOrchestrator _orchestrator;
     private readonly AffiliateSettlementOptions _settlementOptions;
     private readonly SyntheticQaCertificationAuthority? _syntheticQa;
+    private readonly IAffiliatePromotionReadiness? _promotionReadiness;
 
     public AffiliateService(
         ApplicationDbContext context,
@@ -62,8 +63,10 @@ public partial class AffiliateService : IAffiliateService
         IAffiliatePayoutService payoutService,
         IAffiliateSettlementOrchestrator orchestrator,
         IOptions<AffiliateSettlementOptions> settlementOptions,
-        SyntheticQaCertificationAuthority? syntheticQa = null)
+        SyntheticQaCertificationAuthority? syntheticQa = null,
+        IAffiliatePromotionReadiness? promotionReadiness = null)
     {
+        _promotionReadiness = promotionReadiness;
         _syntheticQa = syntheticQa;
         _context = context;
         _tenantContext = tenantContext;
@@ -240,6 +243,8 @@ public partial class AffiliateService : IAffiliateService
         CancellationToken ct = default)
     {
         var tenantId = TenantId;
+        await using var admissionTransaction = _context.Database.CurrentTransaction == null
+            ? await _context.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted, ct) : null;
 
         var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId && p.TenantId == tenantId, ct);
         if (product == null)
@@ -253,6 +258,7 @@ public partial class AffiliateService : IAffiliateService
         // Affiliate policy must not become a hidden Product lifecycle mutation rule.
         if (existing == null || !existing.IsEnabled)
         {
+            await EnsurePromotionPrerequisitesAsync(productId, ct);
             await EnsureProductEligibleForAffiliateAsync(product, ct);
         }
 
@@ -278,6 +284,7 @@ public partial class AffiliateService : IAffiliateService
             existing.Enable();
             await PublishAffiliateProductPolicyChangedAsync(existing, category, ct);
             await _context.SaveChangesAsync(ct);
+            if (admissionTransaction != null) await admissionTransaction.CommitAsync(ct);
 
             _logger.LogInformation(
                 "[AF-30A] Affiliate policy updated for Product {ProductId}",
@@ -390,6 +397,7 @@ public partial class AffiliateService : IAffiliateService
             // Affiliate-owned edits to an enabled policy must not depend on Product state.
             if (existing == null || !existing.IsEnabled)
             {
+                await EnsurePromotionPrerequisitesAsync(productId, ct);
                 await EnsureProductEligibleForAffiliateAsync(product, ct);
             }
 
@@ -539,6 +547,16 @@ public partial class AffiliateService : IAffiliateService
 
         if (!await HasAvailableAffiliateInventoryAsync(product, ct))
             throw new InvalidOperationException("Products must be in stock or allow backorders before affiliate eligibility can be enabled.");
+    }
+
+    private async Task EnsurePromotionPrerequisitesAsync(Guid productId, CancellationToken ct)
+    {
+        // Entry/re-entry only. Independent readiness changes never rewrite an
+        // existing policy, its commission settings, or normal product status.
+        if (_promotionReadiness == null)
+            throw new InvalidOperationException("Affiliate promotion readiness authority is unavailable.");
+        var readiness = await _promotionReadiness.EvaluateForMutationAsync(TenantId, productId, ct);
+        if (!readiness.PrerequisitesReady) throw new AffiliatePromotionNotReadyException(readiness);
     }
 
     private async Task<bool> HasPositiveAffiliatePriceAsync(Product product, CancellationToken ct)

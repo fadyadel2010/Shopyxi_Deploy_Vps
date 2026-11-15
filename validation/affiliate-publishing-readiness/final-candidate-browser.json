@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "headed": true,
+  "onlyIsolatedFixture": true,
+  "checks": [
+    "four ready sections",
+    "eligible catalog and existing link",
+    "simultaneous blockers",
+    "API stale/cross-tenant bypass",
+    "English/Arabic navigation",
+    "partial and complete restoration"
+  ],
+  "financialWorkflowRepeated": false,
+  "productionBusinessMutations": false
+}

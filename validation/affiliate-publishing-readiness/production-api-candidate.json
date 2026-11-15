@@ -1,0 +1,32 @@
+{
+  "verifiedAtUtc": "2026-11-15T20:22:18.825541+00:00",
+  "image": "docker.io/shopixy/api@sha256:39a79e0baaa7a6a935e2f84b6e77a7d4b22618c6f5d9b5e59a5d8f1ebbc9856b",
+  "runtimeConfigId": "sha256:e6671572d11bf35d6d44bede48386452b61bdb7b955f580034d11920ea3f7c61",
+  "sourceInputSha256": "eacda4b4d4f0de57bf3be8207e3dd32cbe9d82ba3a64904372bd09b14066d6d0",
+  "sourceInputsMatchStagedIndex": true,
+  "sourceInputsMatched": 2651,
+  "assemblySha256": [
+    {
+      "filename": "PointOfSale.API.dll",
+      "sha256": "0eee889756bd97d865161b7ad59e2cc636dca532c47ea6cbf4cb74cdd800c719"
+    },
+    {
+      "filename": "PointOfSale.Core.dll",
+      "sha256": "6f92ca63f5562a0f3e3b95155dd28512fdd75f30913601d71a41125197b5150f"
+    },
+    {
+      "filename": "PointOfSale.Infrastructure.dll",
+      "sha256": "0d19323a0bce50bd613ff6d1ae74e94e00b26a7dfb7003e92a6530bfdd451133"
+    }
+  ],
+  "archiveSha256": "ca805f9a96686643aaeaf9782eb8602128f9c09ce406b49e9e5cc06f5236a571",
+  "securityGatePassed": true,
+  "nugetVulnerablePackages": 0,
+  "trivyHighCriticalFindings": 0,
+  "trivyReportSha256": "7528c21074368e922f701a04b35912f4d6aa5c3a58b809c6c412efff9892f5c7",
+  "nugetAuditSha256": "14c1570864f4992cf1dc869ca34066a6cc52fc4bbdea964e28a820804eb9768c",
+  "runtimeVersion": "10.0.15",
+  "uid": 1654,
+  "productionDeployment": false,
+  "deliveryMethod": "not delivered; local archive only"
+}

@@ -1,0 +1,96 @@
+{
+  "scenarios": [
+    "B",
+    "C",
+    "J"
+  ],
+  "method": "existing optimistic-concurrency Admin status API fixture operations, headed Manage readback",
+  "results": [
+    {
+      "value": "disabled",
+      "readiness": {
+        "productFound": true,
+        "storefrontReady": false,
+        "paymentReady": true,
+        "shippingReady": true,
+        "productSellable": true,
+        "policyEnabled": true,
+        "categoryReady": true,
+        "blockerCodes": [
+          "STOREFRONT_NOT_ENABLED",
+          "STOREFRONT_NOT_ACTIVE"
+        ],
+        "prerequisitesReady": false,
+        "isPromotionEligible": false
+      },
+      "policyEnabled": true,
+      "commissionRate": 0.1,
+      "panel": "Not ready for Affiliate promotion\n\nStorefront: BLOCKED\nThe Storefront is not enabled. Storefront Settings\nThe Storefront is not live or the merchant is inactive. Storefront Settings\nPayment: READY\nShipping: READY\nProduct: READY",
+      "links": [
+        "/storefront/status",
+        "/storefront/status"
+      ]
+    },
+    {
+      "value": "live",
+      "readiness": {
+        "productFound": true,
+        "storefrontReady": true,
+        "paymentReady": true,
+        "shippingReady": true,
+        "productSellable": true,
+        "policyEnabled": true,
+        "categoryReady": true,
+        "blockerCodes": [],
+        "prerequisitesReady": true,
+        "isPromotionEligible": true
+      },
+      "policyEnabled": true,
+      "commissionRate": 0.1,
+      "panel": "Ready for Affiliate promotion\n\nStorefront: READY\nPayment: READY\nShipping: READY\nProduct: READY",
+      "links": []
+    },
+    {
+      "value": "maintenance",
+      "readiness": {
+        "productFound": true,
+        "storefrontReady": false,
+        "paymentReady": true,
+        "shippingReady": true,
+        "productSellable": true,
+        "policyEnabled": true,
+        "categoryReady": true,
+        "blockerCodes": [
+          "STOREFRONT_NOT_ACTIVE"
+        ],
+        "prerequisitesReady": false,
+        "isPromotionEligible": false
+      },
+      "policyEnabled": true,
+      "commissionRate": 0.1,
+      "panel": "Not ready for Affiliate promotion\n\nStorefront: BLOCKED\nThe Storefront is not live or the merchant is inactive. Storefront Settings\nPayment: READY\nShipping: READY\nProduct: READY",
+      "links": [
+        "/storefront/status"
+      ]
+    },
+    {
+      "value": "live",
+      "readiness": {
+        "productFound": true,
+        "storefrontReady": true,
+        "paymentReady": true,
+        "shippingReady": true,
+        "productSellable": true,
+        "policyEnabled": true,
+        "categoryReady": true,
+        "blockerCodes": [],
+        "prerequisitesReady": true,
+        "isPromotionEligible": true
+      },
+      "policyEnabled": true,
+      "commissionRate": 0.1,
+      "panel": "Ready for Affiliate promotion\n\nStorefront: READY\nPayment: READY\nShipping: READY\nProduct: READY",
+      "links": []
+    }
+  ]
+}

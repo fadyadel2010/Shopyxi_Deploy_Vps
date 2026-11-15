@@ -46,6 +46,7 @@ public class AffiliatePortalController : ControllerBase
     private readonly StorefrontUrlResolver _storefrontUrlResolver;
     private readonly ILogger<AffiliatePortalController> _logger;
     private readonly int _lowStockThreshold;
+    private readonly IAffiliatePromotionReadiness? _promotionReadiness;
 
     public AffiliatePortalController(
         ApplicationDbContext dbContext,
@@ -55,8 +56,10 @@ public class AffiliatePortalController : ControllerBase
         ITenantContext tenantContext,
         StorefrontUrlResolver storefrontUrlResolver,
         ILogger<AffiliatePortalController> logger,
-        IConfiguration? configuration = null)
+        IConfiguration? configuration = null,
+        IAffiliatePromotionReadiness? promotionReadiness = null)
     {
+        _promotionReadiness = promotionReadiness;
         _dbContext = dbContext;
         _mongoDbContext = mongoDbContext;
         _affiliateService = affiliateService;
@@ -1643,6 +1646,9 @@ public class AffiliatePortalController : ControllerBase
             }
 
             var product = products[index];
+            if (_promotionReadiness == null ||
+                !(await _promotionReadiness.EvaluateAsync(candidate.TenantId, candidate.ProductId, ct)).IsPromotionEligible)
+                continue;
             if (product is not { IsActive: true, IsOnlineVisible: true, IsSearchable: true } ||
                 !product.IsAffiliateEnabled ||
                 !product.TryResolveAffiliatePublicPricing(out var pricing) ||
@@ -1777,6 +1783,10 @@ public class AffiliatePortalController : ControllerBase
             },
             candidate.TenantId,
             ct);
+
+        if (_promotionReadiness == null ||
+            !(await _promotionReadiness.EvaluateAsync(candidate.TenantId, candidate.ProductId, ct)).IsPromotionEligible)
+            return null;
 
         if (product is not { IsActive: true, IsOnlineVisible: true, IsSearchable: true } ||
             !product.IsAffiliateEnabled ||

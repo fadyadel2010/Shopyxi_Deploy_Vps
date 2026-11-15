@@ -1,0 +1,34 @@
+{
+  "scenario": "G",
+  "mutations": {
+    "storefront": "disabled",
+    "payment": "COD disabled",
+    "shipping": "manual inactive"
+  },
+  "readiness": {
+    "productFound": true,
+    "storefrontReady": false,
+    "paymentReady": false,
+    "shippingReady": false,
+    "productSellable": true,
+    "policyEnabled": true,
+    "categoryReady": true,
+    "blockerCodes": [
+      "STOREFRONT_NOT_ENABLED",
+      "STOREFRONT_NOT_ACTIVE",
+      "PAYMENT_METHOD_REQUIRED",
+      "SHIPPING_METHOD_REQUIRED"
+    ],
+    "prerequisitesReady": false,
+    "isPromotionEligible": false
+  },
+  "isPolicyEnabled": true,
+  "commissionRate": 0.1,
+  "panel": "Not ready for Affiliate promotion\n\nStorefront: BLOCKED\nThe Storefront is not enabled. Storefront Settings\nThe Storefront is not live or the merchant is inactive. Storefront Settings\nPayment: BLOCKED\nAt least one usable checkout payment method is required. Payment Methods\nShipping: BLOCKED\nAt least one usable checkout shipping method is required. Shipping Methods\nProduct: READY",
+  "links": [
+    "/storefront/status",
+    "/storefront/status",
+    "/ecommerce/payment-methods",
+    "/ecommerce/shipping-methods"
+  ]
+}

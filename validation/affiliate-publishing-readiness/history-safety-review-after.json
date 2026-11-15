@@ -1,0 +1,26 @@
+{
+  "capturedAtUtc": "2026-11-15T20:45:36.945326+00:00",
+  "stage": "after",
+  "readOnlyRepeatableRead": true,
+  "existingRowCounts": {
+    "Orders": 1,
+    "OrderItems": 1,
+    "OrderRefunds": 1,
+    "OrderRefundLines": 1,
+    "AffiliateAttributions": 1,
+    "AffiliateCommissionLedger": 4,
+    "AffiliateBalanceLedger": 2,
+    "AffiliatePayoutRequests": 2,
+    "AffiliateManualPayouts": 1,
+    "AffiliateManualPayoutReturns": 1,
+    "AffiliateManualPayoutReturnAllocations": 1,
+    "PaymentSettlementBatches": 1,
+    "PaymentSettlementOrders": 1,
+    "LedgerJournalEntries": 11,
+    "LedgerLines": 22,
+    "StockMovements": 4,
+    "InventoryReservations": 1
+  },
+  "allExistingHistoricalRowsUnchanged": true,
+  "privateRowBodiesExported": false
+}

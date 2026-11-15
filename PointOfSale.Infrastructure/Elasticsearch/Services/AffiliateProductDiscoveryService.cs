@@ -9,6 +9,7 @@ using PointOfSale.Infrastructure.Elasticsearch.Configuration;
 using PointOfSale.Infrastructure.Elasticsearch.Documents;
 using PointOfSale.Infrastructure.MongoDB.Documents;
 using PointOfSale.Core.Tenancy;
+using PointOfSale.Core.Interfaces.Affiliate;
 
 namespace PointOfSale.Infrastructure.Elasticsearch.Services;
 
@@ -136,14 +137,17 @@ public class AffiliateProductDiscoveryService : IAffiliateProductDiscoveryServic
     private readonly IConfiguration _configuration;
     private readonly ElasticsearchSettings _settings;
     private readonly ILogger<AffiliateProductDiscoveryService> _logger;
+    private readonly IAffiliatePromotionReadiness? _promotionReadiness;
 
     public AffiliateProductDiscoveryService(
         IOpenSearchClient client,
         ApplicationDbContext dbContext,
         IConfiguration configuration,
         IOptions<ElasticsearchSettings> settings,
-        ILogger<AffiliateProductDiscoveryService> logger)
+        ILogger<AffiliateProductDiscoveryService> logger,
+        IAffiliatePromotionReadiness? promotionReadiness = null)
     {
+        _promotionReadiness = promotionReadiness;
         _client = client;
         _dbContext = dbContext;
         _configuration = configuration;
@@ -422,6 +426,7 @@ public class AffiliateProductDiscoveryService : IAffiliateProductDiscoveryServic
             if (product is not { IsActive: true, IsOnlineVisible: true, IsSearchable: true } ||
                 !product.IsAffiliateEnabled ||
                 (categoryId.HasValue && product.CategoryId != categoryId.Value) ||
+                (_promotionReadiness == null || !(await _promotionReadiness.EvaluateAsync(candidate.TenantId, candidate.ProductId, cancellationToken)).IsPromotionEligible) ||
                 !product.TryResolveAffiliatePublicPricing(out var pricing) ||
                 !pricing.InStock)
             {

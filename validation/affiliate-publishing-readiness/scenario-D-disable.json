@@ -1,0 +1,7 @@
+{
+  "scenario": "D",
+  "method": "supported COD disable API, headed Manage UI",
+  "status": 200,
+  "text": "Not ready for Affiliate promotion\n\nStorefront: READY\nPayment: BLOCKED\nAt least one usable checkout payment method is required. Payment Methods\nShipping: READY\nProduct: READY",
+  "navigation": "/ecommerce/payment-methods"
+}

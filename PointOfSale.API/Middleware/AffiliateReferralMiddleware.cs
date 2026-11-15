@@ -9,6 +9,7 @@ using PointOfSale.Core.Entities.Affiliate;
 using PointOfSale.Core.Enums;
 using PointOfSale.Core.Events.Affiliate;
 using PointOfSale.Core.Interfaces;
+using PointOfSale.Core.Interfaces.Affiliate;
 using PointOfSale.Infrastructure.Data;
 using PointOfSale.Infrastructure.MultiTenancy;
 using PointOfSale.Infrastructure.Reliability;
@@ -71,7 +72,8 @@ public class AffiliateReferralMiddleware
         IEventPublisher eventPublisher,
         IAffiliateModeMetricsService metricsService,
         IAffiliateAttributionEvidenceTokenService attributionEvidenceTokens,
-        IAffiliateShoppingJourneyService shoppingJourneys)
+        IAffiliateShoppingJourneyService shoppingJourneys,
+        IAffiliatePromotionReadiness? promotionReadiness = null)
     {
         var downstreamInvoked = false;
 
@@ -277,7 +279,7 @@ public class AffiliateReferralMiddleware
                         context.RequestAborted);
 
                 if (product == null ||
-                    !await IsProductCurrentlyAffiliateSelectableAsync(dbContext, product, context.RequestAborted))
+                    !await IsProductCurrentlyAffiliateSelectableAsync(dbContext, product, context.RequestAborted, promotionReadiness))
                 {
                     if (protectedEvidence != null)
                     {
@@ -436,6 +438,31 @@ public class AffiliateReferralMiddleware
                 {
                     await InvokeNextAsync();
                     return;
+                }
+
+                if (promotionReadiness == null ||
+                    !(await promotionReadiness.EvaluateMerchantAsync(currentTenantId, context.RequestAborted)).IsReady)
+                {
+                    if (protectedEvidence != null) context.Response.Cookies.Delete(AttributionCookieName);
+                    await InvokeNextAsync();
+                    return;
+                }
+
+                if (protectedEvidence == null ||
+                    context.Request.Path.StartsWithSegments("/p") ||
+                    context.Request.Path.StartsWithSegments("/api/storefront/landing"))
+                {
+                    var productKey = context.Request.Path.Value?.Split('/', StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
+                    Guid.TryParse(productKey, out var productKeyId);
+                    var landingProduct = await dbContext.Products.AsNoTracking().IgnoreQueryFilters()
+                        .SingleOrDefaultAsync(p => p.TenantId == currentTenantId && !p.IsDeleted &&
+                            (p.Id == productKeyId || p.Slug == productKey), context.RequestAborted);
+                    if (landingProduct == null || promotionReadiness == null ||
+                        !(await promotionReadiness.EvaluateAsync(currentTenantId, landingProduct.Id, context.RequestAborted)).IsPromotionEligible)
+                    {
+                        await InvokeNextAsync();
+                        return;
+                    }
                 }
 
                 // ═══════════════════════════════════════════════════════════════════
@@ -655,7 +682,8 @@ public class AffiliateReferralMiddleware
     private static async Task<bool> IsProductCurrentlyAffiliateSelectableAsync(
         ApplicationDbContext dbContext,
         Product product,
-        CancellationToken ct)
+        CancellationToken ct,
+        IAffiliatePromotionReadiness? promotionReadiness = null)
     {
         if (product.IsDeleted ||
             !product.IsActive ||
@@ -702,7 +730,7 @@ public class AffiliateReferralMiddleware
         }
 
         return await HasAvailableAffiliateInventoryAsync(dbContext, product, ct) &&
-            await AffiliatePromotionAttributionAuthority.IsProductEligibleAsync(dbContext, product, ct);
+            await AffiliatePromotionAttributionAuthority.IsProductEligibleAsync(dbContext, product, ct, promotionReadiness);
     }
 
     private static async Task<bool> HasPositiveAffiliatePriceAsync(

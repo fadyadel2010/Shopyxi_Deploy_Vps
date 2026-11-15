@@ -154,6 +154,8 @@ function enabledBaseline() {
         maxCommissionPerItem: 25,
         templateType: 'ClassicV1',
         affiliateCategoryId: 'category-a',
+        readiness: { storefrontReady: true, paymentReady: true, shippingReady: true,
+            productSellable: true, prerequisitesReady: true, isPromotionEligible: true, blockerCodes: [] },
     }
 }
 
@@ -173,6 +175,27 @@ describe('product affiliate settings edit authority', () => {
             missingRequirements: [],
         })
         getCategoryTreeMock.mockResolvedValue(categoryTree)
+    })
+
+    it('publishing readiness fails closed when the product-level result is unavailable', async () => {
+        getSettingsMock.mockResolvedValue({ ...enabledBaseline(), isEnabled: false, isPolicyEnabled: false, readiness: null })
+        renderCard()
+        expect(await screen.findByRole('button', { name: 'Enable Affiliate Marketing' })).toBeDisabled()
+        expect(enableWithCategoryMock).not.toHaveBeenCalled()
+    })
+
+    it('publishing readiness does not block harmless edits to enabled participation', async () => {
+        const settings = { ...enabledBaseline(), isEnabled: false, isPolicyEnabled: true,
+            readiness: { ...enabledBaseline().readiness, paymentReady: false, prerequisitesReady: false,
+                isPromotionEligible: false, blockerCodes: ['PAYMENT_METHOD_REQUIRED'] } }
+        getSettingsMock.mockResolvedValue(settings)
+        enableWithCategoryMock.mockResolvedValue(settings)
+        renderCard()
+        const save = await screen.findByRole('button', { name: 'Save Changes' })
+        expect(save).toBeEnabled()
+        fireEvent.click(save)
+        await waitFor(() => expect(enableWithCategoryMock).toHaveBeenCalledTimes(1))
+        expect(screen.queryByRole('button', { name: 'Enable Affiliate Marketing' })).not.toBeInTheDocument()
     })
 
     it('preserves unsaved edits during lifecycle refetch and resets to backend authority', async () => {

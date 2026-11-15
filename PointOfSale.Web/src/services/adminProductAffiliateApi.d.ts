@@ -1,5 +1,6 @@
 import type { ApiJson } from './apiJson';
-export interface AffiliateProductSettings { productId: string; isEnabled: boolean; isPolicyEnabled: boolean; commissionRate: number | null; maxCommissionPerItem: number | null; templateType: string; affiliateCategoryId: string | null }
+import type { PromotionReadiness } from '../components/AffiliatePromotionReadiness';
+export interface AffiliateProductSettings { productId: string; isEnabled: boolean; isPolicyEnabled: boolean; readiness?: PromotionReadiness | null; commissionRate: number | null; maxCommissionPerItem: number | null; templateType: string; affiliateCategoryId: string | null }
 declare const adminProductAffiliateApi: {
     listProducts(page?: number, pageSize?: number, params?: Record<string, unknown>): Promise<{ items: ApiJson[]; totalCount: number; page: number; pageSize: number; totalPages: number }>;
     getSettings(id: string): Promise<AffiliateProductSettings>; getCategoryTree(): Promise<ApiJson>;

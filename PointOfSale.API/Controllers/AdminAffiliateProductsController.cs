@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PointOfSale.Core.Interfaces;
+using PointOfSale.Core.Interfaces.Affiliate;
 using PointOfSale.Core.Pagination;
 using PointOfSale.Infrastructure.Data;
 
@@ -32,12 +33,15 @@ public class AdminAffiliateProductsController : ControllerBase
     private readonly ApplicationDbContext _dbContext;
     private readonly ITenantContext _tenantContext;
     private readonly ILogger<AdminAffiliateProductsController> _logger;
+    private readonly IAffiliatePromotionReadiness? _promotionReadiness;
 
     public AdminAffiliateProductsController(
         ApplicationDbContext dbContext,
         ITenantContext tenantContext,
-        ILogger<AdminAffiliateProductsController> logger)
+        ILogger<AdminAffiliateProductsController> logger,
+        IAffiliatePromotionReadiness? promotionReadiness = null)
     {
+        _promotionReadiness = promotionReadiness;
         _dbContext = dbContext;
         _tenantContext = tenantContext;
         _logger = logger;
@@ -266,6 +270,10 @@ public class AdminAffiliateProductsController : ControllerBase
             .ToList();
 
         Response.Headers["X-Total-Count"] = totalCount.ToString();
+        Response.Headers.CacheControl = "no-store";
+        foreach (var item in items)
+            item.Readiness = _promotionReadiness == null ? null :
+                await _promotionReadiness.EvaluateAsync(tenantId, item.ProductId, ct);
         Response.Headers["X-Page"] = page.ToString();
         Response.Headers["X-Page-Size"] = pageSize.ToString();
         Response.Headers["X-Total-Pages"] = totalPages.ToString();
@@ -287,6 +295,7 @@ public class AdminAffiliateProductsController : ControllerBase
 /// </summary>
 public sealed class AffiliateProductListItem
 {
+    public AffiliatePromotionReadiness? Readiness { get; set; }
     public Guid ProductId { get; init; }
     public string ProductName { get; init; } = string.Empty;
     public string? ProductNameAr { get; init; }

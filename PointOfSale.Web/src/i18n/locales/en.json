@@ -1,4 +1,27 @@
 {
+  "affiliatePublishingReadiness": {
+    "title": "Affiliate promotion readiness",
+    "ready": "Ready for Affiliate promotion",
+    "blocked": "Not ready for Affiliate promotion",
+    "unavailable": "Promotion readiness unavailable. Refresh before enabling.",
+    "review": "Review the current promotion prerequisites.",
+    "areas": { "storefront": "Storefront", "payment": "Payment", "shipping": "Shipping", "product": "Product" },
+    "states": { "ready": "READY", "blocked": "BLOCKED", "unknown": "Not checked" },
+    "links": { "storefront": "Storefront Settings", "payments": "Payment Methods", "shipping": "Shipping Methods", "product": "Manage product" },
+    "codes": {
+      "STOREFRONT_NOT_ENABLED": "The Storefront is not enabled.",
+      "STOREFRONT_NOT_ACTIVE": "The Storefront is not live or the merchant is inactive.",
+      "PAYMENT_METHOD_REQUIRED": "At least one usable checkout payment method is required.",
+      "SHIPPING_METHOD_REQUIRED": "At least one usable checkout shipping method is required.",
+      "PRODUCT_NOT_ACTIVE": "The product is inactive.",
+      "PRODUCT_NOT_PUBLISHED": "The product is not published.",
+      "PRODUCT_ARCHIVED": "The product is archived.",
+      "PRODUCT_NOT_SELLABLE": "The product is not currently sellable under Storefront pricing, visibility or availability rules.",
+      "PRODUCT_CONFIGURATION_INVALID": "The product's required fields, EGP pricing or variant/unit configuration are invalid.",
+      "AFFILIATE_POLICY_DISABLED": "Affiliate participation is not enabled. Configure the policy here after prerequisites pass.",
+      "AFFILIATE_CATEGORY_REQUIRED": "Select an active Affiliate category with an active parent, where applicable."
+    }
+  },
   "financialVouchers": {
     "printFailed": "Voucher printing failed. No financial action was repeated. Try printing the document again.",
     "title": "Receipt / payment vouchers", "number": "Voucher number", "kind": "Kind", "kind0": "Receipt", "kind1": "Payment", "party": "Customer / supplier", "amount": "Amount", "currency": "Frozen currency", "status": "Status", "status0": "Issued", "status1": "Reversed",

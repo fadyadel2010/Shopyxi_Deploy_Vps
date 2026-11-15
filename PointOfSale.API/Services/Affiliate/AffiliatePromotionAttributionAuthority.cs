@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using PointOfSale.Core.Entities;
 using PointOfSale.Core.Entities.Affiliate;
 using PointOfSale.Core.Enums;
+using PointOfSale.Core.Interfaces.Affiliate;
 using PointOfSale.Infrastructure.Data;
 using PointOfSale.Infrastructure.Elasticsearch.Services;
 using PointOfSale.Infrastructure.MongoDB.Documents;
@@ -25,8 +26,11 @@ internal static class AffiliatePromotionAttributionAuthority
                       select (Guid?)profile.Id).SingleOrDefaultAsync(ct);
     }
 
-    internal static async Task<bool> IsProductEligibleAsync(ApplicationDbContext db, Product product, CancellationToken ct)
+    internal static async Task<bool> IsProductEligibleAsync(ApplicationDbContext db, Product product, CancellationToken ct,
+        IAffiliatePromotionReadiness? readiness = null)
     {
+        if (readiness == null || !(await readiness.EvaluateAsync(product.TenantId, product.Id, ct)).IsPromotionEligible)
+            return false;
         var merchantActive = await db.Tenants.AsNoTracking().IgnoreQueryFilters().AnyAsync(t =>
             t.Id == product.TenantId && t.IsActive && t.Status == TenantStatus.Active && t.DeletedAtUtc == null, ct);
         if (!merchantActive) return false;

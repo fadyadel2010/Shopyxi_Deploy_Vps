@@ -1,0 +1,40 @@
+{
+  "scenario": "K",
+  "rows": [
+    {
+      "language": "en",
+      "text": "Not ready for Affiliate promotion\n\nStorefront: BLOCKED\nThe Storefront is not enabled. Storefront Settings\nThe Storefront is not live or the merchant is inactive. Storefront Settings\nPayment: BLOCKED\nAt least one usable checkout payment method is required. Payment Methods\nShipping: BLOCKED\nAt least one usable checkout shipping method is required. Shipping Methods\nProduct: READY",
+      "sections": 4
+    },
+    {
+      "language": "ar",
+      "text": "غير جاهز للترويج بالعمولة\n\nالمتجر الإلكتروني: غير مستوفٍ\nالمتجر الإلكتروني غير مفعّل. إعدادات المتجر\nالمتجر الإلكتروني غير منشور أو التاجر غير نشط. إعدادات المتجر\nالدفع: غير مستوفٍ\nيجب توفير طريقة دفع واحدة على الأقل صالحة للاستخدام عند إتمام الطلب. طرق الدفع\nالشحن: غير مستوفٍ\nيجب توفير طريقة شحن واحدة على الأقل صالحة للاستخدام عند إتمام الطلب. طرق الشحن\nالمنتج: جاهز",
+      "sections": 4,
+      "dir": "rtl"
+    }
+  ],
+  "navigation": [
+    {
+      "path": "/storefront/status",
+      "identity": {
+        "tenantId": "15150000-2026-4015-a000-000000000001",
+        "role": "Owner"
+      }
+    },
+    {
+      "path": "/ecommerce/payment-methods",
+      "identity": {
+        "tenantId": "15150000-2026-4015-a000-000000000001",
+        "role": "Owner"
+      }
+    },
+    {
+      "path": "/ecommerce/shipping-methods",
+      "identity": {
+        "tenantId": "15150000-2026-4015-a000-000000000001",
+        "role": "Owner"
+      }
+    }
+  ],
+  "languageRestored": "en"
+}

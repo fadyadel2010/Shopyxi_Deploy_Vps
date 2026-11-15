@@ -16,6 +16,7 @@ using Microsoft.Extensions.Options;
 using System.Linq;
 using PointOfSale.API.Services;
 using PointOfSale.Core.Entities;
+using PointOfSale.Core.Interfaces.Affiliate;
 
 namespace PointOfSale.API.Controllers;
 
@@ -32,6 +33,7 @@ namespace PointOfSale.API.Controllers;
 [ApiController]
 [Route("api/public/affiliate/products")]
 [AllowAnonymous]
+[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
 public class PublicAffiliateProductsController : ControllerBase
 {
     private const int CandidateBatchSize = 500;
@@ -42,14 +44,17 @@ public class PublicAffiliateProductsController : ControllerBase
     private readonly StorefrontUrlResolver _storefrontUrlResolver;
     private readonly ElasticsearchSettings _elasticSettings;
     private readonly ILogger<PublicAffiliateProductsController> _logger;
+    private readonly IAffiliatePromotionReadiness? _promotionReadiness;
 
     public PublicAffiliateProductsController(
         IOpenSearchClient elasticClient,
         ApplicationDbContext dbContext,
         StorefrontUrlResolver storefrontUrlResolver,
         IOptions<ElasticsearchSettings> elasticSettings,
-        ILogger<PublicAffiliateProductsController> logger)
+        ILogger<PublicAffiliateProductsController> logger,
+        IAffiliatePromotionReadiness? promotionReadiness = null)
     {
+        _promotionReadiness = promotionReadiness;
         _elasticClient = elasticClient;
         _dbContext = dbContext;
         _storefrontUrlResolver = storefrontUrlResolver;
@@ -418,6 +423,7 @@ public class PublicAffiliateProductsController : ControllerBase
             var candidate = validCandidates[index];
             var product = products[index];
             if (!approvedKeys.Contains((candidate.TenantId, candidate.ProductId)) ||
+                (_promotionReadiness == null || !(await _promotionReadiness.EvaluateAsync(candidate.TenantId, candidate.ProductId, cancellationToken)).IsPromotionEligible) ||
                 product is not { IsActive: true, IsOnlineVisible: true, IsSearchable: true } ||
                 !product.IsAffiliateEnabled ||
                 !product.TryResolveAffiliatePublicPricing(out var pricing) ||
@@ -501,7 +507,8 @@ public class PublicAffiliateProductsController : ControllerBase
                               !parent.IsDeleted))),
                 cancellationToken);
 
-        if (!policyExists)
+        if (!policyExists || _promotionReadiness == null ||
+            !(await _promotionReadiness.EvaluateAsync(candidate.TenantId, candidate.ProductId, cancellationToken)).IsPromotionEligible)
         {
             return null;
         }

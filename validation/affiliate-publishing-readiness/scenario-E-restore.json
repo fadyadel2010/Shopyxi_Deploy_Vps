@@ -1,0 +1,22 @@
+{
+  "scenarios": [
+    "E",
+    "J"
+  ],
+  "status": 204,
+  "readiness": {
+    "productFound": true,
+    "storefrontReady": true,
+    "paymentReady": true,
+    "shippingReady": true,
+    "productSellable": true,
+    "policyEnabled": true,
+    "categoryReady": true,
+    "blockerCodes": [],
+    "prerequisitesReady": true,
+    "isPromotionEligible": true
+  },
+  "isPolicyEnabled": true,
+  "commissionRate": 0.1,
+  "manualShippingQualifiesWithoutCarrierMapping": true
+}

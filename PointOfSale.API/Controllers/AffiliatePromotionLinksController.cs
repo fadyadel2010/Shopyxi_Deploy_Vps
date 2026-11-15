@@ -7,6 +7,7 @@ using PointOfSale.API.Services;
 using PointOfSale.Core.Entities;
 using PointOfSale.Core.Entities.Affiliate;
 using PointOfSale.Core.Enums;
+using PointOfSale.Core.Interfaces.Affiliate;
 using PointOfSale.Infrastructure.Data;
 using PointOfSale.Infrastructure.Elasticsearch.Services;
 using PointOfSale.Infrastructure.MongoDB.Documents;
@@ -41,12 +42,15 @@ public class AffiliatePromotionLinksController : ControllerBase
     private readonly ApplicationDbContext _dbContext;
     private readonly StorefrontUrlResolver _urlResolver;
     private readonly ILogger<AffiliatePromotionLinksController> _logger;
+    private readonly IAffiliatePromotionReadiness? _promotionReadiness;
 
     public AffiliatePromotionLinksController(
         ApplicationDbContext dbContext,
         StorefrontUrlResolver urlResolver,
-        ILogger<AffiliatePromotionLinksController> logger)
+        ILogger<AffiliatePromotionLinksController> logger,
+        IAffiliatePromotionReadiness? promotionReadiness = null)
     {
+        _promotionReadiness = promotionReadiness;
         _dbContext = dbContext;
         _urlResolver = urlResolver;
         _logger = logger;
@@ -89,6 +93,13 @@ public class AffiliatePromotionLinksController : ControllerBase
         if (product == null)
             return NotFound(new { error = "Product not found in this store" });
 
+        if (_promotionReadiness == null)
+            return StatusCode(503, new { code = "AFFILIATE_READINESS_UNAVAILABLE" });
+        await using var transaction = await _dbContext.Database.BeginTransactionAsync(ct);
+        var readiness = await _promotionReadiness.EvaluateForMutationAsync(product.TenantId, product.Id, ct);
+        if (!readiness.IsPromotionEligible)
+            return BadRequest(new { code = "AFFILIATE_PROMOTION_NOT_READY" });
+
         if (!await IsProductCurrentlyAffiliateSelectableAsync(product, ct))
             return BadRequest(new { error = "Product is not enabled for affiliate promotion" });
 
@@ -108,6 +119,7 @@ public class AffiliatePromotionLinksController : ControllerBase
                 await _dbContext.SaveChangesAsync(ct);
             }
             var existingResponse = await MapToResponseAsync(existingLink, requireCurrentSelectionAdmission: true, ct);
+            if (existingResponse != null) await transaction.CommitAsync(ct);
             return existingResponse == null
                 ? BadRequest(new { error = "Product is not enabled for affiliate promotion" })
                 : Ok(existingResponse);
@@ -130,12 +142,14 @@ public class AffiliatePromotionLinksController : ControllerBase
             {
                 await _dbContext.SaveChangesAsync(ct);
                 response.CreatedAt = link.CreatedAt;
+                await transaction.CommitAsync(ct);
                 _logger.LogInformation("[AF-15] Promotion link created | LinkId: {LinkId} | ProductId: {ProductId} | StoreId: {StoreId}",
                     link.Id, product.Id, product.TenantId);
                 return CreatedAtAction(nameof(GetById), new { id = link.Id }, response);
             }
             catch (DbUpdateException ex) when (IsPromotionUniqueConflict(ex))
             {
+                // EF's savepoint restores the transaction after a unique violation.
                 // A competing retry may have committed the logical link. The failed
                 // insert is atomic; detach it before reading the winner or retrying a code.
                 _dbContext.Entry(link).State = EntityState.Detached;
@@ -146,6 +160,7 @@ public class AffiliatePromotionLinksController : ControllerBase
                 {
                     var admitted = await MapToResponseAsync(winner, requireCurrentSelectionAdmission: true, ct);
                     if (admitted == null) return BadRequest(new { error = "Product is not enabled for affiliate promotion" });
+                    await transaction.CommitAsync(ct);
                     return Ok(admitted);
                 }
             }
@@ -295,6 +310,9 @@ public class AffiliatePromotionLinksController : ControllerBase
 
     private async Task<bool> IsProductCurrentlyAffiliateSelectableAsync(Product product, CancellationToken ct)
     {
+        if (_promotionReadiness == null ||
+            !(await _promotionReadiness.EvaluateAsync(product.TenantId, product.Id, ct)).IsPromotionEligible)
+            return false;
         if (product.IsDeleted ||
             !product.IsActive ||
             product.PublishStatus != PublishStatus.Published ||

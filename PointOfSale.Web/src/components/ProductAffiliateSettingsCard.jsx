@@ -4,6 +4,7 @@ import adminProductAffiliateApi from '../services/adminProductAffiliateApi'
 import { useAuthStore } from '../store/authStore'
 import { useAffiliateReadiness } from '../hooks/useAffiliateReadiness'
 import AffiliateReadinessWarning from './AffiliateReadinessWarning'
+import AffiliatePromotionReadiness from './AffiliatePromotionReadiness'
 import { useConfirmDialog } from '../common/confirm/ConfirmDialogProvider'
 import { adminCategoryDisplayName } from '../modules/affiliate/lib/adminCategoryDisplayName'
 
@@ -235,6 +236,7 @@ export default function ProductAffiliateSettingsCard({
         // the explicit policy state when the server supplies it.
         isEnabled: Boolean(data?.isPolicyEnabled ?? data?.isEnabled),
         isEligible: Boolean(data?.isEnabled),
+        readiness: data?.readiness ?? null,
         commissionRate: data?.commissionRate != null ? formatCommissionRatePercent(data.commissionRate) : '',
         maxCommissionPerItem: data?.maxCommissionPerItem != null ? data.maxCommissionPerItem.toString() : '',
         selectedCategoryId: data?.affiliateCategoryId || null,
@@ -519,7 +521,7 @@ export default function ProductAffiliateSettingsCard({
         setErrorField(null)
         setSuccess('')
 
-        if (requireReadiness && !readiness.isReady) {
+        if (requireReadiness && authoritySettings?.readiness?.prerequisitesReady !== true) {
             setError(t('affiliateSettingsCard.errors.notReady'))
             return
         }
@@ -556,6 +558,9 @@ export default function ProductAffiliateSettingsCard({
         } catch (err) {
             if (!isCurrentMutation(currentMutation)) return
 
+            if (err?.response?.data?.code === 'AFFILIATE_PROMOTION_NOT_READY') {
+                setAuthoritySettings(current => current ? { ...current, readiness: err.response.data.readiness, isEligible: false } : current)
+            }
             setError(t(`affiliateSettingsCard.mutationErrors.${resolveMutationErrorKey(err)}`))
             await Promise.all([fetchSettings({ clearError: false }), fetchCategoryTree()])
         } finally {
@@ -642,7 +647,7 @@ export default function ProductAffiliateSettingsCard({
     }
 
     // AF-23: Show readiness warning if not ready
-    if (!readiness.isReady && !acceptedIsEnabled) {
+    if (!readiness.isReady && !acceptedIsEnabled && !authoritySettings?.readiness) {
         return (
             <div className="card border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50">
                 <div className="flex items-start gap-4 mb-4">
@@ -707,7 +712,8 @@ export default function ProductAffiliateSettingsCard({
                 <p className="mb-4 text-sm text-amber-900" data-testid="affiliate-effective-eligibility">
                     {t('affiliateProducts.promotionEligibility')}: {t(authoritySettings?.isEligible ? 'affiliateProducts.eligible' : 'affiliateProducts.notEligible')}
                 </p>
-                {!readiness.isReady && (
+                <AffiliatePromotionReadiness readiness={authoritySettings?.readiness} productId={productId} />
+                {!authoritySettings?.readiness && !readiness.isReady && (
                     <div className="mb-4">
                         <AffiliateReadinessWarning
                             storefrontLive={readiness.storefrontLive}
@@ -907,7 +913,7 @@ export default function ProductAffiliateSettingsCard({
                         <button
                             type="button"
                             onClick={handleEnable}
-                            disabled={saving || categoryTreeLoading || categoryHasNoOptions}
+                            disabled={saving || categoryTreeLoading || categoryHasNoOptions || authoritySettings?.readiness?.prerequisitesReady !== true}
                             className="btn-primary flex items-center gap-2"
                             id="affiliate-enable-btn"
                         >

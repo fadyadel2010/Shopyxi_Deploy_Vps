@@ -1,0 +1,12 @@
+{
+  "scenarios": [
+    "A",
+    "J"
+  ],
+  "catalogStatus": 200,
+  "catalogCount": 1,
+  "detailStatus": 200,
+  "existingLinkStatus": 200,
+  "sameHistoricalLink": true,
+  "referralCodeUnchanged": true
+}

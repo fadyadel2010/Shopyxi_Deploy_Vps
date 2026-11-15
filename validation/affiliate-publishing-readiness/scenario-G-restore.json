@@ -1,0 +1,61 @@
+{
+  "scenarios": [
+    "G",
+    "J"
+  ],
+  "method": "supported isolated Admin APIs; headed restored table",
+  "results": [
+    {
+      "readiness": {
+        "productFound": true,
+        "storefrontReady": true,
+        "paymentReady": true,
+        "shippingReady": false,
+        "productSellable": true,
+        "policyEnabled": true,
+        "categoryReady": true,
+        "blockerCodes": [
+          "SHIPPING_METHOD_REQUIRED"
+        ],
+        "prerequisitesReady": false,
+        "isPromotionEligible": false
+      },
+      "isPolicyEnabled": true,
+      "commissionRate": 0.1
+    },
+    {
+      "readiness": {
+        "productFound": true,
+        "storefrontReady": true,
+        "paymentReady": true,
+        "shippingReady": false,
+        "productSellable": true,
+        "policyEnabled": true,
+        "categoryReady": true,
+        "blockerCodes": [
+          "SHIPPING_METHOD_REQUIRED"
+        ],
+        "prerequisitesReady": false,
+        "isPromotionEligible": false
+      },
+      "isPolicyEnabled": true,
+      "commissionRate": 0.1
+    },
+    {
+      "readiness": {
+        "productFound": true,
+        "storefrontReady": true,
+        "paymentReady": true,
+        "shippingReady": true,
+        "productSellable": true,
+        "policyEnabled": true,
+        "categoryReady": true,
+        "blockerCodes": [],
+        "prerequisitesReady": true,
+        "isPromotionEligible": true
+      },
+      "isPolicyEnabled": true,
+      "commissionRate": 0.1
+    }
+  ]
+}

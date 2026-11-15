@@ -1,0 +1,35 @@
+{
+  "verifiedAtUtc": "2026-11-15T20:28:49.567035+00:00",
+  "backendReadiness": {
+    "passed": 66,
+    "failed": 0,
+    "notExecuted": 0,
+    "sha256": "ae5423e5f51ae3b4e45829ef3f164b5ba5ebbb5b8f8678e74bffb10b95056814"
+  },
+  "directReferralDependency": {
+    "passed": 51,
+    "failed": 0,
+    "notExecuted": 0,
+    "sha256": "4e5fd236a07c12c551ea09893c727e25b755fb75fef1ccea0f625cc0526bdf21"
+  },
+  "frontendReadiness": {
+    "passed": 12,
+    "failed": 0,
+    "unselectedByFilter": 0,
+    "sha256": "62ef3b292bb9087661f3b476d9a08fb2c7dea31aeac071f8d0211eb3e5a26644"
+  },
+  "frontendPolicyReadiness": {
+    "passed": 2,
+    "failed": 0,
+    "unselectedByFilter": 24,
+    "sha256": "28489f57634e0bc68dc90ad091be0c253bd7ab9abec06f138a285526e6ddc03b"
+  },
+  "typescriptPassed": true,
+  "productionWebBuildPassed": true,
+  "webInputsMatchStagedIndex": true,
+  "webInputsMatched": 2193,
+  "finalImmutableCandidatesHeadedAcceptance": true,
+  "fullFinancialLifecycleRepeated": false,
+  "storefrontRebuilt": false,
+  "passed": true
+}
