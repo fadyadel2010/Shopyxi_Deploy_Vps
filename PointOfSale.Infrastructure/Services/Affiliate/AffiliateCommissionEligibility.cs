@@ -16,6 +16,7 @@ public sealed record AffiliateCommissionEligibility(
     IReadOnlyList<AffiliateCommissionLedger> RealEntries,
     IReadOnlyList<AffiliateCommissionLedger> SyntheticEntries)
 {
+    public decimal ReturnedWithdrawalAmount { get; init; }
     public decimal NetApproved => NetApprovedAmount(RealEntries);
     public decimal SyntheticApprovedExcluded => NetApprovedAmount(SyntheticEntries);
 
@@ -98,6 +99,10 @@ public sealed record AffiliateCommissionEligibility(
             logger?.LogError("{ClassificationProblem}", message);
             throw new AffiliatePayoutAuthorityException(message);
         }
-        return new(entries.Where(e => !classified[e.Id]).ToList(), entries.Where(e => classified[e.Id]).ToList());
+        var returned = await AffiliatePayoutReturnAuthority.LoadAsync(db, affiliateAccountId, storeTenantId, ct);
+        // Keep raw append-only activity accessible separately; financial/lifecycle
+        // totals use only Paid events whose exact payout has not been returned.
+        return new(entries.Where(e => !classified[e.Id] && !returned.PaidEntryIds.Contains(e.Id)).ToList(),
+            entries.Where(e => classified[e.Id]).ToList()) { ReturnedWithdrawalAmount = returned.Amount };
     }
 }

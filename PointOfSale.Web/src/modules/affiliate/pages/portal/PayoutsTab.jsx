@@ -26,6 +26,7 @@ const STATUS_CONFIG = {
     Rejected: { color: 'red', icon: XCircle, gradient: 'from-red-500/10 to-red-600/5', border: 'border-red-500/20', text: 'text-red-400', bg: 'bg-red-500/10' },
     Paid: { color: 'emerald', icon: CheckCircle2, gradient: 'from-emerald-500/10 to-emerald-600/5', border: 'border-emerald-500/20', text: 'text-emerald-400', bg: 'bg-emerald-500/10' },
     Cancelled: { color: 'gray', icon: XCircle, border: 'border-gray-500/20', text: 'text-gray-500', bg: 'bg-gray-500/10' },
+    Returned: { color: 'amber', icon: ArrowDownCircle, border: 'border-amber-500/20', text: 'text-amber-500', bg: 'bg-amber-500/10' },
 }
 
 // Match this form's minor-unit step without parseFloat's partial-string acceptance.

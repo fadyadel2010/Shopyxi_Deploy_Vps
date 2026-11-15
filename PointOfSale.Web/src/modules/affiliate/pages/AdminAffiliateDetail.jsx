@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next'
 import { useSettings } from '../../../contexts/SettingsContext'
 import adminAffiliateApi from '../../../services/adminAffiliateApi'
 import AdminManualPayoutDialog from './AdminManualPayoutDialog'
+import AdminManualPayoutReturnDialog from './AdminManualPayoutReturnDialog'
 import '../affiliateLocale.css'
 
 // ═══════════════════════════════════════════════════════════════════
@@ -30,6 +31,7 @@ const statusStyles = {
     Approved: 'bg-emerald-100 text-emerald-800 border-emerald-200',
     Paid: 'bg-green-100 text-green-800 border-green-200',
     Cancelled: 'bg-gray-100 text-gray-700 border-gray-200',
+    Returned: 'bg-orange-100 text-orange-800 border-orange-200',
     Reversed: 'bg-red-100 text-red-800 border-red-200',
     PartiallyReversed: 'bg-orange-100 text-orange-800 border-orange-200',
 }
@@ -46,10 +48,11 @@ const STATUS_LABEL_KEYS = {
     PartiallyReversed: 'adminAffiliateDetail.statuses.partiallyReversed',
     Rejected: 'adminAffiliateDetail.statuses.rejected',
     Cancelled: 'adminAffiliateDetail.statuses.cancelled',
+    Returned: 'adminAffiliateDetail.manualReturn.status',
 }
 
 const ORDER_STATUS_VALUES = ['', 'Earned', 'Approved', 'Paid', 'Reversed', 'PartiallyReversed']
-const PAYOUT_STATUS_VALUES = ['', 'Pending', 'Approved', 'Rejected', 'Paid', 'Cancelled']
+const PAYOUT_STATUS_VALUES = ['', 'Pending', 'Approved', 'Rejected', 'Paid', 'Cancelled', 'Returned']
 const SETTLEMENT_ORDERS_PAGE_SIZE = 100
 const AFFILIATE_DETAIL_TABS = [
     { id: 'orders', labelKey: 'adminAffiliateDetail.tabs.orders', icon: '📦' },
@@ -824,6 +827,7 @@ function WithdrawalsTab({ affiliateId, formatCurrency, onToast, onRefresh }) {
     const [paymentRef, setPaymentRef] = useState('')
     const [financialError, setFinancialError] = useState(null)
     const [manualRequestId, setManualRequestId] = useState(null)
+    const [returnRequestId, setReturnRequestId] = useState(null)
     const actionInFlight = useRef(false)
     const requestSeq = useRef(0)
 
@@ -971,9 +975,13 @@ function WithdrawalsTab({ affiliateId, formatCurrency, onToast, onRefresh }) {
                                                 onClick={() => setManualRequestId(req.id)} className="px-2.5 py-1 bg-blue-100 text-blue-800 rounded text-xs font-medium">
                                                 {t(req.status === 'Approved' ? 'adminAffiliateDetail.manual.confirm' : 'adminAffiliateDetail.manual.review')}
                                             </button>}
-                                            {req.status === 'Paid' && req.paymentReference?.startsWith('ADMIN-MANUAL:') && <button type="button"
+                                            {['Paid', 'Returned'].includes(req.status) && req.paymentReference?.startsWith('ADMIN-MANUAL:') && <button type="button"
                                                 onClick={() => setManualRequestId(req.id)} className="px-2.5 py-1 bg-blue-100 text-blue-800 rounded text-xs font-medium">
                                                 {t('adminAffiliateDetail.manual.receipt')}
+                                            </button>}
+                                            {['Paid', 'Returned'].includes(req.status) && req.paymentReference?.startsWith('ADMIN-MANUAL:') && <button type="button"
+                                                onClick={() => setReturnRequestId(req.id)} className="px-2.5 py-1 bg-orange-100 text-orange-900 rounded text-xs font-medium">
+                                                {t('adminAffiliateDetail.manualReturn.title')}
                                             </button>}
                                             {req.status === 'Pending' && (
                                                 <button
@@ -1026,6 +1034,8 @@ function WithdrawalsTab({ affiliateId, formatCurrency, onToast, onRefresh }) {
             )}
 
             {/* Action Modal */}
+            {returnRequestId && <AdminManualPayoutReturnDialog key={returnRequestId} requestId={returnRequestId} formatCurrency={formatCurrency}
+                onClose={() => setReturnRequestId(null)} onCommitted={() => { fetchData({ showLoading: false }); onRefresh?.() }} />}
             {manualRequestId && <AdminManualPayoutDialog requestId={manualRequestId} formatCurrency={formatCurrency}
                 onClose={() => setManualRequestId(null)} onCommitted={() => { fetchData({ showLoading: false }); onRefresh?.() }} />}
             <ConfirmModal

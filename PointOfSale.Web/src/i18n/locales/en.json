@@ -8151,6 +8151,20 @@
     }
   },
   "adminAffiliateDetail": {
+    "manualReturn": {
+      "title": "Return manual payout",
+      "status": "Paid cash returned",
+      "warning": "Record only a full cash amount already received back in the original cashbox. This does not initiate a bank refund or cancel a transfer. Original payout history is retained; the old approval is not reopened.",
+      "reference": "Actual cash-return receipt reference",
+      "reason": "Reason for the return",
+      "attestation": "I confirm that the full manual payout has actually been returned to the original cashbox.",
+      "confirm": "Record received cash return",
+      "loading": "Loading original payout and cashbox authority…",
+      "loadFailed": "The original payout could not be reviewed. Close this dialog and refresh.",
+      "recorded": "Cash return recorded. Original payment and audit history retained.",
+      "unavailable": "This payout is not eligible for a full manual cash return. Reconcile its original source and payment evidence first.",
+      "unconfirmed": "The return could not be confirmed. Refresh persisted withdrawal history and the receipt before retrying; do not record another receipt for the same cash."
+    },
     "manual": {
       "title": "Record administrator manual payout",
       "review": "Review manual payout",

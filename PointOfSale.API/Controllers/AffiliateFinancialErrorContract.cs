@@ -33,6 +33,11 @@ internal static class AffiliateFinancialErrorContract
                 "AFFILIATE_PAYOUT_REQUEST_STATUS_INVALID" => "This withdrawal is no longer in the required state. Refresh its history before continuing.",
                 "AFFILIATE_PAYOUT_EXTERNAL_CONFIRMATION_REQUIRED" => "Commission approval is not payment confirmation. Use an approved withdrawal and verified external transfer evidence before marking it paid.",
                 "AFFILIATE_PAYOUT_VERIFIED_EXTERNAL_EVIDENCE_REQUIRED" => "A payment reference alone is not confirmation. Trusted bank or provider reconciliation evidence is required before marking this withdrawal paid.",
+                "AFFILIATE_PAYOUT_RETURN_ATTESTATION_REQUIRED" => "Confirm only after the full cash amount has actually been received back in the original cashbox.",
+                "AFFILIATE_PAYOUT_RETURN_STATE_INVALID" => "Only a complete paid manual withdrawal can be returned. Refresh its history; the original approval will not be reopened.",
+                "AFFILIATE_PAYOUT_RETURN_MANUAL_ONLY" => "This action accepts returned manual cash only. Provider payouts require trusted returned-transfer reconciliation.",
+                "AFFILIATE_PAYOUT_RETURN_AUTHORITY_CONFLICT" => "The original payout, return receipt and accounting records do not agree. Reconcile them before retrying.",
+                "AFFILIATE_PAYOUT_RETURN_CONTRACT_INVALID" => "Review the original payout and provide the actual return receipt reference and reason.",
                 _ => null
             };
             if (guidance is not null)

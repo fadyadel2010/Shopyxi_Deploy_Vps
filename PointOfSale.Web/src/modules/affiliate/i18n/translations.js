@@ -377,6 +377,7 @@ const translations = {
 
             payoutsTab: {
                 statusCancelled: 'Cancelled',
+                statusReturned: 'Paid cash returned',
                 cancelWithdrawal: 'Cancel withdrawal',
                 cancellationConfirm: 'Cancel this pending withdrawal and release its reservation? No transfer will be made.',
                 cancellationReason: 'Reason (optional)',
@@ -829,6 +830,7 @@ const translations = {
 
             payoutsTab: {
                 statusCancelled: 'ملغي',
+                statusReturned: 'تم استرداد المبلغ المصروف',
                 cancelWithdrawal: 'إلغاء طلب السحب',
                 cancellationConfirm: 'هل تريد إلغاء طلب السحب المعلق وتحرير المبلغ المحجوز؟ لن يتم إجراء أي تحويل.',
                 cancellationReason: 'السبب (اختياري)',

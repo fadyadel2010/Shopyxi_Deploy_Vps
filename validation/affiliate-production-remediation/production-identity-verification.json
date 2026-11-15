@@ -1,0 +1,30 @@
+{
+  "verifiedImages": {
+    "api": {
+      "deploymentImage": "docker.io/shopixy/api@sha256:880c33e45a4e4a8cf236744b328706cac229e7b12284a7054ae9828b99aa34f3",
+      "runtimeChildManifest": "sha256:a31606bdf75294fa31e5ee05c71afd67fb2a3d8cb300d0e16caa082251fb85f3",
+      "exactChildManifestDigestBelongsToImportedIndex": false,
+      "pinnedReleaseIndexBelongsToRuntimeImageGraph": true,
+      "runtimeConfigAndOrderedLayersMatchImportedChild": true,
+      "runtimeConfigId": "sha256:771f59418f937f15f389016a5681bf8a611be270a72249c3c96339c997e734de",
+      "sourceLabelMatchesReleaseIndex": true,
+      "ready": true,
+      "restartCount": 0
+    },
+    "web": {
+      "deploymentImage": "docker.io/shopixy/web@sha256:f224346ab401bfa77a59f0716f6f555499b994a22fd7980bb8423ee29735c991",
+      "runtimeChildManifest": "sha256:c21530eb075d7742857074e9d4640961ce49ea1ca055e5c10432aa3db1cdb0d1",
+      "exactChildManifestDigestBelongsToImportedIndex": false,
+      "pinnedReleaseIndexBelongsToRuntimeImageGraph": true,
+      "runtimeConfigAndOrderedLayersMatchImportedChild": true,
+      "runtimeConfigId": "sha256:f9f36a37892629bde96c948126dfdcbd75621204107fbae583dd63bde97e2693",
+      "sourceLabelMatchesReleaseIndex": true,
+      "ready": true,
+      "restartCount": 0
+    }
+  },
+  "storefrontSpecUnchanged": true,
+  "operationalSchemaVersionMetadataCorrected": true,
+  "businessDataWrites": false,
+  "completedAtUtc": "2026-11-15T13:04:47.847222+00:00"
+}

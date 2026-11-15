@@ -128,7 +128,8 @@ public class MassTransitEventPublisher : IEventPublisher
         // transaction. Logistics/fulfillment facts must not escape before commit.
         if (_dbContext.Database.CurrentTransaction != null &&
             @event is ShipmentEventBase or OrderFulfillmentEventBase or OrderCancelledEvent or OrderStatusChangedEvent or OrderDeliveredEvent or OrderShippedEvent or SyntheticQaCollectionRecordedEvent or
-                TenantProvisioningRequestedEvent or TenantProvisioningReadyEvent or StoreConfigCreatedEvent)
+                TenantProvisioningRequestedEvent or TenantProvisioningReadyEvent or StoreConfigCreatedEvent or
+                PointOfSale.Core.Events.Affiliate.AffiliateManualPayoutReturnedEvent)
         {
             _dbContext.OutboxMessages.Add(new OutboxMessage
             {

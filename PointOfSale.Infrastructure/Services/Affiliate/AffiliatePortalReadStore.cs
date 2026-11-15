@@ -79,6 +79,7 @@ public static class AffiliatePortalReadStore
     public static async Task<AffiliateCommissionActivityPage> ReadActivityAsync(ApplicationDbContext db, Guid affiliateId,
         int page = 1, int pageSize = 20, Guid? storeId = null, CancellationToken ct = default)
     {
+        await AffiliatePayoutReturnAuthority.LoadAsync(db, affiliateId, storeId, ct);
         page = Math.Clamp(page, 1, 1_000_000); pageSize = Math.Clamp(pageSize, 1, 100);
         var query = db.AffiliateCommissionLedger.IgnoreQueryFilters().AsNoTracking()
             .Where(e => e.AffiliateAccountId == affiliateId && (!storeId.HasValue || e.StoreTenantId == storeId.Value));
@@ -96,6 +97,9 @@ public static class AffiliatePortalReadStore
         }
         var orders = (await ReadOrdersAsync(db, affiliateId, entries.Select(e => e.OrderId).Distinct().ToArray(), storeId, ct))
             .ToDictionary(o => o.OrderId);
+        var returnedIds = await db.AffiliateManualPayoutReturnAllocations
+            .Where(a => db.AffiliateManualPayoutReturns.Any(r => r.Id == a.ReturnId && r.AffiliateAccountId == affiliateId &&
+                (!storeId.HasValue || r.StoreTenantId == storeId.Value))).Select(a => a.PaidEntryId).ToHashSetAsync(ct);
         var rows = entries.Select(e =>
         {
             orders.TryGetValue(e.OrderId, out var order);
@@ -110,7 +114,7 @@ public static class AffiliatePortalReadStore
                 OrderNumber = valid ? order?.OrderNumber : null, ProductName = valid ? item?.ProductName : null,
                 SourceOrderAvailable = valid, IsSyntheticQa = order?.IsSyntheticQa == true,
                 Classification = !valid ? "UnclassifiedLineage" : order!.IsSyntheticQa ? "SyntheticQaExcluded" : "HistoryOnlyUseBalanceApi",
-                ReasonCode = e.EntryType == CommissionEntryType.Reversed ? "ReversalReasonNotRecorded" : null
+                ReasonCode = returnedIds.Contains(e.Id) ? "ManualPayoutReturned" : e.EntryType == CommissionEntryType.Reversed ? "ReversalReasonNotRecorded" : null
             };
         }).ToList();
         return new() { Entries = rows, Page = page, PageSize = pageSize, TotalCount = count, TotalPages = (int)Math.Ceiling(count / (double)pageSize) };

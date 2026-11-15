@@ -27,6 +27,14 @@ beforeEach(() => {
     api.getCommissionActivity.mockResolvedValue({ entries: [event], totalPages: 2, page: 1 })
 })
 describe('P5.4A canonical read models', () => {
+    it('distinguishes returned historical Paid events from outstanding payments in both languages', async () => {
+        api.getCommissionActivity.mockResolvedValue({ entries: [{ ...event, entryType: 'Paid', reasonCode: 'ManualPayoutReturned' }], totalPages: 1 })
+        open(<CommissionActivity formatCurrency={money} />)
+        expect(await screen.findByText(/historical payment was fully returned/)).toBeVisible()
+        expect(screen.queryByText(/does not record a dedicated reversal reason/)).not.toBeInTheDocument()
+        fireEvent.click(screen.getByRole('button', { name: 'Switch' }))
+        expect(screen.getByText(/عاد هذا الصرف السابق بالكامل/)).toBeVisible()
+    })
     it('uses persisted product identity when historical product copy is blank', async () => {
         api.getOrders.mockResolvedValue({ orders: [{ orderId: 'order', orderNumber: 'SQL-ORDER', status: 'Pending', currency: 'EGP', totalCommission: 0,
             canonical, items: [{ orderItemId: 'line', productId: 'persisted-product-id', productName: '', quantity: 1 }] }], totalPages: 1 })

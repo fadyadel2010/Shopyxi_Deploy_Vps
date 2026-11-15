@@ -1061,7 +1061,8 @@ public class AffiliatePortalController : ControllerBase
         var normalizedStatus = status.Trim();
         
         // Get all ledger entries for this affiliate
-        var query = _dbContext.AffiliateCommissionLedger
+        await AffiliatePayoutReturnAuthority.LoadAsync(_dbContext, affiliateAccountId, storeTenantId, ct);
+        var query = AffiliatePayoutReturnAuthority.EffectiveHistory(_dbContext)
             .IgnoreQueryFilters()
             .AsNoTracking()
             .Where(entry => entry.AffiliateAccountId == affiliateAccountId);
@@ -1133,7 +1134,8 @@ public class AffiliatePortalController : ControllerBase
             return new Dictionary<Guid, AffiliateOrderLedgerSnapshot>();
         }
 
-        var query = _dbContext.AffiliateCommissionLedger
+        await AffiliatePayoutReturnAuthority.LoadAsync(_dbContext, affiliateAccountId, storeTenantId, ct);
+        var query = AffiliatePayoutReturnAuthority.EffectiveHistory(_dbContext)
             .IgnoreQueryFilters()
             .AsNoTracking()
             .Where(entry => entry.AffiliateAccountId == affiliateAccountId);
@@ -1241,7 +1243,7 @@ public class AffiliatePortalController : ControllerBase
     {
         var eligibility = await AffiliateCommissionEligibility.LoadAsync(_dbContext, affiliateAccountId, storeTenantId, ct, _logger);
         var eligibleIds = eligibility.RealEntries.Select(e => e.Id).ToArray();
-        var query = _dbContext.AffiliateCommissionLedger.IgnoreQueryFilters().AsNoTracking()
+        var query = AffiliatePayoutReturnAuthority.EffectiveHistory(_dbContext).AsNoTracking()
             .Where(entry => eligibleIds.Contains(entry.Id));
 
         var rows = await query

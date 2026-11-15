@@ -21,6 +21,8 @@ const affiliateReadOptions = (options = {}) => ({
 
 const adminAffiliateApi = {
     reviewManualPayout: requestId => api.get(`/admin/affiliates/payouts/${requestId}/manual-payout`, affiliateReadOptions()).then(r => r.data),
+    reviewManualPayoutReturn: requestId => api.get(`/admin/affiliates/payouts/${requestId}/manual-payout/return`, affiliateReadOptions()).then(r => r.data),
+    confirmManualPayoutReturn: (requestId, command) => api.post(`/admin/affiliates/payouts/${requestId}/manual-payout/return`, command).then(r => r.data),
     confirmManualPayout: (requestId, command) => api.post(`/admin/affiliates/payouts/${requestId}/manual-payout`, command).then(r => r.data),
     // ─── READ ────────────────────────────────────────────────────────
 

@@ -2496,6 +2496,46 @@ namespace PointOfSale.Infrastructure.Migrations
                     b.ToTable("AffiliatePasswordResetTokens", (string)null);
                 });
 
+            modelBuilder.Entity("PointOfSale.Core.Entities.Affiliate.AffiliateManualPayoutReturn", b =>
+                {
+                    b.Property<Guid>("Id").ValueGeneratedOnAdd().HasColumnType("uuid");
+                    b.Property<Guid>("AdministratorId").HasColumnType("uuid");
+                    b.Property<Guid>("AffiliateAccountId").HasColumnType("uuid");
+                    b.Property<decimal>("Amount").HasPrecision(18, 4).HasColumnType("numeric(18,4)");
+                    b.Property<string>("Attestation").IsRequired().HasMaxLength(200).HasColumnType("character varying(200)");
+                    b.Property<Guid>("BalanceLedgerId").HasColumnType("uuid");
+                    b.Property<string>("CommandFingerprint").IsRequired().HasMaxLength(64).HasColumnType("character varying(64)");
+                    b.Property<string>("Currency").IsRequired().HasMaxLength(3).HasColumnType("character varying(3)");
+                    b.Property<Guid>("ManualPayoutId").HasColumnType("uuid");
+                    b.Property<Guid>("OriginalJournalId").HasColumnType("uuid");
+                    b.Property<string>("Reason").IsRequired().HasMaxLength(1000).HasColumnType("character varying(1000)");
+                    b.Property<string>("ReceiptReference").IsRequired().HasMaxLength(200).HasColumnType("character varying(200)");
+                    b.Property<DateTime>("RecordedAtUtc").HasColumnType("timestamp with time zone");
+                    b.Property<Guid>("RequestId").HasColumnType("uuid");
+                    b.Property<Guid>("StoreTenantId").HasColumnType("uuid");
+                    b.HasKey("Id");
+                    b.HasIndex("AdministratorId");
+                    b.HasIndex("AffiliateAccountId");
+                    b.HasIndex("BalanceLedgerId").IsUnique();
+                    b.HasIndex("ManualPayoutId").IsUnique();
+                    b.HasIndex("OriginalJournalId").IsUnique();
+                    b.HasIndex("RequestId").IsUnique();
+                    b.HasIndex("StoreTenantId", "AffiliateAccountId");
+                    b.ToTable("AffiliateManualPayoutReturns", null, t => t.HasCheckConstraint("CK_AffiliatePayoutReturn_Amount", "\"Amount\" > 0"));
+                });
+
+            modelBuilder.Entity("PointOfSale.Core.Entities.Affiliate.AffiliateManualPayoutReturnAllocation", b =>
+                {
+                    b.Property<Guid>("Id").ValueGeneratedOnAdd().HasColumnType("uuid");
+                    b.Property<decimal>("Amount").HasPrecision(18, 4).HasColumnType("numeric(18,4)");
+                    b.Property<Guid>("PaidEntryId").HasColumnType("uuid");
+                    b.Property<Guid>("ReturnId").HasColumnType("uuid");
+                    b.HasKey("Id");
+                    b.HasIndex("PaidEntryId").IsUnique();
+                    b.HasIndex("ReturnId");
+                    b.ToTable("AffiliateManualPayoutReturnAllocations", null, t => t.HasCheckConstraint("CK_AffiliatePayoutReturnAllocation_Amount", "\"Amount\" > 0"));
+                });
+
             modelBuilder.Entity("PointOfSale.Core.Entities.Affiliate.AffiliatePayoutRequest", b =>
                 {
                     b.Property<Guid>("Id")
@@ -24699,6 +24739,22 @@ namespace PointOfSale.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("AffiliateUser");
+                });
+
+            modelBuilder.Entity("PointOfSale.Core.Entities.Affiliate.AffiliateManualPayoutReturn", b =>
+                {
+                    b.HasOne("PointOfSale.Core.Entities.User", null).WithMany().HasForeignKey("AdministratorId").OnDelete(DeleteBehavior.Restrict).IsRequired();
+                    b.HasOne("PointOfSale.Core.Entities.Affiliate.AffiliateAccount", null).WithMany().HasForeignKey("AffiliateAccountId").OnDelete(DeleteBehavior.Restrict).IsRequired();
+                    b.HasOne("PointOfSale.Core.Entities.Affiliate.AffiliateBalanceLedger", null).WithMany().HasForeignKey("BalanceLedgerId").OnDelete(DeleteBehavior.Restrict).IsRequired();
+                    b.HasOne("PointOfSale.Core.Entities.Affiliate.AffiliateManualPayout", null).WithMany().HasForeignKey("ManualPayoutId").OnDelete(DeleteBehavior.Restrict).IsRequired();
+                    b.HasOne("PointOfSale.Core.Entities.Accounting.JournalEntry", null).WithMany().HasForeignKey("OriginalJournalId").OnDelete(DeleteBehavior.Restrict).IsRequired();
+                    b.HasOne("PointOfSale.Core.Entities.Affiliate.AffiliatePayoutRequest", null).WithMany().HasForeignKey("RequestId").OnDelete(DeleteBehavior.Restrict).IsRequired();
+                });
+
+            modelBuilder.Entity("PointOfSale.Core.Entities.Affiliate.AffiliateManualPayoutReturnAllocation", b =>
+                {
+                    b.HasOne("PointOfSale.Core.Entities.Affiliate.AffiliateCommissionLedger", null).WithMany().HasForeignKey("PaidEntryId").OnDelete(DeleteBehavior.Restrict).IsRequired();
+                    b.HasOne("PointOfSale.Core.Entities.Affiliate.AffiliateManualPayoutReturn", null).WithMany().HasForeignKey("ReturnId").OnDelete(DeleteBehavior.Restrict).IsRequired();
                 });
 
             modelBuilder.Entity("PointOfSale.Core.Entities.Affiliate.AffiliatePayoutTransferAllocation", b =>

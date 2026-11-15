@@ -1,0 +1,187 @@
+{
+  "verifiedAtUtc": "2026-11-15T13:10:22.668Z",
+  "passed": true,
+  "profile": {
+    "status": 200,
+    "accountId": "01a1dc7c-3cb5-7b17-a0f2-1d082c878a60",
+    "createdAtUtc": "2026-11-14T23:54:52.051194Z"
+  },
+  "memberSinceMatchesApi": true,
+  "observations": [
+    {
+      "tab": "Dashboard",
+      "status": 200,
+      "mainPresent": true
+    },
+    {
+      "tab": "Promote",
+      "status": 200,
+      "mainPresent": true
+    },
+    {
+      "tab": "My Links",
+      "status": 200,
+      "mainPresent": true
+    },
+    {
+      "tab": "My Landing Pages",
+      "status": 200,
+      "mainPresent": true
+    },
+    {
+      "tab": "Orders",
+      "status": 200,
+      "mainPresent": true
+    },
+    {
+      "tab": "Earnings",
+      "status": 200,
+      "mainPresent": true
+    },
+    {
+      "tab": "Withdrawals",
+      "status": 200,
+      "mainPresent": true
+    },
+    {
+      "tab": "Analytics",
+      "status": 200,
+      "mainPresent": true
+    },
+    {
+      "tab": "Settings",
+      "status": 200,
+      "mainPresent": true
+    }
+  ],
+  "boundaries": [
+    {
+      "path": "/api/admin/affiliates/payouts/00000000-0000-0000-0000-000000000001/manual-payout/return",
+      "status": 400,
+      "code": "TENANT_REQUIRED"
+    }
+  ],
+  "network": [
+    {
+      "method": "GET",
+      "path": "/api/affiliate/profile",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/profile",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/profile",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/trend",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/summary",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/orders",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/dashboard",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/payouts",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/discover/products",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/discover/categories",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/promotion-links",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/landing-pages",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/orders",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/earnings-summary",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/orders",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/commission-activity",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/payouts",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/trend",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/top-products",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/summary",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/analytics/top-stores",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/affiliate/profile",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/affiliates/payouts/00000000-0000-0000-0000-000000000001/manual-payout/return",
+      "status": 400
+    }
+  ],
+  "errors": [
+    "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked.",
+    "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked.",
+    "Failed to load resource: the server responded with a status of 400 ()"
+  ],
+  "mutationRequestsObserved": 0
+}

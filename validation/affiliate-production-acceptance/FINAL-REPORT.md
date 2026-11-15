@@ -1,5 +1,7 @@
 # Affiliate Production acceptance — 2026-11-15
 
+> **Phase-two follow-up:** The formerly missing manual-cash return capability has now been implemented, isolated-tested and deployed. See [the deployed remediation report](../affiliate-production-remediation/FINAL-REPORT.md) for 70 .NET tests, 67 frontend tests, immutable release/read-only evidence, and the documented temporary API outage/recovery. This file retains the historical phase-one observations; it is not a claim of full checkout/fulfillment or real-money Production acceptance.
+
 ## A. Verdict and scope
 
 **Overall: BLOCKED — not full end-to-end acceptance.** Registration/session and the exercised read-only portal screens work after three focused corrections. No referred order, payment, delivery, commission approval, paid settlement, return or financial compensation was performed. Empty balances are not evidence that those workflows pass.

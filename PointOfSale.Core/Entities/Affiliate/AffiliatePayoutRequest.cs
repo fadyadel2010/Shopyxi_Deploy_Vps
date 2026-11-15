@@ -258,6 +258,14 @@ public class AffiliatePayoutRequest
         return amountToApply;
     }
 
+    public void MarkReturned()
+    {
+        if (Status != PayoutRequestStatus.Paid || RemainingAmount != 0m || PaidBy == null || PaidAtUtc == null)
+            throw new InvalidOperationException("AFFILIATE_PAYOUT_RETURN_STATE_INVALID: Only a complete paid request can be returned.");
+        // Preserve original PaidBy/PaidAt/reference and amounts; never reopen an old approval.
+        Status = PayoutRequestStatus.Returned;
+    }
+
     public void MarkPaid(Guid paidBy, string? paymentReference = null, string? adminNotes = null)
     {
         if (paidBy == Guid.Empty)
@@ -286,5 +294,6 @@ public enum PayoutRequestStatus
     Approved = 2,
     Rejected = 3,
     Paid = 4,
-    Cancelled = 5
+    Cancelled = 5,
+    Returned = 6
 }

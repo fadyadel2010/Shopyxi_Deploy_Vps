@@ -525,6 +525,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<AffiliatePayoutTransferEvidence> AffiliatePayoutTransferEvidence => Set<AffiliatePayoutTransferEvidence>();
     public DbSet<AffiliatePayoutTransferAllocation> AffiliatePayoutTransferAllocations => Set<AffiliatePayoutTransferAllocation>();
     public DbSet<AffiliateManualPayout> AffiliateManualPayouts => Set<AffiliateManualPayout>();
+    public DbSet<AffiliateManualPayoutReturn> AffiliateManualPayoutReturns => Set<AffiliateManualPayoutReturn>();
+    public DbSet<AffiliateManualPayoutReturnAllocation> AffiliateManualPayoutReturnAllocations => Set<AffiliateManualPayoutReturnAllocation>();
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -7837,6 +7839,12 @@ public class ApplicationDbContext : DbContext
 
     private void GuardAffiliatePayoutAuthority()
     {
+        foreach (var entry in ChangeTracker.Entries<AffiliateManualPayoutReturn>())
+            if (entry.State is EntityState.Modified or EntityState.Deleted)
+                throw new InvalidOperationException("AffiliateManualPayoutReturn records are append-only and cannot be changed.");
+        foreach (var entry in ChangeTracker.Entries<AffiliateManualPayoutReturnAllocation>())
+            if (entry.State is EntityState.Modified or EntityState.Deleted)
+                throw new InvalidOperationException("AffiliateManualPayoutReturnAllocation records are append-only and cannot be changed.");
         foreach (var entry in ChangeTracker.Entries<AffiliateManualPayout>())
             if (entry.State is EntityState.Modified or EntityState.Deleted)
                 throw new InvalidOperationException("AffiliateManualPayout records are append-only and cannot be changed.");

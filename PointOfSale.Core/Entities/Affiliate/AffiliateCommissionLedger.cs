@@ -341,7 +341,8 @@ public class AffiliateCommissionLedger
         AffiliateCommissionLedger approvedEntry,
         decimal payableBaseAmount,
         decimal payableCommissionAmount,
-        decimal? approvedMaxPerItem)
+        decimal? approvedMaxPerItem,
+        Guid? settlementId = null)
     {
         if (approvedEntry.EntryType != CommissionEntryType.Approved)
             throw new InvalidOperationException(
@@ -403,7 +404,9 @@ public class AffiliateCommissionLedger
             Currency = approvedEntry.Currency,
             EntryType = CommissionEntryType.Paid,
             OriginalEntryId = approvedEntry.Id,
-            IdempotencyKey = $"AFFILIATE_COMM:PAID:{approvedEntry.OrderItemId}", // AF-19B: No TenantId
+            IdempotencyKey = settlementId.HasValue
+                ? $"AFFILIATE_COMM:PAID:{approvedEntry.OrderItemId}:{settlementId.Value}"
+                : $"AFFILIATE_COMM:PAID:{approvedEntry.OrderItemId}",
             RecordedAtUtc = DateTime.UtcNow,
             CreatedAt = DateTime.UtcNow
         };

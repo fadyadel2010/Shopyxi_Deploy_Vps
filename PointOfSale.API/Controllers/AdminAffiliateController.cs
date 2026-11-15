@@ -1685,7 +1685,7 @@ public class AdminAffiliateController : ControllerBase
         var trackedTypes = blockingEntryTypes.Concat(new[] { eligibleEntryType }).Distinct().ToList();
         var eligibility = await AffiliateCommissionEligibility.LoadAsync(_dbContext, affiliateAccountId, tenantId, ct, _logger);
         var eligibleIds = eligibility.RealEntries.Select(e => e.Id).ToArray();
-        var query = _dbContext.AffiliateCommissionLedger
+        var query = AffiliatePayoutReturnAuthority.EffectiveHistory(_dbContext)
             .IgnoreQueryFilters()
             .Where(e =>
                 e.AffiliateAccountId == affiliateAccountId &&
@@ -1752,7 +1752,7 @@ public class AdminAffiliateController : ControllerBase
 
         var eligibility = await AffiliateCommissionEligibility.LoadAsync(_dbContext, affiliateAccountId, tenantId, ct, _logger);
         var eligibleIds = eligibility.RealEntries.Select(e => e.Id).ToArray();
-        var entries = await _dbContext.AffiliateCommissionLedger
+        var entries = await AffiliatePayoutReturnAuthority.EffectiveHistory(_dbContext)
             .IgnoreQueryFilters()
             .Where(e =>
                 e.AffiliateAccountId == affiliateAccountId &&
@@ -1795,7 +1795,8 @@ public class AdminAffiliateController : ControllerBase
         var normalizedStatus = status.Trim();
         
         // Get all ledger entries for this affiliate and tenant
-        var entries = await _dbContext.AffiliateCommissionLedger
+        await AffiliatePayoutReturnAuthority.LoadAsync(_dbContext, affiliateAccountId, tenantId, ct);
+        var entries = await AffiliatePayoutReturnAuthority.EffectiveHistory(_dbContext)
             .IgnoreQueryFilters()
             .AsNoTracking()
             .Where(entry =>
@@ -1874,7 +1875,8 @@ public class AdminAffiliateController : ControllerBase
             return new Dictionary<Guid, AffiliateOrderLedgerSnapshot>();
         }
 
-        var query = _dbContext.AffiliateCommissionLedger
+        await AffiliatePayoutReturnAuthority.LoadAsync(_dbContext, affiliateAccountId, tenantId, ct);
+        var query = AffiliatePayoutReturnAuthority.EffectiveHistory(_dbContext)
             .IgnoreQueryFilters()
             .AsNoTracking()
             .Where(entry =>
@@ -1987,7 +1989,7 @@ public class AdminAffiliateController : ControllerBase
         foreach (var id in ids)
             eligibilityByAffiliate[id] = await AffiliateCommissionEligibility.LoadAsync(_dbContext, id, tenantId, ct, _logger);
         var eligibleIds = eligibilityByAffiliate.Values.SelectMany(e => e.RealEntries).Select(e => e.Id).ToArray();
-        var query = _dbContext.AffiliateCommissionLedger.IgnoreQueryFilters().AsNoTracking()
+        var query = AffiliatePayoutReturnAuthority.EffectiveHistory(_dbContext).AsNoTracking()
             .Where(entry => eligibleIds.Contains(entry.Id));
 
         var totalsRows = await query

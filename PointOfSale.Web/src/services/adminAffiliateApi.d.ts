@@ -3,6 +3,8 @@ export const AFFILIATE_ADMIN_READ_HEADERS: { 'Cache-Control': string; Pragma: st
 declare const adminAffiliateApi: {
     reviewManualPayout(requestId: string): Promise<ApiJson>;
     confirmManualPayout(requestId: string, command: ApiJson): Promise<ApiJson>;
+    reviewManualPayoutReturn(requestId: string): Promise<ApiJson>;
+    confirmManualPayoutReturn(requestId: string, command: ApiJson): Promise<ApiJson>;
     listAffiliates(page?: number, pageSize?: number, status?: string, search?: string): Promise<ApiJson>;
     getAffiliateDetail(id: string): Promise<ApiJson>; getAffiliateOrders(id: string, page?: number, pageSize?: number, status?: string): Promise<ApiJson>;
     getAffiliateEarnings(id: string): Promise<ApiJson>; getAffiliateWithdrawals(id: string, status?: string, page?: number, pageSize?: number): Promise<ApiJson>;

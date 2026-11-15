@@ -830,7 +830,7 @@ public class AffiliateCommissionApprovedProjectionConsumer : IConsumer<Affiliate
 /// 2. AffiliateOrderDocument — updates item settlementStatus, order status
 /// 3. AffiliateEarningsSummaryDocument — increments TotalPaid
 /// </summary>
-public class AffiliateCommissionPaidProjectionConsumer : IConsumer<AffiliateCommissionPaidEvent>
+public partial class AffiliateCommissionPaidProjectionConsumer : IConsumer<AffiliateCommissionPaidEvent>, IConsumer<AffiliateManualPayoutReturnedEvent>
 {
     private readonly IMongoCollection<AffiliateOrderDocument> _orders;
     private readonly IMongoCollection<AffiliateDashboardDocument> _dashboards;
@@ -839,17 +839,25 @@ public class AffiliateCommissionPaidProjectionConsumer : IConsumer<AffiliateComm
 
     public AffiliateCommissionPaidProjectionConsumer(
         IMongoDatabase mongoDatabase,
-        ILogger<AffiliateCommissionPaidProjectionConsumer> logger)
+        ILogger<AffiliateCommissionPaidProjectionConsumer> logger,
+        PointOfSale.Infrastructure.Data.ApplicationDbContext? db = null)
     {
         _orders = mongoDatabase.GetCollection<AffiliateOrderDocument>("affiliate_orders");
         _dashboards = mongoDatabase.GetCollection<AffiliateDashboardDocument>("affiliate_dashboards");
         _summaries = mongoDatabase.GetCollection<AffiliateEarningsSummaryDocument>("affiliate_earnings_summaries");
         _logger = logger;
+        _canonicalDb = db;
     }
 
     public async Task Consume(ConsumeContext<AffiliateCommissionPaidEvent> context)
     {
         var evt = context.Message;
+        if (_canonicalDb != null)
+        {
+            await RebuildPaidFromSqlAsync(evt.StoreTenantId, evt.TenantId, evt.OrderId, evt.AffiliateAccountId,
+                evt.EventVersion, evt.EventId, context.CancellationToken);
+            return;
+        }
         var ct = context.CancellationToken;
         var eventId = evt.EventId.ToString();
         var tenantId = AffiliateMoneyProjectionConsistency.ValidateAuthorityMetadata(

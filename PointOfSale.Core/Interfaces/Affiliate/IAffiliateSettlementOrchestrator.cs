@@ -33,6 +33,9 @@ namespace PointOfSale.Core.Interfaces.Affiliate;
 /// </summary>
 public interface IAffiliateSettlementOrchestrator
 {
+    Task<ManualPayoutReturnResult> ReturnAdminManualPayoutAsync(Guid requestId, Guid storeTenantId,
+        Guid administratorId, AdminManualPayoutReturnCommand command, CancellationToken ct = default);
+
     Task<PayoutExecutionResult> ExecuteAdminManualPayoutAsync(Guid requestId, Guid storeTenantId,
         Guid administratorId, AdminManualPayoutCommand command, CancellationToken ct = default);
 
@@ -149,3 +152,8 @@ public enum SettlementSource
 public sealed record AdminManualPayoutCommand(Guid CashboxId, decimal Amount, string Currency,
     string DestinationFingerprint, string Method, bool PerformedManually, string Attestation,
     string? InternalReference = null, string? Notes = null, string? SourceFingerprint = null);
+
+/// <summary>Not an electronic refund instruction. Confirms cash already received in the original cashbox.</summary>
+public sealed record AdminManualPayoutReturnCommand(string ReviewFingerprint, bool ReceivedManually,
+    string Attestation, string ReceiptReference, string Reason);
+public sealed record ManualPayoutReturnResult(Guid ReturnId, DateTime RecordedAtUtc, bool WasIdempotentSkip);

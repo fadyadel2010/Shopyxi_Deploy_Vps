@@ -1,0 +1,16 @@
+{
+  "verifiedAtUtc": "2026-11-15T13:09:35.004Z",
+  "checks": [
+    {
+      "path": "/api/affiliate/profile",
+      "status": 401,
+      "code": null
+    },
+    {
+      "path": "/api/admin/affiliates/payouts/00000000-0000-0000-0000-000000000001/manual-payout/return",
+      "status": 400,
+      "code": "TENANT_REQUIRED"
+    }
+  ],
+  "mutationsSubmitted": false
+}

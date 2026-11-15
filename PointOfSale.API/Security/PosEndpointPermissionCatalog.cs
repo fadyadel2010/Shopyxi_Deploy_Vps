@@ -205,6 +205,7 @@ public static class PosEndpointPermissionCatalog
             ["AdminProductAffiliate"] = R(PosPermissions.AffiliatesManage),
             ["AffiliatePayoutEvidence"] = R(PosPermissions.AffiliatesPayoutManage),
             ["AffiliateManualPayout"] = R(PosPermissions.AffiliatesPayoutManage),
+            ["AffiliateManualPayoutReturn"] = R(PosPermissions.AffiliatesPayoutManage),
             ["AffiliateQaPayout"] = R(PosPermissions.AffiliatesPayoutManage),
 
             ["AdminCommerceHub"] = R(PosPermissions.CatalogPublish),

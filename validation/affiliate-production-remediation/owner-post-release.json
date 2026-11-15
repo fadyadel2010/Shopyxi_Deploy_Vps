@@ -1,0 +1,26 @@
+{
+  "verifiedAtUtc": "2026-11-15T13:05:30.753Z",
+  "session": {
+    "status": 200,
+    "role": "Owner",
+    "tenantId": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0"
+  },
+  "checks": [
+    {
+      "path": "/api/admin/affiliates",
+      "status": 200,
+      "code": null
+    },
+    {
+      "path": "/api/admin/affiliate/readiness",
+      "status": 200,
+      "code": null
+    },
+    {
+      "path": "/api/admin/affiliates/payouts/00000000-0000-0000-0000-000000000001/manual-payout/return",
+      "status": 404,
+      "code": "AFFILIATE_PAYOUT_REQUEST_NOT_FOUND"
+    }
+  ],
+  "mutationsSubmitted": false
+}

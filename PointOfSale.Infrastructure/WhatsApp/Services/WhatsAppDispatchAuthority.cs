@@ -218,7 +218,7 @@ public sealed class WhatsAppDispatchAuthority
             return null;
         }
 
-        var order = await _dbContext.Orders
+        var order = await PointOfSale.Infrastructure.Notifications.OrderCustomerCommunicationAuthority.CommunicableOrders(_dbContext)
             .AsNoTracking()
             .IgnoreQueryFilters()
             .Include(x => x.Items)
@@ -318,7 +318,7 @@ public sealed class WhatsAppDispatchAuthority
 
         return await (
                 from intent in _dbContext.PaymentIntents.AsNoTracking().IgnoreQueryFilters()
-                join order in _dbContext.Orders.AsNoTracking().IgnoreQueryFilters()
+                join order in PointOfSale.Infrastructure.Notifications.OrderCustomerCommunicationAuthority.CommunicableOrders(_dbContext).AsNoTracking()
                     on new { intent.OrderId, intent.TenantId } equals new { OrderId = order.Id, order.TenantId }
                 where intent.Id == paymentIntentId &&
                       intent.TenantId == tenantId &&

@@ -86,6 +86,11 @@ public class AffiliateDashboardDocument
 /// </summary>
 public class AffiliateOrderDocument
 {
+    // SQL-paid-history recomposition has its own CAS revision. Timestamp-only
+    // fences can collide because BSON stores dates at millisecond precision.
+    [BsonElement("paidHistoryRevision")]
+    public long PaidHistoryRevision { get; set; }
+
     [BsonId]
     [BsonRepresentation(BsonType.String)]
     public Guid Id { get; set; }

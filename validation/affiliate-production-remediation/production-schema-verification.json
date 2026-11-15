@@ -1,0 +1,11 @@
+{
+  "verifiedAtUtc": "2026-11-15T13:16:14.321681+00:00",
+  "migrationRecorded": true,
+  "auditTablesPresent": true,
+  "operationalMetadataMatchesAppliedMigration": true,
+  "fourAuditGuardsEnabled": true,
+  "restrictedRuntimeSelectInsertOnly": true,
+  "returnReceiptCount": 0,
+  "returnAllocationCount": 0,
+  "businessDataWrites": false
+}

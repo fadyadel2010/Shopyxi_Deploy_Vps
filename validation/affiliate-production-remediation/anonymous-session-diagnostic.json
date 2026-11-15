@@ -1,0 +1,27 @@
+{
+  "route": "/affiliate/login",
+  "title": "Welcome Back | Shopixy Affiliate",
+  "checks": [
+    {
+      "path": "/api/auth/session",
+      "status": 401,
+      "code": null,
+      "role": null,
+      "affiliateAccountId": null
+    },
+    {
+      "path": "/api/affiliate/profile",
+      "status": 401,
+      "code": null,
+      "role": null,
+      "affiliateAccountId": null
+    },
+    {
+      "path": "/api/admin/affiliates/payouts/00000000-0000-0000-0000-000000000001/manual-payout/return",
+      "status": 400,
+      "code": "TENANT_REQUIRED",
+      "role": null,
+      "affiliateAccountId": null
+    }
+  ]
+}

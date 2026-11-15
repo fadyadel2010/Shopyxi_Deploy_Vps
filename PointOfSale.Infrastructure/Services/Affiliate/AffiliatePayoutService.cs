@@ -62,6 +62,7 @@ public partial class AffiliatePayoutService : IAffiliatePayoutService
         CancellationToken ct)
     {
         var eligibility = await AffiliateCommissionEligibility.LoadAsync(_db, affiliateAccountId, storeTenantId, ct, _logger);
+        var returnedAmount = eligibility.ReturnedWithdrawalAmount;
         var ledgerCurrencies = await ResolveAuthoritativeBalanceCurrenciesAsync(
             affiliateAccountId,
             storeTenantId,
@@ -138,7 +139,7 @@ public partial class AffiliatePayoutService : IAffiliatePayoutService
         var rawAvailable = 
             netApproved +
             totalPayoutReductions +
-            totalWithdrawals +  // Already negative
+            totalWithdrawals + returnedAmount + // Only complete verified returns can restore a withdrawal
             (-totalPendingRequests);
 
         var displayAvailable = Math.Max(0, rawAvailable);
@@ -202,7 +203,8 @@ public partial class AffiliatePayoutService : IAffiliatePayoutService
         }
 
         // AF-38D: TotalPaid now represents actual money withdrawn (not lifecycle state)
-        var totalPaid = Math.Abs(totalWithdrawals);
+        var totalPaid = -totalWithdrawals - returnedAmount;
+        if (totalPaid < 0m) throw AffiliatePayoutReturnAuthority.Conflict();
 
         return new AffiliateAvailableBalanceResult(
             TotalApproved: netApproved,

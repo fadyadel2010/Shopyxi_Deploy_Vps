@@ -1,0 +1,29 @@
+{
+  "sourceIndexSha256": "a909b4464ff8c1917ba2d0381cc888a5a9e68a5330569527e9964950ca30d942",
+  "registryPush": false,
+  "transport": "Established verified archive import into existing single-node k3s",
+  "images": {
+    "api": {
+      "tag": "shopixy/api:affiliate-return-20261115-a909b4464ff8",
+      "localDockerIdentity": "sha256:880c33e45a4e4a8cf236744b328706cac229e7b12284a7054ae9828b99aa34f3",
+      "archiveSha256": "c07dcd26c115f251feaee6b74157c036f14ea3d7f77a7f871be50928c596d40b",
+      "nonRootUser": 1654,
+      "highCriticalVulnerabilities": 0,
+      "scannerMode": "Cached-DB offline Trivy HIGH/CRITICAL exit-code gate",
+      "privateScanSha256": "f1d88a716e84635329715b8a529ca81f4eeb33440c80f58caebdd75e69caec81"
+    },
+    "web": {
+      "tag": "shopixy/web:affiliate-return-20261115-a909b4464ff8",
+      "localDockerIdentity": "sha256:f224346ab401bfa77a59f0716f6f555499b994a22fd7980bb8423ee29735c991",
+      "archiveSha256": "4bad0c77034499f0ffc1509a4c6f2e7f3e76876b25baeb935c4c39645ccf106b",
+      "nonRootUser": 101,
+      "highCriticalVulnerabilities": 0,
+      "scannerMode": "Cached-DB offline Trivy HIGH/CRITICAL exit-code gate",
+      "privateScanSha256": "bf3b1e9f70cabbcd5bd3fa3e359da0e3a7498435d9cd1a5db973692ad0e8e036"
+    }
+  },
+  "apiUnrelatedRuntimeFilesIdentical": true,
+  "apiDependencyManifestIdentical": true,
+  "webImageDistParity": true,
+  "nginxConfigurationValid": true
+}

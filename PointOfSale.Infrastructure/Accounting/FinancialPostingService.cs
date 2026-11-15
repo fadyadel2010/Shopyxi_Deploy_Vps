@@ -501,6 +501,8 @@ public class FinancialPostingService : IFinancialPostingService
             await ValidateManualWalletSettlementInflowAsync(request, ct);
         if (request.SourceType == CarrierRemittanceAuthority.SourceType)
             await ValidateCarrierRemittanceInflowAsync(request, ct);
+        if (request.SourceType == PointOfSale.Infrastructure.Services.Affiliate.AffiliatePayoutReturnAuthority.SourceType)
+            await ValidateAffiliatePayoutReturnInflowAsync(request, ct);
     }
     
     /// <inheritdoc />
@@ -662,6 +664,7 @@ public class FinancialPostingService : IFinancialPostingService
 
         var authorizedAmount = request.SourceType switch
         {
+            "AffiliateManualPayoutReturn" => await ValidateAffiliatePayoutReturnInflowAsync(request, ct),
             "ManualCodSettlement" => await ValidateManualCodSettlementInflowAsync(request, ct),
             "ManualWalletSettlement" => await ValidateManualWalletSettlementInflowAsync(request, ct),
             "CarrierCashRemittance" => await ValidateCarrierRemittanceInflowAsync(request, ct),
@@ -823,6 +826,17 @@ public class FinancialPostingService : IFinancialPostingService
         return cumulativeCashRefunds <= originalCashPaid
             ? returnRecord.CashRefundAmount
             : null;
+    }
+
+    private async Task<decimal?> ValidateAffiliatePayoutReturnInflowAsync(PostingRequest request, CancellationToken ct)
+    {
+        var expected = await PointOfSale.Infrastructure.Services.Affiliate.AffiliatePayoutReturnAuthority.BuildPostingAsync(
+            _db, request.TenantId, request.SourceId, ct);
+        if (request.IdempotencyKey != expected.IdempotencyKey || request.SourceReference != expected.SourceReference ||
+            request.UserId != expected.UserId || request.JournalDate != expected.JournalDate || request.Lines.Count != expected.Lines.Count ||
+            expected.Lines.Any(l => request.Lines.Count(x => x.AccountId == l.AccountId && x.DebitAmount == l.DebitAmount && x.CreditAmount == l.CreditAmount) != 1))
+            throw new InvalidJournalException("Affiliate payout return must use the complete original cashbox and payable authority.");
+        return expected.Lines.Sum(l => l.DebitAmount);
     }
 
     private async Task<decimal?> ValidateManualWalletSettlementInflowAsync(PostingRequest request, CancellationToken ct)

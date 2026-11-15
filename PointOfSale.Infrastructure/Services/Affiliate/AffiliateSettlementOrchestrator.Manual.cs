@@ -37,7 +37,7 @@ public partial class AffiliateSettlementOrchestrator
     }
 
     public static string ManualReference(Guid request) => $"ADMIN-MANUAL:{request:D}";
-    internal static string ManualJournalKey(Guid store, Guid request) => $"AFFILIATE_MANUAL_PAYOUT:v1:{store}:{request}";
+    public static string ManualJournalKey(Guid store, Guid request) => $"AFFILIATE_MANUAL_PAYOUT:v1:{store}:{request}";
     public static string DestinationFingerprint(AffiliatePayoutRequest r) => Hash(JsonSerializer.Serialize(new {
         r.Id, r.StoreTenantId, r.AffiliateAccountId, r.PayoutWalletNumberSnapshot, r.PayoutWalletTypeSnapshot,
         r.PayoutWalletUpdatedAtUtcSnapshot, r.PayoutWalletSnapshotCapturedAtUtc }));
@@ -123,7 +123,7 @@ public partial class AffiliateSettlementOrchestrator
     }
 
     private async Task AddManualConfirmationAsync(AffiliatePayoutRequest r, AffiliateBalanceLedger debit,
-        ExactPayoutPlan plan, ManualExecution m, CancellationToken ct)
+        ExactPayoutPlan plan, ManualExecution m, IReadOnlyDictionary<Guid, Guid> paidEntryIds, CancellationToken ct)
     {
         var account = await _db.AffiliateAccounts.IgnoreQueryFilters().AsNoTracking().SingleAsync(a => a.Id == r.AffiliateAccountId, ct);
         if (!account.IsActive || account.IsDeleted || !await _db.AffiliateUsers.IgnoreQueryFilters().AnyAsync(u =>
@@ -144,7 +144,8 @@ public partial class AffiliateSettlementOrchestrator
             BalanceLedgerId = debit.Id, CommandFingerprint = CommandFingerprint(m),
             AllocationsJson = JsonSerializer.Serialize(plan.SelectedEntries.Select(e => new {
                 ApprovedEntryId = e.ApprovedEntry.Id, e.ApprovedEntry.OrderId, e.ApprovedEntry.OrderItemId,
-                Amount = e.PayableCommissionAmount, JournalKey = ManualJournalKey(r.StoreTenantId, r.Id) }))
+                Amount = e.PayableCommissionAmount, JournalKey = ManualJournalKey(r.StoreTenantId, r.Id),
+                PaidEntryId = paidEntryIds[e.ApprovedEntry.Id] }))
         };
         _db.AffiliateManualPayouts.Add(confirmation);
         _db.AuditLogs.Add(new AuditLog { TenantId = r.StoreTenantId, UserId = m.Actor.Id,
@@ -200,6 +201,7 @@ public partial class AffiliateSettlementOrchestrator
                 p.EntryType == CommissionEntryType.Paid && p.StoreTenantId == r.StoreTenantId &&
                 p.AffiliateAccountId == r.AffiliateAccountId && p.OrderId == a.OrderId && p.OrderItemId == a.OrderItemId &&
                 p.Currency == saved.Currency && p.CommissionAmount == a.Amount &&
+                (a.PaidEntryId.HasValue ? p.Id == a.PaidEntryId.Value : p.IdempotencyKey == "AFFILIATE_COMM:PAID:" + p.OrderItemId) &&
                 _db.AffiliateCommissionLedger.IgnoreQueryFilters().Any(parent => parent.Id == a.ApprovedEntryId &&
                     parent.EntryType == CommissionEntryType.Approved && parent.StoreTenantId == r.StoreTenantId &&
                     parent.AffiliateAccountId == r.AffiliateAccountId && parent.OrderId == a.OrderId &&
@@ -207,7 +209,7 @@ public partial class AffiliateSettlementOrchestrator
                     parent.Currency == p.Currency && parent.CommissionAmount >= p.CommissionAmount), ct))
                 throw new InvalidOperationException("AFFILIATE_PAYOUT_IDEMPOTENCY_CONFLICT: Manual allocation lineage is incomplete.");
     }
-    private sealed record ManualAllocation(Guid ApprovedEntryId, Guid OrderId, Guid OrderItemId, decimal Amount, string JournalKey);
+    private sealed record ManualAllocation(Guid ApprovedEntryId, Guid OrderId, Guid OrderItemId, decimal Amount, string JournalKey, Guid? PaidEntryId = null);
 
     private async Task<PayoutExecutionResult> ManualResultAsync(Guid requestId, bool replay, CancellationToken ct)
     {

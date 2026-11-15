@@ -156,8 +156,8 @@ public partial class AffiliateSettlementOrchestrator : IAffiliateSettlementOrche
                     externalPaymentReference, confirmedTransferAmount, adminNotes, paidByUserId, sourceLabel, ct), storeTenantId, ct);
     }
 
-    private Task<PayoutExecutionResult> ExecuteWithFreshRetryScopeAsync(
-        Func<AffiliateSettlementOrchestrator, Task<PayoutExecutionResult>> operation, Guid storeTenantId, CancellationToken ct)
+    private Task<T> ExecuteWithFreshRetryScopeAsync<T>(
+        Func<AffiliateSettlementOrchestrator, Task<T>> operation, Guid storeTenantId, CancellationToken ct)
     {
         if (_db.Database.CurrentTransaction != null || _db.ChangeTracker.HasChanges())
             throw new InvalidOperationException("AFFILIATE_PAYOUT_AUTHORITY_CONFLICT: Payout execution requires an independent, clean unit of work.");
@@ -475,7 +475,7 @@ public partial class AffiliateSettlementOrchestrator : IAffiliateSettlementOrche
                             item.CommissionAmount),
                         ct);
 
-            var alreadyPaidOrderItemIds = await _db.AffiliateCommissionLedger
+            var alreadyPaidOrderItemIds = await AffiliatePayoutReturnAuthority.EffectiveHistory(_db)
                 .IgnoreQueryFilters()
                 .Where(e =>
                     e.AffiliateAccountId == affiliateAccountId &&
@@ -550,7 +550,7 @@ public partial class AffiliateSettlementOrchestrator : IAffiliateSettlementOrche
             var paidCount = 0;
 
             // AF-38Y: Track which orders were paid for event publishing
-            if (manual != null) await AddManualConfirmationAsync(payoutRequest!, withdrawalEntry, payoutPlan, manual, ct);
+            var paidEntryIds = new Dictionary<Guid, Guid>();
             var paidOrderTracker = new Dictionary<Guid, (decimal Total, int Count, string Currency)>();
 
             foreach (var selectedEntry in payoutPlan.SelectedEntries)
@@ -560,13 +560,14 @@ public partial class AffiliateSettlementOrchestrator : IAffiliateSettlementOrche
                     approved,
                     selectedEntry.PayableBaseAmount,
                     selectedEntry.PayableCommissionAmount,
-                    selectedEntry.ApprovedMaxPerItem);
+                    selectedEntry.ApprovedMaxPerItem, withdrawalEntry.Id);
 
                 try
                 {
                     _db.AffiliateCommissionLedger.Add(paidEntry);
                     await _db.SaveChangesAsync(ct);
                     paidCount++;
+                    paidEntryIds.Add(approved.Id, paidEntry.Id);
                     // Track paid amount per order for event publishing
                     if (paidOrderTracker.TryGetValue(approved.OrderId, out var existing))
                         paidOrderTracker[approved.OrderId] = (existing.Total + selectedEntry.PayableCommissionAmount, existing.Count + 1, approved.Currency);
@@ -594,6 +595,7 @@ public partial class AffiliateSettlementOrchestrator : IAffiliateSettlementOrche
                 "AffiliateId={AffiliateId} | PaidEntries={PaidCount} | PlannedAmount={PlannedAmount}",
                 sourceLabel, affiliateAccountId, paidCount, payoutPlan.TotalAmount);
 
+            if (manual != null) await AddManualConfirmationAsync(payoutRequest!, withdrawalEntry, payoutPlan, manual, paidEntryIds, ct);
             if (paidOrderTracker.Count > 0)
             {
                 await EnsureAffiliateEarnedAccountingPostedAsync(
@@ -939,7 +941,7 @@ public partial class AffiliateSettlementOrchestrator : IAffiliateSettlementOrche
                             item.CommissionAmount),
                         ct);
 
-            var alreadyPaidOrderItemIds = await _db.AffiliateCommissionLedger
+            var alreadyPaidOrderItemIds = await AffiliatePayoutReturnAuthority.EffectiveHistory(_db)
                 .IgnoreQueryFilters()
                 .Where(e =>
                     e.AffiliateAccountId == affiliateAccountId &&
@@ -991,7 +993,7 @@ public partial class AffiliateSettlementOrchestrator : IAffiliateSettlementOrche
                     approved,
                     selectedEntry.PayableBaseAmount,
                     selectedEntry.PayableCommissionAmount,
-                    selectedEntry.ApprovedMaxPerItem);
+                    selectedEntry.ApprovedMaxPerItem, withdrawalEntry.Id);
 
                 try
                 {
