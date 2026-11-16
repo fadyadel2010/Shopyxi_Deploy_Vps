@@ -1,0 +1,9 @@
+{
+  "evidenceAssertions": "PASS",
+  "sensitivePatternFindings": [],
+  "screenshots": 6,
+  "testsPassed": 33,
+  "aggregateStatus": "Degraded",
+  "requiredBusinessHealth": "Healthy",
+  "applicationAcceptance": "FIXED AND RE-TESTED"
+}

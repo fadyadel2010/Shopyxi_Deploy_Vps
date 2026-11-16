@@ -1,0 +1,301 @@
+{
+  "verifiedAtUtc": "2026-11-16T23:08:24.248597+00:00",
+  "readOnly": true,
+  "workloads": [
+    {
+      "name": "shopixy-api",
+      "generation": 64,
+      "observedGeneration": 64,
+      "readyReplicas": 1,
+      "specSha256": "df93ad645db3af3e22662b3e06ac680689afc6c355bc4f89a3a08085c7061f51",
+      "containers": [
+        {
+          "name": "api",
+          "image": "docker.io/shopixy/api@sha256:cb900c183069f94311142ad9c5a16fa23266611d3c29f674bae64040189ac307"
+        },
+        {
+          "name": "clientip-edge",
+          "image": "docker.io/shopixy/web@sha256:f35e1b9cd384244049d0008af9476ee3d6fb974ca7fbb8e7e1f9fe70c11b0a42"
+        }
+      ],
+      "sourceCommit": "4fb2beb41cb704d8b4e9d9ee383afc34d8904594",
+      "runtimeConfigId": "sha256:72e31d4f8fd125733311af92de54598c244eacfd8eaf8321a5478e291ed716de",
+      "pods": [
+        {
+          "name": "shopixy-api-5b46f7bb8c-jvbg7",
+          "uid": "b2ed19e9-f23c-4374-86f9-4a3d38603db4",
+          "containers": [
+            {
+              "name": "api",
+              "ready": true,
+              "restartCount": 0,
+              "imageID": "docker.io/library/commercehub-publishing-import@sha256:bc02dd4a2391737c74b011e550d3e20953d685839fd3386388c7e5d8643886d7"
+            },
+            {
+              "name": "clientip-edge",
+              "ready": true,
+              "restartCount": 0,
+              "imageID": "docker.io/shopixy/web@sha256:f35e1b9cd384244049d0008af9476ee3d6fb974ca7fbb8e7e1f9fe70c11b0a42"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "shopixy-storefront",
+      "generation": 10,
+      "observedGeneration": 10,
+      "readyReplicas": 1,
+      "specSha256": "a8dc72f11b84d588d5c57b18f5943fc5e10292644b5c1d3b96a95d387ed1f2a7",
+      "containers": [
+        {
+          "name": "storefront",
+          "image": "docker.io/shopixy/storefront@sha256:e9333f609aa664d6de713d4db00b18deba054e3a8acbb559099d9ab245f9f3df"
+        }
+      ],
+      "sourceCommit": null,
+      "runtimeConfigId": "sha256:37e05dee0ed10bae9c58dd634d1630c86d813087b7b0aeb699c5f7d1f45dc4d5",
+      "pods": [
+        {
+          "name": "shopixy-storefront-95dbbc769-tsbbk",
+          "uid": "ddd60a1e-163f-4a8a-925e-9b5f86011d9b",
+          "containers": [
+            {
+              "name": "storefront",
+              "ready": true,
+              "restartCount": 2,
+              "imageID": "docker.io/library/import-2026-11-13@sha256:dcd3573b806201db6bf8d5f124008773f2c38742457e6af8e9829c0c380a64b7"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "shopixy-web",
+      "generation": 23,
+      "observedGeneration": 23,
+      "readyReplicas": 1,
+      "specSha256": "35d18fb2e8658db6f1a112fb4e1f226aa2b582d7acc5a34659fa4ceec1b2b4b8",
+      "containers": [
+        {
+          "name": "web",
+          "image": "docker.io/shopixy/web@sha256:627af0b79e1a8bfa4be76691df0f43c938c9b586727d11c2f223e43580c21568"
+        }
+      ],
+      "sourceCommit": "856648d0b61a7621c600524b5aa55cf4a72fb385",
+      "runtimeConfigId": "sha256:cd7c333299270ee307f490f8229067991d90727541c92dd00fdc4b9e2121664a",
+      "pods": [
+        {
+          "name": "shopixy-web-6bdb8f8bc8-s8fbz",
+          "uid": "a9d99bf1-e336-46ea-a9f8-358991603ecb",
+          "containers": [
+            {
+              "name": "web",
+              "ready": true,
+              "restartCount": 0,
+              "imageID": "docker.io/library/commercehub-closure-import@sha256:f42d80e358918253a1d1a6f8b63600b5344f106772dbacb0e6117997b820bcd2"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "health": {
+    "/health/ready": {
+      "httpStatus": 200,
+      "status": "Degraded",
+      "checks": {
+        "masstransit-bus": "Healthy",
+        "projection_outbox": "Healthy",
+        "integration_outbox_readiness": "Healthy",
+        "payment_cancellation_outbox_readiness": "Healthy",
+        "provider_delivery_outbox_readiness": "Healthy",
+        "mass_transit_bus_outbox_readiness": "Healthy",
+        "accounting_outbox_readiness": "Healthy",
+        "canonical_identity_authority": "Healthy",
+        "payout_external_truth_readiness": "Healthy",
+        "commercehub_external_outcome_recovery": "Healthy",
+        "postgresql": "Healthy",
+        "redis": "Healthy",
+        "mongodb": "Healthy",
+        "elasticsearch": "Healthy",
+        "rabbitmq": "Healthy",
+        "r2": "Healthy",
+        "dns_resolver": "Healthy",
+        "certificate_provider": "Degraded",
+        "caddy_edge": "Degraded",
+        "certificate_renewal": "Healthy",
+        "paymob_foundation": "Healthy",
+        "paymob_operational_readiness": "Healthy",
+        "stripe_operational_readiness": "Healthy",
+        "fawry_foundation": "Healthy",
+        "fawry_operational_readiness": "Healthy",
+        "manual_payment_foundation": "Healthy",
+        "manual_payment_operational_readiness": "Healthy",
+        "cod_reference_workflow_foundation": "Healthy"
+      },
+      "nonHealthyDescriptions": {
+        "certificate_provider": {
+          "status": "Degraded",
+          "description": "Dependency status; diagnostic payload omitted.",
+          "exceptionCategory": null
+        },
+        "caddy_edge": {
+          "status": "Degraded",
+          "description": "Dependency status; diagnostic payload omitted.",
+          "exceptionCategory": null
+        }
+      }
+    },
+    "/health": {
+      "httpStatus": 200,
+      "status": "Degraded",
+      "checks": {
+        "masstransit-bus": "Healthy",
+        "projection_drift": "Healthy",
+        "projection_outbox": "Healthy",
+        "integration_outbox_readiness": "Healthy",
+        "payment_cancellation_outbox_readiness": "Healthy",
+        "provider_delivery_outbox_readiness": "Healthy",
+        "mass_transit_bus_outbox_readiness": "Healthy",
+        "accounting_outbox_readiness": "Healthy",
+        "canonical_identity_authority": "Healthy",
+        "payout_external_truth_readiness": "Healthy",
+        "commercehub_external_outcome_recovery": "Healthy",
+        "redis_latency": "Healthy",
+        "stock_reservation": "Healthy",
+        "marketplace_elasticsearch": "Healthy",
+        "provider_trust_projections": "Healthy",
+        "postgresql": "Healthy",
+        "redis": "Healthy",
+        "mongodb": "Healthy",
+        "elasticsearch": "Healthy",
+        "rabbitmq": "Healthy",
+        "r2": "Healthy",
+        "dns_resolver": "Healthy",
+        "certificate_provider": "Degraded",
+        "caddy_edge": "Degraded",
+        "certificate_renewal": "Healthy",
+        "paymob_foundation": "Healthy",
+        "paymob_operational_readiness": "Healthy",
+        "stripe_foundation": "Healthy",
+        "stripe_operational_readiness": "Healthy",
+        "fawry_foundation": "Healthy",
+        "fawry_operational_readiness": "Healthy",
+        "manual_payment_foundation": "Healthy",
+        "manual_payment_operational_readiness": "Healthy",
+        "cod_reference_workflow_foundation": "Healthy",
+        "tenant_provisioning": "Healthy",
+        "Marketplace": "Healthy",
+        "CommerceHubPlatform": "Healthy",
+        "CommerceHubSearchSync": "Healthy"
+      },
+      "nonHealthyDescriptions": {
+        "certificate_provider": {
+          "status": "Degraded",
+          "description": "Dependency status; diagnostic payload omitted.",
+          "exceptionCategory": null
+        },
+        "caddy_edge": {
+          "status": "Degraded",
+          "description": "Dependency status; diagnostic payload omitted.",
+          "exceptionCategory": null
+        }
+      }
+    }
+  },
+  "configurationFiles": [
+    {
+      "file": "appsettings.json",
+      "sha256": "82a7ba30469d6fb7bc78dbdb7082edf619c605f1750358614a5f8e9895f35421",
+      "enabled": {
+        "CertificateProvider": false,
+        "CaddyEdge": false
+      },
+      "adapterSettingPresence": {
+        "CertificateProvider": {
+          "AccountReference": false,
+          "DirectoryUrl": false
+        },
+        "CaddyEdge": {
+          "ManagedRoutesDirectory": false,
+          "StorefrontRoot": false,
+          "ApiUpstream": false,
+          "LogRoot": false,
+          "ValidateCommand": false,
+          "ReloadCommand": false
+        }
+      }
+    },
+    {
+      "file": "appsettings.Production.json",
+      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "enabled": {
+        "CertificateProvider": "absent",
+        "CaddyEdge": "absent"
+      },
+      "adapterSettingPresence": {
+        "CertificateProvider": {
+          "AccountReference": false,
+          "DirectoryUrl": false
+        },
+        "CaddyEdge": {
+          "ManagedRoutesDirectory": false,
+          "StorefrontRoot": false,
+          "ApiUpstream": false,
+          "LogRoot": false,
+          "ValidateCommand": false,
+          "ReloadCommand": false
+        }
+      }
+    }
+  ],
+  "environmentEnabledFlags": {
+    "CertificateProvider__Enabled": "absent",
+    "CaddyEdge__Enabled": "absent"
+  },
+  "adapterEnvironmentVariableNames": [],
+  "environmentName": "Production",
+  "adapterCommandLineOverrideNames": [],
+  "sql": [
+    {
+      "kind": "commission_rules",
+      "rules": [
+        {
+          "id": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+          "scope_type": 0,
+          "scope_id": null,
+          "rate": 0.1,
+          "is_active": true,
+          "priority": 0,
+          "is_deleted": false,
+          "created_at": "2026-11-16T21:56:39.580058+00:00"
+        }
+      ]
+    },
+    {
+      "kind": "listing",
+      "data": {
+        "id": "ff8cdce3-ad88-4467-b027-cdde5812e84d",
+        "tenant_id": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0",
+        "product_id": "b2ec52fb-d600-f1ed-dc23-2fcdc09e61b8",
+        "variant_id": "81069782-7bda-4e35-bf24-3e13424f06f2",
+        "category_id": "10000000-0000-0000-0000-000000000032",
+        "price": 12.0,
+        "is_published": true,
+        "is_deleted": false,
+        "attributes_json": null,
+        "created_at": "2026-11-16T22:04:38.010618+00:00"
+      }
+    },
+    {
+      "kind": "source_variant",
+      "data": {
+        "id": "81069782-7bda-4e35-bf24-3e13424f06f2",
+        "price": 10.0,
+        "online_price": null,
+        "is_active": true
+      }
+    }
+  ]
+}

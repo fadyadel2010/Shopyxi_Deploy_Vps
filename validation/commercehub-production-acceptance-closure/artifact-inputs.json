@@ -1,0 +1,294 @@
+{
+  "sourceCommit": "856648d0b61a7621c600524b5aa55cf4a72fb385",
+  "sourceInputSha256": "cae8192264f66315958f273a69be053a398c42dd63eeff965177236bd0abcbdb",
+  "parentAlias": "shopixy/web:commercehub-publishing-4fb2beb-20261116",
+  "parentDigest": "sha256:e95bbdf5a645495003a3f88a580148238d738b6b1fd0ee345194d9e271de02a8",
+  "webDistSha256": "81c0f7731fe03bde8f3df60dd5dbbd46e9720b4043edb770c9fcb4de5e0e5748",
+  "files": [
+    {
+      "path": "assets/abandoned-checkouts-CHisHTLM.js",
+      "sha256": "b080db733285b41bd2a5b36828e21f6427c5dfb1f99b5f9d0c7ddad5eb8f7778"
+    },
+    {
+      "path": "assets/analytics-settings-DCjpLD0J.js",
+      "sha256": "018416660ec5a5e457979375455c6694dcafa3da4d8b49198eb4713cbef5d69d"
+    },
+    {
+      "path": "assets/auth-providers-BZ14pPlC.js",
+      "sha256": "32f17157cdbb5d793b1611121e37f35389dc34822e9f772abd4ab9a83f5e8415"
+    },
+    {
+      "path": "assets/balance-transfer-CaTPH8bN.js",
+      "sha256": "35ad11ac3f4690db4b4a89566f89ee71784e4038ba5ed48a15284df9c3d6a2bc"
+    },
+    {
+      "path": "assets/bank-account-Erd7qOU8.js",
+      "sha256": "9f7c64ea34ad30efc42447fdbd4d79aa24826fb0385c8399fcffb79c759d33c2"
+    },
+    {
+      "path": "assets/bank-statement-DBiIaSMh.js",
+      "sha256": "6e60395ea9cfef7c4bf1c1091d23f0ff3cd3385facec36a13ac298fd28de65a6"
+    },
+    {
+      "path": "assets/banks-C0BX9Rbm.js",
+      "sha256": "012a7c2da15fe3f75ea5de33317d06e618ca3a06cd10c673a401e1c5da1d90e2"
+    },
+    {
+      "path": "assets/barcode-printing-BEW1gdlQ.js",
+      "sha256": "110bdce18adbed2fab6893db92a85f5b2c86ddd6fe222479e42d19b32a6d57b3"
+    },
+    {
+      "path": "assets/blocked-phones-BEoLrzDr.js",
+      "sha256": "8bc3438b11e9e59b21f624a108dfbb9854585f5631e5e199b327780c260ca58b"
+    },
+    {
+      "path": "assets/campaign-costs-q-OL-WEj.js",
+      "sha256": "33d96c7cedf6c2d250162a8f23c04316f5b8b896beb083e4221c7d3e85cc5961"
+    },
+    {
+      "path": "assets/cart-recovery-B5enak1P.js",
+      "sha256": "4e8c083ccf327968015ce4aea3eb0e84a7617b04ff83b6193d051555717ad871"
+    },
+    {
+      "path": "assets/cash-account-RK1RAi2Z.js",
+      "sha256": "c1bec5ee4a956222a1013f74b5da40ed4b705e326e19900c110f2cb5396affcc"
+    },
+    {
+      "path": "assets/categories-DqBWc35h.js",
+      "sha256": "4278c08fb74a99555c6d439eb74b90d0fc1aaa151d60b08a1654c8ba6cc353b0"
+    },
+    {
+      "path": "assets/commerce-ai-BbLxwQ-S.js",
+      "sha256": "2871abe4a9a32d2c1193d03a56bc22664934b700948a50401c6673c41af79686"
+    },
+    {
+      "path": "assets/conversion-funnels-BtmP6YBP.js",
+      "sha256": "c59402e660338419f5c693976f0e1f40dbfc8ae74fc7b0a4a7306b0495eeb8e6"
+    },
+    {
+      "path": "assets/coupons-BsRbKfTD.js",
+      "sha256": "6589191851250be8c754fb4c6a1c03691ca6637c2e0e1060329b2f00b06b2680"
+    },
+    {
+      "path": "assets/create-product-CfQTOzmm.js",
+      "sha256": "4f1f3c5cf64ee961c6e50477b94ccabd6851566906ae602ed54c4d6f9366da52"
+    },
+    {
+      "path": "assets/customer-supplier-payments-CFebREAb.js",
+      "sha256": "99234f73b107aa0a38e3d946acba5cc96efb0b1d7c0ad2ce6f346ac12d42efd7"
+    },
+    {
+      "path": "assets/customer-supplier-settlement-CHLrSiP7.js",
+      "sha256": "855376c1264d359067981d2a7469022ade9263558e8a98e311434cfe34cdf14c"
+    },
+    {
+      "path": "assets/customer-supplier-statement-ud_BsQN9.js",
+      "sha256": "314c9e08dd1f973d51020059b2efb26ccbe5ed4393a3f3504f44be3f534b080a"
+    },
+    {
+      "path": "assets/customers-CBFz-N2a.js",
+      "sha256": "be6dd02faa023fe0e9489eed980d5de3af82d6ec09d26d1feca4aff59742f613"
+    },
+    {
+      "path": "assets/dashboard-DjXOiO3e.js",
+      "sha256": "2f2081cf134a7761c0a660175ce540b5dff671200a9b72588c86deb46b0d8129"
+    },
+    {
+      "path": "assets/ecommerce-orders-Dh-h7HLt.js",
+      "sha256": "51765df276ea8aa11b4e8e5929151091474097f46320c9f0733af2dcd4840d50"
+    },
+    {
+      "path": "assets/edit-product-S7_c1qXL.js",
+      "sha256": "c1db12c356fc667abe972150cb9003b3102ba0ed3729c50793d2e82875a23d42"
+    },
+    {
+      "path": "assets/expense-categories-DbsQSw9r.js",
+      "sha256": "10ddabface97906e1aee8c9424661236d2020075395aba44790f099c686ca54a"
+    },
+    {
+      "path": "assets/expenses-movement-DmsneYOB.js",
+      "sha256": "273650b92b2809a1aaf80f7e50d53aee547d157040a9e496bc0340aed77c711b"
+    },
+    {
+      "path": "assets/expenses-report-CcA7Js35.js",
+      "sha256": "88c49793f06ea7d462194e5eed86ccbf1c7a23868805adb06dd58c395ff9554c"
+    },
+    {
+      "path": "assets/financial-main-accounts-CLjT0cYR.js",
+      "sha256": "5f05fa73f4e5f4b6924da9ee5eca5d3a9db52d57ef0eb115bf7ab609392c356b"
+    },
+    {
+      "path": "assets/financial-sub-accounts-iF7ouM9U.js",
+      "sha256": "c477d765a4c08f3cbe3a86175dfd273d7627a40cbb5c3fac934c49651fba5945"
+    },
+    {
+      "path": "assets/html2canvas.esm-QH1iLAAe.js",
+      "sha256": "061c08e50c0dc57b8d5e6531f0b8237a52a68b233260d49ab2f2c2906ad112c4"
+    },
+    {
+      "path": "assets/index-CiO8j38m.css",
+      "sha256": "42ade963cc7141a93b01a7f504e3375c07fa1aa12e0db4e8ca0e5c31894d0cd0"
+    },
+    {
+      "path": "assets/index-D3XE6cwQ.js",
+      "sha256": "d94da37185ee364f5ff01d38c6ba46aad457679dc19cd2c0ecdc964e44c902f3"
+    },
+    {
+      "path": "assets/index.es-CnNeo9qA.js",
+      "sha256": "0685e8ada53db9b96b8fc865473fb17acf3f631e07906968a060ccfaf8385628"
+    },
+    {
+      "path": "assets/inventory-balance-BGebnlAZ.js",
+      "sha256": "4a165b758c6b52d4ea7758cb93c1d2160112dd580e52a1389a063bd060483644"
+    },
+    {
+      "path": "assets/jspdf.es.min-C8O5gCbL.js",
+      "sha256": "1d4c46c4e8807f6ce6d53a293c092c8d0d63074fc58319b42c3a6d3124ed0abf"
+    },
+    {
+      "path": "assets/jspdf.plugin.autotable-CxxEjV4y.js",
+      "sha256": "8c1ee014e864adbc8430faa46df492bb5adf058657c148bbaa11ff23d39c8e7c"
+    },
+    {
+      "path": "assets/manual-payments-D46F3-0W.js",
+      "sha256": "d78e48f71a42cfa96765f7e4e7214c4da104c2b8ad0a97fea1b8a41f0141caa6"
+    },
+    {
+      "path": "assets/marketing-attribution-CwPcnob4.js",
+      "sha256": "7e25f7ad95ed4a80797bc88833209b18355c82b7cf5b49f27ab32e32fd9d54c2"
+    },
+    {
+      "path": "assets/marketing-roi-Cemut9uO.js",
+      "sha256": "c5b01bed1973cbc8571a1c6b46a130f1f2b673ead07f78e6e8b86df25aea4aff"
+    },
+    {
+      "path": "assets/online-customers-pS-zX8Dw.js",
+      "sha256": "d55a655f9e1fc2706550004bca26e109b656ce1b04f8dec82b2b633cb3d9e388"
+    },
+    {
+      "path": "assets/opening-customers-BlY61QfQ.js",
+      "sha256": "7e3250a73e4a2af1a5c8254997b4e691e1474b9bea33345094f6214d8e0c2952"
+    },
+    {
+      "path": "assets/opening-suppliers-j7SQMvPS.js",
+      "sha256": "ceab61c33cca2cd661196aa27a2806dc491c25878e3056bb062fa31077273381"
+    },
+    {
+      "path": "assets/opening-treasury-FRePt2r2.js",
+      "sha256": "e7cc5e4bfcabeaf595e3b432282bd4caeb6db1c03d8b9d6e4ea995f0b048e920"
+    },
+    {
+      "path": "assets/opening-warehouse-stock-DzxyZrcY.js",
+      "sha256": "f0ac7f704f4ec70c8f270bd8823b56e298ea107e2ccda990297134cc173f85e4"
+    },
+    {
+      "path": "assets/outstanding-balances-DuxLq95a.js",
+      "sha256": "73130906f9b990a2978b966f137110bfaa9384c26599e834cb9c1a3cb20ff400"
+    },
+    {
+      "path": "assets/payment-methods-DPm5Zo0z.js",
+      "sha256": "4c144bbf572fe0af40806e1ad2e65dab8fa6f87169761149685bfda618e0436b"
+    },
+    {
+      "path": "assets/pixel-tracking-CllRlia2.js",
+      "sha256": "f9e5697012c8040e1796aad12e70ca17070590d6cb5582b8af83b2a4f2f9e7b2"
+    },
+    {
+      "path": "assets/pos-sales-B7e5m0h_.js",
+      "sha256": "a926be9e4ba7ea31c6bb4dfbf513495b6ff4464eadb65598fde0b28f97590ce6"
+    },
+    {
+      "path": "assets/product-media-CJRzbaq0.js",
+      "sha256": "611e18cea089b25a638e3d58de910f5ce1999a4bd2e7c4ed0dfbac926fb448e6"
+    },
+    {
+      "path": "assets/product-templates-tg97jLz8.js",
+      "sha256": "fe0c27de41494325d714e84f6ca9ff1abbc8d78cc6ea5e4174746d4a9a1d3ae4"
+    },
+    {
+      "path": "assets/product-variants-dIkt8tMn.js",
+      "sha256": "4c249f3ece03dce4a5797b2bfdb03c864cb228acf0cb664dde741abad950b95d"
+    },
+    {
+      "path": "assets/products-BGDc8tzg.js",
+      "sha256": "c5c7be74fe1de4d65b53b555d2563ef968d36614c5b2cd06054ab48b0732b2f9"
+    },
+    {
+      "path": "assets/promotions-C8AGP3NS.js",
+      "sha256": "29f7ca0326356c6cb8eee7ae1f76af3b4d6710ed207b36ec31e6964fef2111b4"
+    },
+    {
+      "path": "assets/purchase-invoice-Cy4a4jcv.js",
+      "sha256": "fde33772791038c6b1294574c317b36af577728dbb011c3dc60e40a9c103f6db"
+    },
+    {
+      "path": "assets/purchase-returns-D94wIGzR.js",
+      "sha256": "a7e7fda0b9c53c5a53ac4592efd289cafd112e5694cc213e0a8d9475b8d82610"
+    },
+    {
+      "path": "assets/sales-representatives-CXZTLrN-.js",
+      "sha256": "2f5452eb0b85dbd5d80d3b3e4574e4953f8ef40514eec91338158aeac255a4d7"
+    },
+    {
+      "path": "assets/sales-returns-DaNfGnzc.js",
+      "sha256": "1c4b1a2f4cad73b81023302fa98b9681080449e9645f9ba42812e70380e35f7f"
+    },
+    {
+      "path": "assets/shipping-setup-yxmq_Epw.js",
+      "sha256": "04b3318a8ff83d3cedc1bd36b78c46bc2e919eaf52f20a129143cd8994c1cb60"
+    },
+    {
+      "path": "assets/smart-offers-BENW-cwY.js",
+      "sha256": "17e51d6249d67cee5574513ed47cbb59e90e77cba282b894fe45ae328de801de"
+    },
+    {
+      "path": "assets/stock-transfers-BWfWkA8i.js",
+      "sha256": "dc501ea7b5fe4ff45bedb7a783501d3f9e08726c341e284a801cd4516d188c83"
+    },
+    {
+      "path": "assets/suppliers-CGNL7vmV.js",
+      "sha256": "a1752ea357fd27a4628e9c4bdd1445895d503ea0a3fd149faa43e4cf8a573721"
+    },
+    {
+      "path": "assets/treasury-dashboard-mtt2uNWQ.js",
+      "sha256": "99abba19dfcb82bc7d410c25ee16ee731a9313195a0bff2edde83e55f39bb63c"
+    },
+    {
+      "path": "assets/treasury-hub-CZ_ayoe0.js",
+      "sha256": "ea86270f85df9e50c655153d95b734c1149944dab712cd3154bf3009a4034724"
+    },
+    {
+      "path": "assets/units-CGzcJChc.js",
+      "sha256": "cb89a2397cbf711afb1bf09332eef13f797332ad0ae661e6824f4baa0de0af45"
+    },
+    {
+      "path": "assets/visa-clearing-BDItaL5M.js",
+      "sha256": "6af767612aad23f661a02325ab333a74974960049f909e000a1ab7dae67bb1ad"
+    },
+    {
+      "path": "assets/visa-statement-CitlGSyY.js",
+      "sha256": "9cc2b3ba6ed5a5b5ad4cfc4dd674b8cae9fb51aa6aa162e9a390feddfc929181"
+    },
+    {
+      "path": "assets/warehouses-CTZ0hLh4.js",
+      "sha256": "301d5936f4d1f8e8f85e8e2675f9ae33c4b0fc6f795e8255945c8ac3603e2fe8"
+    },
+    {
+      "path": "assets/whatsapp-settings-CT7i4DiN.js",
+      "sha256": "c495ce1cebf6483fcbe2a53164417a28aee98ef77a9daab1a63c1b0bc74bbd5c"
+    },
+    {
+      "path": "assets/xlsx-BGhuli8m.js",
+      "sha256": "9884e2dba31195badb157ab848744211c04fa7b62b9f7031670cd7a5b96d25a9"
+    },
+    {
+      "path": "index.html",
+      "sha256": "e58071990cf9719ef5508ea786aa130179538697eb4b8f35a74254f55cdb6793"
+    }
+  ],
+  "changedComponents": [
+    "Admin Web"
+  ],
+  "apiBuild": false,
+  "storefrontBuild": false
+}

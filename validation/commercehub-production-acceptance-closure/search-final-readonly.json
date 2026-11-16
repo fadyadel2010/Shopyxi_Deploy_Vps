@@ -1,0 +1,54 @@
+{
+  "enabled": true,
+  "index": "commercehub_products",
+  "requests": [
+    {
+      "path": "/commercehub_products/_count",
+      "status": 200,
+      "count": 1
+    },
+    {
+      "path": "/commercehub_products/_mapping",
+      "status": 200,
+      "indices": [
+        "commercehub_products_v2"
+      ],
+      "fields": {
+        "commercehub_products_v2": [
+          "attributes",
+          "categoryId",
+          "categoryName",
+          "categoryPath",
+          "createdAtUtc",
+          "currency",
+          "description",
+          "id",
+          "inStock",
+          "isPublished",
+          "lastClickAtUtc",
+          "overridePresent",
+          "popularityScore",
+          "price",
+          "priceSource",
+          "productId",
+          "productName",
+          "productNameNormalized",
+          "projectionConvergedAtUtc",
+          "projectionVersion",
+          "rating",
+          "readModelName",
+          "readModelSchemaVersion",
+          "reviewCount",
+          "storeId",
+          "storeName",
+          "tenantId",
+          "totalStock",
+          "updatedAtUtc",
+          "variantId"
+        ]
+      }
+    }
+  ],
+  "readOnly": true,
+  "verifiedAtUtc": "2026-11-16T23:04:23.279951+00:00"
+}

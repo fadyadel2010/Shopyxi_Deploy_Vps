@@ -1,0 +1,339 @@
+{
+  "verifiedAtUtc": "2026-11-16T22:51:25.836713+00:00",
+  "readOnly": true,
+  "controllers": [
+    {
+      "namespace": "cert-manager",
+      "name": "cert-manager",
+      "generation": 4,
+      "readyReplicas": 1,
+      "images": [
+        "quay.io/jetstack/cert-manager-controller:v1.21.3@sha256:9b262e9493ab3e0daebc2c9cfbddc6df68b9ac91afc036a759584f3d49d607e5"
+      ]
+    },
+    {
+      "namespace": "cert-manager",
+      "name": "cert-manager-cainjector",
+      "generation": 3,
+      "readyReplicas": 1,
+      "images": [
+        "quay.io/jetstack/cert-manager-cainjector:v1.21.3@sha256:165691f631d61931a27e4fbbb82bbed8205431d0446b3c14d170081aeff75f0a"
+      ]
+    },
+    {
+      "namespace": "cert-manager",
+      "name": "cert-manager-webhook",
+      "generation": 3,
+      "readyReplicas": 1,
+      "images": [
+        "quay.io/jetstack/cert-manager-webhook:v1.21.3@sha256:fc2845cc042ab57c8b98c5ff62462d50dcd5d8d3302f9e6875cd05042ce1020b"
+      ]
+    },
+    {
+      "namespace": "kube-system",
+      "name": "traefik",
+      "generation": 5,
+      "readyReplicas": 1,
+      "images": [
+        "rancher/mirrored-library-traefik:3.7.13"
+      ]
+    }
+  ],
+  "certificates": [
+    {
+      "name": "shopixy-api-tls",
+      "namespace": "shopixy-app",
+      "dnsNames": [
+        "api.shopyxi.com"
+      ],
+      "issuerRef": {
+        "group": "cert-manager.io",
+        "kind": "ClusterIssuer",
+        "name": "lets-encrypt-http01"
+      },
+      "generation": 1,
+      "conditions": [
+        {
+          "lastTransitionTime": "2026-11-09T22:20:56Z",
+          "message": "Certificate is up to date and has not expired",
+          "observedGeneration": 1,
+          "reason": "Ready",
+          "status": "True",
+          "type": "Ready"
+        }
+      ],
+      "notAfter": "2027-02-07T21:22:23Z",
+      "renewalTime": "2027-01-08T21:22:23Z",
+      "revision": 1
+    },
+    {
+      "name": "shopixy-frontends-app82-r5",
+      "namespace": "shopixy-app",
+      "dnsNames": [
+        "admin.shopyxi.com",
+        "commercehub.shopyxi.com",
+        "app82-assurance-a.shopyxi.com",
+        "app82-assurance-b.shopyxi.com"
+      ],
+      "issuerRef": {
+        "kind": "ClusterIssuer",
+        "name": "lets-encrypt-http01"
+      },
+      "generation": 1,
+      "conditions": [
+        {
+          "lastTransitionTime": "2026-11-10T00:46:10Z",
+          "message": "Certificate is up to date and has not expired",
+          "observedGeneration": 1,
+          "reason": "Ready",
+          "status": "True",
+          "type": "Ready"
+        }
+      ],
+      "notAfter": "2027-02-07T23:47:37Z",
+      "renewalTime": "2027-01-08T23:47:37Z",
+      "revision": 1
+    },
+    {
+      "name": "shopixy-public-entrypoints-cutover-r1",
+      "namespace": "shopixy-app",
+      "dnsNames": [
+        "shopyxi.com",
+        "www.shopyxi.com",
+        "affiliate.shopyxi.com"
+      ],
+      "issuerRef": {
+        "kind": "ClusterIssuer",
+        "name": "lets-encrypt-http01"
+      },
+      "generation": 1,
+      "conditions": [
+        {
+          "lastTransitionTime": "2026-11-11T01:54:57Z",
+          "message": "Certificate is up to date and has not expired",
+          "observedGeneration": 1,
+          "reason": "Ready",
+          "status": "True",
+          "type": "Ready"
+        }
+      ],
+      "notAfter": "2027-02-09T00:56:25Z",
+      "renewalTime": "2027-01-10T00:56:25Z",
+      "revision": 1
+    },
+    {
+      "name": "shopixy-wildcard-origin-r1",
+      "namespace": "shopixy-app",
+      "dnsNames": [
+        "shopyxi.com",
+        "*.shopyxi.com"
+      ],
+      "issuerRef": {
+        "kind": "ClusterIssuer",
+        "name": "lets-encrypt-cloudflare-dns01-production"
+      },
+      "generation": 1,
+      "conditions": [
+        {
+          "lastTransitionTime": "2026-11-11T20:21:27Z",
+          "message": "Certificate is up to date and has not expired",
+          "observedGeneration": 1,
+          "reason": "Ready",
+          "status": "True",
+          "type": "Ready"
+        }
+      ],
+      "notAfter": "2027-02-09T19:22:53Z",
+      "renewalTime": "2027-01-10T19:22:53Z",
+      "revision": 1
+    }
+  ],
+  "issuers": [
+    {
+      "name": "lets-encrypt-cloudflare-dns01-production",
+      "conditions": [
+        {
+          "lastTransitionTime": "2026-11-11T20:16:14Z",
+          "message": "The ACME account was registered with the ACME server",
+          "observedGeneration": 1,
+          "reason": "ACMEAccountRegistered",
+          "status": "True",
+          "type": "Ready"
+        }
+      ],
+      "acmeServer": "https://acme-v02.api.letsencrypt.org/directory",
+      "solverTypes": [
+        [
+          "dns01"
+        ]
+      ]
+    },
+    {
+      "name": "lets-encrypt-http01",
+      "conditions": [
+        {
+          "lastTransitionTime": "2026-11-09T20:37:17Z",
+          "message": "The ACME account was registered with the ACME server",
+          "observedGeneration": 2,
+          "reason": "ACMEAccountRegistered",
+          "status": "True",
+          "type": "Ready"
+        }
+      ],
+      "acmeServer": "https://acme-v02.api.letsencrypt.org/directory",
+      "solverTypes": [
+        [
+          "http01"
+        ]
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "name": "app82-frontend-websecure-r5",
+      "entryPoints": [
+        "websecure"
+      ],
+      "routes": [
+        {
+          "match": "Host(`admin.shopyxi.com`)",
+          "services": [
+            {
+              "name": "shopixy-web",
+              "port": 8080
+            }
+          ]
+        },
+        {
+          "match": "Host(`commercehub.shopyxi.com`)",
+          "services": [
+            {
+              "name": "shopixy-commercehub",
+              "port": 8080
+            }
+          ]
+        },
+        {
+          "match": "Host(`app82-assurance-a.shopyxi.com`)",
+          "services": [
+            {
+              "name": "shopixy-storefront",
+              "port": 8080
+            }
+          ]
+        },
+        {
+          "match": "Host(`app82-assurance-b.shopyxi.com`)",
+          "services": [
+            {
+              "name": "shopixy-storefront",
+              "port": 8080
+            }
+          ]
+        }
+      ],
+      "tls": {
+        "secretName": "shopixy-frontends-app82-r5-tls"
+      }
+    },
+    {
+      "name": "cloudflare-cutover-existing-frontends-api-r1",
+      "entryPoints": [
+        "websecure"
+      ],
+      "routes": [
+        {
+          "match": "Host(`admin.shopyxi.com`) && (PathPrefix(`/api`) || PathPrefix(`/hubs`))",
+          "services": [
+            {
+              "name": "shopixy-api",
+              "port": 8080
+            }
+          ]
+        },
+        {
+          "match": "Host(`commercehub.shopyxi.com`) && (PathPrefix(`/api`) || PathPrefix(`/hubs`))",
+          "services": [
+            {
+              "name": "shopixy-api",
+              "port": 8080
+            }
+          ]
+        }
+      ],
+      "tls": {
+        "secretName": "shopixy-frontends-app82-r5-tls"
+      }
+    },
+    {
+      "name": "shopixy-tenant-wildcard-https-r1",
+      "entryPoints": [
+        "websecure"
+      ],
+      "routes": [
+        {
+          "match": "HostRegexp(`^[a-z0-9]([a-z0-9-]{1,61})[a-z0-9]\\.shopyxi\\.com$`) && !HostRegexp(`^(about|account|accounts|admin|affiliate|api|app|app82-assurance-a|app82-assurance-b|assets|auth|beta|billing|blog|buy|cdn|certificate|commercehub|console|contact|dashboard|demo|dev|dmca|docs|documentation|domains|ecommerce|email|files|gdpr|help|images|imap|img|internal|intranet|legal|local|localhost|login|logout|mail|media|mx|news|notify|oauth|online|panel|payment|platform|pop|portal|pos|preview|privacy|private|qa|resend|rsend|saas|sandbox|secure|sell|send|shop|signin|signout|smtp|ssl|sso|staging|static|status|store|support|tenant|tenants|terms|test|tos|uat|upload|uploads|web|webmail|website|www)\\.shopyxi\\.com$`) && PathRegexp(`(?i)^/(health|healthz|metrics)(/|$)|(?i)^/api/(platform|auth|customers/auth|storefront/auth)/register(/|$)`)",
+          "services": [
+            {
+              "name": "shopixy-api",
+              "port": 8080
+            }
+          ]
+        },
+        {
+          "match": "HostRegexp(`^[a-z0-9]([a-z0-9-]{1,61})[a-z0-9]\\.shopyxi\\.com$`) && !HostRegexp(`^(about|account|accounts|admin|affiliate|api|app|app82-assurance-a|app82-assurance-b|assets|auth|beta|billing|blog|buy|cdn|certificate|commercehub|console|contact|dashboard|demo|dev|dmca|docs|documentation|domains|ecommerce|email|files|gdpr|help|images|imap|img|internal|intranet|legal|local|localhost|login|logout|mail|media|mx|news|notify|oauth|online|panel|payment|platform|pop|portal|pos|preview|privacy|private|qa|resend|rsend|saas|sandbox|secure|sell|send|shop|signin|signout|smtp|ssl|sso|staging|static|status|store|support|tenant|tenants|terms|test|tos|uat|upload|uploads|web|webmail|website|www)\\.shopyxi\\.com$`) && (PathPrefix(`/api`) || PathPrefix(`/hubs`))",
+          "services": [
+            {
+              "name": "shopixy-api",
+              "port": 8080
+            }
+          ]
+        },
+        {
+          "match": "HostRegexp(`^[a-z0-9]([a-z0-9-]{1,61})[a-z0-9]\\.shopyxi\\.com$`) && !HostRegexp(`^(about|account|accounts|admin|affiliate|api|app|app82-assurance-a|app82-assurance-b|assets|auth|beta|billing|blog|buy|cdn|certificate|commercehub|console|contact|dashboard|demo|dev|dmca|docs|documentation|domains|ecommerce|email|files|gdpr|help|images|imap|img|internal|intranet|legal|local|localhost|login|logout|mail|media|mx|news|notify|oauth|online|panel|payment|platform|pop|portal|pos|preview|privacy|private|qa|resend|rsend|saas|sandbox|secure|sell|send|shop|signin|signout|smtp|ssl|sso|staging|static|status|store|support|tenant|tenants|terms|test|tos|uat|upload|uploads|web|webmail|website|www)\\.shopyxi\\.com$`)",
+          "services": [
+            {
+              "name": "shopixy-storefront",
+              "port": 8080
+            }
+          ]
+        }
+      ],
+      "tls": {
+        "secretName": "shopixy-wildcard-origin-r1-tls"
+      }
+    }
+  ],
+  "adapterWorkloadCounts": [
+    {
+      "kind": "domains",
+      "byTypeAndLifecycle": []
+    },
+    {
+      "kind": "adapter_certificates",
+      "byStatus": []
+    },
+    {
+      "kind": "adapter_operations",
+      "byTypeAndStatus": []
+    },
+    {
+      "kind": "existing_product_search_flags",
+      "data": {
+        "id": "b2ec52fb-d600-f1ed-dc23-2fcdc09e61b8",
+        "is_active": true,
+        "is_online_visible": true,
+        "is_searchable": true,
+        "publish_status": 1,
+        "is_deleted": false
+      }
+    }
+  ],
+  "searchSyncDiagnostics": [],
+  "publicHttpsStatus": {
+    "admin.shopyxi.com": "200",
+    "api.shopyxi.com": "400",
+    "ahram.shopyxi.com": "200"
+  },
+  "hostCaddyProcessPresent": false
+}

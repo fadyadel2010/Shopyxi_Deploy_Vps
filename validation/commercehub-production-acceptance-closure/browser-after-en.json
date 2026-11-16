@@ -1,0 +1,484 @@
+{
+  "verifiedAtUtc": "2026-11-16T23:02:43.953Z",
+  "url": "https://admin.shopyxi.com/admin/commercehub",
+  "production": true,
+  "actualHeadedBrowser": true,
+  "authentication": "Existing genuine merchant cookie session; no injected credentials",
+  "session": {
+    "role": "Owner",
+    "tenantId": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0"
+  },
+  "language": "en",
+  "phase": "after",
+  "productId": "b2ec52fb-d600-f1ed-dc23-2fcdc09e61b8",
+  "variantId": "81069782-7bda-4e35-bf24-3e13424f06f2",
+  "listingId": "ff8cdce3-ad88-4467-b027-cdde5812e84d",
+  "modes": {
+    "custom": {
+      "verifiedAtUtc": "2026-11-16T23:02:40.884Z",
+      "apiResponse": {
+        "method": "GET",
+        "path": "/api/admin/commercehub/commission/resolve-preview",
+        "status": 200,
+        "body": {
+          "vendorId": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0",
+          "categoryId": "10000000-0000-0000-0000-000000000032",
+          "rate": 0.1,
+          "source": "Global",
+          "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+          "priority": 0,
+          "scopeType": "Global",
+          "usedLegacyFallback": false,
+          "cacheStrategy": "MemoryCache",
+          "variantId": "81069782-7bda-4e35-bf24-3e13424f06f2",
+          "parentCategoryId": "10000000-0000-0000-0000-000000000003",
+          "pricingMode": "custom",
+          "currency": "EGP",
+          "commissionBase": "Subtotal",
+          "sourceProductPrice": 10,
+          "marketplacePrice": 12,
+          "commissionAmount": 1.2,
+          "merchantNet": 10.8
+        }
+      },
+      "ui": {
+        "completed": true,
+        "loading": false,
+        "numericRows": [
+          {
+            "label": "Source product price",
+            "value": "EGP 10.00"
+          },
+          {
+            "label": "Marketplace selling price",
+            "value": "EGP 12.00"
+          },
+          {
+            "label": "Commission rate",
+            "value": "10%"
+          },
+          {
+            "label": "Commission deduction",
+            "value": "− EGP 1.20"
+          },
+          {
+            "label": "You will receive",
+            "value": "EGP 10.80"
+          }
+        ],
+        "text": "Commission and merchant proceeds\n\nAuthoritative preview of the amount deducted and the amount you receive.\n\nSource product price\nEGP 10.00\nMarketplace selling price\nEGP 12.00\nCommission rate\n10%\nCommission deduction\n− EGP 1.20\nYou will receive\nEGP 10.80\n\nRULE RESOLUTION\n\nApplied rule: Platform default\n\nSource\n\nPlatform default\n\nPriority\n\n0\n\nAdjust price to maintain my target earnings\nCalculate a suggested Marketplace price from the resolved percentage rate.",
+        "selectedMode": "custom",
+        "direction": "ltr",
+        "language": "en",
+        "horizontalOverflow": false
+      },
+      "screenshot": "after-en-custom-completed.png"
+    },
+    "source": {
+      "verifiedAtUtc": "2026-11-16T23:02:41.895Z",
+      "apiResponse": {
+        "method": "GET",
+        "path": "/api/admin/commercehub/commission/resolve-preview",
+        "status": 200,
+        "body": {
+          "vendorId": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0",
+          "categoryId": "10000000-0000-0000-0000-000000000032",
+          "rate": 0.1,
+          "source": "Global",
+          "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+          "priority": 0,
+          "scopeType": "Global",
+          "usedLegacyFallback": false,
+          "cacheStrategy": "MemoryCache",
+          "variantId": "81069782-7bda-4e35-bf24-3e13424f06f2",
+          "parentCategoryId": "10000000-0000-0000-0000-000000000003",
+          "pricingMode": "source",
+          "currency": "EGP",
+          "commissionBase": "Subtotal",
+          "sourceProductPrice": 10,
+          "marketplacePrice": 10,
+          "commissionAmount": 1,
+          "merchantNet": 9
+        }
+      },
+      "ui": {
+        "completed": true,
+        "loading": false,
+        "numericRows": [
+          {
+            "label": "Source product price",
+            "value": "EGP 10.00"
+          },
+          {
+            "label": "Marketplace selling price",
+            "value": "EGP 10.00"
+          },
+          {
+            "label": "Commission rate",
+            "value": "10%"
+          },
+          {
+            "label": "Commission deduction",
+            "value": "− EGP 1.00"
+          },
+          {
+            "label": "You will receive",
+            "value": "EGP 9.00"
+          }
+        ],
+        "text": "Commission and merchant proceeds\n\nAuthoritative preview of the amount deducted and the amount you receive.\n\nSource product price\nEGP 10.00\nMarketplace selling price\nEGP 10.00\nCommission rate\n10%\nCommission deduction\n− EGP 1.00\nYou will receive\nEGP 9.00\n\nRULE RESOLUTION\n\nApplied rule: Platform default\n\nSource\n\nPlatform default\n\nPriority\n\n0\n\nAdjust price to maintain my target earnings\nCalculate a suggested Marketplace price from the resolved percentage rate.",
+        "selectedMode": "source",
+        "direction": "ltr",
+        "language": "en",
+        "horizontalOverflow": false
+      },
+      "screenshot": "after-en-source-completed.png"
+    }
+  },
+  "rendered": {
+    "mainText": "CommerceHub · Merchant / CommerceHub / Publishing Settings\nHelp\nSoon\n🏪\nCommerceHub Products\nApproved seller\n\nPublish your products to the global marketplace.\n\nFind a product to list\nRefresh\nTOTAL PRODUCTS\n1\nTOTAL VARIANTS\n1\nPUBLISHED ON COMMERCEHUB\n1\nMarketplace listing overview\n\nSearch and review the current state of products already connected to CommerceHub.\n\nUnpublish selected\nUse base price for selected\nTOTAL\n1\nPUBLISHED\n1\nNOT PUBLISHED\n0\nPLATFORM HIDDEN\n0\nCUSTOM PRICE\n1\nNEEDS ATTENTION\n0\nAll statuses\nPublished\nNot published\nPlatform hidden\nNeeds attention\nAll inventory\nIn stock\nOut of stock\nUnavailable\nAll price modes\nCustom price\nCatalog price\nSelect\tProduct / SKU\tStatus\tCategory\tInventory\tPrice\n\t\nQA-ERP-20261112-TRACKED\nQA-ERP-20261112-TRACKED\n\t\nPublished\n\tKitchen\tOut of stock (0)\tEGP 12.00\nLast 30 days: 0 views, 0 searches, and 0 conversions.\nCatalog products\n\nOpen a product to choose its CommerceHub category, review the publication preview, and publish an eligible variant.\n\n📷\nQA-ERP-20261112-TRACKED\n1 variant\n●\nPublished\nSource product\nQA-ERP-20261112-TRACKED\nEGP 10.00\nMarketplace category\nCategory\nSelect\n📱 Electronics\n👗 Fashion\n🏠 Home & Garden\nSubcategory\nSelect\n🛋️ Furniture\n🍳 Kitchen\nProduct details\n\nComplete the fields defined for the selected Marketplace category.\n\nMarketplace price\nUse source product price\nCommerceHub follows the current POS/Storefront selling price.\nCustom Marketplace price\nSet an independent CommerceHub-only selling price.\nCommission and merchant proceeds\n\nAuthoritative preview of the amount deducted and the amount you receive.\n\nSource product price\nEGP 10.00\nMarketplace selling price\nEGP 10.00\nCommission rate\n10%\nCommission deduction\n− EGP 1.00\nYou will receive\nEGP 9.00\n\nRULE RESOLUTION\n\nApplied rule: Platform default\n\nSource\n\nPlatform default\n\nPriority\n\n0\n\nAdjust price to maintain my target earnings\nCalculate a suggested Marketplace price from the resolved percentage rate.\nPublication review\n\nPrice and commission are resolved. Review the details before publishing.\n\n↻\nUpdate\n✕\nUnpublish",
+    "visibleLatinText": [
+      "POS System",
+      "Store Management System",
+      "Dashboard",
+      "Database",
+      "Accounts",
+      "Opening Balance",
+      "Transactions",
+      "Treasury",
+      "Inventory",
+      "Expenses",
+      "Account Statement",
+      "Storefront",
+      "Design",
+      "Operations",
+      "Overview",
+      "Orders",
+      "Orders",
+      "Abandoned Checkouts",
+      "Abandoned Cart Recovery",
+      "Blocked Phones",
+      "Online Customers",
+      "WhatsApp Settings",
+      "Payments",
+      "Payment Methods",
+      "Manual Payments",
+      "Catalog",
+      "Coupons",
+      "Promotions (Offers)",
+      "Smart Offers",
+      "Shipping",
+      "Shipping Methods",
+      "Shipments",
+      "Marketing",
+      "Pixel Tracking",
+      "Conversion Funnels",
+      "Marketing Attribution",
+      "Overview",
+      "Campaign Costs",
+      "Marketing ROI",
+      "Commerce AI Experience",
+      "Auth Providers",
+      "Analytics",
+      "Storefront Analytics",
+      "Analytics Settings",
+      "Services Marketplace",
+      "CommerceHub",
+      "Become a CommerceHub Seller",
+      "Orders",
+      "Publishing Settings",
+      "Finance Dashboard",
+      "Vendor Earnings",
+      "Debt Repayment",
+      "Affiliate System",
+      "Reports",
+      "Finance Control Center",
+      "Users Management",
+      "Settings",
+      "POS System",
+      "Ctrl K",
+      "AR",
+      "SHOPIXY",
+      "Owner",
+      "S",
+      "Logout",
+      "CommerceHub · Merchant",
+      "CommerceHub",
+      "Publishing Settings",
+      "Help",
+      "Soon",
+      "CommerceHub Products",
+      "Approved seller",
+      "Publish your products to the global marketplace.",
+      "Find a product to list",
+      "Refresh",
+      "TOTAL PRODUCTS",
+      "TOTAL VARIANTS",
+      "PUBLISHED ON COMMERCEHUB",
+      "Marketplace listing overview",
+      "Search and review the current state of products already connected to CommerceHub.",
+      "Unpublish selected",
+      "Use base price for selected",
+      "TOTAL",
+      "PUBLISHED",
+      "NOT PUBLISHED",
+      "PLATFORM HIDDEN",
+      "CUSTOM PRICE",
+      "NEEDS ATTENTION",
+      "Select",
+      "Product / SKU",
+      "Status",
+      "Category",
+      "Inventory",
+      "Price",
+      "QA-ERP-20261112-TRACKED",
+      "QA-ERP-20261112-TRACKED",
+      "Published",
+      "Kitchen",
+      "Out of stock (0)",
+      "EGP 12.00",
+      "Last 30 days: 0 views, 0 searches, and 0 conversions.",
+      "Catalog products",
+      "Open a product to choose its CommerceHub category, review the publication preview, and publish an eligible variant.",
+      "QA-ERP-20261112-TRACKED",
+      "Published",
+      "Source product",
+      "QA-ERP-20261112-TRACKED",
+      "EGP 10.00",
+      "Marketplace category",
+      "Category",
+      "Subcategory",
+      "Product details",
+      "Complete the fields defined for the selected Marketplace category.",
+      "Marketplace price",
+      "Use source product price",
+      "CommerceHub follows the current POS/Storefront selling price.",
+      "Custom Marketplace price",
+      "Set an independent CommerceHub-only selling price.",
+      "Commission and merchant proceeds",
+      "Authoritative preview of the amount deducted and the amount you receive.",
+      "Source product price",
+      "EGP 10.00",
+      "Marketplace selling price",
+      "EGP 10.00",
+      "Commission rate",
+      "Commission deduction",
+      "− EGP 1.00",
+      "You will receive",
+      "EGP 9.00",
+      "RULE RESOLUTION",
+      "Applied rule: Platform default",
+      "Source",
+      "Platform default",
+      "Priority",
+      "Adjust price to maintain my target earnings",
+      "Calculate a suggested Marketplace price from the resolved percentage rate.",
+      "Publication review",
+      "Price and commission are resolved. Review the details before publishing.",
+      "Update",
+      "Unpublish"
+    ],
+    "roleText": "Owner",
+    "helpText": "Help\nSoon",
+    "browserLanguage": "en-US",
+    "direction": "ltr",
+    "language": "en"
+  },
+  "responses": [
+    {
+      "method": "GET",
+      "path": "/api/auth/session",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/verification-status",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/marketplace/incoming-requests",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/settings",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings/notifications",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings/kpis",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/commercehub/categories/tree",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/session",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/products",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings/analytics",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/commercehub/categories/10000000-0000-0000-0000-000000000032/attributes",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings/notifications",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/products",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/commercehub/categories/tree",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings/analytics",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings/kpis",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/products/b2ec52fb-d600-f1ed-dc23-2fcdc09e61b8",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/products",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/commission/resolve-preview",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/commission/resolve-preview",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/session",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/marketplace/incoming-requests",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/verification-status",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/products",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings/notifications",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings/analytics",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/commercehub/categories/tree",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings/kpis",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/settings",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/commercehub/categories/10000000-0000-0000-0000-000000000032/attributes",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/products/b2ec52fb-d600-f1ed-dc23-2fcdc09e61b8",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/products",
+      "status": 200
+    }
+  ],
+  "errors": [],
+  "failed": [],
+  "nonGetRequests": [],
+  "businessWrites": [],
+  "integrity": {
+    "changedProtectedFields": [],
+    "listingUnchanged": true,
+    "listing": {
+      "listingId": "ff8cdce3-ad88-4467-b027-cdde5812e84d",
+      "isPublished": true,
+      "commerceHubCategoryId": "10000000-0000-0000-0000-000000000032",
+      "categoryId": "10000000-0000-0000-0000-000000000032",
+      "parentCategoryId": "10000000-0000-0000-0000-000000000003",
+      "commerceHubPrice": 12,
+      "priceOverrideMutationVersion": 1
+    },
+    "posPrice": 10,
+    "effectiveStorefrontPrice": 10,
+    "stock": 0
+  }
+}

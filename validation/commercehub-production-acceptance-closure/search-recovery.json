@@ -1,0 +1,107 @@
+{
+  "approved": true,
+  "approval": "User explicitly selected Repair derived search",
+  "startedAtUtc": "2026-11-16T22:55:04.091Z",
+  "method": "POST",
+  "path": "/api/admin/commercehub/search/reindex",
+  "session": {
+    "role": "Owner",
+    "tenantId": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0"
+  },
+  "beforeIndexStatus": {
+    "migrationPhase": "Complete",
+    "requiresReindex": false,
+    "activeWriteIndex": "commercehub_products_v2",
+    "activeReadIndex": "commercehub_products_v2",
+    "desiredIndex": "commercehub_products_v2",
+    "desiredVersion": 2,
+    "activeVersion": 2,
+    "aliasMode": true,
+    "legacyConcreteIndexExists": false,
+    "mappingCompatible": true,
+    "missingFields": [],
+    "verification": {
+      "aliasName": "commercehub_products",
+      "desiredIndexName": "commercehub_products_v2",
+      "activeIndexName": "commercehub_products_v2",
+      "writeIndexName": "commercehub_products_v2",
+      "aliasExists": true,
+      "aliasIndices": [
+        "commercehub_products_v2"
+      ],
+      "legacyConcreteIndexExists": false,
+      "desiredIndexExists": true,
+      "desiredDocumentCount": 0,
+      "activeDocumentCount": 0,
+      "desiredIndexMissingFields": [],
+      "desiredIndexHasAttributeTemplates": true,
+      "smokeTestQuery": "samsung",
+      "smokeTestPassed": true,
+      "smokeTestHitCount": 0,
+      "aliasPointsToDesiredIndex": true,
+      "desiredIndexMappingCompatible": true,
+      "desiredIndexReady": true
+    }
+  },
+  "listingBefore": {
+    "listingId": "ff8cdce3-ad88-4467-b027-cdde5812e84d",
+    "isPublished": true,
+    "commerceHubCategoryId": "10000000-0000-0000-0000-000000000032",
+    "categoryId": "10000000-0000-0000-0000-000000000032",
+    "parentCategoryId": "10000000-0000-0000-0000-000000000003",
+    "commerceHubPrice": 12,
+    "priceOverrideMutationVersion": 1
+  },
+  "attemptCount": 1,
+  "outcome": "COMPLETED",
+  "response": {
+    "status": 200,
+    "body": {
+      "processed": 1,
+      "succeeded": 1,
+      "failed": 0,
+      "staleDeleted": 0,
+      "activeIndexName": "commercehub_products_v2",
+      "targetIndexName": "commercehub_products_v2",
+      "promoted": false
+    }
+  },
+  "completedAtUtc": "2026-11-16T22:55:04.940Z",
+  "afterIndexStatus": {
+    "migrationPhase": "Complete",
+    "requiresReindex": false,
+    "activeWriteIndex": "commercehub_products_v2",
+    "activeReadIndex": "commercehub_products_v2",
+    "desiredIndex": "commercehub_products_v2",
+    "desiredVersion": 2,
+    "activeVersion": 2,
+    "aliasMode": true,
+    "legacyConcreteIndexExists": false,
+    "mappingCompatible": true,
+    "missingFields": [],
+    "verification": {
+      "aliasName": "commercehub_products",
+      "desiredIndexName": "commercehub_products_v2",
+      "activeIndexName": "commercehub_products_v2",
+      "writeIndexName": "commercehub_products_v2",
+      "aliasExists": true,
+      "aliasIndices": [
+        "commercehub_products_v2"
+      ],
+      "legacyConcreteIndexExists": false,
+      "desiredIndexExists": true,
+      "desiredDocumentCount": 1,
+      "activeDocumentCount": 1,
+      "desiredIndexMissingFields": [],
+      "desiredIndexHasAttributeTemplates": true,
+      "smokeTestQuery": "samsung",
+      "smokeTestPassed": true,
+      "smokeTestHitCount": 0,
+      "aliasPointsToDesiredIndex": true,
+      "desiredIndexMappingCompatible": true,
+      "desiredIndexReady": true
+    }
+  },
+  "protectedProductUnchanged": true,
+  "listingUnchanged": true
+}

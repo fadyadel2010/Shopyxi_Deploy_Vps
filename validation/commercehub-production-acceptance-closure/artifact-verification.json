@@ -1,0 +1,25 @@
+{
+  "sourceCommit": "856648d0b61a7621c600524b5aa55cf4a72fb385",
+  "sourceInputSha256": "cae8192264f66315958f273a69be053a398c42dd63eeff965177236bd0abcbdb",
+  "webDistSha256": "81c0f7731fe03bde8f3df60dd5dbbd46e9720b4043edb770c9fcb4de5e0e5748",
+  "webDistFileCount": 70,
+  "baseImage": "docker.io/shopixy/web@sha256:e95bbdf5a645495003a3f88a580148238d738b6b1fd0ee345194d9e271de02a8",
+  "web": {
+    "archive": "web.tar",
+    "archiveSha256": "af0f307ecc43b66fcaa75394b324b6992fdb9bc994ec1636c75eb342c6776202",
+    "manifestDigest": "sha256:627af0b79e1a8bfa4be76691df0f43c938c9b586727d11c2f223e43580c21568",
+    "oldImage": "docker.io/shopixy/web@sha256:e95bbdf5a645495003a3f88a580148238d738b6b1fd0ee345194d9e271de02a8"
+  },
+  "apiImage": "docker.io/shopixy/api@sha256:cb900c183069f94311142ad9c5a16fa23266611d3c29f674bae64040189ac307",
+  "storefrontImage": "docker.io/shopixy/storefront@sha256:e9333f609aa664d6de713d4db00b18deba054e3a8acbb559099d9ab245f9f3df",
+  "verification": {
+    "nonRootUid": 101,
+    "nginxSyntax": true,
+    "distParity": true,
+    "trivyHighCritical": 0,
+    "scanMode": "cached-database offline vulnerability scan",
+    "scanCreatedAt": "2026-11-17T00:57:31.214518897+02:00",
+    "apiBuilt": false,
+    "storefrontBuilt": false
+  }
+}

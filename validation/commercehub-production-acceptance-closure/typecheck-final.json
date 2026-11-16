@@ -1,0 +1,17 @@
+{
+  "verifiedAtUtc": "2026-11-16T22:50:23.490Z",
+  "baseline": "1f53f19bc1f352a43358a1b6a4a58c4f2e49c708",
+  "fullTypecheckPassed": true,
+  "current": [],
+  "accepted": [
+    {
+      "code": 7016,
+      "file": "PointOfSale.Web/src/pages/CommerceHubSellerApplication.test.tsx",
+      "line": 4,
+      "message": "Could not find a declaration file for module './CommerceHubSellerApplication'. '<repository>/PointOfSale.Web/src/pages/CommerceHubSellerApplication.jsx' implicitly has an 'any' type."
+    }
+  ],
+  "identicalPreexistingDiagnostics": false,
+  "excludingKnownPreexistingTest": [],
+  "qualification": "The missing page declaration is now supplied using the existing adjacent .d.ts convention. No type-check suppression or tsconfig change."
+}

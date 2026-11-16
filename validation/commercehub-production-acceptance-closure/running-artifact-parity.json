@@ -1,0 +1,25 @@
+{
+  "verifiedAtUtc": "2026-11-16T23:09:34.417509+00:00",
+  "webPod": "shopixy-web-6bdb8f8bc8-s8fbz",
+  "webFilesCompared": 70,
+  "webDistParity": true,
+  "apiPod": "shopixy-api-5b46f7bb8c-jvbg7",
+  "apiAssemblyHashes": [
+    {
+      "file": "PointOfSale.API.dll",
+      "sha256": "80c3ed9959fb54d9b6d99a2fb712d8100b717365ec158aa0e9790d6e8f2ded9f"
+    },
+    {
+      "file": "PointOfSale.Core.dll",
+      "sha256": "bf644b2d4d7432536a90cb8472ff2239b298658a88924a908604c417f58520e2"
+    },
+    {
+      "file": "PointOfSale.Infrastructure.dll",
+      "sha256": "e3cfafcf81b28c2d4174668b0d378491f729e9ff9e914742bf7954c351e3f68b"
+    }
+  ],
+  "matchesAcceptedApiBuild": true,
+  "commissionListingSourceVariantSqlUnchanged": true,
+  "apiWorkloadUnchanged": true,
+  "storefrontWorkloadUnchanged": true
+}

@@ -1,0 +1,334 @@
+{
+  "verifiedAtUtc": "2026-11-16T23:02:34.436Z",
+  "url": "https://admin.shopyxi.com/admin/commercehub",
+  "production": true,
+  "actualHeadedBrowser": true,
+  "authentication": "Existing genuine merchant cookie session; no injected credentials",
+  "session": {
+    "role": "Owner",
+    "tenantId": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0"
+  },
+  "language": "ar",
+  "phase": "after",
+  "productId": "b2ec52fb-d600-f1ed-dc23-2fcdc09e61b8",
+  "variantId": "81069782-7bda-4e35-bf24-3e13424f06f2",
+  "listingId": "ff8cdce3-ad88-4467-b027-cdde5812e84d",
+  "modes": {
+    "custom": {
+      "verifiedAtUtc": "2026-11-16T23:02:31.427Z",
+      "apiResponse": {
+        "method": "GET",
+        "path": "/api/admin/commercehub/commission/resolve-preview",
+        "status": 200,
+        "body": {
+          "vendorId": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0",
+          "categoryId": "10000000-0000-0000-0000-000000000032",
+          "rate": 0.1,
+          "source": "Global",
+          "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+          "priority": 0,
+          "scopeType": "Global",
+          "usedLegacyFallback": false,
+          "cacheStrategy": "MemoryCache",
+          "variantId": "81069782-7bda-4e35-bf24-3e13424f06f2",
+          "parentCategoryId": "10000000-0000-0000-0000-000000000003",
+          "pricingMode": "custom",
+          "currency": "EGP",
+          "commissionBase": "Subtotal",
+          "sourceProductPrice": 10,
+          "marketplacePrice": 12,
+          "commissionAmount": 1.2,
+          "merchantNet": 10.8
+        }
+      },
+      "ui": {
+        "completed": true,
+        "loading": false,
+        "numericRows": [
+          {
+            "label": "سعر المنتج المصدر",
+            "value": "‏١٠٫٠٠ ج.م.‏"
+          },
+          {
+            "label": "سعر البيع في السوق",
+            "value": "‏١٢٫٠٠ ج.م.‏"
+          },
+          {
+            "label": "نسبة العمولة",
+            "value": "١٠%"
+          },
+          {
+            "label": "خصم العمولة",
+            "value": "− ‏١٫٢٠ ج.م.‏"
+          },
+          {
+            "label": "ستحصل على",
+            "value": "‏١٠٫٨٠ ج.م.‏"
+          }
+        ],
+        "text": "العمولة ومستحقات التاجر\n\nمعاينة موثوقة للمبلغ المخصوم وصافي المبلغ الذي ستحصل عليه.\n\nسعر المنتج المصدر\n‏١٠٫٠٠ ج.م.‏\nسعر البيع في السوق\n‏١٢٫٠٠ ج.م.‏\nنسبة العمولة\n١٠%\nخصم العمولة\n− ‏١٫٢٠ ج.م.‏\nستحصل على\n‏١٠٫٨٠ ج.م.‏\n\nتحديد قاعدة العمولة\n\nالقاعدة المطبقة: إعداد المنصة الافتراضي\n\nالمصدر\n\nإعداد المنصة الافتراضي\n\nالأولوية\n\n0\n\nتعديل السعر للحفاظ على صافي مستحقاتي المستهدف\nاحسب سعراً مقترحاً للسوق باستخدام نسبة العمولة المحددة.",
+        "selectedMode": "custom",
+        "direction": "rtl",
+        "language": "ar",
+        "horizontalOverflow": false
+      },
+      "screenshot": "after-ar-custom-completed.png"
+    },
+    "source": {
+      "verifiedAtUtc": "2026-11-16T23:02:32.263Z",
+      "apiResponse": {
+        "method": "GET",
+        "path": "/api/admin/commercehub/commission/resolve-preview",
+        "status": 200,
+        "body": {
+          "vendorId": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0",
+          "categoryId": "10000000-0000-0000-0000-000000000032",
+          "rate": 0.1,
+          "source": "Global",
+          "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+          "priority": 0,
+          "scopeType": "Global",
+          "usedLegacyFallback": false,
+          "cacheStrategy": "MemoryCache",
+          "variantId": "81069782-7bda-4e35-bf24-3e13424f06f2",
+          "parentCategoryId": "10000000-0000-0000-0000-000000000003",
+          "pricingMode": "source",
+          "currency": "EGP",
+          "commissionBase": "Subtotal",
+          "sourceProductPrice": 10,
+          "marketplacePrice": 10,
+          "commissionAmount": 1,
+          "merchantNet": 9
+        }
+      },
+      "ui": {
+        "completed": true,
+        "loading": false,
+        "numericRows": [
+          {
+            "label": "سعر المنتج المصدر",
+            "value": "‏١٠٫٠٠ ج.م.‏"
+          },
+          {
+            "label": "سعر البيع في السوق",
+            "value": "‏١٠٫٠٠ ج.م.‏"
+          },
+          {
+            "label": "نسبة العمولة",
+            "value": "١٠%"
+          },
+          {
+            "label": "خصم العمولة",
+            "value": "− ‏١٫٠٠ ج.م.‏"
+          },
+          {
+            "label": "ستحصل على",
+            "value": "‏٩٫٠٠ ج.م.‏"
+          }
+        ],
+        "text": "العمولة ومستحقات التاجر\n\nمعاينة موثوقة للمبلغ المخصوم وصافي المبلغ الذي ستحصل عليه.\n\nسعر المنتج المصدر\n‏١٠٫٠٠ ج.م.‏\nسعر البيع في السوق\n‏١٠٫٠٠ ج.م.‏\nنسبة العمولة\n١٠%\nخصم العمولة\n− ‏١٫٠٠ ج.م.‏\nستحصل على\n‏٩٫٠٠ ج.م.‏\n\nتحديد قاعدة العمولة\n\nالقاعدة المطبقة: إعداد المنصة الافتراضي\n\nالمصدر\n\nإعداد المنصة الافتراضي\n\nالأولوية\n\n0\n\nتعديل السعر للحفاظ على صافي مستحقاتي المستهدف\nاحسب سعراً مقترحاً للسوق باستخدام نسبة العمولة المحددة.",
+        "selectedMode": "source",
+        "direction": "rtl",
+        "language": "ar",
+        "horizontalOverflow": false
+      },
+      "screenshot": "after-ar-source-completed.png"
+    }
+  },
+  "rendered": {
+    "mainText": "كومرس هب (CommerceHub) · التاجر / كومرس هب (CommerceHub) / إعدادات النشر\nمساعدة\nقريباً\n🏪\nمنتجات CommerceHub\nبائع معتمد\n\nانشر منتجاتك في السوق العالمي.\n\nالعثور على منتج للنشر\nتحديث\nإجمالي المنتجات\n١\nإجمالي المتغيرات\n١\nالمنشور على COMMERCEHUB\n١\nنظرة عامة على قوائم السوق\n\nابحث وراجع الحالة الحالية للمنتجات المرتبطة بالفعل بـ CommerceHub.\n\nإلغاء نشر المحدد\nاستخدام سعر الكتالوج للمحدد\nالإجمالي\n١\nمنشور\n١\nغير منشور\n٠\nمخفي من المنصة\n٠\nسعر مخصص\n١\nيحتاج إلى مراجعة\n٠\nكل الحالات\nمنشور\nغير منشور\nمخفي من المنصة\nيحتاج إلى مراجعة\nكل حالات المخزون\nمتوفر\nنفد المخزون\nغير متاح\nكل أنماط السعر\nسعر مخصص\nسعر الكتالوج\nتحديد\tالمنتج / SKU\tالحالة\tالفئة\tالمخزون\tالسعر\n\t\nQA-ERP-20261112-TRACKED\nQA-ERP-20261112-TRACKED\n\t\nمنشور\n\tمطبخ\tنفد المخزون (٠)\t‏١٢٫٠٠ ج.م.‏\nآخر ٣٠ يوماً: ٠ مشاهدة و٠ عملية بحث و٠ عملية تحويل.\nمنتجات الكتالوج\n\nافتح المنتج لاختيار فئة CommerceHub ومراجعة معاينة النشر ثم نشر المتغير المؤهل.\n\n📷\nQA-ERP-20261112-TRACKED\n١ متغير\n●\nمنشور\nالمنتج المصدر\nQA-ERP-20261112-TRACKED\n‏١٠٫٠٠ ج.م.‏\nفئة السوق\nالفئة\nاختر\n📱 إلكترونيات\n👗 أزياء\n🏠 المنزل والحديقة\nالفئة الفرعية\nاختر\n🛋️ أثاث\n🍳 مطبخ\nتفاصيل المنتج\n\nأكمل الحقول المحددة لفئة السوق المختارة.\n\nسعر السوق\nاستخدام سعر المنتج المصدر\nيتبع CommerceHub سعر البيع الحالي في نقاط البيع والمتجر.\nسعر مخصص للسوق\nحدد سعر بيع مستقلاً خاصاً بـ CommerceHub.\nالعمولة ومستحقات التاجر\n\nمعاينة موثوقة للمبلغ المخصوم وصافي المبلغ الذي ستحصل عليه.\n\nسعر المنتج المصدر\n‏١٠٫٠٠ ج.م.‏\nسعر البيع في السوق\n‏١٠٫٠٠ ج.م.‏\nنسبة العمولة\n١٠%\nخصم العمولة\n− ‏١٫٠٠ ج.م.‏\nستحصل على\n‏٩٫٠٠ ج.م.‏\n\nتحديد قاعدة العمولة\n\nالقاعدة المطبقة: إعداد المنصة الافتراضي\n\nالمصدر\n\nإعداد المنصة الافتراضي\n\nالأولوية\n\n0\n\nتعديل السعر للحفاظ على صافي مستحقاتي المستهدف\nاحسب سعراً مقترحاً للسوق باستخدام نسبة العمولة المحددة.\nمراجعة النشر\n\nتم تحديد السعر والعمولة. راجع التفاصيل قبل النشر.\n\n↻\nتحديث\n✕\nإلغاء النشر",
+    "visibleLatinText": [
+      "كومرس هب (CommerceHub)",
+      "انضم كبائع في CommerceHub",
+      "Ctrl K",
+      "EN",
+      "SHOPIXY",
+      "S",
+      "كومرس هب (CommerceHub) · التاجر",
+      "كومرس هب (CommerceHub)",
+      "منتجات CommerceHub",
+      "المنشور على COMMERCEHUB",
+      "ابحث وراجع الحالة الحالية للمنتجات المرتبطة بالفعل بـ CommerceHub.",
+      "المنتج / SKU",
+      "QA-ERP-20261112-TRACKED",
+      "QA-ERP-20261112-TRACKED",
+      "افتح المنتج لاختيار فئة CommerceHub ومراجعة معاينة النشر ثم نشر المتغير المؤهل.",
+      "QA-ERP-20261112-TRACKED",
+      "QA-ERP-20261112-TRACKED",
+      "يتبع CommerceHub سعر البيع الحالي في نقاط البيع والمتجر.",
+      "حدد سعر بيع مستقلاً خاصاً بـ CommerceHub."
+    ],
+    "roleText": "مالك",
+    "helpText": "مساعدة\nقريباً",
+    "browserLanguage": "en-US",
+    "direction": "rtl",
+    "language": "ar"
+  },
+  "responses": [
+    {
+      "method": "GET",
+      "path": "/api/auth/session",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings/notifications",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/marketplace/incoming-requests",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/products",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/verification-status",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings/kpis",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/settings",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/session",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/commercehub/categories/tree",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings/analytics",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/commercehub/categories/10000000-0000-0000-0000-000000000032/attributes",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/products/b2ec52fb-d600-f1ed-dc23-2fcdc09e61b8",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/products",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/commission/resolve-preview",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/commission/resolve-preview",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/session",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/verification-status",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/marketplace/incoming-requests",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/settings",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/products",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings/analytics",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings/notifications",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings/kpis",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/commercehub/categories/tree",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/commercehub/categories/10000000-0000-0000-0000-000000000032/attributes",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/products/b2ec52fb-d600-f1ed-dc23-2fcdc09e61b8",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/products",
+      "status": 200
+    }
+  ],
+  "errors": [],
+  "failed": [],
+  "nonGetRequests": [],
+  "businessWrites": [],
+  "integrity": {
+    "changedProtectedFields": [],
+    "listingUnchanged": true,
+    "listing": {
+      "listingId": "ff8cdce3-ad88-4467-b027-cdde5812e84d",
+      "isPublished": true,
+      "commerceHubCategoryId": "10000000-0000-0000-0000-000000000032",
+      "categoryId": "10000000-0000-0000-0000-000000000032",
+      "parentCategoryId": "10000000-0000-0000-0000-000000000003",
+      "commerceHubPrice": 12,
+      "priceOverrideMutationVersion": 1
+    },
+    "posPrice": 10,
+    "effectiveStorefrontPrice": 10,
+    "stock": 0
+  }
+}
