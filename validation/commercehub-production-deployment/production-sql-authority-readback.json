@@ -1,0 +1,45 @@
+{
+  "verifiedAtUtc": "2026-11-16T22:10:28.374058+00:00",
+  "readOnly": true,
+  "results": [
+    {
+      "kind": "commission_rules",
+      "rules": [
+        {
+          "id": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+          "scope_type": 0,
+          "scope_id": null,
+          "rate": 0.1,
+          "is_active": true,
+          "priority": 0,
+          "is_deleted": false,
+          "created_at": "2026-11-16T21:56:39.580058+00:00"
+        }
+      ]
+    },
+    {
+      "kind": "listing",
+      "data": {
+        "id": "ff8cdce3-ad88-4467-b027-cdde5812e84d",
+        "tenant_id": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0",
+        "product_id": "b2ec52fb-d600-f1ed-dc23-2fcdc09e61b8",
+        "variant_id": "81069782-7bda-4e35-bf24-3e13424f06f2",
+        "category_id": "10000000-0000-0000-0000-000000000032",
+        "price": 12.0,
+        "is_published": true,
+        "is_deleted": false,
+        "attributes_json": null,
+        "created_at": "2026-11-16T22:04:38.010618+00:00"
+      }
+    },
+    {
+      "kind": "source_variant",
+      "data": {
+        "id": "81069782-7bda-4e35-bf24-3e13424f06f2",
+        "price": 10.0,
+        "online_price": null,
+        "is_active": true
+      }
+    }
+  ]
+}

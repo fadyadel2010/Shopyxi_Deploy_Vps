@@ -1,0 +1,580 @@
+{
+  "verifiedAtUtc": "2026-11-16T21:57:30.953Z",
+  "production": true,
+  "actualHeadedBrowser": true,
+  "route": "/super-admin/commission",
+  "beforeRuleCount": 0,
+  "verifiedRuleCount": 1,
+  "rule": {
+    "id": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+    "scopeType": "Global",
+    "rate": 0.1,
+    "priority": 0,
+    "isActive": true
+  },
+  "activeRuleCount": 1,
+  "activeNonGlobalRuleCount": 0,
+  "resolutions": {
+    "vendorCount": 4,
+    "categoryCount": 10,
+    "results": [
+      {
+        "vendorId": null,
+        "categoryId": null,
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": null,
+        "categoryId": "10000000-0000-0000-0000-000000000001",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": null,
+        "categoryId": "10000000-0000-0000-0000-000000000002",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": null,
+        "categoryId": "10000000-0000-0000-0000-000000000003",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": null,
+        "categoryId": "10000000-0000-0000-0000-000000000031",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": null,
+        "categoryId": "10000000-0000-0000-0000-000000000021",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": null,
+        "categoryId": "10000000-0000-0000-0000-000000000011",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": null,
+        "categoryId": "10000000-0000-0000-0000-000000000032",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": null,
+        "categoryId": "10000000-0000-0000-0000-000000000012",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": null,
+        "categoryId": "10000000-0000-0000-0000-000000000022",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": null,
+        "categoryId": "10000000-0000-0000-0000-000000000013",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "c33bf69f-0c2a-4c4f-802e-1ed32b7829ab",
+        "categoryId": null,
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "c33bf69f-0c2a-4c4f-802e-1ed32b7829ab",
+        "categoryId": "10000000-0000-0000-0000-000000000001",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "c33bf69f-0c2a-4c4f-802e-1ed32b7829ab",
+        "categoryId": "10000000-0000-0000-0000-000000000002",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "c33bf69f-0c2a-4c4f-802e-1ed32b7829ab",
+        "categoryId": "10000000-0000-0000-0000-000000000003",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "c33bf69f-0c2a-4c4f-802e-1ed32b7829ab",
+        "categoryId": "10000000-0000-0000-0000-000000000031",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "c33bf69f-0c2a-4c4f-802e-1ed32b7829ab",
+        "categoryId": "10000000-0000-0000-0000-000000000021",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "c33bf69f-0c2a-4c4f-802e-1ed32b7829ab",
+        "categoryId": "10000000-0000-0000-0000-000000000011",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "c33bf69f-0c2a-4c4f-802e-1ed32b7829ab",
+        "categoryId": "10000000-0000-0000-0000-000000000032",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "c33bf69f-0c2a-4c4f-802e-1ed32b7829ab",
+        "categoryId": "10000000-0000-0000-0000-000000000012",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "c33bf69f-0c2a-4c4f-802e-1ed32b7829ab",
+        "categoryId": "10000000-0000-0000-0000-000000000022",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "c33bf69f-0c2a-4c4f-802e-1ed32b7829ab",
+        "categoryId": "10000000-0000-0000-0000-000000000013",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "953b2f2d-70dc-4c7f-b311-a858b6346f26",
+        "categoryId": null,
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "953b2f2d-70dc-4c7f-b311-a858b6346f26",
+        "categoryId": "10000000-0000-0000-0000-000000000001",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "953b2f2d-70dc-4c7f-b311-a858b6346f26",
+        "categoryId": "10000000-0000-0000-0000-000000000002",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "953b2f2d-70dc-4c7f-b311-a858b6346f26",
+        "categoryId": "10000000-0000-0000-0000-000000000003",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "953b2f2d-70dc-4c7f-b311-a858b6346f26",
+        "categoryId": "10000000-0000-0000-0000-000000000031",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "953b2f2d-70dc-4c7f-b311-a858b6346f26",
+        "categoryId": "10000000-0000-0000-0000-000000000021",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "953b2f2d-70dc-4c7f-b311-a858b6346f26",
+        "categoryId": "10000000-0000-0000-0000-000000000011",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "953b2f2d-70dc-4c7f-b311-a858b6346f26",
+        "categoryId": "10000000-0000-0000-0000-000000000032",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "953b2f2d-70dc-4c7f-b311-a858b6346f26",
+        "categoryId": "10000000-0000-0000-0000-000000000012",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "953b2f2d-70dc-4c7f-b311-a858b6346f26",
+        "categoryId": "10000000-0000-0000-0000-000000000022",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "953b2f2d-70dc-4c7f-b311-a858b6346f26",
+        "categoryId": "10000000-0000-0000-0000-000000000013",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "e49b90ec-8cad-4eee-8125-21996f9f961b",
+        "categoryId": null,
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "e49b90ec-8cad-4eee-8125-21996f9f961b",
+        "categoryId": "10000000-0000-0000-0000-000000000001",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "e49b90ec-8cad-4eee-8125-21996f9f961b",
+        "categoryId": "10000000-0000-0000-0000-000000000002",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "e49b90ec-8cad-4eee-8125-21996f9f961b",
+        "categoryId": "10000000-0000-0000-0000-000000000003",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "e49b90ec-8cad-4eee-8125-21996f9f961b",
+        "categoryId": "10000000-0000-0000-0000-000000000031",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "e49b90ec-8cad-4eee-8125-21996f9f961b",
+        "categoryId": "10000000-0000-0000-0000-000000000021",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "e49b90ec-8cad-4eee-8125-21996f9f961b",
+        "categoryId": "10000000-0000-0000-0000-000000000011",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "e49b90ec-8cad-4eee-8125-21996f9f961b",
+        "categoryId": "10000000-0000-0000-0000-000000000032",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "e49b90ec-8cad-4eee-8125-21996f9f961b",
+        "categoryId": "10000000-0000-0000-0000-000000000012",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "e49b90ec-8cad-4eee-8125-21996f9f961b",
+        "categoryId": "10000000-0000-0000-0000-000000000022",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "e49b90ec-8cad-4eee-8125-21996f9f961b",
+        "categoryId": "10000000-0000-0000-0000-000000000013",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0",
+        "categoryId": null,
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0",
+        "categoryId": "10000000-0000-0000-0000-000000000001",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0",
+        "categoryId": "10000000-0000-0000-0000-000000000002",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0",
+        "categoryId": "10000000-0000-0000-0000-000000000003",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0",
+        "categoryId": "10000000-0000-0000-0000-000000000031",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0",
+        "categoryId": "10000000-0000-0000-0000-000000000021",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0",
+        "categoryId": "10000000-0000-0000-0000-000000000011",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0",
+        "categoryId": "10000000-0000-0000-0000-000000000032",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0",
+        "categoryId": "10000000-0000-0000-0000-000000000012",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0",
+        "categoryId": "10000000-0000-0000-0000-000000000022",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      },
+      {
+        "vendorId": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0",
+        "categoryId": "10000000-0000-0000-0000-000000000013",
+        "status": 200,
+        "rate": 0.1,
+        "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+        "source": "Global",
+        "usedLegacyFallback": false
+      }
+    ]
+  },
+  "networkStatuses": [
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200
+  ],
+  "consoleErrorCount": 0,
+  "credentialsOmitted": true
+}

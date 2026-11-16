@@ -1,0 +1,16 @@
+{
+  "repository": "https://github.com/fadyadel2010/Shopyxi_Deploy_Vps.git",
+  "branch": "commercehub/merchant-product-publishing-ux-pricing-20261116",
+  "commit": "4fb2beb41cb704d8b4e9d9ee383afc34d8904594",
+  "gitTreeSha256": "c960752d300ac9c03e044ae1ca8f553a9e8fd53f283cceb0d141289083095f44",
+  "apiBase": "docker.io/shopixy/api@sha256:c384ee860fcbc9aa1522cd7ffa6d76da320009772fa016c615ddb9037b65187e",
+  "webBase": "docker.io/shopixy/web@sha256:cadd2cb3a44fa6bff972652b0d94c1677c6238fbcae5240e69afcd2fed84452a",
+  "webDistSha256": "8a81cd18d3091e5ffc20b49caa53362c33e293f8f51eac9ad439ff6519160cac",
+  "webDistFiles": 70,
+  "remoteRefs": [
+    "4fb2beb41cb704d8b4e9d9ee383afc34d8904594\trefs/heads/commercehub/merchant-product-publishing-ux-pricing-20261116",
+    "cf5892ed379261d7a1d08ba3c622d8f2dbda4a80\trefs/heads/main"
+  ],
+  "trackedWorkingTreeClean": true,
+  "acceptedReportPath": "validation/commercehub-merchant-product-publishing/FINAL-REPORT.md"
+}

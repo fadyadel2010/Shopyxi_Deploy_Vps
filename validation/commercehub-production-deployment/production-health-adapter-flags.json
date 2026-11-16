@@ -1,0 +1,26 @@
+{
+  "verifiedAtUtc": "2026-11-16T22:16:41.017523+00:00",
+  "readOnly": true,
+  "pod": "shopixy-api-5b46f7bb8c-jvbg7",
+  "configurationFiles": [
+    {
+      "file": "appsettings.json",
+      "enabledFlags": {
+        "CertificateProvider": false,
+        "CaddyEdge": false
+      }
+    },
+    {
+      "file": "appsettings.Production.json",
+      "enabledFlags": {
+        "CertificateProvider": "not specified",
+        "CaddyEdge": "not specified"
+      }
+    }
+  ],
+  "environmentEnabledFlags": {
+    "CertificateProvider__Enabled": "absent",
+    "CaddyEdge__Enabled": "absent"
+  },
+  "qualification": "Only enable flags recorded; no private configuration persisted. Health response and source code provide separate status/cause evidence."
+}

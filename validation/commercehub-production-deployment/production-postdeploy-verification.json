@@ -1,0 +1,195 @@
+{
+  "verifiedAtUtc": "2026-11-16T22:10:28.374797+00:00",
+  "workloads": [
+    {
+      "name": "shopixy-api",
+      "generation": 64,
+      "observedGeneration": 64,
+      "replicas": 1,
+      "readyReplicas": 1,
+      "strategy": {
+        "type": "Recreate"
+      },
+      "containers": [
+        {
+          "name": "api",
+          "image": "docker.io/shopixy/api@sha256:cb900c183069f94311142ad9c5a16fa23266611d3c29f674bae64040189ac307",
+          "imagePullPolicy": "Never"
+        },
+        {
+          "name": "clientip-edge",
+          "image": "docker.io/shopixy/web@sha256:f35e1b9cd384244049d0008af9476ee3d6fb974ca7fbb8e7e1f9fe70c11b0a42",
+          "imagePullPolicy": "Never"
+        }
+      ],
+      "pods": [
+        {
+          "name": "shopixy-api-5b46f7bb8c-jvbg7",
+          "phase": "Running",
+          "containers": [
+            {
+              "name": "api",
+              "imageID": "docker.io/library/commercehub-publishing-import@sha256:bc02dd4a2391737c74b011e550d3e20953d685839fd3386388c7e5d8643886d7",
+              "ready": true,
+              "restartCount": 0
+            },
+            {
+              "name": "clientip-edge",
+              "imageID": "docker.io/shopixy/web@sha256:f35e1b9cd384244049d0008af9476ee3d6fb974ca7fbb8e7e1f9fe70c11b0a42",
+              "ready": true,
+              "restartCount": 0
+            }
+          ]
+        }
+      ],
+      "sourceCommit": "4fb2beb41cb704d8b4e9d9ee383afc34d8904594",
+      "sourceInputSha256": "c960752d300ac9c03e044ae1ca8f553a9e8fd53f283cceb0d141289083095f44",
+      "runtimeConfigId": "sha256:72e31d4f8fd125733311af92de54598c244eacfd8eaf8321a5478e291ed716de",
+      "repoDigests": [
+        "docker.io/library/commercehub-publishing-import@sha256:bc02dd4a2391737c74b011e550d3e20953d685839fd3386388c7e5d8643886d7",
+        "docker.io/library/import-2026-11-16@sha256:bc02dd4a2391737c74b011e550d3e20953d685839fd3386388c7e5d8643886d7",
+        "docker.io/shopixy/api@sha256:cb900c183069f94311142ad9c5a16fa23266611d3c29f674bae64040189ac307"
+      ]
+    },
+    {
+      "name": "shopixy-storefront",
+      "generation": 10,
+      "observedGeneration": 10,
+      "replicas": 1,
+      "readyReplicas": 1,
+      "strategy": {
+        "type": "Recreate"
+      },
+      "containers": [
+        {
+          "name": "storefront",
+          "image": "docker.io/shopixy/storefront@sha256:e9333f609aa664d6de713d4db00b18deba054e3a8acbb559099d9ab245f9f3df",
+          "imagePullPolicy": "Never"
+        }
+      ],
+      "pods": [
+        {
+          "name": "shopixy-storefront-95dbbc769-tsbbk",
+          "phase": "Running",
+          "containers": [
+            {
+              "name": "storefront",
+              "imageID": "docker.io/library/import-2026-11-13@sha256:dcd3573b806201db6bf8d5f124008773f2c38742457e6af8e9829c0c380a64b7",
+              "ready": true,
+              "restartCount": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "shopixy-web",
+      "generation": 22,
+      "observedGeneration": 22,
+      "replicas": 1,
+      "readyReplicas": 1,
+      "strategy": {
+        "type": "Recreate"
+      },
+      "containers": [
+        {
+          "name": "web",
+          "image": "docker.io/shopixy/web@sha256:e95bbdf5a645495003a3f88a580148238d738b6b1fd0ee345194d9e271de02a8",
+          "imagePullPolicy": "Never"
+        }
+      ],
+      "pods": [
+        {
+          "name": "shopixy-web-78bf87956c-87c76",
+          "phase": "Running",
+          "containers": [
+            {
+              "name": "web",
+              "imageID": "docker.io/library/commercehub-publishing-import@sha256:7ef96c5203157a3bf50b61ac399afa8732074db3a3a2039aa5b281715851648d",
+              "ready": true,
+              "restartCount": 0
+            }
+          ]
+        }
+      ],
+      "sourceCommit": "4fb2beb41cb704d8b4e9d9ee383afc34d8904594",
+      "sourceInputSha256": "c960752d300ac9c03e044ae1ca8f553a9e8fd53f283cceb0d141289083095f44",
+      "runtimeConfigId": "sha256:56d10a770ef161a3bc106411278dcf7a7431097db068aa111200ec502685aef1",
+      "repoDigests": [
+        "docker.io/library/commercehub-publishing-import@sha256:7ef96c5203157a3bf50b61ac399afa8732074db3a3a2039aa5b281715851648d",
+        "docker.io/library/import-2026-11-16@sha256:7ef96c5203157a3bf50b61ac399afa8732074db3a3a2039aa5b281715851648d",
+        "docker.io/shopixy/web@sha256:e95bbdf5a645495003a3f88a580148238d738b6b1fd0ee345194d9e271de02a8"
+      ]
+    }
+  ],
+  "apiAssemblyParity": [
+    {
+      "file": "PointOfSale.API.dll",
+      "sha256": "80c3ed9959fb54d9b6d99a2fb712d8100b717365ec158aa0e9790d6e8f2ded9f",
+      "matchesBuild": true
+    },
+    {
+      "file": "PointOfSale.Core.dll",
+      "sha256": "bf644b2d4d7432536a90cb8472ff2239b298658a88924a908604c417f58520e2",
+      "matchesBuild": true
+    },
+    {
+      "file": "PointOfSale.Infrastructure.dll",
+      "sha256": "e3cfafcf81b28c2d4174668b0d378491f729e9ff9e914742bf7954c351e3f68b",
+      "matchesBuild": true
+    }
+  ],
+  "apiReadiness": {
+    "status": "Degraded",
+    "checks": {
+      "masstransit-bus": "Healthy",
+      "projection_outbox": "Healthy",
+      "integration_outbox_readiness": "Healthy",
+      "payment_cancellation_outbox_readiness": "Healthy",
+      "provider_delivery_outbox_readiness": "Healthy",
+      "mass_transit_bus_outbox_readiness": "Healthy",
+      "accounting_outbox_readiness": "Healthy",
+      "canonical_identity_authority": "Healthy",
+      "payout_external_truth_readiness": "Healthy",
+      "commercehub_external_outcome_recovery": "Healthy",
+      "postgresql": "Healthy",
+      "redis": "Healthy",
+      "mongodb": "Healthy",
+      "elasticsearch": "Healthy",
+      "rabbitmq": "Healthy",
+      "r2": "Healthy",
+      "dns_resolver": "Healthy",
+      "certificate_provider": "Degraded",
+      "caddy_edge": "Degraded",
+      "certificate_renewal": "Healthy",
+      "paymob_foundation": "Healthy",
+      "paymob_operational_readiness": "Healthy",
+      "stripe_operational_readiness": "Healthy",
+      "fawry_foundation": "Healthy",
+      "fawry_operational_readiness": "Healthy",
+      "manual_payment_foundation": "Healthy",
+      "manual_payment_operational_readiness": "Healthy",
+      "cod_reference_workflow_foundation": "Healthy"
+    },
+    "nonHealthyDescriptions": {
+      "certificate_provider": {
+        "status": "Degraded",
+        "description": "Dependency status; diagnostic payload omitted."
+      },
+      "caddy_edge": {
+        "status": "Degraded",
+        "description": "Dependency status; diagnostic payload omitted."
+      }
+    }
+  },
+  "capacity": [
+    "Filesystem      Size  Used Avail Use% Mounted on",
+    "/dev/sda1       194G   33G  161G  17% /",
+    "/dev/sda1       194G   33G  161G  17% /",
+    "               total        used        free      shared  buff/cache   available",
+    "Mem:            39Gi       7.0Gi        27Gi       458Mi       4.5Gi        31Gi",
+    "Swap:             0B          0B          0B",
+    "8"
+  ],
+  "metricsApiAvailable": false
+}

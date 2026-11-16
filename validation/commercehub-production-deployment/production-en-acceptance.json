@@ -1,0 +1,319 @@
+{
+  "verifiedAtUtc": "2026-11-16T22:04:37.482Z",
+  "production": true,
+  "actualHeadedBrowser": true,
+  "url": "https://admin.shopyxi.com/admin/commercehub",
+  "language": "en",
+  "session": {
+    "role": "Owner",
+    "tenantId": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0"
+  },
+  "product": {
+    "id": "b2ec52fb-d600-f1ed-dc23-2fcdc09e61b8",
+    "name": "QA-ERP-20261112-TRACKED",
+    "variantId": "81069782-7bda-4e35-bf24-3e13424f06f2"
+  },
+  "parentCategoryId": "10000000-0000-0000-0000-000000000003",
+  "categoryId": "10000000-0000-0000-0000-000000000032",
+  "categoryPath": "Home & Garden → Kitchen",
+  "emptyCategoryPublishDisabled": true,
+  "electronicsChildOptionCount": 4,
+  "dynamicAttributes": {
+    "text": "Product details\n\nComplete the fields defined for the selected Marketplace category.\n\nBrand\n*\nSelect\nSamsung\nLG\nSony\nTCL\nHisense\nToshiba\nPanasonic\nScreen Size (inches)\n*\nResolution\nSelect\nHD\nFull HD\n4K UHD\n8K",
+    "selectCount": 2,
+    "numberCount": 1
+  },
+  "sourcePreview": {
+    "vendorId": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0",
+    "categoryId": "10000000-0000-0000-0000-000000000032",
+    "rate": 0.1,
+    "source": "Global",
+    "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+    "priority": 0,
+    "scopeType": "Global",
+    "usedLegacyFallback": false,
+    "cacheStrategy": "MemoryCache",
+    "variantId": "81069782-7bda-4e35-bf24-3e13424f06f2",
+    "parentCategoryId": "10000000-0000-0000-0000-000000000003",
+    "pricingMode": "source",
+    "currency": "EGP",
+    "commissionBase": "Subtotal",
+    "sourceProductPrice": 10,
+    "marketplacePrice": 10,
+    "commissionAmount": 1,
+    "merchantNet": 9
+  },
+  "customPreview": {
+    "vendorId": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0",
+    "categoryId": "10000000-0000-0000-0000-000000000032",
+    "rate": 0.1,
+    "source": "Global",
+    "ruleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+    "priority": 0,
+    "scopeType": "Global",
+    "usedLegacyFallback": false,
+    "cacheStrategy": "MemoryCache",
+    "variantId": "81069782-7bda-4e35-bf24-3e13424f06f2",
+    "parentCategoryId": "10000000-0000-0000-0000-000000000003",
+    "pricingMode": "custom",
+    "currency": "EGP",
+    "commissionBase": "Subtotal",
+    "sourceProductPrice": 10,
+    "marketplacePrice": 12,
+    "commissionAmount": 1.2,
+    "merchantNet": 10.8
+  },
+  "ui": {
+    "direction": "ltr",
+    "commissionText": "Commission and merchant proceeds\n\nAuthoritative preview of the amount deducted and the amount you receive.\n\nSource product price\nEGP 10.00\nMarketplace selling price\nEGP 12.00\nCommission rate\n10%\nCommission deduction\n− EGP 1.20\nYou will receive\nEGP 10.80\n\nRULE RESOLUTION\n\nApplied rule: Platform default\n\nSource\n\nPlatform default\n\nPriority\n\n0\n\nAdjust price to maintain my target earnings\nCalculate a suggested Marketplace price from the resolved percentage rate.",
+    "publishDisabled": false,
+    "horizontalOverflow": false,
+    "selectedOptions": [
+      {
+        "value": "10000000-0000-0000-0000-000000000003",
+        "text": "🏠 Home & Garden"
+      },
+      {
+        "value": "10000000-0000-0000-0000-000000000032",
+        "text": "🍳 Kitchen"
+      }
+    ],
+    "unexpectedCommissionFallback": false
+  },
+  "network": [
+    {
+      "method": "GET",
+      "path": "/api/auth/session",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/products/b2ec52fb-d600-f1ed-dc23-2fcdc09e61b8",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/products",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/session",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/marketplace/incoming-requests",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/verification-status",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings/analytics",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/settings",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/commercehub/categories/tree",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/products",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings/kpis",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings/notifications",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/commercehub/categories/10000000-0000-0000-0000-000000000011/attributes",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/commission/resolve-preview",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/commercehub/categories/10000000-0000-0000-0000-000000000032/attributes",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/commission/resolve-preview",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/commission/resolve-preview",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/admin/commercehub/publish",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/products",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings/notifications",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings/analytics",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings/kpis",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/commercehub/categories/tree",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/commission/resolve-preview",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/products",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/products/b2ec52fb-d600-f1ed-dc23-2fcdc09e61b8",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/session",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/marketplace/incoming-requests",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/verification-status",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/products",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/commercehub/categories/tree",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings/kpis",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/settings",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings/analytics",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/listings/notifications",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/commercehub/categories/10000000-0000-0000-0000-000000000032/attributes",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/commercehub/commission/resolve-preview",
+      "status": 200
+    }
+  ],
+  "consoleErrors": [],
+  "failedApiRequests": [],
+  "writesBeforePublication": 0,
+  "publication": {
+    "status": 200,
+    "method": "POST",
+    "request": {
+      "variantId": "81069782-7bda-4e35-bf24-3e13424f06f2",
+      "commerceHubCategoryId": "10000000-0000-0000-0000-000000000032",
+      "parentCategoryId": "10000000-0000-0000-0000-000000000003",
+      "pricingMode": "custom",
+      "commerceHubPrice": 12,
+      "expectedCommissionRuleId": "98eca7ca-414a-442f-bdf6-fb320cfb4de4",
+      "expectedPriceOverrideMutationVersion": 0,
+      "attributesJson": null
+    },
+    "listing": {
+      "listingId": "ff8cdce3-ad88-4467-b027-cdde5812e84d",
+      "isPublished": true,
+      "commerceHubCategoryId": "10000000-0000-0000-0000-000000000032",
+      "categoryId": "10000000-0000-0000-0000-000000000032",
+      "parentCategoryId": "10000000-0000-0000-0000-000000000003",
+      "commerceHubPrice": 12,
+      "priceOverrideMutationVersion": 1
+    },
+    "verifiedAfterFreshReload": true
+  },
+  "pricingIntegrity": {
+    "changedProtectedFields": [],
+    "posPrice": 10,
+    "effectiveStorefrontPrice": 10,
+    "commerceHubPrice": 12,
+    "stock": 0
+  }
+}

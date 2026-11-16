@@ -1,0 +1,44 @@
+{
+  "id": "b2ec52fb-d600-f1ed-dc23-2fcdc09e61b8",
+  "name": "QA-ERP-20261112-TRACKED",
+  "salePrice": 10,
+  "purchasePrice": 0,
+  "isOnlineVisible": true,
+  "publishStatus": "Published",
+  "units": [
+    {
+      "id": "f88bd5d5-4294-4c2f-b19d-54d2efc811b3",
+      "unitId": "1a56ce43-695f-4c7b-ba7a-ebb2f1683276",
+      "unitName": "Piece",
+      "unitSymbol": "pc",
+      "conversionFactor": 1,
+      "purchasePrice": 0,
+      "sellingPrice": 10,
+      "isDefault": true,
+      "isBaseUnit": true
+    }
+  ],
+  "variants": [
+    {
+      "id": "81069782-7bda-4e35-bf24-3e13424f06f2",
+      "sku": "QA-ERP-20261112-TRACKED",
+      "price": 10,
+      "costPrice": 0,
+      "effectiveOnlinePrice": 10,
+      "isDefault": true,
+      "isActive": true,
+      "sortOrder": 0,
+      "totalStock": 0,
+      "attributes": []
+    }
+  ],
+  "warehouseStocks": [
+    {
+      "warehouseId": "05db0b00-5c92-47cc-b4c4-d06e36927fb2",
+      "warehouseName": "Main Warehouse",
+      "quantity": 0,
+      "reservedQuantity": 0,
+      "availableQuantity": 0
+    }
+  ]
+}

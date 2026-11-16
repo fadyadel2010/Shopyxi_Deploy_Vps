@@ -1,0 +1,37 @@
+{
+  "deliveryMethod": "SHA-256 verified archive transferred over SSH/SCP and imported into existing single-node k3s containerd; imagePullPolicy Never retained",
+  "registryPushPerformed": false,
+  "registryPullAttempt": "Denied; verified exact locally retained parent images used without substitution",
+  "apiOverlayParity": true,
+  "apiUnrelatedFilesUnchanged": true,
+  "apiDependenciesMatchParent": true,
+  "apiStartupSmokePassed": true,
+  "webDistParity": true,
+  "webNginxConfigValid": true,
+  "candidates": [
+    {
+      "component": "api",
+      "image": "docker.io/shopixy/api@sha256:cb900c183069f94311142ad9c5a16fa23266611d3c29f674bae64040189ac307",
+      "archiveSha256": "cbeae7707dae856b767f01ea2e402211cc5d09e7f8bb00d6cbd1f3a17d361bf7",
+      "scanReportSha256": "f0588b673fb3ac7b44f296f7c68ed3ed7c10bbcfb5f687581b5a66c6835577e9",
+      "scanCreatedAt": "2026-11-16T20:29:05.625003656+02:00",
+      "highCriticalFindings": 0,
+      "scannerDatabaseUpdatedDuringRun": false,
+      "scanMode": "cached-database offline vulnerability scan",
+      "nonRoot": true,
+      "sourceCommit": "4fb2beb41cb704d8b4e9d9ee383afc34d8904594"
+    },
+    {
+      "component": "web",
+      "image": "docker.io/shopixy/web@sha256:e95bbdf5a645495003a3f88a580148238d738b6b1fd0ee345194d9e271de02a8",
+      "archiveSha256": "d33864562a46bf08fced7f76afc0c11d0188688b775f6f33912d16a372dd72fd",
+      "scanReportSha256": "adaf487e2ce2648a85d4ab110d8f62e57e5ee625a820da9710bfea5fab872afb",
+      "scanCreatedAt": "2026-11-16T20:29:06.459320446+02:00",
+      "highCriticalFindings": 0,
+      "scannerDatabaseUpdatedDuringRun": false,
+      "scanMode": "cached-database offline vulnerability scan",
+      "nonRoot": true,
+      "sourceCommit": "4fb2beb41cb704d8b4e9d9ee383afc34d8904594"
+    }
+  ]
+}

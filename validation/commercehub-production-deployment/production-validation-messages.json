@@ -1,0 +1,68 @@
+{
+  "verifiedAtUtc": "2026-11-16T22:06:55.773Z",
+  "production": true,
+  "actualHeadedBrowser": true,
+  "results": [
+    {
+      "language": "en",
+      "requiredChildBlocked": true,
+      "requiredAttributeValidationMessage": [
+        "\"Brand\" is required."
+      ],
+      "dynamicFields": {
+        "text": "Product details\n\nComplete the fields defined for the selected Marketplace category.\n\nBrand\n*\nSelect\nSamsung\nLG\nSony\nTCL\nHisense\nToshiba\nPanasonic\nScreen Size (inches)\n*\nResolution\nSelect\nHD\nFull HD\n4K UHD\n8K",
+        "selectOptions": [
+          [
+            "",
+            "Samsung",
+            "LG",
+            "Sony",
+            "TCL",
+            "Hisense",
+            "Toshiba",
+            "Panasonic"
+          ],
+          [
+            "",
+            "HD",
+            "Full HD",
+            "4K UHD",
+            "8K"
+          ]
+        ],
+        "numberInputCount": 1
+      }
+    },
+    {
+      "language": "ar",
+      "requiredChildBlocked": true,
+      "requiredAttributeValidationMessage": [
+        "\"الماركة\" مطلوب."
+      ],
+      "dynamicFields": {
+        "text": "تفاصيل المنتج\n\nأكمل الحقول المحددة لفئة السوق المختارة.\n\nالماركة\n*\nاختر\nSamsung\nLG\nSony\nTCL\nHisense\nToshiba\nPanasonic\nحجم الشاشة (بوصة)\n*\nالدقة\nاختر\nHD\nFull HD\n4K UHD\n8K",
+        "selectOptions": [
+          [
+            "",
+            "Samsung",
+            "LG",
+            "Sony",
+            "TCL",
+            "Hisense",
+            "Toshiba",
+            "Panasonic"
+          ],
+          [
+            "",
+            "HD",
+            "Full HD",
+            "4K UHD",
+            "8K"
+          ]
+        ],
+        "numberInputCount": 1
+      }
+    }
+  ],
+  "writes": []
+}
