@@ -1,0 +1,25 @@
+{
+  "origin": "http://admin.localhost:18180",
+  "route": "/admin/affiliates/products",
+  "headings": [
+    "POS System",
+    "POS System",
+    "Affiliate Products",
+    "Help Center"
+  ],
+  "storageKeyNames": [
+    "i18nextLng",
+    "marketplace_seen_request_ids:15150000-2026-4015-a000-000000000001:15150000-2026-4015-a000-000000000002:seen",
+    "pointofsale.storefront.sidebar.expansion.v1",
+    "pos_runtime_invalidation_v1:15150000-2026-4015-a000-000000000001:15150000-2026-4015-a000-000000000002:all",
+    "pointofsale.storefront.operations.sidebar.expansion.v1",
+    "pointofsale.admin.navigation.v1:15150000-2026-4015-a000-000000000001:15150000-2026-4015-a000-000000000002",
+    "admin.dashboard.activeTab"
+  ],
+  "cookieNames": [
+    "access_token",
+    "csrf_token",
+    "refresh_token",
+    "storefront_rl_sid"
+  ]
+}

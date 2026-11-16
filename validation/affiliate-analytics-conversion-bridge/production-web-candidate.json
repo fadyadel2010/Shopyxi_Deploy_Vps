@@ -1,0 +1,17 @@
+{
+  "verifiedAtUtc": "2026-11-16T00:06:09.916336+00:00",
+  "component": "web",
+  "image": "shopixy/web@sha256:4f57cdb948c4c9a0f91bfdb0b283590a1976cf4f80f7f28fcbdd190726168219",
+  "baseImage": "sha256:ee6f3d73e076221dd600ea44c178afc8b811e2a32758eae9890553cd38486abd",
+  "sourceInputSha256": "24aa0babed0c9f8f30ae5f6aaae5e5e13cd6f37c851b5d67a41fd9b4a11eac9f",
+  "sourceInputCount": 2195,
+  "distSha256": "a19774c133120d1f6bd5d56d4d44567a2232e2d95129ce2406057ded382c85b9",
+  "distFiles": 70,
+  "archiveSha256": "3f43fab85e48ae7bf0e89b75b817b4dbf7f36192cb7ce8baf02a0d37d8c1681f",
+  "imageContentsMatchBuild": true,
+  "nonRoot": true,
+  "nginxConfigValid": true,
+  "trivyHighCriticalFindings": 0,
+  "securityGatePassed": true,
+  "productionDeployment": false
+}

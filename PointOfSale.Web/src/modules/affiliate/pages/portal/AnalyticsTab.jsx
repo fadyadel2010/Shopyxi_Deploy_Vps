@@ -132,6 +132,15 @@ export default function AnalyticsTab() {
     }, [])
 
     useEffect(() => { loadData(range) }, [range, loadData])
+    useEffect(() => {
+        const refresh = () => { if (!document.hidden) loadData(range) }
+        window.addEventListener('focus', refresh)
+        window.addEventListener('online', refresh)
+        return () => {
+            window.removeEventListener('focus', refresh)
+            window.removeEventListener('online', refresh)
+        }
+    }, [range, loadData])
 
     // Pluralization helper
     const pluralize = (count, singularKey, pluralKey) =>
@@ -189,14 +198,14 @@ export default function AnalyticsTab() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <KPICard
                             label={ta('totalClicks')}
-                            value={formatNumber(summary?.totalClicks || 0)}
+                            value={summary?.totalClicks == null ? ta('unavailable') : formatNumber(summary.totalClicks)}
                             icon={MousePointerClick}
                             color="#6C63FF"
                             index={0}
                         />
                         <KPICard
-                            label={ta('totalOrders')}
-                            value={formatNumber(summary?.totalOrders || 0)}
+                            label={ta('attributedOrders')}
+                            value={summary?.attributedOrders == null ? ta('unavailable') : formatNumber(summary.attributedOrders)}
                             icon={ShoppingBag}
                             color="#F59E0B"
                             index={1}
@@ -210,12 +219,17 @@ export default function AnalyticsTab() {
                         />
                         <KPICard
                             label={ta('conversionRate')}
-                            value={formatNumber((summary?.conversionRate || 0) / 100, { style: 'percent', minimumFractionDigits: 2 })}
+                            value={summary?.conversionRate == null ? ta('unavailable') : formatNumber(summary.conversionRate / 100, { style: 'percent', minimumFractionDigits: 2 })}
                             icon={TrendingUp}
                             color="#EC4899"
                             index={3}
                         />
                     </div>
+
+                    <p className="text-xs text-gray-500" data-testid="conversion-definition">
+                        {ta('conversionDefinition')} · {ta('clickRecords')}: {summary?.clickRecords == null ? ta('unavailable') : formatNumber(summary.clickRecords)}
+                        {' · '}{ta('convertedClicks')}: {summary?.convertedClicks == null ? ta('unavailable') : formatNumber(summary.convertedClicks)}
+                    </p>
 
                     {/* Earnings Trend Chart */}
                     <motion.div
@@ -229,7 +243,7 @@ export default function AnalyticsTab() {
                                     <span className="w-2.5 h-2.5 rounded-full bg-[#6C63FF]" /> {ta('earnings')}
                                 </span>
                                 <span className="flex items-center gap-1.5">
-                                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" /> {ta('orders')}
+                                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" /> {ta('attributedOrders')}
                                 </span>
                             </div>
                         </div>
@@ -277,11 +291,11 @@ export default function AnalyticsTab() {
                                         <Line
                                             yAxisId="right"
                                             type="monotone"
-                                            dataKey="orders"
+                                            dataKey="attributedOrders"
                                             stroke="#10B981"
                                             strokeWidth={2}
                                             dot={{ fill: '#10B981', r: 2 }}
-                                            name={ta('orders')}
+                                            name={ta('attributedOrders')}
                                         />
                                     </AreaChart>
                                 </ResponsiveContainer>
@@ -314,7 +328,7 @@ export default function AnalyticsTab() {
                                         <YAxis tick={{ fill: '#6B7280', fontSize: 10 }} axisLine={false} tickLine={false} />
                                         <Tooltip content={<ChartTooltip />} />
                                         <Bar dataKey="clicks" fill="#6C63FF" radius={[4, 4, 0, 0]} name={ta('clicks')} opacity={0.6} />
-                                        <Bar dataKey="orders" fill="#10B981" radius={[4, 4, 0, 0]} name={ta('orders')} />
+                                        <Bar dataKey="attributedOrders" fill="#10B981" radius={[4, 4, 0, 0]} name={ta('attributedOrders')} />
                                     </BarChart>
                                 </ResponsiveContainer>
                             ) : (

@@ -16,6 +16,9 @@ public interface IAffiliateAttributionEvidenceTokenService
         string token,
         Guid expectedTenantId,
         out AffiliateAttributionEvidence evidence);
+
+    string CreateWithClick(Guid tenantId, Guid affiliateAccountId, string referralCode,
+        Guid? promotionLinkId, Guid clickId, Guid? productId);
 }
 
 public sealed record AffiliateAttributionEvidence(
@@ -23,7 +26,11 @@ public sealed record AffiliateAttributionEvidence(
     Guid AffiliateAccountId,
     string ReferralCode,
     Guid? PromotionLinkId,
-    DateTime ExpiresAtUtc);
+    DateTime ExpiresAtUtc)
+{
+    public Guid? ReferralClickId { get; init; }
+    public Guid? ReferralProductId { get; init; }
+}
 
 public sealed class AffiliateAttributionEvidenceTokenService : IAffiliateAttributionEvidenceTokenService
 {
@@ -121,4 +128,17 @@ public sealed class AffiliateAttributionEvidenceTokenService : IAffiliateAttribu
 
     private static string NormalizeReferralCode(string? referralCode) =>
         referralCode?.Trim().ToUpperInvariant() ?? string.Empty;
+
+    public string CreateWithClick(Guid tenantId, Guid affiliateAccountId, string referralCode,
+        Guid? promotionLinkId, Guid clickId, Guid? productId)
+    {
+        if (tenantId == Guid.Empty || affiliateAccountId == Guid.Empty || clickId == Guid.Empty ||
+            productId == Guid.Empty || string.IsNullOrWhiteSpace(referralCode))
+            throw new ArgumentException("Invalid trusted referral click context.");
+        var payload = new AffiliateAttributionEvidence(tenantId, affiliateAccountId,
+            NormalizeReferralCode(referralCode), promotionLinkId,
+            _timeProvider.GetUtcNow().UtcDateTime.Add(AttributionWindow))
+        { ReferralClickId = clickId, ReferralProductId = productId };
+        return _protector.Protect(JsonSerializer.Serialize(payload, JsonOptions));
+    }
 }

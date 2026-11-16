@@ -1,0 +1,1 @@
+shopixy/api@sha256:a01d5ae1b3149d1fe099a9da0755d7f53a87e64b04aac18c1a8189d93cbfdcad

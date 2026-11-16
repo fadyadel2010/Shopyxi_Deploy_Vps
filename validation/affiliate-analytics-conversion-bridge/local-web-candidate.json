@@ -1,0 +1,9 @@
+{
+  "component": "web",
+  "tag": "shopixy/web:affiliate-analytics-7274865880d3",
+  "imageId": "sha256:752e4a11699e9e2a7523149eddd4b9db88b00163023efe3edf9d1e8008fd280b",
+  "baseImageId": "sha256:ee6f3d73e076221dd600ea44c178afc8b811e2a32758eae9890553cd38486abd",
+  "buildContextSha256": "7274865880d3457715136243110f9f2541fe8a39bbea570d0f6491ef4f9b63f4",
+  "isolatedOnly": true,
+  "networkDuringBuild": "none"
+}

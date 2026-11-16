@@ -1914,6 +1914,7 @@ builder.Services.AddScoped<PointOfSale.Core.Interfaces.Affiliate.IAffiliatePromo
 
 // AF-34: Ranking Score Service (click/conversion signal tracking + daily recalculation)
 builder.Services.AddScoped<PointOfSale.Infrastructure.Services.Affiliate.AffiliateRankingService>();
+builder.Services.AddScoped<PointOfSale.Infrastructure.Services.Affiliate.AffiliateConversionProjector>();
 
 // AF-38: Affiliate Payout Service (Hybrid Withdrawal Engine)
 builder.Services.AddScoped<PointOfSale.Core.Interfaces.Affiliate.IAffiliatePayoutService, PointOfSale.Infrastructure.Services.Affiliate.AffiliatePayoutService>();
@@ -2202,6 +2203,7 @@ builder.Services.AddMassTransit(x =>
 
     // AF-4: Analytics consumers — update click-to-conversion tracking.
     x.AddConsumer<PointOfSale.Infrastructure.Consumers.Affiliate.AffiliateLinkClickedConsumer>();
+    x.AddConsumer<PointOfSale.Infrastructure.Consumers.Affiliate.AffiliateOrderConversionConsumer>();
     x.AddConsumer<PointOfSale.Infrastructure.Consumers.Affiliate.AffiliateClickConversionConsumer>();
 
     // AF-24: Daily analytics projection consumers — time-series click/order/earnings tracking.

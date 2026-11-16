@@ -1,0 +1,17 @@
+{
+  "origin": "https://admin.shopyxi.com",
+  "route": "/admin/affiliates/products",
+  "authenticatedAdmin": false,
+  "reconciliation": {
+    "status": 200,
+    "body": {
+      "authoritativeAttributedOrders": 0,
+      "alreadyProjected": 0,
+      "unprojectedOrders": 0,
+      "exactClickCandidates": 0,
+      "ambiguousHistoricalClickLinksAreExcluded": true
+    }
+  },
+  "errors": [],
+  "readOnly": true
+}

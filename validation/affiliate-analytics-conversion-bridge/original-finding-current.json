@@ -1,0 +1,171 @@
+{
+  "capturedAtUtc": "2026-11-15T21:32:09.720717+00:00",
+  "readOnly": true,
+  "onlyExistingIsolatedFixture": true,
+  "sql": [
+    {
+      "orderId": "8f2866d0-cac0-4c0b-bd91-fe6f3c4c5e12",
+      "tenantId": "15150000-2026-4015-a000-000000000001",
+      "affiliateId": "01a1df98-5257-7282-9e19-f9f8ae5b6b74",
+      "attributionId": "01a1dfa8-1e81-75e2-9645-fb71a6bd6f5c",
+      "promotionLinkId": "01a1dfa0-8334-755b-aeb8-c037243e70c0",
+      "orderCreatedAt": "2026-11-15T14:41:39.34201+00:00",
+      "orderSessionPresent": true,
+      "cartId": "af43fe03-d50a-4de2-a5c7-828c2e10939b",
+      "checkoutId": "5e1163f8-476f-4647-840c-cdf6a5948cc5",
+      "convertedOrderId": "8f2866d0-cac0-4c0b-bd91-fe6f3c4c5e12",
+      "sameOrderCheckoutSession": true,
+      "sameCart": true,
+      "journeys": [
+        {
+          "tenantId": "15150000-2026-4015-a000-000000000001",
+          "referralCode": "WWC3NC7R9B",
+          "promotionLinkId": "01a1dfa0-8334-755b-aeb8-c037243e70c0",
+          "affiliateAccountId": "01a1df98-5257-7282-9e19-f9f8ae5b6b74"
+        }
+      ]
+    },
+    {
+      "eventType": "PointOfSale.API.Events.InventoryReservedEvent",
+      "eventId": "b5f4cefb-7f9b-5a9b-9be8-09e1048e37c3",
+      "processed": true,
+      "retryCount": 0
+    },
+    {
+      "eventType": "PointOfSale.Core.Events.PaymentIntentCreatedEvent",
+      "eventId": "4519d7f3-91e2-0956-536a-2f8bb9f98583",
+      "processed": true,
+      "retryCount": 0
+    },
+    {
+      "eventType": "PointOfSale.Core.Events.OrderStatusChangedEvent, PointOfSale.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "eventId": "6e86e510-2336-4fc9-8dab-b3e10b75e9e5",
+      "processed": true,
+      "retryCount": 0
+    },
+    {
+      "eventType": "PointOfSale.Core.Events.FulfillmentConfirmedEvent, PointOfSale.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "eventId": "60900e45-a554-4a3a-a13b-55ea5374c396",
+      "processed": true,
+      "retryCount": 0
+    },
+    {
+      "eventType": "PointOfSale.Core.Events.ShipmentCreatedEvent, PointOfSale.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "eventId": "9291c3f2-f55e-494e-aca5-78854a525ac9",
+      "processed": true,
+      "retryCount": 0
+    },
+    {
+      "eventType": "PointOfSale.Core.Events.OrderStatusChangedEvent, PointOfSale.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "eventId": "acc0e659-f540-4517-ac2d-fa84c6ee0737",
+      "processed": true,
+      "retryCount": 0
+    },
+    {
+      "eventType": "PointOfSale.Core.Events.ShipmentStatusChangedEvent, PointOfSale.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "eventId": "5d20442a-1f71-44ee-93e0-455212f1d491",
+      "processed": true,
+      "retryCount": 0
+    },
+    {
+      "eventType": "PointOfSale.Core.Events.ShipmentStatusChangedEvent, PointOfSale.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "eventId": "899983b6-55a4-4639-9108-166f5bafc4e3",
+      "processed": true,
+      "retryCount": 0
+    },
+    {
+      "eventType": "PointOfSale.Core.Events.OrderPackedEvent, PointOfSale.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "eventId": "d0081222-b345-49f0-b570-68fabc22d65d",
+      "processed": true,
+      "retryCount": 0
+    },
+    {
+      "eventType": "PointOfSale.Core.Events.OrderOutForDeliveryEvent, PointOfSale.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "eventId": "1188e7c9-a67d-401e-816c-d66f42a41f26",
+      "processed": true,
+      "retryCount": 0
+    },
+    {
+      "eventType": "PointOfSale.Core.Events.ShipmentStatusChangedEvent, PointOfSale.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "eventId": "dda0602e-16ec-4ea5-9479-3b6ca2db9e8f",
+      "processed": true,
+      "retryCount": 0
+    },
+    {
+      "eventType": "PointOfSale.Core.Events.ShipmentStatusChangedEvent, PointOfSale.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "eventId": "521751b7-5076-44c1-bc03-77fe11d83325",
+      "processed": true,
+      "retryCount": 0
+    },
+    {
+      "eventType": "PointOfSale.Core.Events.OrderStatusChangedEvent, PointOfSale.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "eventId": "b62d6886-d5e5-4bc1-be35-cd28a29d56c2",
+      "processed": true,
+      "retryCount": 0
+    },
+    {
+      "eventType": "PointOfSale.Core.Events.Affiliate.AffiliateManualPayoutReturnedEvent, PointOfSale.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "eventId": "638c82b2-b77b-42fd-9164-40592f85b6d6",
+      "processed": true,
+      "retryCount": 0
+    },
+    {
+      "eventType": "PointOfSale.Core.Events.ShipmentStatusChangedEvent, PointOfSale.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "eventId": "a0c736da-ff8d-4713-8b0c-f31d2071103d",
+      "processed": true,
+      "retryCount": 0
+    },
+    {
+      "eventType": "PointOfSale.Core.Events.ShipmentStatusChangedEvent, PointOfSale.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "eventId": "4ec3b034-9578-40cd-9e19-12ef746c5c46",
+      "processed": true,
+      "retryCount": 0
+    },
+    {
+      "eventType": "PointOfSale.Core.Events.ShipmentStatusChangedEvent, PointOfSale.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "eventId": "3e4b1c09-ea4f-4db6-9184-ca41d0b5a8f9",
+      "processed": true,
+      "retryCount": 0
+    },
+    {
+      "eventType": "PointOfSale.Core.Events.OrderStatusChangedEvent, PointOfSale.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "eventId": "ca0049b5-0024-4e4b-a97d-8e87326f7889",
+      "processed": true,
+      "retryCount": 0
+    },
+    {
+      "eventType": "PointOfSale.Core.Events.FulfillmentDeliveredEvent, PointOfSale.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "eventId": "8f2bdb09-1ac9-4c26-930d-d73c23dfb351",
+      "processed": true,
+      "retryCount": 0
+    },
+    {
+      "eventType": "PointOfSale.Core.Events.OrderCompletedEvent, PointOfSale.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "eventId": "a37423c2-30f3-41a1-9718-68b7f9af85df",
+      "processed": true,
+      "retryCount": 0
+    },
+    {
+      "eventType": "PointOfSale.Core.Events.OrderStatusChangedEvent, PointOfSale.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "eventId": "2e17d439-da91-4b7e-8ade-72f5041ccb3a",
+      "processed": true,
+      "retryCount": 0
+    }
+  ],
+  "mongo": {
+    "clickCount": 1,
+    "click": {
+      "_id": "3de85e14-3e61-4b8d-a964-a49aeb3f1ba7",
+      "tenantId": "15150000-2026-4015-a000-000000000001",
+      "affiliateAccountId": "01a1df98-5257-7282-9e19-f9f8ae5b6b74",
+      "referralCode": "WWC3NC7R9B",
+      "productId": "37d9a1b6-6585-f655-0e55-824a517ce90c",
+      "clickedAtUtc": {
+        "$date": "2026-11-15T14:34:21.073Z"
+      },
+      "orderId": null,
+      "convertedAtUtc": null
+    },
+    "trackedClickEvents": "0109"
+  }
+}

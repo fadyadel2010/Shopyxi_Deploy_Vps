@@ -1,0 +1,271 @@
+{
+  "route": "/affiliate/portal?tab=analytics",
+  "thirtyDaySemantics": {
+    "kpis": {
+      "Tracked Click Events": "198",
+      "Attributed Orders": "2",
+      "Total Earnings": "EGP\u00a0110.00",
+      "Conversion Rate": "50.00%"
+    },
+    "trackedClickEventsLabeled": true,
+    "attributedOrders": true,
+    "conversionRate": true
+  },
+  "definition": "Conversions are committed attributed orders, not payments, deliveries or commissions. Rate = attributed orders / click records \u00d7 100 for the selected UTC days. Click events are not unique visitors. \u00b7 Click records: 4 \u00b7 Converted clicks: 1",
+  "apiChecks": {
+    "tenant": {
+      "status": 200,
+      "body": {
+        "totalClicks": 198,
+        "totalOrders": 1,
+        "totalEarnings": 110,
+        "conversionRate": 50,
+        "clickRecords": 4,
+        "attributedOrders": 2,
+        "convertedClicks": 1,
+        "commissionOrderRate": 0.51,
+        "conversionRateDenominator": "clickRecords",
+        "conversionMilestone": "committed-attributed-order",
+        "timezone": "UTC",
+        "range": 30
+      }
+    },
+    "otherTenant": {
+      "status": 200,
+      "body": {
+        "totalClicks": 0,
+        "totalOrders": 0,
+        "totalEarnings": 0,
+        "clickRecords": 0,
+        "attributedOrders": 0,
+        "convertedClicks": 0,
+        "commissionOrderRate": 0,
+        "conversionRateDenominator": "clickRecords",
+        "conversionMilestone": "committed-attributed-order",
+        "timezone": "UTC",
+        "range": 30
+      }
+    },
+    "product": {
+      "status": 200,
+      "body": {
+        "totalOrders": 1,
+        "totalEarnings": 110,
+        "conversionRate": 50,
+        "clickRecords": 4,
+        "attributedOrders": 2,
+        "convertedClicks": 1,
+        "commissionOrderRate": 0,
+        "conversionRateDenominator": "clickRecords",
+        "conversionMilestone": "committed-attributed-order",
+        "timezone": "UTC",
+        "range": 30
+      }
+    },
+    "productTrend": {
+      "status": 200,
+      "body": [
+        {
+          "date": "2026-11-15",
+          "clicks": 198,
+          "orders": 1,
+          "earnings": 110,
+          "attributedOrders": 2
+        }
+      ]
+    }
+  },
+  "responses": [
+    {
+      "path": "/api/affiliate/analytics/trend?range=30",
+      "status": 200,
+      "body": [
+        {
+          "date": "2026-11-15",
+          "clicks": 198,
+          "orders": 1,
+          "earnings": 110,
+          "attributedOrders": 2
+        }
+      ]
+    },
+    {
+      "path": "/api/affiliate/analytics/summary?range=30",
+      "status": 200,
+      "body": {
+        "totalClicks": 198,
+        "totalOrders": 1,
+        "totalEarnings": 110,
+        "conversionRate": 50,
+        "clickRecords": 4,
+        "attributedOrders": 2,
+        "convertedClicks": 1,
+        "commissionOrderRate": 0.51,
+        "conversionRateDenominator": "clickRecords",
+        "conversionMilestone": "committed-attributed-order",
+        "timezone": "UTC",
+        "range": 30
+      }
+    },
+    {
+      "path": "/api/affiliate/analytics/summary?range=30&tenantId=15150000-2026-4015-a000-000000000001",
+      "status": 200,
+      "body": {
+        "totalClicks": 198,
+        "totalOrders": 1,
+        "totalEarnings": 110,
+        "conversionRate": 50,
+        "clickRecords": 4,
+        "attributedOrders": 2,
+        "convertedClicks": 1,
+        "commissionOrderRate": 0.51,
+        "conversionRateDenominator": "clickRecords",
+        "conversionMilestone": "committed-attributed-order",
+        "timezone": "UTC",
+        "range": 30
+      }
+    },
+    {
+      "path": "/api/affiliate/analytics/summary?range=30&tenantId=25150000-2026-4015-a000-000000000001",
+      "status": 200,
+      "body": {
+        "totalClicks": 0,
+        "totalOrders": 0,
+        "totalEarnings": 0,
+        "clickRecords": 0,
+        "attributedOrders": 0,
+        "convertedClicks": 0,
+        "commissionOrderRate": 0,
+        "conversionRateDenominator": "clickRecords",
+        "conversionMilestone": "committed-attributed-order",
+        "timezone": "UTC",
+        "range": 30
+      }
+    },
+    {
+      "path": "/api/affiliate/analytics/summary?range=30&productId=37d9a1b6-6585-f655-0e55-824a517ce90c",
+      "status": 200,
+      "body": {
+        "totalOrders": 1,
+        "totalEarnings": 110,
+        "conversionRate": 50,
+        "clickRecords": 4,
+        "attributedOrders": 2,
+        "convertedClicks": 1,
+        "commissionOrderRate": 0,
+        "conversionRateDenominator": "clickRecords",
+        "conversionMilestone": "committed-attributed-order",
+        "timezone": "UTC",
+        "range": 30
+      }
+    },
+    {
+      "path": "/api/affiliate/analytics/trend?range=30&productId=37d9a1b6-6585-f655-0e55-824a517ce90c",
+      "status": 200,
+      "body": [
+        {
+          "date": "2026-11-15",
+          "clicks": 198,
+          "orders": 1,
+          "earnings": 110,
+          "attributedOrders": 2
+        }
+      ]
+    },
+    {
+      "path": "/api/affiliate/analytics/trend?range=7",
+      "status": 200,
+      "body": [
+        {
+          "date": "2026-11-15",
+          "clicks": 198,
+          "orders": 1,
+          "earnings": 110,
+          "attributedOrders": 2
+        }
+      ]
+    },
+    {
+      "path": "/api/affiliate/analytics/summary?range=7",
+      "status": 200,
+      "body": {
+        "totalClicks": 198,
+        "totalOrders": 1,
+        "totalEarnings": 110,
+        "conversionRate": 50,
+        "clickRecords": 4,
+        "attributedOrders": 2,
+        "convertedClicks": 1,
+        "commissionOrderRate": 0.51,
+        "conversionRateDenominator": "clickRecords",
+        "conversionMilestone": "committed-attributed-order",
+        "timezone": "UTC",
+        "range": 7
+      }
+    },
+    {
+      "path": "/api/affiliate/analytics/trend?range=7",
+      "status": 200,
+      "body": [
+        {
+          "date": "2026-11-15",
+          "clicks": 198,
+          "orders": 1,
+          "earnings": 110,
+          "attributedOrders": 2
+        }
+      ]
+    },
+    {
+      "path": "/api/affiliate/analytics/summary?range=7",
+      "status": 200,
+      "body": {
+        "totalClicks": 198,
+        "totalOrders": 1,
+        "totalEarnings": 110,
+        "conversionRate": 50,
+        "clickRecords": 4,
+        "attributedOrders": 2,
+        "convertedClicks": 1,
+        "commissionOrderRate": 0.51,
+        "conversionRateDenominator": "clickRecords",
+        "conversionMilestone": "committed-attributed-order",
+        "timezone": "UTC",
+        "range": 7
+      }
+    },
+    {
+      "path": "/api/affiliate/analytics/trend?range=30",
+      "status": 200,
+      "body": [
+        {
+          "date": "2026-11-15",
+          "clicks": 198,
+          "orders": 1,
+          "earnings": 110,
+          "attributedOrders": 2
+        }
+      ]
+    },
+    {
+      "path": "/api/affiliate/analytics/summary?range=30",
+      "status": 200,
+      "body": {
+        "totalClicks": 198,
+        "totalOrders": 1,
+        "totalEarnings": 110,
+        "conversionRate": 50,
+        "clickRecords": 4,
+        "attributedOrders": 2,
+        "convertedClicks": 1,
+        "commissionOrderRate": 0.51,
+        "conversionRateDenominator": "clickRecords",
+        "conversionMilestone": "committed-attributed-order",
+        "timezone": "UTC",
+        "range": 30
+      }
+    }
+  ],
+  "errors": [],
+  "harnessBlockedResources": 2
+}

@@ -46,11 +46,15 @@ public class AffiliateAttribution : BaseEntity, ITenantOwned
     /// </summary>
     public Guid? PromotionLinkId { get; private set; }
 
+    /// <summary>Exact server-issued touch captured with the committed attribution. Never inferred.</summary>
+    public Guid? ReferralClickId { get; private set; }
+    public Guid? ReferralProductId { get; private set; }
+
     private AffiliateAttribution() { }
 
     public static AffiliateAttribution Create(
         Guid tenantId, Guid orderId, Guid affiliateAccountId,
-        string referralCode, AttributionSource source)
+        string referralCode, AttributionSource source, Guid? referralClickId = null, Guid? referralProductId = null)
     {
         if (tenantId == Guid.Empty) throw new ArgumentException("TenantId required", nameof(tenantId));
         if (orderId == Guid.Empty) throw new ArgumentException("OrderId required", nameof(orderId));
@@ -65,6 +69,8 @@ public class AffiliateAttribution : BaseEntity, ITenantOwned
             ReferralCode = referralCode,
             Source = source,
             PromotionLinkId = null,
+            ReferralClickId = ValidateClickId(referralClickId, referralProductId),
+            ReferralProductId = referralProductId,
             AttributedAtUtc = DateTime.UtcNow,
             CreatedAt = DateTime.UtcNow
         };
@@ -76,7 +82,7 @@ public class AffiliateAttribution : BaseEntity, ITenantOwned
     public static AffiliateAttribution CreateV2(
         Guid tenantId, Guid orderId, Guid affiliateAccountId,
         string referralCode, AttributionSource source,
-        Guid promotionLinkId)
+        Guid promotionLinkId, Guid? referralClickId = null, Guid? referralProductId = null)
     {
         if (tenantId == Guid.Empty) throw new ArgumentException("TenantId required", nameof(tenantId));
         if (orderId == Guid.Empty) throw new ArgumentException("OrderId required", nameof(orderId));
@@ -92,9 +98,18 @@ public class AffiliateAttribution : BaseEntity, ITenantOwned
             ReferralCode = referralCode,
             Source = source,
             PromotionLinkId = promotionLinkId,
+            ReferralClickId = ValidateClickId(referralClickId, referralProductId),
+            ReferralProductId = referralProductId,
             AttributedAtUtc = DateTime.UtcNow,
             CreatedAt = DateTime.UtcNow
         };
+    }
+
+    private static Guid? ValidateClickId(Guid? clickId, Guid? productId)
+    {
+        if (clickId == Guid.Empty || productId == Guid.Empty || (productId.HasValue && !clickId.HasValue))
+            throw new ArgumentException("Invalid referral click correlation.");
+        return clickId;
     }
 
     // AF-30A FIX D-1: EF Core setter methods REMOVED.

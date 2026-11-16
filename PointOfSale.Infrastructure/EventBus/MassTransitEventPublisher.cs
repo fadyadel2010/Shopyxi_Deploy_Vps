@@ -129,7 +129,8 @@ public class MassTransitEventPublisher : IEventPublisher
         if (_dbContext.Database.CurrentTransaction != null &&
             @event is ShipmentEventBase or OrderFulfillmentEventBase or OrderCancelledEvent or OrderStatusChangedEvent or OrderDeliveredEvent or OrderShippedEvent or SyntheticQaCollectionRecordedEvent or
                 TenantProvisioningRequestedEvent or TenantProvisioningReadyEvent or StoreConfigCreatedEvent or
-                PointOfSale.Core.Events.Affiliate.AffiliateManualPayoutReturnedEvent)
+                PointOfSale.Core.Events.Affiliate.AffiliateManualPayoutReturnedEvent or
+                PointOfSale.Core.Events.Affiliate.AffiliateOrderPlacedEvent)
         {
             _dbContext.OutboxMessages.Add(new OutboxMessage
             {

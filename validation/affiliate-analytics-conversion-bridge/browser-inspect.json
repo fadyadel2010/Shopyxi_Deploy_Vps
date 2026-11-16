@@ -1,0 +1,12 @@
+{
+  "origin": "http://affiliate.localhost:18180",
+  "pathname": "/affiliate/portal",
+  "search": "?tab=discover",
+  "analyticsNavigation": [
+    {
+      "tag": "BUTTON",
+      "label": "Analytics",
+      "href": null
+    }
+  ]
+}

@@ -7,8 +7,7 @@ using PointOfSale.Infrastructure.Data;
 using PointOfSale.Infrastructure.MongoDB.Documents.Affiliate;
 using PointOfSale.Infrastructure.MongoDB.Documents;
 using PointOfSale.Infrastructure.MongoDB.Services;
-using StackExchange.Redis;
-using System.Text.Json;
+using PointOfSale.Infrastructure.Services.Affiliate;
 
 namespace PointOfSale.API.Controllers;
 
@@ -37,19 +36,13 @@ public class AffiliateAnalyticsController : ControllerBase
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly MongoDbContext _mongoDbContext;
-    private readonly IConnectionMultiplexer? _redis;
-    private readonly ILogger<AffiliateAnalyticsController> _logger;
 
     public AffiliateAnalyticsController(
         ApplicationDbContext dbContext,
-        MongoDbContext mongoDbContext,
-        IConnectionMultiplexer? redis,
-        ILogger<AffiliateAnalyticsController> logger)
+        MongoDbContext mongoDbContext)
     {
         _dbContext = dbContext;
         _mongoDbContext = mongoDbContext;
-        _redis = redis;
-        _logger = logger;
     }
 
     /// <summary>
@@ -60,73 +53,59 @@ public class AffiliateAnalyticsController : ControllerBase
     [HttpGet("summary")]
     public async Task<IActionResult> GetSummary(
         [FromQuery] int range = 30,
-        CancellationToken ct = default)
+        CancellationToken ct = default,
+        [FromQuery] Guid? tenantId = null,
+        [FromQuery] Guid? productId = null)
     {
         var affiliateId = await ResolveAffiliateAccountId(ct);
         if (affiliateId == null) return NotFound(new { message = "Affiliate account not found" });
 
         range = Math.Clamp(range, 1, 365);
 
-        // AF-24 HARDENING: Redis cache for summary (30s TTL)
-        var cacheKey = $"affiliate:analytics:summary:{affiliateId.Value}:{range}";
-        try
-        {
-            if (_redis != null)
-            {
-                var db = _redis.GetDatabase();
-                var cached = await db.StringGetAsync(cacheKey);
-                if (cached.HasValue)
-                {
-                    return Content(cached.ToString(), "application/json");
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogDebug(ex, "[AF-24] Redis cache miss (non-fatal) for summary");
-        }
-
-        var sinceDate = DateTime.UtcNow.AddDays(-range).ToString("yyyy-MM-dd");
+        Response.Headers.CacheControl = "no-store";
+        var window = AffiliateConversionAnalyticsQuery.Window(range, DateTime.UtcNow);
+        var sinceDate = window.Since.ToString("yyyy-MM-dd");
+        var untilDate = window.Until.ToString("yyyy-MM-dd");
 
         var filter = Builders<AffiliateAnalyticsDailyDocument>.Filter.And(
             Builders<AffiliateAnalyticsDailyDocument>.Filter.Eq(d => d.AffiliateAccountId, affiliateId.Value),
-            Builders<AffiliateAnalyticsDailyDocument>.Filter.Gte(d => d.Date, sinceDate)
+            Builders<AffiliateAnalyticsDailyDocument>.Filter.Gte(d => d.Date, sinceDate),
+            Builders<AffiliateAnalyticsDailyDocument>.Filter.Lt(d => d.Date, untilDate)
         );
+        if (tenantId.HasValue) filter &= Builders<AffiliateAnalyticsDailyDocument>.Filter.Eq(d => d.TenantId, tenantId.Value);
 
         var docs = await _mongoDbContext.AffiliateAnalyticsDaily
             .Find(filter)
             .ToListAsync(ct);
 
-        var totalClicks = docs.Sum(d => d.Clicks);
-        var totalOrders = docs.Sum(d => d.Orders);
-        var totalEarnings = docs.Sum(d => d.Earnings);
-        var conversionRate = totalClicks > 0
-            ? Math.Round((double)totalOrders / totalClicks * 100, 2)
+        // Preserve historical tracked-event totals (109 in retained evidence).
+        // They are not deduplicated click records or visitors. Daily projections
+        // do not contain per-product click events; expose unknown for that filter.
+        long? totalClicks = productId.HasValue ? null : docs.Sum(d => d.Clicks);
+        var productEarnings = docs.SelectMany(d => d.ProductEarnings).Where(p => p.ProductId == productId).ToList();
+        var totalOrders = productId.HasValue ? productEarnings.Sum(p => p.Orders) : docs.Sum(d => d.Orders);
+        var totalEarnings = productId.HasValue ? productEarnings.Sum(p => p.Earnings) : docs.Sum(d => d.Earnings);
+        var commissionOrderRate = totalClicks > 0
+            ? Math.Round((double)totalOrders / totalClicks.Value * 100, 2)
             : 0.0;
+        var metrics = await new AffiliateConversionAnalyticsQuery(_mongoDbContext)
+            .SummaryAsync(affiliateId.Value, range, tenantId, productId, ct);
 
         var result = new
         {
             totalClicks,
             totalOrders,
             totalEarnings,
-            conversionRate,
+            conversionRate = metrics.ConversionRate,
+            clickRecords = metrics.ClickRecords,
+            attributedOrders = metrics.AttributedOrders,
+            convertedClicks = metrics.ConvertedClicks,
+            commissionOrderRate,
+            conversionRateDenominator = "clickRecords",
+            conversionMilestone = "committed-attributed-order",
+            timezone = "UTC",
             range
         };
-
-        // AF-24 HARDENING: Store in Redis (30s, best-effort)
-        try
-        {
-            if (_redis != null)
-            {
-                var db = _redis.GetDatabase();
-                var json = JsonSerializer.Serialize(result);
-                await db.StringSetAsync(cacheKey, json, TimeSpan.FromSeconds(30));
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogDebug(ex, "[AF-24] Redis cache set failed (non-fatal) for summary");
-        }
 
         return Ok(result);
     }
@@ -139,18 +118,25 @@ public class AffiliateAnalyticsController : ControllerBase
     [HttpGet("trend")]
     public async Task<IActionResult> GetTrend(
         [FromQuery] int range = 30,
-        CancellationToken ct = default)
+        CancellationToken ct = default,
+        [FromQuery] Guid? tenantId = null,
+        [FromQuery] Guid? productId = null)
     {
         var affiliateId = await ResolveAffiliateAccountId(ct);
         if (affiliateId == null) return NotFound(new { message = "Affiliate account not found" });
 
         range = Math.Clamp(range, 1, 365);
-        var sinceDate = DateTime.UtcNow.AddDays(-range).ToString("yyyy-MM-dd");
+        Response.Headers.CacheControl = "no-store";
+        var window = AffiliateConversionAnalyticsQuery.Window(range, DateTime.UtcNow);
+        var sinceDate = window.Since.ToString("yyyy-MM-dd");
+        var untilDate = window.Until.ToString("yyyy-MM-dd");
 
         var filter = Builders<AffiliateAnalyticsDailyDocument>.Filter.And(
             Builders<AffiliateAnalyticsDailyDocument>.Filter.Eq(d => d.AffiliateAccountId, affiliateId.Value),
-            Builders<AffiliateAnalyticsDailyDocument>.Filter.Gte(d => d.Date, sinceDate)
+            Builders<AffiliateAnalyticsDailyDocument>.Filter.Gte(d => d.Date, sinceDate),
+            Builders<AffiliateAnalyticsDailyDocument>.Filter.Lt(d => d.Date, untilDate)
         );
+        if (tenantId.HasValue) filter &= Builders<AffiliateAnalyticsDailyDocument>.Filter.Eq(d => d.TenantId, tenantId.Value);
 
         var docs = await _mongoDbContext.AffiliateAnalyticsDaily
             .Find(filter)
@@ -158,14 +144,25 @@ public class AffiliateAnalyticsController : ControllerBase
             .ToListAsync(ct);
 
         // Aggregate across tenants per day (affiliate sees ALL stores combined)
-        var trend = docs
-            .GroupBy(d => d.Date)
-            .Select(g => new
+        var conversions = await new AffiliateConversionAnalyticsQuery(_mongoDbContext)
+            .OrdersAsync(affiliateId.Value, range, tenantId, productId, ct);
+        var dates = docs.Select(d => d.Date).Concat(conversions.Select(c => c.ConvertedAtUtc.ToString("yyyy-MM-dd"))).Distinct();
+        var trend = dates
+            .Select(date => new
             {
-                date = g.Key,
-                clicks = g.Sum(d => d.Clicks),
-                orders = g.Sum(d => d.Orders),
-                earnings = g.Sum(d => d.Earnings)
+                date,
+                // Daily click events have no per-product dimension. As in summary,
+                // unknown is not zero and must never become another product's total.
+                clicks = productId.HasValue ? (long?)null : docs.Where(d => d.Date == date).Sum(d => d.Clicks),
+                orders = productId.HasValue
+                    ? docs.Where(d => d.Date == date).SelectMany(d => d.ProductEarnings)
+                        .Where(p => p.ProductId == productId).Sum(p => p.Orders)
+                    : docs.Where(d => d.Date == date).Sum(d => d.Orders),
+                earnings = productId.HasValue
+                    ? docs.Where(d => d.Date == date).SelectMany(d => d.ProductEarnings)
+                        .Where(p => p.ProductId == productId).Sum(p => p.Earnings)
+                    : docs.Where(d => d.Date == date).Sum(d => d.Earnings),
+                attributedOrders = conversions.Count(c => c.ConvertedAtUtc.ToString("yyyy-MM-dd") == date)
             })
             .OrderBy(d => d.date)
             .ToList();
@@ -189,11 +186,14 @@ public class AffiliateAnalyticsController : ControllerBase
 
         range = Math.Clamp(range, 1, 365);
         limit = Math.Clamp(limit, 1, 50);
-        var sinceDate = DateTime.UtcNow.AddDays(-range).ToString("yyyy-MM-dd");
+        var window = AffiliateConversionAnalyticsQuery.Window(range, DateTime.UtcNow);
+        var sinceDate = window.Since.ToString("yyyy-MM-dd");
+        var untilDate = window.Until.ToString("yyyy-MM-dd");
 
         var filter = Builders<AffiliateAnalyticsDailyDocument>.Filter.And(
             Builders<AffiliateAnalyticsDailyDocument>.Filter.Eq(d => d.AffiliateAccountId, affiliateId.Value),
-            Builders<AffiliateAnalyticsDailyDocument>.Filter.Gte(d => d.Date, sinceDate)
+            Builders<AffiliateAnalyticsDailyDocument>.Filter.Gte(d => d.Date, sinceDate),
+            Builders<AffiliateAnalyticsDailyDocument>.Filter.Lt(d => d.Date, untilDate)
         );
 
         var docs = await _mongoDbContext.AffiliateAnalyticsDaily
@@ -233,11 +233,14 @@ public class AffiliateAnalyticsController : ControllerBase
 
         range = Math.Clamp(range, 1, 365);
         limit = Math.Clamp(limit, 1, 50);
-        var sinceDate = DateTime.UtcNow.AddDays(-range).ToString("yyyy-MM-dd");
+        var window = AffiliateConversionAnalyticsQuery.Window(range, DateTime.UtcNow);
+        var sinceDate = window.Since.ToString("yyyy-MM-dd");
+        var untilDate = window.Until.ToString("yyyy-MM-dd");
 
         var filter = Builders<AffiliateAnalyticsDailyDocument>.Filter.And(
             Builders<AffiliateAnalyticsDailyDocument>.Filter.Eq(d => d.AffiliateAccountId, affiliateId.Value),
-            Builders<AffiliateAnalyticsDailyDocument>.Filter.Gte(d => d.Date, sinceDate)
+            Builders<AffiliateAnalyticsDailyDocument>.Filter.Gte(d => d.Date, sinceDate),
+            Builders<AffiliateAnalyticsDailyDocument>.Filter.Lt(d => d.Date, untilDate)
         );
 
         var docs = await _mongoDbContext.AffiliateAnalyticsDaily

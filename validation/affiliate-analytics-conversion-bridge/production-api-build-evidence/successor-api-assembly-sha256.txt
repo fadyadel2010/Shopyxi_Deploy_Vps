@@ -1,0 +1,1 @@
+3ae5d60dbd831192c5751735798aca888f5f61dc3aa143d3d5e94c3d2963e38c  PointOfSale.API.dll

@@ -1,0 +1,94 @@
+{
+  "capturedAtUtc": "2026-11-15T23:08:11.828179+00:00",
+  "stage": "post-new-order",
+  "readOnly": true,
+  "sqlAuthority": [
+    {
+      "orderId": "8f2866d0-cac0-4c0b-bd91-fe6f3c4c5e12",
+      "attributionId": "01a1dfa8-1e81-75e2-9645-fb71a6bd6f5c",
+      "tenantId": "15150000-2026-4015-a000-000000000001",
+      "affiliateId": "01a1df98-5257-7282-9e19-f9f8ae5b6b74",
+      "clickId": null,
+      "productId": null,
+      "orderCreatedAt": "2026-11-15T14:41:39.34201+00:00",
+      "orderStatus": 5,
+      "paymentStatus": 5
+    },
+    {
+      "orderId": "932bccae-3f92-4c55-bb7d-4e3cb2ef7c1d",
+      "attributionId": "01a1e177-70cc-7b28-a13a-ca384e1aa437",
+      "tenantId": "15150000-2026-4015-a000-000000000001",
+      "affiliateId": "01a1df98-5257-7282-9e19-f9f8ae5b6b74",
+      "clickId": "b623f1f8-d1c4-4a42-bab8-4302aa43fe7a",
+      "productId": "37d9a1b6-6585-f655-0e55-824a517ce90c",
+      "orderCreatedAt": "2026-11-15T23:07:43.482858+00:00",
+      "orderStatus": 0,
+      "paymentStatus": 0
+    }
+  ],
+  "mongoProjection": {
+    "clicks": [
+      {
+        "_id": "3de85e14-3e61-4b8d-a964-a49aeb3f1ba7",
+        "tenantId": "15150000-2026-4015-a000-000000000001",
+        "affiliateAccountId": "01a1df98-5257-7282-9e19-f9f8ae5b6b74",
+        "referralCode": "WWC3NC7R9B",
+        "productId": "37d9a1b6-6585-f655-0e55-824a517ce90c",
+        "clickedAtUtc": {
+          "$date": "2026-11-15T14:34:21.073Z"
+        },
+        "orderId": null,
+        "convertedAtUtc": null
+      },
+      {
+        "_id": "464f4658-3cfb-4562-87ea-e7e9585dfedb",
+        "tenantId": "15150000-2026-4015-a000-000000000001",
+        "affiliateAccountId": "01a1df98-5257-7282-9e19-f9f8ae5b6b74",
+        "referralCode": "WWC3NC7R9B",
+        "productId": "37d9a1b6-6585-f655-0e55-824a517ce90c",
+        "clickedAtUtc": {
+          "$date": "2026-11-15T22:45:33.299Z"
+        },
+        "orderId": null,
+        "convertedAtUtc": null
+      },
+      {
+        "_id": "69ed0810-c114-4bf3-88ee-29e74261c2ff",
+        "tenantId": "15150000-2026-4015-a000-000000000001",
+        "affiliateAccountId": "01a1df98-5257-7282-9e19-f9f8ae5b6b74",
+        "referralCode": "WWC3NC7R9B",
+        "productId": "37d9a1b6-6585-f655-0e55-824a517ce90c",
+        "clickedAtUtc": {
+          "$date": "2026-11-15T22:52:02.018Z"
+        },
+        "orderId": null,
+        "convertedAtUtc": null
+      },
+      {
+        "_id": "b623f1f8-d1c4-4a42-bab8-4302aa43fe7a",
+        "tenantId": "15150000-2026-4015-a000-000000000001",
+        "affiliateAccountId": "01a1df98-5257-7282-9e19-f9f8ae5b6b74",
+        "referralCode": "WWC3NC7R9B",
+        "productId": "37d9a1b6-6585-f655-0e55-824a517ce90c",
+        "clickedAtUtc": {
+          "$date": "2026-11-15T22:54:27.734Z"
+        },
+        "orderId": null,
+        "convertedAtUtc": null
+      }
+    ],
+    "conversions": [
+      {
+        "_id": "8f2866d0-cac0-4c0b-bd91-fe6f3c4c5e12",
+        "tenantId": "15150000-2026-4015-a000-000000000001",
+        "affiliateAccountId": "01a1df98-5257-7282-9e19-f9f8ae5b6b74",
+        "attributionId": "01a1dfa8-1e81-75e2-9645-fb71a6bd6f5c",
+        "clickId": null,
+        "productId": "37d9a1b6-6585-f655-0e55-824a517ce90c",
+        "convertedAtUtc": {
+          "$date": "2026-11-15T14:41:39.342Z"
+        }
+      }
+    ]
+  }
+}

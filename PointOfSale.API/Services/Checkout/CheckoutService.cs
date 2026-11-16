@@ -7104,6 +7104,14 @@ public class CheckoutService : ICheckoutService
             if (order.AffiliateAccountId.HasValue && !string.IsNullOrWhiteSpace(order.AffiliateReferralCode))
             {
                 // AF-15: Use v2 factory if PromotionLinkId is present, v1 otherwise
+                var clickJourney = snapshot.AffiliateJourney ??
+                    AffiliateShoppingJourney.FromRequest(_httpContextAccessor?.HttpContext);
+                if (clickJourney != null && (clickJourney.TenantId != tenantId ||
+                    clickJourney.AffiliateAccountId != order.AffiliateAccountId ||
+                    clickJourney.PromotionLinkId != order.PromotionLinkId ||
+                    clickJourney.ReferralCode != order.AffiliateReferralCode))
+                    throw new CheckoutException("AFFILIATE_CLICK_AUTHORITY_MISMATCH",
+                        "Referral journey does not match the committed attribution.", "AffiliateAttribution");
                 AffiliateAttribution attribution;
                 if (order.PromotionLinkId.HasValue)
                 {
@@ -7113,7 +7121,7 @@ public class CheckoutService : ICheckoutService
                         order.AffiliateAccountId.Value,
                         order.AffiliateReferralCode.ToUpperInvariant(),
                         AttributionSource.ReferralLink,
-                        order.PromotionLinkId.Value);
+                        order.PromotionLinkId.Value, clickJourney?.ReferralClickId, clickJourney?.ReferralProductId);
                 }
                 else
                 {
@@ -7122,7 +7130,7 @@ public class CheckoutService : ICheckoutService
                         order.Id,
                         order.AffiliateAccountId.Value,
                         order.AffiliateReferralCode.ToUpperInvariant(),
-                        AttributionSource.ReferralLink);
+                        AttributionSource.ReferralLink, clickJourney?.ReferralClickId, clickJourney?.ReferralProductId);
                 }
 
                 _dbContext.AffiliateAttributions.Add(attribution);

@@ -1,0 +1,48 @@
+{
+  "route": "/checkout",
+  "placeOrderEnabled": true,
+  "referralBanner": true,
+  "responses": [
+    {
+      "path": "/api/storefront/cart/items?lang=en",
+      "status": 200
+    },
+    {
+      "path": "/api/storefront/checkout-fields?lang=en",
+      "status": 200
+    },
+    {
+      "path": "/api/storefront/cart?lang=en",
+      "status": 200
+    },
+    {
+      "path": "/api/storefront/checkout-session?lang=en",
+      "status": 200
+    },
+    {
+      "path": "/api/storefront/checkout/pricing?lang=en",
+      "status": 200
+    },
+    {
+      "path": "/api/storefront/checkout-session/bd5297ef-477c-419f-940d-2abc38fe5f99?lang=en",
+      "status": 200
+    },
+    {
+      "path": "/api/storefront/checkout/pricing?lang=en",
+      "status": 200
+    },
+    {
+      "path": "/api/storefront/checkout-session/bd5297ef-477c-419f-940d-2abc38fe5f99?lang=en",
+      "status": 200
+    },
+    {
+      "path": "/api/storefront/checkout-session/bd5297ef-477c-419f-940d-2abc38fe5f99?lang=en",
+      "status": 200
+    },
+    {
+      "path": "/api/storefront/checkout/phone-verification-status?phone=%2B201000000001&lang=en",
+      "status": 200
+    }
+  ],
+  "body": "\ud83d\udd17 You're browsing via a partner referral(WWC3NC7R9B) Ahram \u2014 ISOLATED SYNTHETIC E2E \ud83c\udfaf affiliate.storeBadge Ctrl+K \u0627\u0644\u0639\u0631\u0628\u064a\u0629 Login Sign Up 1 Home Shopping Cart Checkout Checkout \u26a1 Fast checkout \u2014 no account required Just fill in your details and place your order Shipping Payment 3 Review Checkout details saved at 12:59 AM. Shipping Information Edit Synthetic Affiliate Customer +201000000001 1 Isolated Test Street, Synthetic QA, Cairo Note: Isolated affiliate conversion bridge acceptance Shipping Method Edit ISOLATED QA Manual Fulfillment Estimated delivery: 5 days EGP 10.00 Payment Method Edit Cash on Delivery Pay with cash when your order is delivered Pay on Delivery Subtotal (1) EGP 1,000.00 Shipping EGP 10.00 Tax EGP 100.00 Total EGP 1,110.00 \u2713 Prices are revalidated when you place the order \u2713 Shipping and stock are revalidated when you place the order \u2713 Delivery, customer payment and merchant remittance are separate Back to Payment Place Order Your information is secure and encrypted Order Summary QA-AHRAM-AFFILIATE-E2E-20261115 SKU: QA-AFF-E2E-20261115 Qty: 1 EGP 1,000.00 each EGP 1,000.00 Have a coupon? Apply Subtotal EGP 1,000.00 Shipping(ISOLATED QA Manual Fulfillment) EGP 10.00 Tax EGP 100.00 Total EGP 1,110.00 Ahram \u2014 ISOLATED SYNTHETIC E2E CUSTOMER SERVICE No customer service links have been published yet. \u00a9 2026 Ahram \u2014 ISOLATED SYNTHETIC E2E. All rights reserved."
+}

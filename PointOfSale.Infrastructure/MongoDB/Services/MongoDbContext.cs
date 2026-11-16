@@ -5,6 +5,7 @@ using MongoDB.Driver;
 using PointOfSale.Infrastructure.MongoDB.Configuration;
 using PointOfSale.Infrastructure.MongoDB.Documents;
 using PointOfSale.Infrastructure.MongoDB.Documents.Affiliate;
+using PointOfSale.Infrastructure.Services.Affiliate;
 
 namespace PointOfSale.Infrastructure.MongoDB.Services;
 
@@ -157,6 +158,9 @@ public class MongoDbContext
     /// </summary>
     public IMongoCollection<AffiliateAnalyticsDailyDocument> AffiliateAnalyticsDaily =>
         _database.GetCollection<AffiliateAnalyticsDailyDocument>("affiliate_analytics_daily");
+
+    public IMongoCollection<AffiliateOrderConversionDocument> AffiliateOrderConversions =>
+        _database.GetCollection<AffiliateOrderConversionDocument>(AffiliateConversionProjector.CollectionName);
 
     public IMongoCollection<AffiliateProjectionEventReceiptDocument> AffiliateProjectionEventReceipts =>
         _database.GetCollection<AffiliateProjectionEventReceiptDocument>("affiliate_projection_event_receipts");
@@ -880,6 +884,23 @@ public class MongoDbContext
             await IndexPolicy.EnsureAsync(analyticsSummaryCollection,
                 new[] { analyticsSummaryUniqueIndex },
                 cancellationToken);
+
+            var orderConversions = AffiliateOrderConversions;
+            var conversionTimeline = new CreateIndexModel<AffiliateOrderConversionDocument>(
+                Builders<AffiliateOrderConversionDocument>.IndexKeys
+                    .Ascending(d => d.AffiliateAccountId).Ascending(d => d.ConvertedAtUtc)
+                    .Ascending(d => d.TenantId).Ascending(d => d.ProductId),
+                new CreateIndexOptions { Name = "idx_affiliate_conversion_timeline", Background = true });
+            var conversionClick = new CreateIndexModel<AffiliateOrderConversionDocument>(
+                Builders<AffiliateOrderConversionDocument>.IndexKeys.Ascending(d => d.ClickId),
+                new CreateIndexOptions<AffiliateOrderConversionDocument>
+                {
+                    Unique = true, Name = "idx_affiliate_conversion_click_unique", Background = true,
+                    PartialFilterExpression = new BsonDocumentFilterDefinition<AffiliateOrderConversionDocument>(
+                        new BsonDocument("clickId", new BsonDocument("$type", "string")))
+                });
+            await IndexPolicy.EnsureAsync(orderConversions,
+                new[] { conversionTimeline, conversionClick }, cancellationToken);
 
             // ─── AF-24: Daily Analytics ──────────────────────────────────
 

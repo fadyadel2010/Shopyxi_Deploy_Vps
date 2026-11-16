@@ -10,6 +10,9 @@ public class AffiliateAttributionConfiguration : IEntityTypeConfiguration<Affili
     {
         builder.ToTable("AffiliateAttributions");
         builder.HasKey(e => e.Id);
+        builder.HasIndex(e => new { e.TenantId, e.ReferralClickId })
+            .IsUnique().HasFilter("\"ReferralClickId\" IS NOT NULL")
+            .HasDatabaseName("UQ_AffiliateAttributions_Tenant_Click");
 
         // CRITICAL: one attribution per order — ever
         builder.HasIndex(e => new { e.TenantId, e.OrderId })

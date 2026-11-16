@@ -1940,6 +1940,12 @@ namespace PointOfSale.Infrastructure.Migrations
                     b.Property<Guid?>("PromotionLinkId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("ReferralClickId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ReferralProductId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("ReferralCode")
                         .IsRequired()
                         .HasMaxLength(16)
@@ -1977,6 +1983,11 @@ namespace PointOfSale.Infrastructure.Migrations
 
                     b.HasIndex("TenantId", "OrderId", "IsDeleted")
                         .HasDatabaseName("IX_AffiliateAttributions_Tenant_Order_Active");
+
+                    b.HasIndex("TenantId", "ReferralClickId")
+                        .IsUnique()
+                        .HasDatabaseName("UQ_AffiliateAttributions_Tenant_Click")
+                        .HasFilter("\"ReferralClickId\" IS NOT NULL");
 
                     b.ToTable("AffiliateAttributions", null, t =>
                         {

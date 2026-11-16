@@ -288,6 +288,8 @@ public class AffiliateCategoryDeactivatedEvent : IntegrationEvent, IGlobalPlatfo
 /// </summary>
 public class AffiliateLinkClickedEvent : IntegrationEvent, INonAuthoritativeIntegrationEvent
 {
+    /// <summary>Server-issued protected referral touch; null for pre-bridge events.</summary>
+    public Guid? ClickId { get; set; }
     public Guid AffiliateAccountId { get; set; }
     public string ReferralCode { get; set; } = string.Empty;
     public Guid? ProductId { get; set; }

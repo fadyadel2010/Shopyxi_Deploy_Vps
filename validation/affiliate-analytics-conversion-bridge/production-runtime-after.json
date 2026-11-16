@@ -1,0 +1,64 @@
+{
+  "verifiedAtUtc": "2026-11-16T01:43:31.194248+00:00",
+  "method": "Fresh kubectl GET and containerd/CRI content inspection, not a previous deployment receipt",
+  "productionMutations": false,
+  "workloads": [
+    {
+      "component": "api",
+      "image": "docker.io/shopixy/api@sha256:8c954ba73be0321da387bf258b90e751926f092ef33c68c3dc51e0dc48aa1865",
+      "generation": 58,
+      "observedGeneration": 58,
+      "desiredReplicas": 1,
+      "readyReplicas": 1,
+      "availableReplicas": 1,
+      "runtimeConfigId": "sha256:7e7c3b071b21560f4016a06766f4f96290400f0fc171bf14f3b054f31273d3e6",
+      "pods": [
+        {
+          "name": "shopixy-api-5bb8584474-szww8",
+          "imageID": "docker.io/library/import-2026-11-16@sha256:391bd405d6226de2d3953aa6f99ec1c0d95bbc7dbcdd8ebc06f4f24fe8197d3e",
+          "ready": true,
+          "restartCount": 0,
+          "configAndLayersMatchPinnedImage": true
+        }
+      ]
+    },
+    {
+      "component": "web",
+      "image": "docker.io/shopixy/web@sha256:4f57cdb948c4c9a0f91bfdb0b283590a1976cf4f80f7f28fcbdd190726168219",
+      "generation": 19,
+      "observedGeneration": 19,
+      "desiredReplicas": 1,
+      "readyReplicas": 1,
+      "availableReplicas": 1,
+      "runtimeConfigId": "sha256:dcb61b6d4d8709e809886cfbeb2270a2b2fca322b10cc64bb82dfce35042d743",
+      "pods": [
+        {
+          "name": "shopixy-web-7959b8f455-xd6f2",
+          "imageID": "docker.io/library/import-2026-11-16@sha256:3e2dab51079b1f36bf4266b0825c39a330e9219848e4c1a8cbd6d5b3d626d330",
+          "ready": true,
+          "restartCount": 0,
+          "configAndLayersMatchPinnedImage": true
+        }
+      ]
+    },
+    {
+      "component": "storefront",
+      "image": "docker.io/shopixy/storefront@sha256:e9333f609aa664d6de713d4db00b18deba054e3a8acbb559099d9ab245f9f3df",
+      "generation": 10,
+      "observedGeneration": 10,
+      "desiredReplicas": 1,
+      "readyReplicas": 1,
+      "availableReplicas": 1,
+      "runtimeConfigId": "sha256:37e05dee0ed10bae9c58dd634d1630c86d813087b7b0aeb699c5f7d1f45dc4d5",
+      "pods": [
+        {
+          "name": "shopixy-storefront-95dbbc769-tsbbk",
+          "imageID": "docker.io/library/import-2026-11-13@sha256:dcd3573b806201db6bf8d5f124008773f2c38742457e6af8e9829c0c380a64b7",
+          "ready": true,
+          "restartCount": 0,
+          "configAndLayersMatchPinnedImage": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "capturedAtUtc": "2026-11-16T01:56:08.840099+00:00",
+  "readOnly": true,
+  "outbox": [
+    {
+      "eventId": "00f84cd5-2a55-4172-8f3b-a74de771f01e",
+      "tenantId": "15150000-2026-4015-a000-000000000001",
+      "orderId": "932bccae-3f92-4c55-bb7d-4e3cb2ef7c1d",
+      "eventVersion": 2,
+      "createdAtUtc": "2026-11-15T23:07:43.901731+00:00",
+      "processedAtUtc": "2026-11-15T23:07:45.267274+00:00",
+      "retryCount": 0,
+      "requiresOperatorReconciliation": false
+    }
+  ],
+  "consumerRetries": [
+    {
+      "timestampUtc": "2026-11-15T23:22:23.114Z",
+      "queue": "affiliate-order-conversion",
+      "exceptionType": "TimeoutException",
+      "rawExceptionOmitted": true
+    }
+  ]
+}

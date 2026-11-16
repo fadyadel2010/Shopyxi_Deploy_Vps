@@ -16,7 +16,7 @@ LABEL org.opencontainers.image.title="Shopixy API automatic subdomains" \
       org.opencontainers.image.source="Shopixy APP82 r11 automatic subdomains independent-audit r3" \
       org.opencontainers.image.revision="${API_ASSEMBLY_SHA256}" \
       shopixy.io/source-input-sha256="${SOURCE_INPUT_SHA256}" \
-      shopixy.io/base-image="docker.io/shopixy/api@sha256:5efeb7042bcaf6ea223f3df06c7983862e073787e78634fb996ffbf9c4cf266e" \
+      shopixy.io/base-image="${BASE_IMAGE}" \
       shopixy.io/dotnet-runtime="10.0.15"
 WORKDIR /app
 USER 1654:1654

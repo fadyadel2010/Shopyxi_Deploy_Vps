@@ -188,7 +188,8 @@ public class AffiliateReferralMiddleware
             {
                 protectedEvidence = new AffiliateAttributionEvidence(currentTenantId,
                     activeJourney.AffiliateAccountId, activeJourney.ReferralCode,
-                    activeJourney.PromotionLinkId, DateTime.UtcNow.AddDays(30));
+                    activeJourney.PromotionLinkId, DateTime.UtcNow.AddDays(30))
+                { ReferralClickId = activeJourney.ReferralClickId, ReferralProductId = activeJourney.ReferralProductId };
                 rawRef = activeJourney.ReferralCode;
                 refSource = "Journey:first-touch";
             }
@@ -199,14 +200,25 @@ public class AffiliateReferralMiddleware
                 var segments = context.Request.Path.Value?.Split('/', StringSplitOptions.RemoveEmptyEntries);
                 if (candidate == null && segments is { Length: >= 2 } && segments[0] == "p") candidate = segments[1];
                 if (candidate == null && segments is { Length: >= 5 } && segments[2] == "landing") candidate = segments[3];
+                var isProductEntry = context.Request.Path.StartsWithSegments("/api/storefront/products") ||
+                    context.Request.Path.StartsWithSegments("/products") ||
+                    context.Request.Path.StartsWithSegments("/p") ||
+                    context.Request.Path.StartsWithSegments("/api/storefront/landing");
+                var evidenceClickAlreadyAttributed = false;
+                if (isProductEntry && !string.IsNullOrWhiteSpace(candidate) &&
+                    protectedEvidence?.ReferralClickId is { } evidenceClickId && evidenceClickId != Guid.Empty)
+                {
+                    evidenceClickAlreadyAttributed = await dbContext.AffiliateAttributions
+                        .AsNoTracking().IgnoreQueryFilters()
+                        .AnyAsync(a => a.TenantId == currentTenantId && a.ReferralClickId == evidenceClickId,
+                            context.RequestAborted);
+                }
                 // Only product-entry requests may start another journey. Header
                 // hints on categories/cart/checkout must not erase first touch.
                 if (!string.IsNullOrWhiteSpace(candidate) &&
-                    (context.Request.Path.StartsWithSegments("/api/storefront/products") ||
-                     context.Request.Path.StartsWithSegments("/products") ||
-                     context.Request.Path.StartsWithSegments("/p") ||
-                     context.Request.Path.StartsWithSegments("/api/storefront/landing")) &&
-                    !string.Equals(candidate.Trim(), rawRef, StringComparison.OrdinalIgnoreCase))
+                    isProductEntry &&
+                    (evidenceClickAlreadyAttributed ||
+                     !string.Equals(candidate.Trim(), rawRef, StringComparison.OrdinalIgnoreCase)))
                 {
                     rawRef = candidate;
                     protectedEvidence = null;
@@ -364,9 +376,12 @@ public class AffiliateReferralMiddleware
                 }
 
                 // Set v2 affiliate mode (includes v1 AffiliateAccountId for compatibility)
+                var trustedJourney = await ResolveClickJourneyAsync(context, attributionEvidenceTokens,
+                    currentTenantId, affiliateAccountId.Value, promotionLink.ReferralCode,
+                    promotionLink.Id, promotionLink.ProductId, activeJourney, protectedEvidence);
                 if (activeJourney == null)
                     await shoppingJourneys.BindActiveCartAsync(context, currentTenantId,
-                        new(currentTenantId, affiliateAccountId.Value, promotionLink.ReferralCode, promotionLink.Id), context.RequestAborted);
+                        trustedJourney, context.RequestAborted);
                 AffiliateModeResolver.SetAffiliateModeV2(
                     context,
                     affiliateAccountId.Value,
@@ -375,13 +390,6 @@ public class AffiliateReferralMiddleware
                     promotionLink.AffiliateUserId,
                     currentTenantId,
                     affiliateIdentity.DisplayName);
-                EnsureAttributionCookie(
-                    context,
-                    attributionEvidenceTokens,
-                    currentTenantId,
-                    affiliateAccountId.Value,
-                    promotionLink.ReferralCode,
-                    promotionLink.Id);
 
                 // Session & click tracking
                 var sessionId = EnsureSession(context);
@@ -391,6 +399,7 @@ public class AffiliateReferralMiddleware
 
                 var clickEvent = new AffiliateLinkClickedEvent
                 {
+                    ClickId = trustedJourney.ReferralClickId,
                     TenantId = tenantId,
                     AffiliateAccountId = affiliateAccountId.Value,
                     ReferralCode = promotionLink.ReferralCode,
@@ -524,6 +533,9 @@ public class AffiliateReferralMiddleware
                 }
 
                 // Session & click tracking
+                var trustedJourney = await ResolveClickJourneyAsync(context, attributionEvidenceTokens,
+                    currentTenantId, affiliateAccount.Id, affiliateAccount.ReferralCode,
+                    null, null, activeJourney, protectedEvidence);
                 var sessionId = EnsureSession(context);
                 Guid? productId = ExtractProductId(context.Request.Path);
                 var ipHash = HashIp(context.Connection.RemoteIpAddress?.ToString());
@@ -531,6 +543,7 @@ public class AffiliateReferralMiddleware
 
                 var clickEvent = new AffiliateLinkClickedEvent
                 {
+                    ClickId = trustedJourney.ReferralClickId,
                     TenantId = tenantId,
                     AffiliateAccountId = affiliateAccount.Id,
                     ReferralCode = affiliateAccount.ReferralCode,
@@ -546,19 +559,12 @@ public class AffiliateReferralMiddleware
                 // AF-12: Activate v1 Affiliate Mode
                 if (activeJourney == null)
                     await shoppingJourneys.BindActiveCartAsync(context, currentTenantId,
-                        new(currentTenantId, affiliateAccount.Id, affiliateAccount.ReferralCode, null), context.RequestAborted);
+                        trustedJourney, context.RequestAborted);
                 AffiliateModeResolver.SetAffiliateMode(
                     context,
                     affiliateAccount.Id,
                     affiliateAccount.ReferralCode,
                     affiliateAccount.DisplayName); // AF-27E
-                EnsureAttributionCookie(
-                    context,
-                    attributionEvidenceTokens,
-                    currentTenantId,
-                    affiliateAccount.Id,
-                    affiliateAccount.ReferralCode,
-                    promotionLinkId: null);
 
                 _logger.LogInformation(
                     "[Affiliate:Mode] Activated (v1 fallback) | AffiliateId: {AffiliateId} | Ref: {Ref} | " +
@@ -608,28 +614,33 @@ public class AffiliateReferralMiddleware
     /// Persists the first accepted referral code for navigation-safe attribution.
     /// The cookie is evidence only; checkout revalidates SQL authority before stamping an order.
     /// </summary>
-    private void EnsureAttributionCookie(
+    private Task<AffiliateShoppingJourney> ResolveClickJourneyAsync(
         HttpContext context,
         IAffiliateAttributionEvidenceTokenService attributionEvidenceTokens,
         Guid tenantId,
         Guid affiliateAccountId,
         string referralCode,
-        Guid? promotionLinkId)
+        Guid? promotionLinkId,
+        Guid? productId,
+        AffiliateShoppingJourney? activeJourney,
+        AffiliateAttributionEvidence? evidence)
     {
-        if (context.Request.Cookies.TryGetValue(AttributionCookieName, out var existing) &&
-            !string.IsNullOrWhiteSpace(existing) &&
-            attributionEvidenceTokens.TryValidate(existing, tenantId, out var accepted) &&
-            accepted.AffiliateAccountId == affiliateAccountId && accepted.PromotionLinkId == promotionLinkId &&
-            accepted.ReferralCode == referralCode)
+        // Existing cart/checkout first touch remains immutable, including legacy
+        // journeys with no provable click. Never invent a click for an old cart.
+        if (activeJourney != null)
         {
-            return;
+            context.Items[typeof(AffiliateShoppingJourney)] = activeJourney;
+            return Task.FromResult(activeJourney);
         }
-
-        var protectedEvidence = attributionEvidenceTokens.Create(
-            tenantId,
-            affiliateAccountId,
-            referralCode,
-            promotionLinkId);
+        var clickId = evidence?.ReferralClickId;
+        if (clickId == Guid.Empty || evidence?.ReferralProductId != productId)
+            clickId = null;
+        clickId ??= Guid.NewGuid();
+        var journey = new AffiliateShoppingJourney(tenantId, affiliateAccountId, referralCode, promotionLinkId)
+        { ReferralClickId = clickId, ReferralProductId = productId };
+        context.Items[typeof(AffiliateShoppingJourney)] = journey;
+        var protectedEvidence = attributionEvidenceTokens.CreateWithClick(tenantId, affiliateAccountId,
+            referralCode, promotionLinkId, clickId.Value, productId);
 
         context.Response.Cookies.Append(AttributionCookieName, protectedEvidence, new CookieOptions
         {
@@ -639,6 +650,7 @@ public class AffiliateReferralMiddleware
             MaxAge = TimeSpan.FromDays(30),
             Path = "/"
         });
+        return Task.FromResult(journey);
     }
 
     /// <summary>

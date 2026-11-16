@@ -117,6 +117,7 @@ public class CartService : ICartService
     /// </summary>
     private static readonly TimeSpan CartMutationLockRenewalInterval = TimeSpan.FromSeconds(30);
     private readonly TimeSpan _cartMutationLockRenewalInterval;
+    private readonly IHttpContextAccessor? _httpContextAccessor;
 
     public CartService(
         ApplicationDbContext dbContext,
@@ -130,9 +131,11 @@ public class CartService : ICartService
         CommerceReliabilityTelemetry reliabilityTelemetry,
         IDistributedLockService distributedLockService,
         ILogger<CartService> logger,
-        TimeSpan? lockRenewalInterval = null)
+        TimeSpan? lockRenewalInterval = null,
+        IHttpContextAccessor? httpContextAccessor = null)
     {
         _dbContext = dbContext;
+        _httpContextAccessor = httpContextAccessor;
         _redisFactory = redisFactory;
         _redisSettings = redisSettings.Value;
         _productRepository = productRepository;
@@ -583,7 +586,14 @@ public class CartService : ICartService
                 affiliateReferralCode, promotionLinkId, correlationId, cancellationToken)
             : AffiliateCartLineAdmission.NotEligible;
         if (journey == null && lineAdmission.IsEligible)
+        {
+            var trusted = AffiliateShoppingJourney.FromRequest(_httpContextAccessor?.HttpContext);
             journey = new(tenantId, lineAdmission.AffiliateAccountId!.Value, lineAdmission.ReferralCode!, promotionLinkId);
+            if (trusted != null && trusted.TenantId == tenantId &&
+                trusted.AffiliateAccountId == journey.AffiliateAccountId &&
+                trusted.ReferralCode == journey.ReferralCode && trusted.PromotionLinkId == promotionLinkId)
+                journey = trusted;
+        }
         cart.AffiliateJourney = journey;
 
         // CreateEmptyCart just read the current tenant SQL currency for this

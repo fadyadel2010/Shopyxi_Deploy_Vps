@@ -1,0 +1,15 @@
+{
+  "sql": {
+    "attributedOrders": 0,
+    "committedAttributedOrders": 0
+  },
+  "mongo": {
+    "clickRecords": 0,
+    "convertedClicks": 0,
+    "unconvertedClicks": 0,
+    "conversionDocuments": 0
+  },
+  "readOnly": true,
+  "personalDataExported": false,
+  "capturedAtUtc": "2026-11-16T01:02:17.882360+00:00"
+}

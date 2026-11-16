@@ -1,0 +1,64 @@
+{
+  "route": "/products/qa-ahram-affiliate-e2e-20261115?ref=WWC3NC7R9B",
+  "headings": [
+    "QA-AHRAM-AFFILIATE-E2E-20261115",
+    "Customer Testimonials",
+    "Recommended Products"
+  ],
+  "actions": [
+    "Ctrl+K",
+    "\u0627\u0644\u0639\u0631\u0628\u064a\u0629",
+    "Add to Cart"
+  ],
+  "body": "\ud83d\udd17 You're browsing via a partner referral(WWC3NC7R9B) Ahram \u2014 ISOLATED SYNTHETIC E2E \ud83c\udfaf affiliate.storeBadge Ctrl+K \u0627\u0644\u0639\u0631\u0628\u064a\u0629 Login Sign Up No product media available PRODUCT GALLERY Browse product media ISOLATED AFFILIATE QA QA-AHRAM-AFFILIATE-E2E-20261115 EGP 1000.00 Isolated synthetic affiliate lifecycle; no real money, shipping or customer contact. PURCHASE CONFIDENCE AVAILABILITY In Stock (3) SKU QA-AFF-E2E-20261115 CATEGORY ISOLATED Affiliate QA In Stock (3) Add to Cart Products Customer Testimonials Add testimonials in the builder to display customer feedback. Recommended Products View All Failed to load products Ahram \u2014 ISOLATED SYNTHETIC E2E CUSTOMER SERVICE No customer service links have been published yet. \u00a9 2026 Ahram \u2014 ISOLATED SYNTHETIC E2E. All rights reserved.",
+  "responses": [
+    {
+      "path": "/api/storefront/store-config?lang=en",
+      "status": 200
+    },
+    {
+      "path": "/api/storefront/auth/me?lang=en",
+      "status": 401
+    },
+    {
+      "path": "/api/storefront/auth/refresh?lang=en",
+      "status": 401
+    },
+    {
+      "path": "/api/storefront/auth/providers?lang=en",
+      "status": 200
+    },
+    {
+      "path": "/api/storefront/auth/providers?lang=en",
+      "status": 200
+    },
+    {
+      "path": "/api/storefront/navigation?lang=en",
+      "status": 200
+    },
+    {
+      "path": "/api/storefront/footer?lang=en",
+      "status": 200
+    },
+    {
+      "path": "/api/storefront/auth/providers?lang=en",
+      "status": 200
+    },
+    {
+      "path": "/api/storefront/categories?lang=en",
+      "status": 200
+    },
+    {
+      "path": "/api/storefront/products/qa-ahram-affiliate-e2e-20261115?lang=en",
+      "status": 200
+    },
+    {
+      "path": "/api/storefront/smart-offers?lang=en",
+      "status": 200
+    },
+    {
+      "path": "/api/storefront/products/discover?category=15150000-2026-4015-a000-000000000003&page=1&pageSize=5&lang=en",
+      "status": 503
+    }
+  ]
+}

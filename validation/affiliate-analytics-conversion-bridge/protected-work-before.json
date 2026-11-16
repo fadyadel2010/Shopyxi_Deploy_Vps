@@ -1,0 +1,151 @@
+{
+  "verifiedAtUtc": "2026-11-15T21:17:27.419359+00:00",
+  "originalHead": "8365a92416463136418065f040e8b7f84bcff9fe",
+  "statusSha256": "184de2c97118f8e71f461e10015e6077dd79086671e98df3da687d21d294318e",
+  "workingEntries": 35,
+  "files": [
+    {
+      "path": "PointOfSale.API/Controllers/AdminAffiliateProductsController.cs",
+      "sha256": "74c17975767935e85453a937061a57b3b03b91c4f8f57038ee19ba15bb1ba2bc"
+    },
+    {
+      "path": "PointOfSale.API/Controllers/AdminProductAffiliateController.cs",
+      "sha256": "1ef9ffb4c21e3f730466cf490d9c29ca76022ec0b2f18ac93a6cb07676aee004"
+    },
+    {
+      "path": "PointOfSale.API/Controllers/AffiliatePromotionLinksController.cs",
+      "sha256": "2d8a1b0c2b4ee645ae9dd5c4474be3ef09074c93d0be885a89aa704c6b9dda87"
+    },
+    {
+      "path": "PointOfSale.API/Controllers/PlatformController.cs",
+      "sha256": "7a3ee72a3e33307d7b25650518380809d2fd1ea564a29242ac955ea6aa15b3ab"
+    },
+    {
+      "path": "PointOfSale.API/Controllers/PublicAffiliateProductsController.cs",
+      "sha256": "9fe160d8b9a400b260d43db36e0449b232caebf593c8f5dbefbbe6618f44a9cc"
+    },
+    {
+      "path": "PointOfSale.API/DTOs/ExpenseDTOs.cs",
+      "sha256": "882736672abe4e4e9cbc5fbbd1d2bed183b3fb7a21ba5203c118dc51b3425727"
+    },
+    {
+      "path": "PointOfSale.API/Middleware/AffiliateReferralMiddleware.cs",
+      "sha256": "9bb409aa58dd9045fd6f6b584fc6bfcff19dfcfa8b3d07a58a7c11d44e1b1fbb"
+    },
+    {
+      "path": "PointOfSale.API/Middleware/OwnerEmailVerificationMiddleware.cs",
+      "sha256": null
+    },
+    {
+      "path": "PointOfSale.API/Program.cs",
+      "sha256": "00ae0957540512fb7268ccc6178365f9525e3e33ac10b6822cf8b5a11859b3dc"
+    },
+    {
+      "path": "PointOfSale.API/Services/Checkout/CheckoutService.cs",
+      "sha256": "f8f5981b04e929c05fda747eda2e72bf78c1256c6ab2291ef5e60cb71c8f656b"
+    },
+    {
+      "path": "PointOfSale.API/Services/Platform/RateLimitService.cs",
+      "sha256": "6928e4ac108db5cbbe5e0cc87ebc1786b303334f7850b8956ded455590b00302"
+    },
+    {
+      "path": "PointOfSale.Core/Interfaces/Affiliate/IAffiliateReadinessService.cs",
+      "sha256": "9a017e59d2621b91c8638c968957767663a6732e938dac84442e9811d904df94"
+    },
+    {
+      "path": "PointOfSale.Core/Models/Affiliate/AffiliateReadinessResult.cs",
+      "sha256": "db6a9d49651f32ecf27bb2e0b4480afd5fec6bfe8d9b52eb33d1f369a39df8cb"
+    },
+    {
+      "path": "PointOfSale.Infrastructure/Elasticsearch/Services/AffiliateProductDiscoveryService.cs",
+      "sha256": "5dfef23813aee54fea53abaeb123fcf0f65379222466e0e3079847865db34c4d"
+    },
+    {
+      "path": "PointOfSale.Infrastructure/Services/Affiliate/AffiliateReadinessService.cs",
+      "sha256": "0c34297cfeaae4d6d07cc9e1be9032dab74b08922203eb9b945a44615353a4cc"
+    },
+    {
+      "path": "PointOfSale.Web/src/components/AffiliateReadinessWarning.jsx",
+      "sha256": "e346104bd05396e1223bea8e68bfa7771066089822aeb1daf6441236d78236c7"
+    },
+    {
+      "path": "PointOfSale.Web/src/components/EmailVerificationRequired.d.ts",
+      "sha256": null
+    },
+    {
+      "path": "PointOfSale.Web/src/components/EmailVerificationRequired.jsx",
+      "sha256": null
+    },
+    {
+      "path": "PointOfSale.Web/src/components/EmailVerificationRequired.test.tsx",
+      "sha256": null
+    },
+    {
+      "path": "PointOfSale.Web/src/components/ProductAffiliateSettingsCard.jsx",
+      "sha256": "f825ea09e27a38c525c22f8c915e17bb134950353651250b1fc5f9042fd750ab"
+    },
+    {
+      "path": "PointOfSale.Web/src/components/ProtectedRoute.jsx",
+      "sha256": "9bb1d2300f4695ca2811c4d79d3bb07ea2a7bdffc03ae9ba0ed925d342e25a06"
+    },
+    {
+      "path": "PointOfSale.Web/src/components/ProtectedRoute.verification.test.tsx",
+      "sha256": null
+    },
+    {
+      "path": "PointOfSale.Web/src/hooks/useAffiliateReadiness.d.ts",
+      "sha256": "b21757f49c851b51667487860de45f280cb64e27d1e2bcaa1d6044b25849dd9c"
+    },
+    {
+      "path": "PointOfSale.Web/src/hooks/useAffiliateReadiness.js",
+      "sha256": "a4b03994d1c0f9ba5784aff59c4571fc098d245e330cc9e582b95f2cd0abfd5a"
+    },
+    {
+      "path": "PointOfSale.Web/src/i18n/locales/ar.json",
+      "sha256": "717a1f1b7f696f2c9ba6c66e6c2986fb74bf91ac2209dfb2a254127908a9e4bd"
+    },
+    {
+      "path": "PointOfSale.Web/src/i18n/locales/en.json",
+      "sha256": "b332e078505444159fea54f06a6de9f5c56d262671ea5270cedd7fe8f76e2d42"
+    },
+    {
+      "path": "PointOfSale.Web/src/marketplace/queryKeys.ts",
+      "sha256": "0feb7136f2f10bce15c8604ce7b0be9c6d6a3305771c4e94c51ad5dd5a8b0ffb"
+    },
+    {
+      "path": "PointOfSale.Web/src/modules/affiliate/pages/AffiliateProducts.jsx",
+      "sha256": "2012c431ecde34b0931d05851f8c0a45bca7f98999ad58296119f95fcdfaa97a"
+    },
+    {
+      "path": "PointOfSale.Web/src/pages/Categories.jsx",
+      "sha256": "5288374cbc4b368e41a67b13a412fddb152eae191f55fd2259027e721af673e0"
+    },
+    {
+      "path": "PointOfSale.Web/src/pages/Register.admission.test.tsx",
+      "sha256": null
+    },
+    {
+      "path": "PointOfSale.Web/src/pages/Register.jsx",
+      "sha256": "9938d400b4e83ecbe8bc9252897d92bd4d2d82e28cf59ad82b448becd0ab2442"
+    },
+    {
+      "path": "validation/general-ledger-final-fix/FINAL-REPORT.md",
+      "sha256": "721dc1b42b00c09b9525436517bcc4e2bd939f572a31b2373a7b871a097686f4"
+    },
+    {
+      "path": "validation/storefront-20261114/FINAL-REPORT.md",
+      "sha256": "8044374b21efc9c1f4fe11bfc16fa294ce5e820e10beb74c04c17e3e53ab21a2"
+    },
+    {
+      "path": "validation/storefront-20261114/StorefrontRegression.csproj",
+      "sha256": null
+    },
+    {
+      "path": "PointOfSale.API/Services/Affiliate/AffiliatePublishingReadinessService.cs",
+      "sha256": "4b70314abe88aabe60bba91f7afb2f9e20873625e205ea78fb62c466e2ecbc5d"
+    }
+  ],
+  "preservedPatchSha256": "f65a1fb038b4285e4ec7a7e41ee0271412933f70a4cd5b8816d8e67f7dd20468",
+  "preservedPatchUnchanged": true,
+  "sourceBaseline": "ddfbe18ee55a965f1f8ff8c2b0b9e1e8cf196158"
+}

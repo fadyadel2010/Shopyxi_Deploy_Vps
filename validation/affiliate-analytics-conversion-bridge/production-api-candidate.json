@@ -1,0 +1,15 @@
+{
+  "verifiedAtUtc": "2026-11-16T00:09:38.540034+00:00",
+  "component": "api",
+  "image": "shopixy/api@sha256:c3a6b3964580292f59a667278d19ff31a2997c562367115475b506247b65ddb2",
+  "baseImage": "sha256:39a79e0baaa7a6a935e2f84b6e77a7d4b22618c6f5d9b5e59a5d8f1ebbc9856b",
+  "sourceInputSha256": "2c22739c654b063e808df1cc4f6a88bcab40a5784ba50f1d68bf949ffe65fbfc",
+  "apiAssemblySha256": "3ae5d60dbd831192c5751735798aca888f5f61dc3aa143d3d5e94c3d2963e38c",
+  "archiveSha256": "92f98a52912c912fcec5f1bf0df67c6ce84b5f8e0060359963f5c3dc398a6cad",
+  "dotnetRuntime": "10.0.15",
+  "nonRoot": true,
+  "nugetVulnerabilityGatePassed": true,
+  "trivyHighCriticalFindings": 0,
+  "securityGatePassed": true,
+  "productionDeployment": false
+}

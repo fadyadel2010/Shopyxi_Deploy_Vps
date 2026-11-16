@@ -1,0 +1,44 @@
+{
+  "before": {
+    "status": 200,
+    "body": {
+      "authoritativeAttributedOrders": 1,
+      "alreadyProjected": 0,
+      "unprojectedOrders": 1,
+      "exactClickCandidates": 0,
+      "ambiguousHistoricalClickLinksAreExcluded": true
+    }
+  },
+  "repaired": {
+    "status": 200,
+    "body": {
+      "orderId": "8f2866d0-cac0-4c0b-bd91-fe6f3c4c5e12",
+      "attributionId": "01a1dfa8-1e81-75e2-9645-fb71a6bd6f5c",
+      "productId": "37d9a1b6-6585-f655-0e55-824a517ce90c",
+      "convertedAtUtc": "2026-11-15T14:41:39.342Z",
+      "idempotent": true
+    }
+  },
+  "replay": {
+    "status": 200,
+    "body": {
+      "orderId": "8f2866d0-cac0-4c0b-bd91-fe6f3c4c5e12",
+      "attributionId": "01a1dfa8-1e81-75e2-9645-fb71a6bd6f5c",
+      "productId": "37d9a1b6-6585-f655-0e55-824a517ce90c",
+      "convertedAtUtc": "2026-11-15T14:41:39.342Z",
+      "idempotent": true
+    }
+  },
+  "after": {
+    "status": 200,
+    "body": {
+      "authoritativeAttributedOrders": 1,
+      "alreadyProjected": 1,
+      "unprojectedOrders": 0,
+      "exactClickCandidates": 0,
+      "ambiguousHistoricalClickLinksAreExcluded": true
+    }
+  },
+  "sqlBusinessMutationsRequested": false,
+  "scope": "analytics projection for one explicit existing isolated order"
+}

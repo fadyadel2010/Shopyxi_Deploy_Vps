@@ -1,0 +1,109 @@
+[
+    {
+        "Id": "sha256:a01d5ae1b3149d1fe099a9da0755d7f53a87e64b04aac18c1a8189d93cbfdcad",
+        "RepoTags": [
+            "shopixy/api:affiliate-analytics-production-20261116-4"
+        ],
+        "RepoDigests": [
+            "shopixy/api@sha256:a01d5ae1b3149d1fe099a9da0755d7f53a87e64b04aac18c1a8189d93cbfdcad"
+        ],
+        "Comment": "buildkit.dockerfile.v0",
+        "Created": "2026-11-16T04:03:02.191162025+02:00",
+        "Config": {
+            "User": "1654:1654",
+            "ExposedPorts": {
+                "8080/tcp": {}
+            },
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "APP_UID=1654",
+                "ASPNETCORE_HTTP_PORTS=8080",
+                "DOTNET_RUNNING_IN_CONTAINER=true",
+                "DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false",
+                "DOTNET_VERSION=10.0.15",
+                "ASPNET_VERSION=10.0.15",
+                "ASPNETCORE_ENVIRONMENT=Production",
+                "DOTNET_ENVIRONMENT=Production",
+                "HOME=/home/app",
+                "XDG_DATA_HOME=/home/app/.local/share",
+                "DataProtection__KeysPath=/var/lib/shopixy/dpkeys"
+            ],
+            "Entrypoint": [
+                "dotnet",
+                "PointOfSale.API.dll"
+            ],
+            "WorkingDir": "/app",
+            "Labels": {
+                "org.opencontainers.image.revision": "67f7010cc38bb3f19a8aba620617ae0d55a3f4e8db69c4b647bd0783644ffdb1",
+                "org.opencontainers.image.source": "Shopixy APP82 r11 automatic subdomains independent-audit r3",
+                "org.opencontainers.image.title": "Shopixy API automatic subdomains",
+                "shopixy.io/base-image": "",
+                "shopixy.io/dotnet-runtime": "10.0.15",
+                "shopixy.io/source-input-sha256": "63d862eddc0c7405574dc2d89d07cbf73f83b03bb440776f8e684232ae275e05"
+            },
+            "Healthcheck": {
+                "Test": [
+                    "CMD",
+                    "dotnet",
+                    "/opt/shopixy-healthprobe/HealthProbe.dll"
+                ],
+                "Interval": 30000000000,
+                "Timeout": 3000000000,
+                "StartPeriod": 30000000000,
+                "Retries": 3
+            }
+        },
+        "Architecture": "amd64",
+        "Os": "linux",
+        "Size": 1306947010,
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064",
+                "sha256:7179963c95b33f40bbfd6734896600aff2631b733f2c00a38a081591b88cdb9d",
+                "sha256:bbbd8ede3481fae877878ca2f3ecbc4dc306e1aad0c54b7e323515bbf2996d51",
+                "sha256:caa285ab046924adb26df1a69da4480ca6d2048481f4162d7c8bdf0368cd8d67",
+                "sha256:4f7116e513862a2462cfd758f4a7ad0aa89c7d72bbef3b97b87f695a66a2fae9",
+                "sha256:71415bbbb9738cb340907a7b8c34cc6f209d1dca980a57070d2cb923675b69a7",
+                "sha256:d78b117bb12a5718009129327b575d99b86d66b43f33e77d63bf8e2ceaa8721d",
+                "sha256:80021c5c607aea18fa87f03d81ede533868d0fbd20e0b152facac7b25ada2517",
+                "sha256:2e4e62caf6f3b4b3434af2df8bb2bc7373514abde620f9acfd18f1b99ac430ed",
+                "sha256:ea474ccf2e4938d9dc1630ee9725e2eb8377156c95c0e70aec0ef6e189df99bb",
+                "sha256:eb016e316df001dfe2131738643e975279c36f6b4079333d7c755db1191ebceb",
+                "sha256:1f0eac3c37dfd33cf09fe425bb0227cccaa6c3888b18b4fc2a04bbdcb43eb831",
+                "sha256:6ae22dfbf5d1cff1a66455250bfa5d70238fd7c71aa1064c81e5f9df2b702728",
+                "sha256:df9c0b10a65973974898144de8193e6d5bbc5175c92a6780fa7951b9d92e2014",
+                "sha256:34506e8d261422e1763e98f57498655c89ff20f94047e80bf0a269dfe86291f5",
+                "sha256:b0ff2f1c36ac305c1038b9adf17916bf63675c374b99dea704943696c38032ba",
+                "sha256:c0cd76df21dc33b0ffc1814b82058531ef96c6ccbb192de4083e84f083424795",
+                "sha256:93cd5c33536ec3eeb3edab40d2c8d2e9de94960642dc6309c9847d11de970ad0",
+                "sha256:e016dee684198092a489c8c0149071d9c528927e8d023a2d7758e8b1d5590c48",
+                "sha256:6f204c8ba1dda3e28a5ef05232c2d3b8d5bd34666471b63fe445ba17f14b4724",
+                "sha256:9990eee6956f22cf1d2cf19e1d4e6a5c232d2f91710aab40f64fa43483dd2a59",
+                "sha256:2e47f8aba38186e909bd478e242c996c64bd6888db52b1c03fda32c3b16b28c5",
+                "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+                "sha256:716055247a627db55faa6d5caac9163e4d65e27d42aea9a75eb52309a06eb54f",
+                "sha256:6f204c8ba1dda3e28a5ef05232c2d3b8d5bd34666471b63fe445ba17f14b4724",
+                "sha256:51309ae750844f9f138332c086229a6949a617d3a3502f58d90de8b2838dbd02",
+                "sha256:e195b0e0f574418ba38799567e3d7cfbf41a7d12b197c620624afa2ba93a56f4",
+                "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2026-11-16T02:03:07.722660743Z"
+        },
+        "Descriptor": {
+            "mediaType": "application/vnd.oci.image.index.v1+json",
+            "digest": "sha256:a01d5ae1b3149d1fe099a9da0755d7f53a87e64b04aac18c1a8189d93cbfdcad",
+            "size": 856
+        },
+        "Identity": {
+            "Build": [
+                {
+                    "Ref": "qiddguqp1rifi0xoy38o8n8lr",
+                    "CreatedAt": "2026-11-16T04:03:09.427102255+02:00"
+                }
+            ]
+        }
+    }
+]

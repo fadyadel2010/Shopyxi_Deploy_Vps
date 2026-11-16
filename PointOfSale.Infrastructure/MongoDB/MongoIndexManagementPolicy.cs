@@ -55,15 +55,17 @@ public sealed class MongoIndexManagementPolicy(IOptions<MongoDbSettings>? settin
         {
             var name = model.Options?.Name;
             var keys = model.Keys.Render(render);
+            var partialFilter = (model.Options as CreateIndexOptions<T>)?.PartialFilterExpression?.Render(render);
             // Existing application definitions are explicitly named. Refuse to infer
             // a schema identity if a future definition omits its stable name.
             if (string.IsNullOrWhiteSpace(name) || !existing.Any(index =>
-                    index.GetValue("name", "").AsString == name && Matches(index, keys, model.Options)))
+                    index.GetValue("name", "").AsString == name && Matches(index, keys, model.Options, partialFilter)))
                 throw new MongoIndexValidationException();
         }
     }
 
-    public static bool Matches(BsonDocument existing, BsonDocument requiredKeys, CreateIndexOptions? options)
+    public static bool Matches(BsonDocument existing, BsonDocument requiredKeys, CreateIndexOptions? options,
+        BsonDocument? requiredPartialFilter = null)
     {
         if (!existing.TryGetValue("key", out var value) || !value.IsBsonDocument) return false;
         var keys = value.AsBsonDocument;
@@ -95,9 +97,14 @@ public sealed class MongoIndexManagementPolicy(IOptions<MongoDbSettings>? settin
             if (!existing.TryGetValue("expireAfterSeconds", out var seconds) || seconds.ToDouble() != ttl.Value.TotalSeconds) return false;
         }
         else if (existing.Contains("expireAfterSeconds")) return false;
-        // Current definitions have neither partial filters nor custom collation.
-        // Do not silently accept a more restrictive pre-existing index.
-        return !existing.Contains("partialFilterExpression") && !existing.Contains("collation") &&
+        if (requiredPartialFilter == null)
+        {
+            if (existing.Contains("partialFilterExpression")) return false;
+        }
+        else if (!existing.TryGetValue("partialFilterExpression", out var partial) ||
+            !partial.IsBsonDocument || !partial.AsBsonDocument.Equals(requiredPartialFilter)) return false;
+        // Never accept an unexpected partial filter or custom collation.
+        return !existing.Contains("collation") &&
             !existing.GetValue("hidden", false).ToBoolean();
     }
 }

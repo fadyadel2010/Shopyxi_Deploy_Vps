@@ -6,6 +6,13 @@ namespace PointOfSale.API.Services.Affiliate;
 /// Never populated from a request DTO. Current SQL admission must still be checked.</summary>
 public sealed record AffiliateShoppingJourney(Guid TenantId, Guid AffiliateAccountId, string ReferralCode, Guid? PromotionLinkId)
 {
+    public Guid? ReferralClickId { get; init; }
+    public Guid? ReferralProductId { get; init; }
+
+    // Request-local, server-stamped context; never populated by a request DTO.
+    public static AffiliateShoppingJourney? FromRequest(HttpContext? context) =>
+        context?.Items[typeof(AffiliateShoppingJourney)] as AffiliateShoppingJourney;
+
     public static AffiliateShoppingJourney? FromCart(CartDto cart)
     {
         if (cart.AffiliateJourney is { } journey)

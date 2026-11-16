@@ -118,6 +118,23 @@ public class AffiliateRankingService
         }
     }
 
+    /// <summary>Order conversion ranking signal with a stable order receipt.
+    /// Exact replay cannot increment the product a second time.</summary>
+    public async Task ApplyConversionSignalOnceAsync(Guid productId, Guid tenantId,
+        Guid orderId, DateTime convertedAtUtc, CancellationToken ct = default)
+    {
+        var key = "affiliate-order:" + orderId.ToString("N");
+        var f = Builders<AffiliateProductIntelligenceDocument>.Filter;
+        var filter = f.And(f.Eq(d => d.ProductId, productId), f.Eq(d => d.TenantId, tenantId),
+            f.Not(f.AnyEq(d => d.ProcessedEventIds, key)));
+        var update = Builders<AffiliateProductIntelligenceDocument>.Update
+            .Inc(d => d.TotalConversions, 1)
+            .Set(d => d.LastConversionUtc, convertedAtUtc)
+            .AddToSet(d => d.ProcessedEventIds, key);
+        await _mongoDbContext.AffiliateProductIntelligence.UpdateOneAsync(
+            filter, update, cancellationToken: ct);
+    }
+
     // ═══════════════════════════════════════════════════════════════════
     // DAILY RECALCULATION (Background Job, BulkWrite Batched)
     // ═══════════════════════════════════════════════════════════════════

@@ -1,0 +1,26 @@
+{
+  "route": "/checkout/pending?orderId=932bccae-3f92-4c55-bb7d-4e3cb2ef7c1d&orderNumber=ORD-1515-2026-01001&ref=WWC3NC7R9B",
+  "responses": [
+    {
+      "path": "/api/storefront/checkout/phone-verification-status?phone=%2B201000000001&lang=en",
+      "status": 200
+    },
+    {
+      "path": "/api/storefront/checkout/pricing?lang=en",
+      "status": 200
+    },
+    {
+      "path": "/api/storefront/checkout/pricing?lang=en",
+      "status": 200
+    },
+    {
+      "path": "/api/storefront/checkout-fields?lang=en",
+      "status": 200
+    },
+    {
+      "path": "/api/storefront/checkout?lang=en",
+      "status": 200
+    }
+  ],
+  "confirmation": "\ud83d\udd17 You're browsing via a partner referral(WWC3NC7R9B) Ahram \u2014 ISOLATED SYNTHETIC E2E \ud83c\udfaf affiliate.storeBadge Ctrl+K \u0627\u0644\u0639\u0631\u0628\u064a\u0629 Login Sign Up Order saved \u2014 cash on delivery pending Payment is due on delivery. No customer collection or merchant remittance has been confirmed. Order Number ORD-1515-2026-01001 Backend status: PENDING Awaiting order processing The backend controls order and delivery progress. This is not a gateway payment in progress. Track Order Refresh Status Continue Shopping Ahram \u2014 ISOLATED SYNTHETIC E2E CUSTOMER SERVICE No customer service links have been published yet. \u00a9 2026 Ahram \u2014 ISOLATED SYNTHETIC E2E. All rights reserved."
+}

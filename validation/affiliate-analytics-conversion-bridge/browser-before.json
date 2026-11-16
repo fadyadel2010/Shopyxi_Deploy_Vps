@@ -1,0 +1,29 @@
+{
+  "route": "/affiliate/portal?tab=analytics",
+  "responses": [
+    {
+      "pathAndQuery": "/api/affiliate/analytics/summary?range=30",
+      "status": 200,
+      "body": {
+        "totalClicks": 109,
+        "totalOrders": 1,
+        "totalEarnings": 110,
+        "conversionRate": 0.92,
+        "range": 30
+      }
+    },
+    {
+      "pathAndQuery": "/api/affiliate/analytics/trend?range=30",
+      "status": 200,
+      "body": [
+        {
+          "date": "2026-11-15",
+          "clicks": 109,
+          "orders": 1,
+          "earnings": 110
+        }
+      ]
+    }
+  ],
+  "errors": []
+}
