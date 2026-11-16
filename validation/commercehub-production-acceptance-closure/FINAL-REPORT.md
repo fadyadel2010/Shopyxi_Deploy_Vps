@@ -93,7 +93,7 @@ Screenshot: `after-ar-source-completed.png`; adjacent custom proof: `after-ar-cu
 - No missing requirement for current serving; custom-domain Caddy enablement would be a separate infrastructure/security feature rollout.
 - Disabled still reports Degraded by the retained health contract. No adapter/check was disabled or altered in this assignment.
 
-Evidence: `health-architecture.json`, `runtime-predeploy.json`, `runtime-after.json`, and the source paths above. No certificate bodies, private keys, Secret values or full environment/config bodies were retained.
+Evidence: `health-architecture.json`, `runtime-predeploy.json`, `runtime-after.json`, `runtime-final.json`, and the source paths above. No certificate bodies, private keys, Secret values or full environment/config bodies were retained.
 
 ### Additional actual defect fixed: empty CommerceHub search index
 
@@ -220,9 +220,9 @@ Evidence: SQL in `runtime-before.json`/`runtime-after.json`, `running-artifact-p
 | Localization application commit | `d5e1e6313136253d8917abcd991b91cce62d823d` |
 | Final application / actual deployed Web commit | `856648d0b61a7621c600524b5aa55cf4a72fb385` |
 | Actual deployed API commit | `4fb2beb41cb704d8b4e9d9ee383afc34d8904594` (unchanged) |
-| Documentation/evidence commit | Recorded in `github-delivery.json` after evidence commit creation |
+| Documentation/evidence commit | `4b5b7342e784e743e297cf0ae844fe4aa1947835` |
 
-Application commits were pushed to the new branch without rewriting history. Final documentation delivery, remote-ref equality, scoped secret scan and clean tracked-tree verification are recorded in `github-delivery.json` and the final delivery message. Evidence-only follow-ups are not application releases.
+Application commits and evidence commit `4b5b7342e784e743e297cf0ae844fe4aa1947835` were pushed to the new branch without rewriting history. `git ls-remote` independently returned that exact evidence commit. `github-delivery.json` records this verification, the exact deployed identities and secret-scan results. The final delivery message records the subsequent documentation-only tip and final remote/tree verification. Evidence-only follow-ups are not application releases.
 
 Secret scanning uses the installed Gitleaks scanner. A WSL Git-mode attempt could not resolve the Windows worktree pointer and scanned zero bytes; it is **not** counted as a successful gate. The actual source/staged diff was then passed to Gitleaks stdin and scanned successfully. The final evidence directory/delivery diff is separately scanned before committing.
 

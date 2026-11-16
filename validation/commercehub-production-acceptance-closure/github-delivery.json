@@ -1,0 +1,46 @@
+{
+  "repository": "https://github.com/fadyadel2010/Shopyxi_Deploy_Vps.git",
+  "branch": "commercehub/production-acceptance-closure-20261117",
+  "preservedApplicationBaseline": "4fb2beb41cb704d8b4e9d9ee383afc34d8904594",
+  "preservedDocumentationBaseline": "1f53f19bc1f352a43358a1b6a4a58c4f2e49c708",
+  "localizationCommit": "d5e1e6313136253d8917abcd991b91cce62d823d",
+  "applicationCommit": "856648d0b61a7621c600524b5aa55cf4a72fb385",
+  "documentationEvidenceCommit": "4b5b7342e784e743e297cf0ae844fe4aa1947835",
+  "remoteEvidenceVerification": {
+    "command": "git ls-remote origin refs/heads/commercehub/production-acceptance-closure-20261117",
+    "observedCommit": "4b5b7342e784e743e297cf0ae844fe4aa1947835",
+    "matchesLocalEvidenceCommit": true
+  },
+  "deployedComponents": [
+    {
+      "component": "Admin Web",
+      "commit": "856648d0b61a7621c600524b5aa55cf4a72fb385",
+      "image": "docker.io/shopixy/web@sha256:627af0b79e1a8bfa4be76691df0f43c938c9b586727d11c2f223e43580c21568",
+      "generation": 23
+    },
+    {
+      "component": "API",
+      "commit": "4fb2beb41cb704d8b4e9d9ee383afc34d8904594",
+      "image": "docker.io/shopixy/api@sha256:cb900c183069f94311142ad9c5a16fa23266611d3c29f674bae64040189ac307",
+      "generation": 64,
+      "unchanged": true
+    },
+    {
+      "component": "Storefront",
+      "image": "docker.io/shopixy/storefront@sha256:e9333f609aa664d6de713d4db00b18deba054e3a8acbb559099d9ab245f9f3df",
+      "generation": 10,
+      "unchanged": true
+    }
+  ],
+  "sourceAndEvidenceSecretScanFindings": 0,
+  "secretScanReports": [
+    "secret-scan-source-final.json",
+    "secret-scan-evidence.json",
+    "secret-scan-delivery.json"
+  ],
+  "historyRewritten": false,
+  "forcedPush": false,
+  "applicationSourceWorkingTreeClean": true,
+  "deliveryFollowup": "This record and exact evidence commit reference are a documentation-only follow-up. Its final tip and remote/tree equality are verified in the final execution output, not substituted as the deployed application commit.",
+  "ignoredLocalArtifacts": "Only generated raw frontend build output and existing/tool dependency caches remain ignored; none is staged as Production evidence."
+}
