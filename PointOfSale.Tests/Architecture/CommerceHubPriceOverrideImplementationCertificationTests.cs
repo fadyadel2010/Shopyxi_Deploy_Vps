@@ -7,7 +7,7 @@ namespace PointOfSale.Tests.Architecture;
 public sealed class CommerceHubPriceOverrideImplementationCertificationTests
 {
     [Fact]
-    public async Task Resolver_UsesAllowlistedMerchantOverride_AndKillSwitchFallsBackWithoutDeletingRecord()
+    public async Task Resolver_UsesPersistedMerchantOverride_IndependentOfLegacyRolloutConfig()
     {
         var tenantId = Guid.NewGuid();
         var resolver = new CommerceHubPriceAuthority();
@@ -26,10 +26,10 @@ public sealed class CommerceHubPriceOverrideImplementationCertificationTests
             Assert.Equal(CommerceHubPriceSource.CommerceHubOverride, active.PriceSource);
 
             CommerceHubPriceOverrideRuntimePolicy.Configure(new CommerceHubPriceOverrideRolloutOptions());
-            var rolledBack = await resolver.ResolveAsync(tenantId, 80m, 50m);
-            Assert.Equal(80m, rolledBack.FinalPrice);
-            Assert.Null(rolledBack.OverridePrice);
-            Assert.Equal(CommerceHubPriceSource.ProductVariantEffectiveOnlinePrice, rolledBack.PriceSource);
+            var stillAuthoritative = await resolver.ResolveAsync(tenantId, 80m, 50m);
+            Assert.Equal(50m, stillAuthoritative.FinalPrice);
+            Assert.Equal(50m, stillAuthoritative.OverridePrice);
+            Assert.Equal(CommerceHubPriceSource.CommerceHubOverride, stillAuthoritative.PriceSource);
         }
         finally
         {

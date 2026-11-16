@@ -15,6 +15,9 @@ public class PublishToCommerceHubRequest
     public Guid? CategoryId { get; set; }
 
     public decimal? CommerceHubPrice { get; set; }
+    public string? PricingMode { get; set; }
+    public Guid? ParentCategoryId { get; set; }
+    public Guid? ExpectedCommissionRuleId { get; set; }
     public string? OverrideReason { get; set; }
     public int? ExpectedPriceOverrideMutationVersion { get; set; }
     public JsonElement? AttributesJson { get; set; }
@@ -33,6 +36,9 @@ public class UpdateCommerceHubListingRequest
     public Guid? CategoryId { get; set; }
 
     public decimal? CommerceHubPrice { get; set; }
+    public string? PricingMode { get; set; }
+    public Guid? ParentCategoryId { get; set; }
+    public Guid? ExpectedCommissionRuleId { get; set; }
     public string? OverrideReason { get; set; }
     public int? ExpectedPriceOverrideMutationVersion { get; set; }
     public JsonElement? AttributesJson { get; set; }
@@ -97,6 +103,7 @@ public class CommerceHubAdminVariantListingDto
     public bool IsPublished { get; set; }
     public Guid CommerceHubCategoryId { get; set; }
     public Guid CategoryId { get; set; }
+    public Guid ParentCategoryId { get; set; }
     public decimal? CommerceHubPrice { get; set; }
     public int PriceOverrideMutationVersion { get; set; }
     public string? AttributesJson { get; set; }
@@ -180,6 +187,7 @@ public class CommerceHubBulkListingOperationRequest
     public string Operation { get; set; } = string.Empty;
     public List<Guid> ListingIds { get; set; } = new();
     public Guid? CategoryId { get; set; }
+    public Guid? ParentCategoryId { get; set; }
 }
 
 public class CommerceHubBulkListingOperationResponse
@@ -210,6 +218,15 @@ public class CommerceHubAdminCommissionPreviewDto
     public Guid? ScopeId { get; set; }
     public bool UsedLegacyFallback { get; set; }
     public string CacheStrategy { get; set; } = "MemoryCache";
+    public Guid VariantId { get; set; }
+    public Guid ParentCategoryId { get; set; }
+    public string PricingMode { get; set; } = "source";
+    public string Currency { get; set; } = "EGP";
+    public string CommissionBase { get; set; } = CommissionCalculator.CommissionBase;
+    public decimal SourceProductPrice { get; set; }
+    public decimal MarketplacePrice { get; set; }
+    public decimal CommissionAmount { get; set; }
+    public decimal MerchantNet { get; set; }
 }
 
 internal static class CommerceHubRequestJsonHelper

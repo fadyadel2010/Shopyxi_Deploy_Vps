@@ -10,7 +10,10 @@ public sealed record PublishToCommerceHubCommand(
     string? CorrelationId = null,
     string? RequestId = null,
     string? OverrideReason = null,
-    int? ExpectedPriceOverrideMutationVersion = null);
+    int? ExpectedPriceOverrideMutationVersion = null,
+    Guid? ParentCategoryId = null,
+    string? PricingMode = null,
+    Guid? ExpectedCommissionRuleId = null);
 
 public sealed record UpdateCommerceHubListingCommand(
     Guid TenantId,
@@ -22,7 +25,10 @@ public sealed record UpdateCommerceHubListingCommand(
     string? CorrelationId = null,
     string? RequestId = null,
     string? OverrideReason = null,
-    int? ExpectedPriceOverrideMutationVersion = null);
+    int? ExpectedPriceOverrideMutationVersion = null,
+    Guid? ParentCategoryId = null,
+    string? PricingMode = null,
+    Guid? ExpectedCommissionRuleId = null);
 
 public sealed record UnpublishFromCommerceHubCommand(
     Guid TenantId,

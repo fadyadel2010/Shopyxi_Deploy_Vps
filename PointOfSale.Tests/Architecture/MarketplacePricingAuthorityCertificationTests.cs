@@ -10,7 +10,7 @@ public sealed class MarketplacePricingAuthorityCertificationTests
         var cart = ReadRepoFile("PointOfSale.API/Services/CommerceHub/CommerceHubCartService.cs");
         var overlay = ReadRepoFile("PointOfSale.Infrastructure/Elasticsearch/Services/CommerceHubSearchSqlAuthorityOverlay.cs");
 
-        Assert.Contains("CommerceHubPriceOverrideRuntimePolicy.IsEnabledForTenant", handlers, StringComparison.Ordinal);
+        Assert.Contains("EnsureVendorListingAllowedAsync", handlers, StringComparison.Ordinal);
         Assert.Contains("ICommerceHubPriceAuthority", handlers, StringComparison.Ordinal);
         Assert.Contains("_priceAuthority.ResolveAsync", checkout, StringComparison.Ordinal);
         Assert.Contains("_priceAuthority.ResolveAsync", cart, StringComparison.Ordinal);

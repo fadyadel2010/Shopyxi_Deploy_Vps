@@ -105,7 +105,7 @@ public partial class CommerceHubQueryService : ICommerceHubQueryService
         CancellationToken cancellationToken = default)
     {
         await using var snapshot = await BeginAuthoritySnapshotAsync(cancellationToken);
-        var priceOverrideTenantIds = CommerceHubPriceOverrideRuntimePolicy.CaptureEnabledTenantIds();
+        var priceOverrideTenantIds = Array.Empty<Guid>();
         var tenantId = ResolveTenantScope(query.TenantId);
         var request = NormalizeRequest(
             query.Page,
@@ -137,7 +137,7 @@ public partial class CommerceHubQueryService : ICommerceHubQueryService
         CancellationToken cancellationToken = default)
     {
         await using var snapshot = await BeginAuthoritySnapshotAsync(cancellationToken);
-        var priceOverrideTenantIds = CommerceHubPriceOverrideRuntimePolicy.CaptureEnabledTenantIds();
+        var priceOverrideTenantIds = Array.Empty<Guid>();
         var normalizedQuery = NormalizeUserQuery(query.Q);
         var intent = await _intentDetector.DetectAsync(normalizedQuery, cancellationToken);
         var facetDefinitions = await LoadFacetDefinitionsAsync(query.CategoryId, cancellationToken);
@@ -641,8 +641,7 @@ public partial class CommerceHubQueryService : ICommerceHubQueryService
         IReadOnlyDictionary<Guid, string> categoryPaths)
     {
         var basePrice = CommerceHubPriceAuthority.ResolveBaseVariantPrice(candidate.VariantPrice, candidate.VariantOnlinePrice);
-        var overridePrice = CommerceHubPriceOverrideRuntimePolicy.IsEnabledForTenant(candidate.TenantId) &&
-                            candidate.CommerceHubPrice is > 0m
+        var overridePrice = candidate.CommerceHubPrice is > 0m
             ? candidate.CommerceHubPrice
             : null;
         var availableStock = stockByVariant.GetValueOrDefault(candidate.VariantId);

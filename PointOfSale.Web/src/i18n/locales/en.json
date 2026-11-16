@@ -8482,6 +8482,61 @@
     "unpublish": "Unpublish",
     "commerceHubPrice": "CommerceHub price",
     "productPrice": "Product price",
+    "mainCategoryRequired": "Select a main CommerceHub category.",
+    "customPriceRequired": "Enter a valid custom Marketplace price greater than zero.",
+    "selectMainCategoryFirst": "Select a main category first",
+    "subcategoryNotRequired": "Not required for this category",
+    "form": {
+      "productIdentity": "Source product",
+      "category": "Marketplace category",
+      "attributes": "Product details",
+      "attributesHelp": "Complete the fields defined for the selected Marketplace category.",
+      "pricing": "Marketplace price",
+      "review": "Publication review",
+      "ready": "Price and commission are resolved. Review the details before publishing.",
+      "notReady": "Complete the category, price, attributes, and commission preview before publishing."
+    },
+    "pricing": {
+      "sourceMode": "Use source product price",
+      "sourceHelp": "CommerceHub follows the current POS/Storefront selling price.",
+      "customMode": "Custom Marketplace price",
+      "customHelp": "Set an independent CommerceHub-only selling price.",
+      "customPrice": "CommerceHub selling price"
+    },
+    "commission": {
+      "title": "Commission and merchant proceeds",
+      "help": "Authoritative preview of the amount deducted and the amount you receive.",
+      "loading": "Resolving commission…",
+      "selectCategory": "Select a valid Marketplace category to resolve commission.",
+      "sourcePrice": "Source product price",
+      "marketplacePrice": "Marketplace selling price",
+      "rate": "Commission rate",
+      "deduction": "Commission deduction",
+      "net": "You will receive",
+      "ruleResolution": "Rule resolution",
+      "source": "Source",
+      "priority": "Priority",
+      "pending": "Pending",
+      "awaitingResolution": "Applied rule: awaiting resolution",
+      "appliedRule": "Applied rule: {{source}}",
+      "appliedCategory": "Applied rule: category ({{category}})",
+      "publishBlocked": "Publication is blocked until a current commission rule is resolved.",
+      "sources": { "Vendor": "Merchant agreement", "Category": "Category rule", "Global": "Platform default" },
+      "errors": {
+        "missingRule": "No active commission rule applies. Ask the platform administrator to configure a valid rule before publishing.",
+        "ambiguousRule": "More than one commission rule has the same authority. The platform administrator must resolve the conflict.",
+        "invalidPrice": "Enter a valid custom Marketplace price to calculate commission.",
+        "unavailable": "Commission preview is unavailable. Check the category and price, then try again."
+      },
+      "target": {
+        "title": "Adjust price to maintain my target earnings",
+        "help": "Calculate a suggested Marketplace price from the resolved percentage rate.",
+        "desired": "Desired merchant proceeds",
+        "required": "Required CommerceHub price",
+        "apply": "Use this Marketplace price",
+        "prompt": "Enter the amount you want to receive. Your manual price changes only when you apply the suggestion."
+      }
+    },
     "sellerApplication": {
       "title": "Become a CommerceHub Seller",
       "subtitle": "Apply once with a few useful business details. Product publishing stays unavailable until a platform Super Admin approves your application.",

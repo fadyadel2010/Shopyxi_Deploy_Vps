@@ -63,11 +63,6 @@ const safeParseOptions = (optionsJson) => {
     }
 }
 
-const resolveEffectivePrice = (variantPrice, commerceHubPrice) => {
-    const resolvedValue = commerceHubPrice ?? variantPrice ?? 0
-    return Number.isFinite(resolvedValue) ? Number(resolvedValue) : 0
-}
-
 const getCommerceHubErrorMessage = (error, fallbackMessage) =>
     error?.response?.data?.message || error?.message || fallbackMessage
 
@@ -120,6 +115,7 @@ export default function CommerceHubSettings() {
     const [bulkSaving, setBulkSaving] = useState(false)
     const [categories, setCategories] = useState([])
     const [saving, setSaving] = useState({}) // { [variantId]: true }
+    const [previewState, setPreviewState] = useState({})
     
     // Expanded product rows
     const [expanded, setExpanded] = useState({})
@@ -186,7 +182,9 @@ export default function CommerceHubSettings() {
                     if (variant.listing) {
                         state[variant.variantId] = {
                             categoryId: variant.listing.categoryId,
+                            parentCategoryId: variant.listing.parentCategoryId,
                             commerceHubPrice: variant.listing.commerceHubPrice,
+                            pricingMode: variant.listing.commerceHubPrice != null ? 'custom' : 'source',
                             priceOverrideMutationVersion: variant.listing.priceOverrideMutationVersion ?? 0,
                             attributesJson: variant.listing.attributesJson,
                             attributes: safeParseAttributes(variant.listing.attributesJson)
@@ -274,7 +272,7 @@ export default function CommerceHubSettings() {
     }, [editState, loadAttributes])
 
     // ─── Edit State Helpers ─────────────────────────────────
-    const getEditState = (variantId) => editState[variantId] || { categoryId: '', commerceHubPrice: '', attributes: {} }
+    const getEditState = (variantId) => editState[variantId] || { parentCategoryId: '', categoryId: '', pricingMode: 'source', commerceHubPrice: null, attributes: {} }
     
     const updateEditState = (variantId, updates) => {
         setEditState(prev => ({
@@ -284,7 +282,7 @@ export default function CommerceHubSettings() {
     }
 
     const handleCategoryChange = async (variantId, categoryId) => {
-        updateEditState(variantId, { categoryId, attributes: {}, _pendingParent: null })
+        updateEditState(variantId, { categoryId, attributes: {} })
         if (categoryId) {
             await loadAttributes(categoryId)
         }
@@ -320,6 +318,18 @@ export default function CommerceHubSettings() {
             showError(t('commerceHub.categoryRequired'))
             return
         }
+        if (!state.parentCategoryId) {
+            showError(t('commerceHub.mainCategoryRequired'))
+            return
+        }
+        if (state.pricingMode === 'custom' && (!Number.isFinite(state.commerceHubPrice) || state.commerceHubPrice <= 0)) {
+            showError(t('commerceHub.customPriceRequired'))
+            return
+        }
+        if (!previewState[variant.variantId]?.ready || !previewState[variant.variantId]?.ruleId) {
+            showError(t('commerceHub.commission.publishBlocked'))
+            return
+        }
 
         // Validate required attributes
         const attrs = categoryAttributes[state.categoryId] || []
@@ -344,9 +354,10 @@ export default function CommerceHubSettings() {
             const payload = {
                 variantId: variant.variantId,
                 commerceHubCategoryId: state.categoryId,
-                commerceHubPrice: variant.isCommerceHubPriceOverrideEnabled
-                    ? state.commerceHubPrice || null
-                    : null,
+                parentCategoryId: state.parentCategoryId,
+                pricingMode: state.pricingMode,
+                commerceHubPrice: state.pricingMode === 'custom' ? state.commerceHubPrice : null,
+                expectedCommissionRuleId: previewState[variant.variantId].ruleId,
                 expectedPriceOverrideMutationVersion: state.priceOverrideMutationVersion ?? 0,
                 attributesJson: Object.keys(normalizedAttributes).length > 0
                     ? normalizedAttributes
@@ -389,6 +400,21 @@ export default function CommerceHubSettings() {
             setSaving(prev => ({ ...prev, [variant.variantId]: false }))
         }
     }
+
+    const handleParentCategoryChange = async (variantId, parentCategoryId) => {
+        const children = getChildren(parentCategoryId)
+        const categoryId = parentCategoryId && children.length === 0 ? parentCategoryId : ''
+        updateEditState(variantId, { parentCategoryId, categoryId, attributes: {} })
+        if (categoryId) await loadAttributes(categoryId)
+    }
+
+    const handlePreviewResolution = useCallback((variantId, resolution) => {
+        setPreviewState(prev => {
+            const current = prev[variantId]
+            if (current?.ready === resolution.ready && current?.ruleId === resolution.ruleId) return prev
+            return { ...prev, [variantId]: resolution }
+        })
+    }, [])
 
     const toggleListingSelection = (listingId) => {
         setSelectedListingIds(prev => ({
@@ -490,32 +516,20 @@ export default function CommerceHubSettings() {
     // ─── Category Cascade Selector ──────────────────────────
     const renderCategorySelector = (variantId) => {
         const state = getEditState(variantId)
-        const selectedCat = categories.find(c => c.id === state.categoryId)
-        
-        // Determine parent selection
-        const isLeafCategory = selectedCat && !categories.some(c => c.parentId === selectedCat.id)
+        const parentId = state.parentCategoryId || ''
+        const subs = parentId ? getChildren(parentId) : []
 
         return (
-            <div className="flex flex-wrap gap-2 items-end">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {/* Root category */}
-                <div className="min-w-[160px]">
+                <div>
                     <label className="text-xs font-medium text-gray-500 mb-1 block">
                         {t('commerceHub.category')}
                     </label>
                     <select
                         aria-label={`${t('commerceHub.category')} — ${variantId}`}
-                        value={selectedCat?.parentId ? selectedCat.parentId : (state.categoryId || '')}
-                        onChange={e => {
-                            const parentId = e.target.value
-                            const parentChildren = getChildren(parentId)
-                            if (parentChildren.length > 0) {
-                                // Has children — don't set yet, wait for sub-category
-                                handleCategoryChange(variantId, '')
-                                updateEditState(variantId, { _pendingParent: parentId })
-                            } else {
-                                handleCategoryChange(variantId, parentId)
-                            }
-                        }}
+                        value={parentId}
+                        onChange={e => handleParentCategoryChange(variantId, e.target.value)}
                         className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                     >
                         <option value="">{t('commerceHub.selectPlaceholder')}</option>
@@ -527,34 +541,26 @@ export default function CommerceHubSettings() {
                     </select>
                 </div>
 
-                {/* Sub-category (if parent has children) */}
-                {(() => {
-                    const parentId = selectedCat?.parentId || state._pendingParent
-                    if (!parentId) return null
-                    const subs = getChildren(parentId)
-                    if (subs.length === 0) return null
-
-                    return (
-                        <div className="min-w-[160px]">
-                            <label className="text-xs font-medium text-gray-500 mb-1 block">
-                                {t('commerceHub.subcategory')}
-                            </label>
-                            <select
-                                aria-label={`${t('commerceHub.subcategory')} — ${variantId}`}
-                                value={isLeafCategory ? state.categoryId : ''}
-                                onChange={e => handleCategoryChange(variantId, e.target.value)}
-                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-                            >
-                                <option value="">{t('commerceHub.selectPlaceholder')}</option>
-                                {subs.map(cat => (
-                                    <option key={cat.id} value={cat.id}>
-                                        {cat.iconEmoji} {isRTL ? (cat.nameAr || cat.name) : cat.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    )
-                })()}
+                <div>
+                    <label className="text-xs font-medium text-gray-500 mb-1 block">
+                        {t('commerceHub.subcategory')}
+                    </label>
+                    <select
+                        aria-label={`${t('commerceHub.subcategory')} — ${variantId}`}
+                        value={subs.length === 0 && parentId ? parentId : state.categoryId}
+                        onChange={e => handleCategoryChange(variantId, e.target.value)}
+                        disabled={!parentId || subs.length === 0}
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white disabled:bg-slate-100"
+                    >
+                        <option value="">{!parentId ? t('commerceHub.selectMainCategoryFirst') : t('commerceHub.selectPlaceholder')}</option>
+                        {parentId && subs.length === 0 && <option value={parentId}>{t('commerceHub.subcategoryNotRequired')}</option>}
+                        {subs.map(cat => (
+                            <option key={cat.id} value={cat.id}>
+                                {cat.iconEmoji} {isRTL ? (cat.nameAr || cat.name) : cat.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
             </div>
         )
     }
@@ -848,14 +854,6 @@ export default function CommerceHubSettings() {
                                         const state = getEditState(variant.variantId)
                                         const isPublished = variant.listing?.isPublished
                                         const isSaving = saving[variant.variantId]
-                                        const isPriceOverrideEnabled = variant.isCommerceHubPriceOverrideEnabled === true
-                                        const effectivePrice = resolveEffectivePrice(
-                                            variant.price,
-                                            isPriceOverrideEnabled ? state.commerceHubPrice : null,
-                                        )
-                                        const isOverridePriceActive = isPriceOverrideEnabled
-                                            && state.commerceHubPrice !== null
-                                            && state.commerceHubPrice !== undefined
                                         const selectedCategoryName = getCategoryName(state.categoryId)
                                         const isCurrencyBlocked = variant.isCommerceHubCurrencyEligible !== true
                                         const currencyPolicyMessage = isCurrencyBlocked
@@ -872,10 +870,9 @@ export default function CommerceHubSettings() {
                                                     isPublished ? 'bg-green-50/30' : ''
                                                 }`}
                                             >
-                                                {/* Variant Info Row */}
-                                                <div className="flex items-start gap-4 flex-wrap">
-                                                    {/* Variant details */}
-                                                    <div className="flex-1 min-w-[200px]">
+                                                <div className="grid gap-4 lg:grid-cols-[0.7fr_1.3fr]">
+                                                    <section className="rounded-xl border border-slate-200 bg-white p-4">
+                                                        <h3 className="text-sm font-bold text-slate-950">{t('commerceHub.form.productIdentity')}</h3>
                                                         <div className="flex items-center gap-2">
                                                             <span className="text-sm font-mono text-gray-600">{variant.sku}</span>
                                                             {isPublished && (
@@ -898,41 +895,51 @@ export default function CommerceHubSettings() {
                                                                 {publicationEligibilityMessage}
                                                             </div>
                                                         )}
-                                                    </div>
+                                                    </section>
 
-                                                    {/* Category Selector */}
-                                                    <div className="min-w-0 w-full flex-1 sm:min-w-[320px]">
+                                                    <section className="rounded-xl border border-slate-200 bg-white p-4">
+                                                        <h3 className="mb-3 text-sm font-bold text-slate-950">{t('commerceHub.form.category')}</h3>
                                                         {renderCategorySelector(variant.variantId)}
-                                                    </div>
+                                                    </section>
+                                                </div>
 
-                                                    {/* Price Override */}
-                                                    <div className="min-w-[130px]">
-                                                        <label className="text-xs font-medium text-gray-500 mb-1 block">
-                                                            {t('commerceHub.priceOverride')}
-                                                        </label>
-                                                        <input
-                                                            type="number"
-                                                            step="0.01"
-                                                            min="0"
-                                                            value={isPriceOverrideEnabled ? state.commerceHubPrice ?? '' : ''}
-                                                            onChange={e => updateEditState(variant.variantId, { commerceHubPrice: e.target.value ? parseFloat(e.target.value) : null })}
-                                                            placeholder={isPriceOverrideEnabled ? t('commerceHub.autoPrice') : t('commerceHub.productPrice')}
-                                                            disabled={!isPriceOverrideEnabled}
-                                                            title={!isPriceOverrideEnabled ? t('commerceHub.priceOverrideDisabled') : undefined}
-                                                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
-                                                        />
-                                                        {!isPriceOverrideEnabled && (
-                                                            <p className="mt-1 max-w-[180px] text-xs leading-4 text-gray-500">
-                                                                {t('commerceHub.priceOverrideDisabled')}
-                                                            </p>
-                                                        )}
-                                                    </div>
+                                                {state.categoryId && (
+                                                    <section className="mt-4 rounded-xl border border-slate-200 bg-white p-4">
+                                                        <h3 className="text-sm font-bold text-slate-950">{t('commerceHub.form.attributes')}</h3>
+                                                        <p className="mt-1 text-xs text-slate-500">{t('commerceHub.form.attributesHelp')}</p>
+                                                        {renderAttributeForm(variant.variantId, state.categoryId)}
+                                                    </section>
+                                                )}
 
-                                                    {/* Actions */}
-                                                    <div className="flex items-end gap-2 min-w-[180px]">
+                                                <section className="mt-4 rounded-xl border border-slate-200 bg-white p-4">
+                                                    <h3 className="text-sm font-bold text-slate-950">{t('commerceHub.form.pricing')}</h3>
+                                                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                                                        <label className={`rounded-xl border p-3 ${state.pricingMode === 'source' ? 'border-indigo-400 bg-indigo-50' : 'border-slate-200'}`}><span className="flex items-start gap-2"><input type="radio" name={`pricing-${variant.variantId}`} checked={state.pricingMode === 'source'} onChange={() => updateEditState(variant.variantId, { pricingMode: 'source' })} /><span><span className="block text-sm font-semibold">{t('commerceHub.pricing.sourceMode')}</span><span className="block text-xs text-slate-500">{t('commerceHub.pricing.sourceHelp')}</span></span></span></label>
+                                                        <label className={`rounded-xl border p-3 ${state.pricingMode === 'custom' ? 'border-indigo-400 bg-indigo-50' : 'border-slate-200'}`}><span className="flex items-start gap-2"><input type="radio" name={`pricing-${variant.variantId}`} checked={state.pricingMode === 'custom'} onChange={() => updateEditState(variant.variantId, { pricingMode: 'custom' })} /><span><span className="block text-sm font-semibold">{t('commerceHub.pricing.customMode')}</span><span className="block text-xs text-slate-500">{t('commerceHub.pricing.customHelp')}</span></span></span></label>
+                                                    </div>
+                                                    {state.pricingMode === 'custom' && <div className="mt-3 max-w-xs"><label className="mb-1 block text-xs font-semibold text-slate-600">{t('commerceHub.pricing.customPrice')}</label><div className="relative"><input type="number" inputMode="decimal" step="0.01" min="0.01" value={state.commerceHubPrice ?? ''} onChange={e => updateEditState(variant.variantId, { commerceHubPrice: e.target.value ? Number(e.target.value) : null })} className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" /><span className={`pointer-events-none absolute inset-y-0 flex items-center text-xs font-bold text-slate-500 ${isRTL ? 'left-3' : 'right-3'}`}>EGP</span></div></div>}
+                                                </section>
+
+                                                <div className="mt-4">
+                                                    <CommissionPreviewPanel
+                                                        vendorId={currentVendorId}
+                                                        variantId={variant.variantId}
+                                                        parentCategoryId={state.parentCategoryId || null}
+                                                        categoryId={state.categoryId || null}
+                                                        categoryName={selectedCategoryName || null}
+                                                        pricingMode={state.pricingMode}
+                                                        marketplacePrice={state.pricingMode === 'custom' ? state.commerceHubPrice : null}
+                                                        onApplySuggestedPrice={(suggestedPrice) => updateEditState(variant.variantId, { pricingMode: 'custom', commerceHubPrice: suggestedPrice })}
+                                                        onResolutionChange={(resolution) => handlePreviewResolution(variant.variantId, resolution)}
+                                                    />
+                                                </div>
+
+                                                <section className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                                                    <div><h3 className="text-sm font-bold text-slate-950">{t('commerceHub.form.review')}</h3><p className="mt-1 text-xs text-slate-500">{previewState[variant.variantId]?.ready ? t('commerceHub.form.ready') : t('commerceHub.form.notReady')}</p></div>
+                                                    <div className="flex items-center gap-2">
                                                         <button
                                                             onClick={() => handlePublish(variant)}
-                                                            disabled={isSaving || !state.categoryId || isCurrencyBlocked || isPublicationBlocked || !canManageCatalog}
+                                                            disabled={isSaving || !state.categoryId || !previewState[variant.variantId]?.ready || isCurrencyBlocked || isPublicationBlocked || !canManageCatalog}
                                                             title={currencyPolicyMessage || publicationEligibilityMessage || undefined}
                                                             className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                                                                 isPublished
@@ -961,22 +968,7 @@ export default function CommerceHubSettings() {
                                                             </button>
                                                         )}
                                                     </div>
-                                                </div>
-
-                                                <CommissionPreviewPanel
-                                                    vendorId={currentVendorId}
-                                                    categoryId={state.categoryId || null}
-                                                    categoryName={selectedCategoryName || null}
-                                                    price={effectivePrice}
-                                                    priceLabel={isOverridePriceActive ? t('commerceHub.commerceHubPrice') : t('commerceHub.productPrice')}
-                                                    currencyCode="EGP"
-                                                    onApplySuggestedPrice={isPriceOverrideEnabled
-                                                        ? (suggestedPrice) => updateEditState(variant.variantId, { commerceHubPrice: suggestedPrice })
-                                                        : undefined}
-                                                />
-
-                                                {/* Dynamic Attributes (shown when category is selected) */}
-                                                {state.categoryId && renderAttributeForm(variant.variantId, state.categoryId)}
+                                                </section>
                                             </div>
                                         )
                                     })}

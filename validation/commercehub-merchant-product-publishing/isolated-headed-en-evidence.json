@@ -1,0 +1,29 @@
+{
+  "actualHeadedBrowser": true,
+  "language": "en",
+  "initial": {
+    "direction": "ltr",
+    "selectCount": 5,
+    "customRadioEnabled": true,
+    "sourceText": true
+  },
+  "parentId": "10000000-0000-0000-0000-000000000001",
+  "childOptions": [
+    "📺 TVs",
+    "📱 Mobile Phones",
+    "💻 Laptops"
+  ],
+  "invalidPairStatus": 400,
+  "english": {
+    "commissionText": "Commission and merchant proceeds\n\nAuthoritative preview of the amount deducted and the amount you receive.\n\nNo active commission rule applies. Ask the platform administrator to configure a valid rule before publishing.\nSource product price\n—\nMarketplace selling price\n—\nCommission rate\n—\nCommission deduction\n—\nYou will receive\n—\n\nRULE RESOLUTION\n\nApplied rule: awaiting resolution\n\nSource\n\nPending\n\nPriority\n\n—\n\nAdjust price to maintain my target earnings\nCalculate a suggested Marketplace price from the resolved percentage rate.",
+    "publishDisabled": true,
+    "customInputDisabled": false,
+    "horizontalOverflow": false
+  },
+  "previewStatuses": [
+    409,
+    409,
+    400
+  ],
+  "commerceHubWriteRequests": 0
+}

@@ -7,7 +7,7 @@ namespace PointOfSale.Tests.Architecture;
 public sealed class CommerceHubPriceAuthorityCertificationTests
 {
     [Fact]
-    public async Task Resolver_CurrentRuntimeBehavior_RemainsVariantEffectiveOnlinePrice()
+    public async Task Resolver_AcceptsPersistedMerchantMarketplacePrice()
     {
         var resolver = new CommerceHubPriceAuthority();
         var variant = new ProductVariant
@@ -18,16 +18,15 @@ public sealed class CommerceHubPriceAuthorityCertificationTests
 
         var resolution = await resolver.ResolveAsync(variant, overridePrice: 50m);
 
-        Assert.Equal(75m, resolution.FinalPrice);
+        Assert.Equal(50m, resolution.FinalPrice);
         Assert.Equal(75m, resolution.BaseVariantPrice);
-        Assert.Null(resolution.OverridePrice);
-        Assert.Equal(CommerceHubPriceSource.ProductVariantEffectiveOnlinePrice, resolution.PriceSource);
+        Assert.Equal(50m, resolution.OverridePrice);
+        Assert.Equal(CommerceHubPriceSource.CommerceHubOverride, resolution.PriceSource);
         Assert.True(resolution.AuthorityAccepted);
-        Assert.False(CommerceHubPriceAuthority.OverridesEnabled);
     }
 
     [Fact]
-    public void ResolverContract_MustExistAndKeepOverrideActivationDisabled()
+    public void ResolverContract_MustExistAndKeepListingPriceSeparate()
     {
         var source = ReadRepoFile("PointOfSale.Core/Pricing/CommerceHubPriceAuthority.cs");
         var listing = ReadRepoFile("PointOfSale.Core/Entities/CommerceHubListing.cs");

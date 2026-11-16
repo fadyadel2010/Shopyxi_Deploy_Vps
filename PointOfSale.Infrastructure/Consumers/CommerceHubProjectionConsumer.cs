@@ -216,10 +216,7 @@ public class CommerceHubProjectionConsumer :
             authoritativeVariantId,
             document.Price,
             context.CancellationToken);
-        document.CommerceHubPriceOverride =
-            CommerceHubPriceOverrideRuntimePolicy.IsEnabledForTenant(tenant)
-                ? sqlListing?.CommerceHubPrice
-                : null;
+        document.CommerceHubPriceOverride = sqlListing?.CommerceHubPrice;
         document.PriceSource = document.CommerceHubPriceOverride.HasValue
             ? CommerceHubPriceSource.CommerceHubOverride.ToString()
             : CommerceHubPriceSource.ProductVariantEffectiveOnlinePrice.ToString();
@@ -1078,10 +1075,7 @@ public class CommerceHubProjectionConsumer :
             variantId,
             existing?.Price ?? 0m,
             cancellationToken);
-        document.CommerceHubPriceOverride =
-            CommerceHubPriceOverrideRuntimePolicy.IsEnabledForTenant(tenant)
-                ? sqlListing.CommerceHubPrice
-                : null;
+        document.CommerceHubPriceOverride = sqlListing.CommerceHubPrice;
         document.PriceSource = document.CommerceHubPriceOverride.HasValue
             ? CommerceHubPriceSource.CommerceHubOverride.ToString()
             : CommerceHubPriceSource.ProductVariantEffectiveOnlinePrice.ToString();

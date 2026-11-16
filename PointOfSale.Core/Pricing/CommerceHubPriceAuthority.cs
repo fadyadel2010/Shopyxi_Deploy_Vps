@@ -99,8 +99,7 @@ public sealed class CommerceHubPriceAuthority : ICommerceHubPriceAuthority
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        var acceptedOverride = CommerceHubPriceOverrideRuntimePolicy.IsEnabledForTenant(tenantId) &&
-                               overridePrice.HasValue &&
+        var acceptedOverride = overridePrice.HasValue &&
                                overridePrice.Value > 0m
             ? overridePrice
             : null;

@@ -124,6 +124,7 @@ public class PublishToCommerceHubHandler : IPublishToCommerceHubHandler
     private readonly ITenantContext _tenantContext;
     private readonly IUserGovernanceService _userGovernanceService;
     private readonly ICommerceHubPriceAuthority _priceAuthority;
+    private readonly ICommissionService _commissionService;
     private readonly IMarketplaceEventOutboxService _marketplaceEventOutbox;
     private readonly ILogger<PublishToCommerceHubHandler> _logger;
 
@@ -134,6 +135,7 @@ public class PublishToCommerceHubHandler : IPublishToCommerceHubHandler
         ITenantContext tenantContext,
         IUserGovernanceService userGovernanceService,
         ICommerceHubPriceAuthority priceAuthority,
+        ICommissionService commissionService,
         IMarketplaceEventOutboxService marketplaceEventOutbox,
         ILogger<PublishToCommerceHubHandler> logger)
     {
@@ -143,6 +145,7 @@ public class PublishToCommerceHubHandler : IPublishToCommerceHubHandler
         _tenantContext = tenantContext;
         _userGovernanceService = userGovernanceService;
         _priceAuthority = priceAuthority;
+        _commissionService = commissionService;
         _marketplaceEventOutbox = marketplaceEventOutbox;
         _logger = logger;
     }
@@ -151,7 +154,7 @@ public class PublishToCommerceHubHandler : IPublishToCommerceHubHandler
         PublishToCommerceHubCommand command,
         CancellationToken cancellationToken = default)
     {
-        ValidatePublishOrUpdate(command.TenantId, command.VariantId, command.CategoryId, command.CommerceHubPrice);
+        ValidatePublishOrUpdate(command.TenantId, command.VariantId, command.CategoryId, command.CommerceHubPrice, command.PricingMode);
         var tenant = await _dbContext.Tenants.AsNoTracking().FirstOrDefaultAsync(t => t.Id == command.TenantId, cancellationToken);
         if (tenant == null)
         {
@@ -171,7 +174,9 @@ public class PublishToCommerceHubHandler : IPublishToCommerceHubHandler
             throw new CommerceHubValidationException(exception.Message);
         }
         await EnsureTenantHasActiveShippingAsync(command.TenantId, cancellationToken);
-        await EnsureLiveCommerceHubCategoryAsync(command.CategoryId, cancellationToken);
+        await CommerceHubCategorySelectionAuthority.ValidateAsync(
+            _dbContext, command.ParentCategoryId, command.CategoryId, cancellationToken);
+        EnsureCurrentCommission(command.TenantId, command.CategoryId, command.ExpectedCommissionRuleId);
 
         _logger.LogInformation(
             "CommerceHub publish requested | TenantId: {TenantId} | VariantId: {VariantId} | CategoryId: {CategoryId} | AttributesJson: {AttributesJson}",
@@ -486,7 +491,12 @@ public class PublishToCommerceHubHandler : IPublishToCommerceHubHandler
             cancellationToken);
     }
 
-    internal static void ValidatePublishOrUpdate(Guid tenantId, Guid variantId, Guid categoryId, decimal? commerceHubPrice)
+    internal static void ValidatePublishOrUpdate(
+        Guid tenantId,
+        Guid variantId,
+        Guid categoryId,
+        decimal? commerceHubPrice,
+        string? pricingMode = null)
     {
         if (tenantId == Guid.Empty)
             throw new CommerceHubValidationException("TenantId is required.");
@@ -496,9 +506,25 @@ public class PublishToCommerceHubHandler : IPublishToCommerceHubHandler
             throw new CommerceHubValidationException("CategoryId is required.");
         if (commerceHubPrice is <= 0m)
             throw new CommerceHubValidationException("CommerceHubPrice override must be greater than zero.");
-        if (commerceHubPrice.HasValue &&
-            !CommerceHubPriceOverrideRuntimePolicy.IsEnabledForTenant(tenantId))
-            throw new CommerceHubValidationException("CommerceHub price overrides are disabled for this tenant.");
+        if (commerceHubPrice.HasValue && decimal.Round(commerceHubPrice.Value, 2) != commerceHubPrice.Value)
+            throw new CommerceHubValidationException("CommerceHubPrice supports at most two decimal places.");
+
+        var normalizedMode = pricingMode?.Trim().ToLowerInvariant();
+        if (normalizedMode == "custom" && !commerceHubPrice.HasValue)
+            throw new CommerceHubValidationException("A custom CommerceHub price is required in custom pricing mode.");
+        if (normalizedMode == "source" && commerceHubPrice.HasValue)
+            throw new CommerceHubValidationException("Source-price mode cannot include a CommerceHub price override.");
+        if (normalizedMode is not (null or "" or "source" or "custom"))
+            throw new CommerceHubValidationException("PricingMode must be either source or custom.");
+    }
+
+    private void EnsureCurrentCommission(Guid tenantId, Guid categoryId, Guid? expectedRuleId)
+    {
+        var resolution = _commissionService.ResolveCommission(tenantId, categoryId);
+        if (expectedRuleId.HasValue && resolution.RuleId != expectedRuleId.Value)
+        {
+            throw new CommerceHubValidationException("The commission rule changed after preview. Refresh the preview before publishing.");
+        }
     }
 
     internal static async Task PublishPriceOverrideEventAsync(
@@ -563,6 +589,7 @@ public class UpdateCommerceHubListingHandler : IUpdateCommerceHubListingHandler
     private readonly ITenantContext _tenantContext;
     private readonly IUserGovernanceService _userGovernanceService;
     private readonly ICommerceHubPriceAuthority _priceAuthority;
+    private readonly ICommissionService _commissionService;
     private readonly IMarketplaceEventOutboxService _marketplaceEventOutbox;
     private readonly ILogger<UpdateCommerceHubListingHandler> _logger;
 
@@ -573,6 +600,7 @@ public class UpdateCommerceHubListingHandler : IUpdateCommerceHubListingHandler
         ITenantContext tenantContext,
         IUserGovernanceService userGovernanceService,
         ICommerceHubPriceAuthority priceAuthority,
+        ICommissionService commissionService,
         IMarketplaceEventOutboxService marketplaceEventOutbox,
         ILogger<UpdateCommerceHubListingHandler> logger)
     {
@@ -582,6 +610,7 @@ public class UpdateCommerceHubListingHandler : IUpdateCommerceHubListingHandler
         _tenantContext = tenantContext;
         _userGovernanceService = userGovernanceService;
         _priceAuthority = priceAuthority;
+        _commissionService = commissionService;
         _marketplaceEventOutbox = marketplaceEventOutbox;
         _logger = logger;
     }
@@ -590,7 +619,8 @@ public class UpdateCommerceHubListingHandler : IUpdateCommerceHubListingHandler
         UpdateCommerceHubListingCommand command,
         CancellationToken cancellationToken = default)
     {
-        PublishToCommerceHubHandler.ValidatePublishOrUpdate(command.TenantId, command.VariantId, command.CategoryId, command.CommerceHubPrice);
+        PublishToCommerceHubHandler.ValidatePublishOrUpdate(
+            command.TenantId, command.VariantId, command.CategoryId, command.CommerceHubPrice, command.PricingMode);
         var tenant = await _dbContext.Tenants.AsNoTracking().FirstOrDefaultAsync(t => t.Id == command.TenantId, cancellationToken);
         if (tenant == null)
         {
@@ -609,7 +639,9 @@ public class UpdateCommerceHubListingHandler : IUpdateCommerceHubListingHandler
         {
             throw new CommerceHubValidationException(exception.Message);
         }
-        await EnsureLiveCommerceHubCategoryAsync(command.CategoryId, cancellationToken);
+        await CommerceHubCategorySelectionAuthority.ValidateAsync(
+            _dbContext, command.ParentCategoryId, command.CategoryId, cancellationToken);
+        EnsureCurrentCommission(command.TenantId, command.CategoryId, command.ExpectedCommissionRuleId);
 
         _logger.LogInformation(
             "CommerceHub update requested | TenantId: {TenantId} | VariantId: {VariantId} | CategoryId: {CategoryId} | AttributesJson: {AttributesJson}",
@@ -766,6 +798,15 @@ public class UpdateCommerceHubListingHandler : IUpdateCommerceHubListingHandler
         if (!await CommerceHubCategoryLineageAuthority.IsLiveAsync(_dbContext, categoryId, cancellationToken))
         {
             throw new CommerceHubValidationException("CommerceHub category is not currently available for listing publication.");
+        }
+    }
+
+    private void EnsureCurrentCommission(Guid tenantId, Guid categoryId, Guid? expectedRuleId)
+    {
+        var resolution = _commissionService.ResolveCommission(tenantId, categoryId);
+        if (expectedRuleId.HasValue && resolution.RuleId != expectedRuleId.Value)
+        {
+            throw new CommerceHubValidationException("The commission rule changed after preview. Refresh the preview before updating the listing.");
         }
     }
 }

@@ -15,7 +15,7 @@ public sealed class DataAuthorityViolationHardeningTests
         Assert.NotNull(publishMethod);
         Assert.NotNull(resolveMethod);
 
-        Assert.Contains("CommerceHubPriceOverrideRuntimePolicy.IsEnabledForTenant", source, StringComparison.Ordinal);
+        Assert.Contains("EnsureVendorListingAllowedAsync", source, StringComparison.Ordinal);
         Assert.Contains("ValidateCommerceHubPriceOverride", entity, StringComparison.Ordinal);
         Assert.Contains("CommerceHubPrice = commerceHubPrice", entity, StringComparison.Ordinal);
         Assert.Contains("new CommerceHubPriceAuthority()", resolveMethod, StringComparison.Ordinal);
@@ -32,7 +32,7 @@ public sealed class DataAuthorityViolationHardeningTests
     {
         var source = File.ReadAllText(InfrastructurePath("Consumers", "CommerceHubProjectionConsumer.cs"));
 
-        Assert.Contains("CommerceHubPriceOverrideRuntimePolicy.IsEnabledForTenant", source, StringComparison.Ordinal);
+        Assert.Contains("document.CommerceHubPriceOverride = sqlListing.CommerceHubPrice", source, StringComparison.Ordinal);
         Assert.Contains(".Set(x => x.CommerceHubPriceOverride, priceResolution.OverridePrice)", source, StringComparison.Ordinal);
         Assert.DoesNotContain("listing.CommerceHubPriceOverride.HasValue", source, StringComparison.Ordinal);
     }

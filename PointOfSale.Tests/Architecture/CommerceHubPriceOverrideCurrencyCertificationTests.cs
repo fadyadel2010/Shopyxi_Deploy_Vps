@@ -18,7 +18,7 @@ public sealed class CommerceHubPriceOverrideCurrencyCertificationTests
 
         Assert.Contains("ResolveAsync(tenantId, variant.EffectiveOnlinePrice, listing.CommerceHubPrice", overlay, StringComparison.Ordinal);
         Assert.Contains("FinancialCurrencyGuard.PlatformBaseCurrencyCode", overlay, StringComparison.Ordinal);
-        Assert.Contains("CommerceHubPriceOverrideRuntimePolicy.IsEnabledForTenant", priceAuthority, StringComparison.Ordinal);
+        Assert.Contains("overridePrice.HasValue", priceAuthority, StringComparison.Ordinal);
         Assert.Contains("CommerceHubPriceOverrideSavedEvent", handlers, StringComparison.Ordinal);
         Assert.Contains("priceResolution.OverridePrice", projection, StringComparison.Ordinal);
         Assert.Contains("ResolveCurrency()", projection, StringComparison.Ordinal);

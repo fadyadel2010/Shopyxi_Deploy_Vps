@@ -7,7 +7,7 @@ namespace PointOfSale.Tests.Architecture;
 public sealed class CommerceHubPriceOverrideActivationCertificationTests
 {
     [Fact]
-    public async Task ActivationGate_MustRemainClosedUntilRequiredControlsExist()
+    public async Task ApprovedSellerListingPrice_IsAcceptedByCentralAuthority()
     {
         var resolver = new CommerceHubPriceAuthority();
         var variant = new ProductVariant
@@ -18,10 +18,9 @@ public sealed class CommerceHubPriceOverrideActivationCertificationTests
 
         var resolution = await resolver.ResolveAsync(variant, overridePrice: 50m);
 
-        Assert.False(CommerceHubPriceAuthority.OverridesEnabled);
-        Assert.Equal(80m, resolution.FinalPrice);
-        Assert.Null(resolution.OverridePrice);
-        Assert.Equal(CommerceHubPriceSource.ProductVariantEffectiveOnlinePrice, resolution.PriceSource);
+        Assert.Equal(50m, resolution.FinalPrice);
+        Assert.Equal(50m, resolution.OverridePrice);
+        Assert.Equal(CommerceHubPriceSource.CommerceHubOverride, resolution.PriceSource);
     }
 
     [Fact]
@@ -34,7 +33,7 @@ public sealed class CommerceHubPriceOverrideActivationCertificationTests
         var projection = ReadRepoFile("PointOfSale.Infrastructure/Consumers/CommerceHubProjectionConsumer.cs");
         var overlay = ReadRepoFile("PointOfSale.Infrastructure/Elasticsearch/Services/CommerceHubSearchSqlAuthorityOverlay.cs");
 
-        Assert.Contains("CommerceHubPriceOverrideRuntimePolicy", resolver, StringComparison.Ordinal);
+        Assert.Contains("overridePrice.HasValue", resolver, StringComparison.Ordinal);
         Assert.Contains("ValidateCommerceHubPriceOverride(commerceHubPrice);", listing, StringComparison.Ordinal);
         Assert.Contains("GuardCommerceHubPriceAuthority", dbContext, StringComparison.Ordinal);
         Assert.Contains("\\\"CommerceHubPrice\\\" IS NULL OR \\\"CommerceHubPrice\\\" > 0", config, StringComparison.Ordinal);

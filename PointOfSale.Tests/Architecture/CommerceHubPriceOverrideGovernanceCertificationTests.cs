@@ -7,7 +7,7 @@ namespace PointOfSale.Tests.Architecture;
 public sealed class CommerceHubPriceOverrideGovernanceCertificationTests
 {
     [Fact]
-    public async Task OperationalGovernanceFreeze_MustNotActivateOverridePricing()
+    public async Task OperationalGovernance_MustApplyPersistedMerchantPrice()
     {
         var resolver = new CommerceHubPriceAuthority();
         var variant = new ProductVariant
@@ -18,10 +18,9 @@ public sealed class CommerceHubPriceOverrideGovernanceCertificationTests
 
         var resolution = await resolver.ResolveAsync(variant, overridePrice: 50m);
 
-        Assert.False(CommerceHubPriceAuthority.OverridesEnabled);
-        Assert.Equal(80m, resolution.FinalPrice);
-        Assert.Null(resolution.OverridePrice);
-        Assert.Equal(CommerceHubPriceSource.ProductVariantEffectiveOnlinePrice, resolution.PriceSource);
+        Assert.Equal(50m, resolution.FinalPrice);
+        Assert.Equal(50m, resolution.OverridePrice);
+        Assert.Equal(CommerceHubPriceSource.CommerceHubOverride, resolution.PriceSource);
     }
 
     [Fact]
