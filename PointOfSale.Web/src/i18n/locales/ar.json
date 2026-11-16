@@ -1537,6 +1537,11 @@
     }
   },
   "common": {
+    "help": "مساعدة",
+    "helpUnavailable": "مقال المساعدة متاح قريباً",
+    "available": "متاح",
+    "soon": "قريباً",
+    "helpCenter": "مركز المساعدة",
     "activeOnly": "النشط فقط",
     "syncing": "جارٍ المزامنة…",
     "search": "بحث",

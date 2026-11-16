@@ -1537,6 +1537,11 @@
     }
   },
   "common": {
+    "help": "Help",
+    "helpUnavailable": "Help article coming soon",
+    "available": "Available",
+    "soon": "Soon",
+    "helpCenter": "Help Center",
     "activeOnly": "Active only",
     "syncing": "Syncing…",
     "search": "Search",

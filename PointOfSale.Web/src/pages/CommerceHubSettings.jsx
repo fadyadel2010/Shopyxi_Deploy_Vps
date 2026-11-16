@@ -214,6 +214,11 @@ export default function CommerceHubSettings() {
 
         return isRTL ? (category.nameAr || category.name) : category.name
     }
+    const getInventoryStatusLabel = (status) => {
+        if (status === 'in_stock') return t('commerceHub.publishing.inStock')
+        if (status === 'out_of_stock') return t('commerceHub.publishing.outOfStock')
+        return t('commerceHub.publishing.unavailable')
+    }
 
     // ─── Load attributes for a category ─────────────────────
     const loadAttributes = useCallback(async (categoryId) => {
@@ -754,9 +759,9 @@ export default function CommerceHubSettings() {
                                             <div className="text-xs text-gray-500 max-w-xs">{row.suppressionReason || row.orphanReason}</div>
                                         )}
                                     </td>
-                                    <td className="px-3 py-2">{row.categoryName || '-'}</td>
+                                    <td className="px-3 py-2">{getCategoryName(row.categoryId) || (isRTL ? t('common.unavailable') : row.categoryName) || '-'}</td>
                                     <td className="px-3 py-2">
-                                        {row.inventoryStatus} ({formatNumber(row.inventoryAvailable ?? 0)})
+                                        {getInventoryStatusLabel(row.inventoryStatus)} ({formatNumber(row.inventoryAvailable ?? 0)})
                                     </td>
                                     <td className="px-3 py-2">
                                         {row.overrideEnabled ? formatCurrency(row.commerceHubPrice || 0, 'EGP') : t('commerceHub.publishing.basePrice')}

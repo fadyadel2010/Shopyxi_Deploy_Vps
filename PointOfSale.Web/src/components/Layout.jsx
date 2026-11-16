@@ -112,7 +112,7 @@ function LayoutContent() {
                                             {user?.firstName} {user?.lastName}
                                         </div>
                                         <div className="text-xs text-gray-500">
-                                            {user?.role}
+                                            {t(`userManagement.roles.${user?.role}`, { defaultValue: t('common.unavailable') })}
                                         </div>
                                     </div>
                                     <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold shadow-md">
