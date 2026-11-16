@@ -60,3 +60,12 @@ Authenticated **production Affiliate dashboard** acceptance is not yet proven. N
 ## Preservation
 
 The original worktree remains at its original HEAD with all 35 protected working entries byte-for-byte unchanged. The retained working-differences patch hash is unchanged. No force-push, reset, history rewrite, or broad cleanup was used.
+
+## GitHub delivery
+
+- Implementation/release commit: `d0363b2e486aeca78488718a11ec3104b2f565e7`.
+- Feature branch: `affiliate/analytics-conversion-bridge`, pushed to `origin`.
+- Remote `main` was safely fast-forwarded from `ddfbe18ee55a965f1f8ff8c2b0b9e1e8cf196158` to the release commit.
+- Annotated deployed-release tag: `affiliate-analytics-conversion-bridge-20261116`, pushed only after independent runtime parity verification. The annotation explicitly retains the authenticated production Affiliate UI gap.
+- All staged production build inputs were checked against the sealed deployed inputs: 2,658 API and 2,195 Web inputs. Git EOL normalization differences for API inputs: zero.
+- This final delivery-note update changes documentation only; the release tag identifies the application/evidence commit, not a claim that production Affiliate UI acceptance was completed.
