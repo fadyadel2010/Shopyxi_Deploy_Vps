@@ -71,14 +71,14 @@ const resolveEffectivePrice = (variantPrice, commerceHubPrice) => {
 const getCommerceHubErrorMessage = (error, fallbackMessage) =>
     error?.response?.data?.message || error?.message || fallbackMessage
 
-const getCommerceHubCurrencyPolicyMessage = (variant) =>
+const getCommerceHubCurrencyPolicyMessage = (variant, fallbackMessage) =>
     variant?.commerceHubCurrencyPolicyMessage ||
-    `CommerceHub currently supports EGP products only. This product uses ${variant?.productCurrency || 'an unsupported currency'} and cannot be published.`
+    fallbackMessage
 
-const formatProductCurrencyPrice = (formatCurrency, amount, currency) => {
+const formatProductCurrencyPrice = (formatCurrency, amount, currency, unavailableLabel) => {
     const normalizedCurrency = typeof currency === 'string' ? currency.trim() : ''
     if (!normalizedCurrency) {
-        return 'Currency unavailable'
+        return unavailableLabel
     }
 
     return formatCurrency(amount, normalizedCurrency)
@@ -104,6 +104,7 @@ export default function CommerceHubSettings() {
 
     const [loading, setLoading] = useState(true)
     const [products, setProducts] = useState([])
+    const [catalogSearch, setCatalogSearch] = useState('')
     const [listingSearch, setListingSearch] = useState('')
     const [listingFilters, setListingFilters] = useState({
         status: '',
@@ -130,6 +131,7 @@ export default function CommerceHubSettings() {
     const [categoryAttributes, setCategoryAttributes] = useState({})
     const categoryAttributesRef = useRef({})
     const pendingAttributeLoadsRef = useRef({})
+    const catalogSearchRef = useRef(null)
 
     useEffect(() => {
         categoryAttributesRef.current = categoryAttributes
@@ -299,12 +301,12 @@ export default function CommerceHubSettings() {
     // ─── Publish / Update / Unpublish ───────────────────────
     const handlePublish = async (variant) => {
         if (!canManageCatalog) {
-            showError('Current backend vendor eligibility does not allow catalog publishing.')
+            showError(t('commerceHub.publishing.notAuthorized'))
             return
         }
 
         if (variant.isCommerceHubCurrencyEligible !== true) {
-            showError(getCommerceHubCurrencyPolicyMessage(variant))
+            showError(getCommerceHubCurrencyPolicyMessage(variant, t('commerceHub.publishing.currencyBlocked', { currency: variant?.productCurrency || t('common.unavailable') })))
             return
         }
 
@@ -369,7 +371,7 @@ export default function CommerceHubSettings() {
 
     const handleUnpublish = async (variant) => {
         if (!canManageCatalog) {
-            showError('Current backend vendor eligibility does not allow catalog publishing.')
+            showError(t('commerceHub.publishing.notAuthorized'))
             return
         }
 
@@ -401,12 +403,12 @@ export default function CommerceHubSettings() {
 
     const handleBulkOperation = async (operation) => {
         if (!canManageCatalog) {
-            showError('Current backend vendor eligibility does not allow catalog publishing.')
+            showError(t('commerceHub.publishing.notAuthorized'))
             return
         }
 
         if (selectedListingIdList.length === 0) {
-            showError('Select at least one listing first.')
+            showError(t('commerceHub.publishing.selectListing'))
             return
         }
 
@@ -418,14 +420,14 @@ export default function CommerceHubSettings() {
             })
             const failed = response.data?.failed ?? 0
             if (failed > 0) {
-                showError(`${failed} listing operations failed. Review row outcomes and refresh.`)
+                showError(t('commerceHub.publishing.bulkFailedCount', { count: failed }))
             } else {
-                showSuccess('Bulk operation completed.')
+                showSuccess(t('commerceHub.publishing.bulkCompleted'))
             }
             setSelectedListingIds({})
             await fetchData()
         } catch (error) {
-            showError(getCommerceHubErrorMessage(error, 'Bulk listing operation failed.'))
+            showError(getCommerceHubErrorMessage(error, t('commerceHub.publishing.bulkFailed')))
         } finally {
             setBulkSaving(false)
         }
@@ -566,58 +568,63 @@ export default function CommerceHubSettings() {
         )
     }
 
-    const publishedCount = products.reduce((acc, p) => 
+    const publishedCount = products.reduce((acc, p) =>
         acc + p.variants.filter(v => v.listing?.isPublished).length, 0)
     const totalVariants = products.reduce((acc, p) => acc + p.variants.length, 0)
+    const normalizedCatalogSearch = catalogSearch.trim().toLowerCase()
+    const filteredProducts = normalizedCatalogSearch
+        ? products.filter(product =>
+            product.name?.toLowerCase().includes(normalizedCatalogSearch) ||
+            product.variants?.some(variant => variant.sku?.toLowerCase().includes(normalizedCatalogSearch)))
+        : products
 
     return (
-        <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className="mx-auto max-w-[1500px] space-y-5" dir={isRTL ? 'rtl' : 'ltr'}>
             {/* Header */}
-            <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="flex min-w-0 max-w-full items-center gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
-                        <span className="text-2xl">🏪</span>
+            <div className="flex flex-col gap-4 border-b border-slate-200 pb-5 sm:flex-row sm:items-start sm:justify-between">
+                <div className="flex min-w-0 max-w-full items-start gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-100 text-lg">
+                        <span aria-hidden="true">🏪</span>
                     </div>
                     <div>
-                        <h2 className="text-xl font-bold text-gray-900">
-                            {t('commerceHub.title')}
-                        </h2>
-                        <p className="text-sm text-gray-500">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <h1 className="text-2xl font-bold text-slate-950">{t('commerceHub.publishing.title')}</h1>
+                            <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-bold text-emerald-800">{t('commerceHub.publishing.approvedSeller')}</span>
+                        </div>
+                        <p className="mt-1 max-w-2xl text-sm leading-6 text-slate-600">
                             {t('commerceHub.subtitle')}
                         </p>
                     </div>
                 </div>
-                <button
-                    onClick={fetchData}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                    <span className="text-sm">{t('common.refresh')}</span>
-                </button>
+                <div className="flex flex-wrap gap-2">
+                    <button onClick={() => { catalogSearchRef.current?.focus(); catalogSearchRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }) }} className="rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700">{t('commerceHub.publishing.findProduct')}</button>
+                    <button onClick={fetchData} className="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50">{t('common.refresh')}</button>
+                </div>
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="bg-white border border-gray-200 rounded-xl p-4">
-                    <div className="text-xs text-gray-500 uppercase tracking-wide">{t('commerceHub.stats.totalProducts')}</div>
-                    <div className="text-2xl font-bold text-gray-900 mt-1">{formatNumber(products.length)}</div>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+                    <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t('commerceHub.stats.totalProducts')}</div>
+                    <div className="mt-1 text-2xl font-bold text-slate-950">{formatNumber(products.length)}</div>
                 </div>
-                <div className="bg-white border border-gray-200 rounded-xl p-4">
-                    <div className="text-xs text-gray-500 uppercase tracking-wide">{t('commerceHub.stats.totalVariants')}</div>
-                    <div className="text-2xl font-bold text-gray-900 mt-1">{formatNumber(totalVariants)}</div>
+                <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+                    <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t('commerceHub.stats.totalVariants')}</div>
+                    <div className="mt-1 text-2xl font-bold text-slate-950">{formatNumber(totalVariants)}</div>
                 </div>
-                <div className="bg-white border border-green-200 rounded-xl p-4">
-                    <div className="text-xs text-green-600 uppercase tracking-wide">{t('commerceHub.stats.published')}</div>
-                    <div className="text-2xl font-bold text-green-700 mt-1">{formatNumber(publishedCount)}</div>
+                <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 shadow-sm">
+                    <div className="text-xs font-semibold uppercase tracking-wide text-emerald-700">{t('commerceHub.stats.published')}</div>
+                    <div className="mt-1 text-2xl font-bold text-emerald-800">{formatNumber(publishedCount)}</div>
                 </div>
             </div>
 
             {/* Authoritative Listing Operations Console */}
-            <div className="bg-white border border-gray-200 rounded-xl p-5 space-y-4">
+            <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <div className="flex items-start justify-between gap-4 flex-wrap">
                     <div className="min-w-0 max-w-full">
-                        <h3 className="text-lg font-semibold text-gray-900">Listing operations console</h3>
+                        <h2 className="text-lg font-bold text-slate-950">{t('commerceHub.publishing.listingOverview')}</h2>
                         <p className="text-sm text-gray-500">
-                            SQL-authoritative search, filters, suppression visibility, orphan visibility, KPIs, analytics, notifications, and bulk operations.
+                            {t('commerceHub.publishing.listingOverviewHelp')}
                         </p>
                     </div>
                     <div className="flex flex-wrap gap-2">
@@ -626,26 +633,26 @@ export default function CommerceHubSettings() {
                             disabled={bulkSaving || selectedListingIdList.length === 0 || !canManageCatalog}
                             className="px-3 py-2 text-sm font-medium text-red-700 bg-red-50 border border-red-200 rounded-lg disabled:opacity-50"
                         >
-                            Bulk unpublish
+                            {t('commerceHub.publishing.bulkUnpublish')}
                         </button>
                         <button
                             onClick={() => handleBulkOperation('remove_override')}
                             disabled={bulkSaving || selectedListingIdList.length === 0 || !canManageCatalog}
                             className="px-3 py-2 text-sm font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-lg disabled:opacity-50"
                         >
-                            Bulk remove overrides
+                            {t('commerceHub.publishing.bulkRemoveOverrides')}
                         </button>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
                     {[
-                        ['Total', listingKpis?.totalListings],
-                        ['Published', listingKpis?.publishedListings],
-                        ['Unpublished', listingKpis?.unpublishedListings],
-                        ['Suppressed', listingKpis?.suppressedListings],
-                        ['Override enabled', listingKpis?.overrideEnabledListings],
-                        ['Orphaned', listingKpis?.orphanedListings],
+                        [t('commerceHub.publishing.total'), listingKpis?.totalListings],
+                        [t('commerceHub.publishing.published'), listingKpis?.publishedListings],
+                        [t('commerceHub.publishing.unpublished'), listingKpis?.unpublishedListings],
+                        [t('commerceHub.publishing.suppressed'), listingKpis?.suppressedListings],
+                        [t('commerceHub.publishing.overrideEnabled'), listingKpis?.overrideEnabledListings],
+                        [t('commerceHub.publishing.needsAttention'), listingKpis?.orphanedListings],
                     ].map(([label, value]) => (
                         <div key={label} className="border border-gray-100 rounded-lg p-3">
                             <div className="text-xs uppercase text-gray-500">{label}</div>
@@ -658,41 +665,41 @@ export default function CommerceHubSettings() {
                     <input
                         value={listingSearch}
                         onChange={event => setListingSearch(event.target.value)}
-                        placeholder="Search product, variant, SKU, barcode, category"
+                        placeholder={t('commerceHub.publishing.searchListings')}
                         className="md:col-span-2 px-3 py-2 text-sm border border-gray-300 rounded-lg"
                     />
                     <select
-                        aria-label="Listing status"
+                        aria-label={t('commerceHub.publishing.statusFilter')}
                         value={listingFilters.status}
                         onChange={event => setListingFilters(prev => ({ ...prev, status: event.target.value }))}
                         className="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white"
                     >
-                        <option value="">All statuses</option>
-                        <option value="published">Published</option>
-                        <option value="unpublished">Unpublished</option>
-                        <option value="suppressed">Suppressed</option>
-                        <option value="orphaned">Orphaned</option>
+                        <option value="">{t('commerceHub.publishing.allStatuses')}</option>
+                        <option value="published">{t('commerceHub.publishing.published')}</option>
+                        <option value="unpublished">{t('commerceHub.publishing.unpublished')}</option>
+                        <option value="suppressed">{t('commerceHub.publishing.suppressed')}</option>
+                        <option value="orphaned">{t('commerceHub.publishing.needsAttention')}</option>
                     </select>
                     <select
-                        aria-label="Listing inventory"
+                        aria-label={t('commerceHub.publishing.inventoryFilter')}
                         value={listingFilters.inventoryStatus}
                         onChange={event => setListingFilters(prev => ({ ...prev, inventoryStatus: event.target.value }))}
                         className="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white"
                     >
-                        <option value="">All inventory</option>
-                        <option value="in_stock">In stock</option>
-                        <option value="out_of_stock">Out of stock</option>
-                        <option value="unavailable">Unavailable</option>
+                        <option value="">{t('commerceHub.publishing.allInventory')}</option>
+                        <option value="in_stock">{t('commerceHub.publishing.inStock')}</option>
+                        <option value="out_of_stock">{t('commerceHub.publishing.outOfStock')}</option>
+                        <option value="unavailable">{t('commerceHub.publishing.unavailable')}</option>
                     </select>
                     <select
-                        aria-label="Listing price override"
+                        aria-label={t('commerceHub.publishing.priceFilter')}
                         value={listingFilters.overrideEnabled}
                         onChange={event => setListingFilters(prev => ({ ...prev, overrideEnabled: event.target.value }))}
                         className="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white"
                     >
-                        <option value="">All overrides</option>
-                        <option value="true">Override enabled</option>
-                        <option value="false">No override</option>
+                        <option value="">{t('commerceHub.publishing.allPriceModes')}</option>
+                        <option value="true">{t('commerceHub.publishing.overrideEnabled')}</option>
+                        <option value="false">{t('commerceHub.publishing.basePrice')}</option>
                     </select>
                 </div>
 
@@ -710,12 +717,12 @@ export default function CommerceHubSettings() {
                     <table className="min-w-full text-sm">
                         <thead className="bg-gray-50 text-gray-600">
                             <tr>
-                                <th className="px-3 py-2 text-left">Select</th>
-                                <th className="px-3 py-2 text-left">Listing</th>
-                                <th className="px-3 py-2 text-left">Status</th>
-                                <th className="px-3 py-2 text-left">Category</th>
-                                <th className="px-3 py-2 text-left">Inventory</th>
-                                <th className="px-3 py-2 text-left">Override</th>
+                                <th className="px-3 py-2 text-start">{t('commerceHub.publishing.select')}</th>
+                                <th className="px-3 py-2 text-start">{t('commerceHub.publishing.listing')}</th>
+                                <th className="px-3 py-2 text-start">{t('commerceHub.publishing.statusLabel')}</th>
+                                <th className="px-3 py-2 text-start">{t('commerceHub.category')}</th>
+                                <th className="px-3 py-2 text-start">{t('commerceHub.publishing.inventory')}</th>
+                                <th className="px-3 py-2 text-start">{t('commerceHub.publishing.priceMode')}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -724,7 +731,7 @@ export default function CommerceHubSettings() {
                                     <td className="px-3 py-2">
                                         <input
                                             type="checkbox"
-                                            aria-label={`Select ${row.productName} — ${row.sku || row.variantId}`}
+                                            aria-label={t('commerceHub.publishing.selectListingNamed', { name: row.productName, sku: row.sku || row.variantId })}
                                             checked={!!selectedListingIds[row.listingId]}
                                             onChange={() => toggleListingSelection(row.listingId)}
                                         />
@@ -735,7 +742,7 @@ export default function CommerceHubSettings() {
                                     </td>
                                     <td className="px-3 py-2">
                                         <div className="font-medium">
-                                            {row.isSuppressed ? 'Suppressed' : row.isOrphaned ? 'Orphaned' : row.isPublished ? 'Published' : 'Unpublished'}
+                                            {row.isSuppressed ? t('commerceHub.publishing.suppressed') : row.isOrphaned ? t('commerceHub.publishing.needsAttention') : row.isPublished ? t('commerceHub.publishing.published') : t('commerceHub.publishing.unpublished')}
                                         </div>
                                         {(row.suppressionReason || row.orphanReason) && (
                                             <div className="text-xs text-gray-500 max-w-xs">{row.suppressionReason || row.orphanReason}</div>
@@ -746,14 +753,14 @@ export default function CommerceHubSettings() {
                                         {row.inventoryStatus} ({formatNumber(row.inventoryAvailable ?? 0)})
                                     </td>
                                     <td className="px-3 py-2">
-                                        {row.overrideEnabled ? formatCurrency(row.commerceHubPrice || 0, 'EGP') : 'Base price'}
+                                        {row.overrideEnabled ? formatCurrency(row.commerceHubPrice || 0, 'EGP') : t('commerceHub.publishing.basePrice')}
                                     </td>
                                 </tr>
                             ))}
                             {listingRows.length === 0 && (
                                 <tr>
                                     <td colSpan={6} className="px-3 py-8 text-center text-gray-500">
-                                        No listings match the current search and filters.
+                                        {t('commerceHub.publishing.noListings')}
                                     </td>
                                 </tr>
                             )}
@@ -763,11 +770,22 @@ export default function CommerceHubSettings() {
 
                 {listingAnalytics && (
                     <div className="text-xs text-gray-500">
-                        Last {listingAnalytics.days} days: {formatNumber(listingAnalytics.listingViews)} listing views,
-                        {' '}{formatNumber(listingAnalytics.listingSearches)} searches,
-                        {' '}{formatNumber(listingAnalytics.listingConversions)} conversions. Authority: {listingAnalytics.authorityOwner}.
+                        {t('commerceHub.publishing.analyticsSummary', {
+                            days: formatNumber(listingAnalytics.days),
+                            views: formatNumber(listingAnalytics.listingViews),
+                            searches: formatNumber(listingAnalytics.listingSearches),
+                            conversions: formatNumber(listingAnalytics.listingConversions),
+                        })}
                     </div>
                 )}
+            </div>
+
+            <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h2 className="font-bold text-slate-950">{t('commerceHub.publishing.catalogProducts')}</h2>
+                    <p className="mt-1 text-sm text-slate-500">{t('commerceHub.publishing.catalogProductsHelp')}</p>
+                </div>
+                <input ref={catalogSearchRef} value={catalogSearch} onChange={(event) => setCatalogSearch(event.target.value)} placeholder={t('commerceHub.publishing.searchCatalog')} className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 sm:max-w-sm" />
             </div>
 
             {/* Products Table */}
@@ -781,7 +799,7 @@ export default function CommerceHubSettings() {
                 </div>
             ) : (
                 <div className="space-y-3">
-                    {products.map(product => (
+                    {filteredProducts.map(product => (
                         <div key={product.productId} className="bg-white border border-gray-200 rounded-xl overflow-hidden">
                             {/* Product Header (click to expand) */}
                             <button
@@ -841,7 +859,7 @@ export default function CommerceHubSettings() {
                                         const selectedCategoryName = getCategoryName(state.categoryId)
                                         const isCurrencyBlocked = variant.isCommerceHubCurrencyEligible !== true
                                         const currencyPolicyMessage = isCurrencyBlocked
-                                            ? getCommerceHubCurrencyPolicyMessage(variant)
+                                            ? getCommerceHubCurrencyPolicyMessage(variant, t('commerceHub.publishing.currencyBlocked', { currency: variant?.productCurrency || t('common.unavailable') }))
                                             : null
                                         const isPublicationBlocked = variant.isCommerceHubPublicationEligible === false
                                         const publicationEligibilityMessage = isPublicationBlocked
@@ -868,7 +886,7 @@ export default function CommerceHubSettings() {
                                                             <div className="text-xs text-gray-500 mt-0.5">{variant.attributeSummary}</div>
                                                         )}
                                                         <div className="text-sm font-medium text-gray-900 mt-1">
-                                                            {formatProductCurrencyPrice(formatCurrency, variant.price || 0, variant.productCurrency)}
+                                                            {formatProductCurrencyPrice(formatCurrency, variant.price || 0, variant.productCurrency, t('commerceHub.publishing.currencyUnavailable'))}
                                                         </div>
                                                         {isCurrencyBlocked && (
                                                             <div className="mt-2 text-xs text-red-700 bg-red-50 border border-red-100 rounded-lg px-2 py-1">
@@ -968,6 +986,7 @@ export default function CommerceHubSettings() {
                     ))}
                 </div>
             )}
+            {products.length > 0 && filteredProducts.length === 0 && <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-500">{t('commerceHub.publishing.noCatalogMatches')}</div>}
         </div>
     )
 }

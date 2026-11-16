@@ -16,6 +16,7 @@ import {
     Package,
     RotateCw,
     Shield,
+    Store,
     Users,
     X,
 } from 'lucide-react'
@@ -139,6 +140,13 @@ const navigationGroups: NavigationGroup[] = [
                 capability: 'super-admin.users.govern',
             },
             {
+                labelKey: 'sellerApplications',
+                descriptionKey: 'sellerApplicationsDescription',
+                icon: Store,
+                to: '/super-admin/commercehub/seller-applications',
+                capability: 'super-admin.marketplace.govern',
+            },
+            {
                 labelKey: 'marketplaceGovernance',
                 descriptionKey: 'marketplaceGovernanceDescription',
                 icon: Shield,
@@ -195,6 +203,7 @@ const pageLabels: Array<{ match: string; key: string }> = [
     { match: '/super-admin/orders', key: 'orders' },
     { match: '/super-admin/reviews', key: 'reviews' },
     { match: '/super-admin/users', key: 'users' },
+    { match: '/super-admin/commercehub/seller-applications', key: 'sellerApplications' },
     { match: '/super-admin/marketplace/governance', key: 'marketplaceGovernance' },
     { match: '/super-admin/marketplace/operations', key: 'marketplaceOperations' },
     { match: '/super-admin/payments', key: 'payments' },

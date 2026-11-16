@@ -78,6 +78,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Unit> Units => Set<Unit>();
     public DbSet<ProductUnit> ProductUnits => Set<ProductUnit>();
     public DbSet<CommerceHubListing> CommerceHubListings => Set<CommerceHubListing>();
+    public DbSet<CommerceHubSellerApplication> CommerceHubSellerApplications => Set<CommerceHubSellerApplication>();
     public DbSet<CommerceHubMerchantLifecycleLedgerEntry> CommerceHubMerchantLifecycleLedgerEntries => Set<CommerceHubMerchantLifecycleLedgerEntry>();
     public DbSet<CommerceHubRecoveryOperationLedgerEntry> CommerceHubRecoveryOperationLedgerEntries => Set<CommerceHubRecoveryOperationLedgerEntry>();
     public DbSet<CommissionRule> CommissionRules => Set<CommissionRule>();

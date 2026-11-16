@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using PointOfSale.API.CommerceHub.Commands;
 using PointOfSale.API.CommerceHub.Handlers;
 using PointOfSale.API.DTOs.CommerceHub;
+using PointOfSale.API.Filters;
 using PointOfSale.API.Middleware;
 using PointOfSale.API.Services.CommerceHub;
 using PointOfSale.API.Services.Governance;
@@ -25,6 +26,7 @@ namespace PointOfSale.API.Controllers;
 
 [ApiController]
 [Route("api/admin/commercehub")]
+[ServiceFilter(typeof(CommerceHubApprovedSellerFilter))]
 public class AdminCommerceHubController : ControllerBase
 {
     private readonly ITenantContext _tenantContext;

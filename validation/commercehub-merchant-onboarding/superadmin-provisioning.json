@@ -1,0 +1,12 @@
+{
+  "verifiedAtUtc": "2026-11-16T14:13:54.123Z",
+  "systemSuperAdminCount": 1,
+  "activeBootstrapSecretCount": 1,
+  "configuredPasswordLength": 86,
+  "minimumPasswordLengthRequired": 32,
+  "headedProductionLoginHttpStatus": 200,
+  "marketplaceGovernanceCapability": true,
+  "accountAction": "VERIFIED_EXISTING_IMMUTABLE_SYSTEM_ROOT",
+  "duplicateAccountCreated": false,
+  "credentialValuesIncluded": false
+}

@@ -1,0 +1,29 @@
+{
+  "migrationId": "20261116100000_CommerceHubSellerApplications",
+  "businessRowsChanged": 0,
+  "firstReleaseAttempt": {
+    "result": "ROLLED_BACK",
+    "cause": "The production installer omitted the read-only startup-admission SystemSchemaVersions update.",
+    "apiAvailabilityAffected": true,
+    "webChanged": false
+  },
+  "recovery": {
+    "schemaAuthorityVersionAdvanced": true,
+    "tableOwnerCorrectedToApp": true,
+    "runtimeRoleGranted": [
+      "SELECT",
+      "INSERT",
+      "UPDATE"
+    ],
+    "runtimeRoleDeleteGranted": false,
+    "candidateRetrySucceeded": true
+  },
+  "final": {
+    "schemaVerified": true,
+    "tableEmpty": true,
+    "superAdminListHttpStatus": 200,
+    "apiReady": true,
+    "webReady": true,
+    "storefrontUnchanged": true
+  }
+}

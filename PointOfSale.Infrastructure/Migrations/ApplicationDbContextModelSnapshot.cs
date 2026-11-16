@@ -6363,6 +6363,41 @@ namespace PointOfSale.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PointOfSale.Core.Entities.CommerceHubSellerApplication", b =>
+                {
+                    b.Property<Guid>("Id").ValueGeneratedOnAdd().HasColumnType("uuid");
+                    b.Property<string>("BusinessCategory").IsRequired().HasMaxLength(120).HasColumnType("character varying(120)");
+                    b.Property<string>("BusinessDescription").IsRequired().HasMaxLength(1000).HasColumnType("character varying(1000)");
+                    b.Property<Guid>("ConcurrencyToken").IsConcurrencyToken().HasColumnType("uuid");
+                    b.Property<string>("ContactEmail").IsRequired().HasMaxLength(320).HasColumnType("character varying(320)");
+                    b.Property<string>("ContactName").IsRequired().HasMaxLength(160).HasColumnType("character varying(160)");
+                    b.Property<string>("ContactPhone").IsRequired().HasMaxLength(40).HasColumnType("character varying(40)");
+                    b.Property<string>("ProductCategoriesJson").IsRequired().HasColumnType("jsonb");
+                    b.Property<string>("ReferenceNumber").IsRequired().HasMaxLength(40).HasColumnType("character varying(40)");
+                    b.Property<string>("RejectionReason").HasMaxLength(1000).HasColumnType("character varying(1000)");
+                    b.Property<DateTime?>("ReviewedAtUtc").HasColumnType("timestamp with time zone");
+                    b.Property<Guid?>("ReviewedBySuperAdminId").HasColumnType("uuid");
+                    b.Property<string>("ReviewerIdentity").HasMaxLength(320).HasColumnType("character varying(320)");
+                    b.Property<int>("Revision").HasColumnType("integer");
+                    b.Property<int>("Status").HasColumnType("integer");
+                    b.Property<string>("StoreDisplayName").IsRequired().HasMaxLength(160).HasColumnType("character varying(160)");
+                    b.Property<string>("StorefrontUrl").HasMaxLength(500).HasColumnType("character varying(500)");
+                    b.Property<DateTime>("SubmittedAtUtc").HasColumnType("timestamp with time zone");
+                    b.Property<Guid>("SubmittedByUserId").HasColumnType("uuid");
+                    b.Property<Guid>("TenantId").HasColumnType("uuid");
+                    b.HasKey("Id");
+                    b.HasIndex("ReferenceNumber").IsUnique();
+                    b.HasIndex("Status", "SubmittedAtUtc");
+                    b.HasIndex("TenantId").IsUnique().HasFilter("\"Status\" = 1").HasDatabaseName("UX_CommerceHubSellerApplications_OnePendingPerTenant");
+                    b.HasIndex("TenantId", "Revision").IsUnique();
+                    b.ToTable("CommerceHubSellerApplications", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_CommerceHubSellerApplications_RejectionReason", "\"Status\" <> 3 OR (\"RejectionReason\" IS NOT NULL AND length(trim(\"RejectionReason\")) >= 10)");
+                            t.HasCheckConstraint("CK_CommerceHubSellerApplications_ReviewState", "(\"Status\" = 1 AND \"ReviewedAtUtc\" IS NULL AND \"ReviewedBySuperAdminId\" IS NULL) OR (\"Status\" IN (2, 3) AND \"ReviewedAtUtc\" IS NOT NULL AND \"ReviewedBySuperAdminId\" IS NOT NULL)");
+                            t.HasCheckConstraint("CK_CommerceHubSellerApplications_Revision", "\"Revision\" > 0");
+                        });
+                });
+
             modelBuilder.Entity("PointOfSale.Core.Entities.CommerceHubMarketplaceOrder", b =>
                 {
                     b.Property<Guid>("Id")
@@ -25167,6 +25202,15 @@ namespace PointOfSale.Infrastructure.Migrations
                     b.HasOne("PointOfSale.Core.Entities.ProductVariant", null)
                         .WithMany()
                         .HasForeignKey("VariantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PointOfSale.Core.Entities.CommerceHubSellerApplication", b =>
+                {
+                    b.HasOne("PointOfSale.Core.Entities.Tenant", null)
+                        .WithMany()
+                        .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

@@ -79,6 +79,7 @@ import ShippingMethods from './pages/ShippingMethods'
 // Commerce AI Admin Control (Phase 6)
 import CommerceAI from './pages/CommerceAI'
 import CommerceHubSettings from './pages/CommerceHubSettings'
+import CommerceHubSellerApplication from './pages/CommerceHubSellerApplication'
 import CommerceHubFinance from './pages/CommerceHubFinance'
 import CommerceHubEarnings from './pages/CommerceHubEarnings'
 import CommerceHubPayments from './pages/CommerceHubPayments'
@@ -189,6 +190,7 @@ import PayoutsPage from './super-admin/payouts/PayoutsPage'
 import UsersPage from './super-admin/users/UsersPage'
 import MarketplaceGovernancePage from './super-admin/marketplace-governance/MarketplaceGovernancePage'
 import MarketplaceOperationsPage from './super-admin/marketplace-operations/MarketplaceOperationsPage'
+import SellerApplicationsPage from './super-admin/seller-applications/SellerApplicationsPage'
 import HomepageBuilderPage from './super-admin/homepage/HomepageBuilderPage'
 import HomepageManagerPage from './super-admin/homepage/HomepageManagerPage'
 import { MarketplaceCmsPagesPage } from './super-admin/marketplace-cms/MarketplaceCmsPagesPage'
@@ -246,7 +248,8 @@ export function appRouteElements() {
                                         <Route element={<SuperAdminCapabilityRoute capability="super-admin.orders.view" />}><Route path="orders" element={<OrdersPage />} /></Route>
                                         <Route element={<SuperAdminCapabilityRoute capability="super-admin.reviews.view" />}><Route path="reviews" element={<ReviewModerationPage />} /></Route>
                                         <Route element={<SuperAdminCapabilityRoute capability="super-admin.users.govern" />}><Route path="users" element={<UsersPage />} /></Route>
-                                        <Route element={<SuperAdminCapabilityRoute capability="super-admin.marketplace.govern" />}><Route path="marketplace/governance" element={<MarketplaceGovernancePage />} /></Route>
+                                         <Route element={<SuperAdminCapabilityRoute capability="super-admin.marketplace.govern" />}><Route path="marketplace/governance" element={<MarketplaceGovernancePage />} /></Route>
+                                         <Route element={<SuperAdminCapabilityRoute capability="super-admin.marketplace.govern" />}><Route path="commercehub/seller-applications" element={<SellerApplicationsPage />} /></Route>
                                         <Route element={<SuperAdminCapabilityRoute capability="super-admin.marketplace.operate" />}><Route path="marketplace/operations" element={<MarketplaceOperationsPage />} /></Route>
                                         <Route element={<SuperAdminCapabilityRoute capability="super-admin.payments.view" />}><Route path="payments" element={<PaymentsPage />} /></Route>
                                         <Route element={<SuperAdminCapabilityRoute capability="super-admin.payment-providers.view" />}><Route path="commercehub/payment-providers" element={<PaymentProvidersPage />} /></Route>
@@ -524,6 +527,9 @@ export function appRouteElements() {
                                         </Route>
 
                                         {/* CommerceHub Admin (Global Marketplace Publishing) */}
+                                        <Route element={<PosPermissionRouteGuard permission="catalog.publish" />}>
+                                            <Route path="commercehub/seller-application" element={<CommerceHubSellerApplication />} />
+                                        </Route>
                                         <Route element={<PosPermissionRouteGuard permission="storefront.orders.view" />}>
                                             <Route element={<CommerceHubVendorRouteGuard capability="commercehub.orders.view" />}>
                                                 <Route path="commercehub/orders" element={<CommerceHubOrders />} />

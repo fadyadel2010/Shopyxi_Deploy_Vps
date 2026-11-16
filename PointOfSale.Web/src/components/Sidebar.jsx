@@ -244,6 +244,7 @@ export function buildAdminMenu(t, user) {
             label: t('nav.commerceHub', 'CommerceHub'),
             icon: '🏪',
             children: [
+                { path: '/commercehub/seller-application', label: t('nav.commerceHubSellerApplication', 'Become a CommerceHub Seller'), icon: '📝', permission: 'catalog.publish' },
                 { path: '/commercehub/orders', label: t('nav.commerceHubOrders', 'Orders'), icon: '📦', capability: 'commercehub.orders.view', permission: 'storefront.orders.view' },
                 { path: '/admin/commercehub', label: t('nav.commerceHubSettings', 'Publishing Settings'), icon: '⚙️', capability: 'commercehub.catalog.manage', permission: 'catalog.publish' },
                 { path: '/commercehub/finance', label: t('nav.commerceHubFinance', 'Finance Dashboard'), icon: '💼', capability: 'commercehub.finance.view', permission: 'reports.financial.view' },

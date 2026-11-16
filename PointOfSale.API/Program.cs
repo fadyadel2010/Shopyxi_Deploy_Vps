@@ -656,6 +656,8 @@ builder.Services.AddScoped<PointOfSale.API.Services.MarketplaceTranslations.IMar
 builder.Services.AddScoped<PointOfSale.API.Services.MarketplaceTranslations.IMarketplaceCategoryTranslationService, PointOfSale.API.Services.MarketplaceTranslations.MarketplaceCategoryTranslationService>();
 builder.Services.AddScoped<PointOfSale.API.Services.MarketplaceTranslations.IMarketplaceProductLocalizationService, PointOfSale.API.Services.MarketplaceTranslations.MarketplaceProductLocalizationService>();
 builder.Services.AddScoped<PointOfSale.API.Services.CommerceHub.ICommerceHubQueryService, PointOfSale.API.Services.CommerceHub.CommerceHubQueryService>();
+builder.Services.AddScoped<PointOfSale.API.Services.CommerceHub.ICommerceHubSellerApplicationService, PointOfSale.API.Services.CommerceHub.CommerceHubSellerApplicationService>();
+builder.Services.AddScoped<PointOfSale.API.Filters.CommerceHubApprovedSellerFilter>();
 builder.Services.AddScoped<PointOfSale.API.Services.CommerceHub.ICommerceHubGovernanceCacheInvalidationService, PointOfSale.API.Services.CommerceHub.CommerceHubGovernanceCacheInvalidationService>();
 builder.Services.AddScoped<PointOfSale.API.Services.CommerceHub.ICommerceHubPublicVendorVisibilityService, PointOfSale.API.Services.CommerceHub.CommerceHubPublicVendorVisibilityService>();
 builder.Services.AddScoped<PointOfSale.API.Services.CommerceHub.ICommerceHubSearchIntelligenceService, PointOfSale.API.Services.CommerceHub.CommerceHubSearchIntelligenceService>();

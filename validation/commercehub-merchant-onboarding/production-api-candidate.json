@@ -1,0 +1,16 @@
+{
+  "verifiedAtUtc": "2026-11-16T13:26:38.388657+00:00",
+  "component": "api",
+  "image": "docker.io/shopixy/api@sha256:c384ee860fcbc9aa1522cd7ffa6d76da320009772fa016c615ddb9037b65187e",
+  "tag": "shopixy/api:commercehub-merchant-onboarding-20261116",
+  "baseImage": "docker.io/shopixy/api@sha256:a01d5ae1b3149d1fe099a9da0755d7f53a87e64b04aac18c1a8189d93cbfdcad",
+  "sourceInputSha256": "ae35ed334f74fc613975bdc8acde056ca16c7b960b44508efcfd87b1beceb613",
+  "sourceInputCount": 2665,
+  "archiveSha256": "5b30c5c252a5a4aa59ea385ca3789bd7ea809f3a7bddb804a67e3c628252c522",
+  "nonRoot": true,
+  "trivyHighCriticalFindings": 0,
+  "securityGatePassed": true,
+  "productionDeployment": false,
+  "apiAssemblySha256": "c9817f22828e532ff7a74c6050c2695804a9b0b3c5d91aa657dce46349f72ded",
+  "infrastructureAssemblySha256": "df22aa1554eefffc90985bb8db2d72328c2df9d274f28b4695bc82c3c051c9ba"
+}

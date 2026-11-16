@@ -1,0 +1,17 @@
+{
+  "verifiedAtUtc": "2026-11-16T13:26:39.432586+00:00",
+  "component": "web",
+  "image": "docker.io/shopixy/web@sha256:cadd2cb3a44fa6bff972652b0d94c1677c6238fbcae5240e69afcd2fed84452a",
+  "tag": "shopixy/web:commercehub-merchant-onboarding-20261116",
+  "baseImage": "docker.io/shopixy/web@sha256:ebcf704b5b688ccb46b74db821de5fb63818240ab3705f5a2d9cdc07515dd841",
+  "sourceInputSha256": "8b4a9d990ba98e14e1cc3b0785ca62a0aa8a76a35fd8d2beb5dc208ad7456459",
+  "sourceInputCount": 2200,
+  "archiveSha256": "4307a7a01daa6ef80e5073bd06feda382c895962429bfe30426d19495e09668e",
+  "nonRoot": true,
+  "trivyHighCriticalFindings": 0,
+  "securityGatePassed": true,
+  "productionDeployment": false,
+  "distSha256": "d35f3eb84a905ea89d61527dd1a2d8e2ca227d2259ea1179412f3bc3bff6a68e",
+  "distFiles": 70,
+  "nginxConfigValid": true
+}

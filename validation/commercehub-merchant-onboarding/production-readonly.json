@@ -1,0 +1,20 @@
+{
+  "verifiedAtUtc": "2026-11-16T14:14:14.057Z",
+  "actualHeadedBrowser": true,
+  "production": true,
+  "superAdminLoginHttpStatus": 200,
+  "sellerApplicationListHttpStatus": 200,
+  "pendingApplicationsVisible": 0,
+  "businessMutationRequestsObserved": 0,
+  "productionMerchantAcceptance": "BLOCKED_NO_AUTHORIZED_OWNER_SESSION",
+  "network": [
+    {
+      "method": "GET",
+      "path": "/api/super-admin/commercehub/seller-applications",
+      "status": 200
+    }
+  ],
+  "consoleErrorsObserved": 4,
+  "consoleErrorScope": "Includes blocked external resources in the allowlisted browser context; no clean global-console claim.",
+  "credentialValuesOmitted": true
+}

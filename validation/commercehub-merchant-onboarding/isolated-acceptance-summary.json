@@ -1,0 +1,31 @@
+{
+  "verifiedThroughUtc": "2026-11-16T13:19:28.403Z",
+  "environment": "disposable internal-only isolated stack",
+  "productionDataImported": false,
+  "transitionBrowserMode": "browser-native Chrome sessions; headless",
+  "finalAcceptanceBrowserMode": "actual headed Chrome",
+  "scenarios": {
+    "A_application_submission": "PASS",
+    "B_pending_duplicate_and_catalog_gate": "PASS",
+    "C_super_admin_inbox_and_mandatory_reason": "PASS",
+    "D_exact_rejection_reason": "PASS",
+    "E_correction_revision_and_history": "PASS",
+    "F_existing_kyc_prerequisite": "PASS",
+    "G_approval_and_governance_activation": "PASS",
+    "H_actual_headed_publishing_access": "PASS",
+    "I_english_arabic_and_no_product_write": "PASS"
+  },
+  "observed": {
+    "initialSubmissionHttpStatus": 200,
+    "pendingCatalogHttpStatus": 403,
+    "rejectionHttpStatus": 200,
+    "resubmissionHttpStatus": 200,
+    "approvalHttpStatus": 200,
+    "approvedCatalogHttpStatus": 200,
+    "historyRevisions": 2,
+    "productMutationRequestsDuringHeadedFinalPass": 0,
+    "bilingualPublishingPresentation": true,
+    "externalRequestsBlockedBeforeDispatch": true
+  },
+  "credentialsIncluded": false
+}
