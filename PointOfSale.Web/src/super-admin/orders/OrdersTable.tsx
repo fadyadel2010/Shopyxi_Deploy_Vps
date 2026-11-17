@@ -21,6 +21,7 @@ interface OrdersTableProps {
     orders: SuperAdminOrderListItem[]
     isLoading: boolean
     isFetching: boolean
+    isUnavailable?: boolean
     selectedOrderId?: string | null
     sortBy: SuperAdminOrdersSortField
     sortDirection: SuperAdminSortDirection
@@ -43,6 +44,10 @@ const tableColumns: Array<{ key: SuperAdminOrdersSortField; label: string; label
 
 const ORDER_STATUS_LABELS: Record<string, string> = {
     Pending: 'معلّق',
+    Authorized: 'مفوّض',
+    PartiallyPaid: 'مدفوع جزئيًا',
+    AwaitingVerification: 'بانتظار التحقق',
+    CashOnDelivery: 'الدفع عند الاستلام',
     'Awaiting Payment': 'بانتظار الدفع',
     'Payment Pending': 'الدفع معلّق',
     Confirmed: 'مؤكد',
@@ -172,6 +177,7 @@ export default function OrdersTable({
     orders,
     isLoading,
     isFetching,
+    isUnavailable,
     selectedOrderId,
     sortBy,
     sortDirection,
@@ -248,7 +254,8 @@ export default function OrdersTable({
                     <thead className="bg-slate-50/90">
                         <tr>
                             {tableColumns.map((column) => (
-                                <th key={column.key} className={saTable.headerCell}>
+                                <th key={column.key} className={saTable.headerCell}
+                                    aria-sort={sortBy === column.key ? (sortDirection === 'Asc' ? 'ascending' : 'descending') : 'none'}>
                                     <SortButton
                                         label={tr(column.label, column.labelAr)}
                                         active={sortBy === column.key}
@@ -269,8 +276,8 @@ export default function OrdersTable({
                                 <tr>
                                     <td colSpan={tableColumns.length + 1} className="px-4 py-6">
                                         <EmptyState
-                                            title={tr('No orders matched these filters', 'لا توجد طلبات تطابق هذه المرشحات')}
-                                            description={tr(
+                                            title={isUnavailable ? tr('Orders unavailable', 'الطلبات غير متاحة') : tr('No orders matched these filters', 'لا توجد طلبات تطابق هذه المرشحات')}
+                                            description={isUnavailable ? tr('Resolve the request or filter error before interpreting counts.', 'عالج خطأ الطلب أو المرشحات قبل تفسير الأعداد.') : tr(
                                                 'Adjust the search, payment filter, or date range to broaden the operational view.',
                                                 'عدّل البحث أو مرشح الدفع أو الفترة لتوسيع العرض التشغيلي.',
                                             )}
@@ -352,7 +359,14 @@ export default function OrdersTable({
                                             </td>
 
                                             <td className="px-4 py-3 align-top">
-                                                <div className="text-sm font-medium text-slate-900">{order.tenantName}</div>
+                                                <div className="text-sm font-medium text-slate-900">
+                                                    {order.vendorCount > 1
+                                                        ? tr(
+                                                              `${order.subOrders[0]?.vendorName} +${order.vendorCount - 1} more`,
+                                                              `${order.subOrders[0]?.vendorName} و${formatNumber(order.vendorCount - 1)} آخرون`,
+                                                          )
+                                                        : order.subOrders[0]?.vendorName || tr('No vendors', 'لا يوجد بائعون')}
+                                                </div>
                                                 <div className="mt-0.5 text-xs text-slate-500">
                                                     {order.subOrders
                                                         .slice(0, 2)

@@ -20,7 +20,7 @@ using PointOfSale.Tests.TestDoubles;
 
 namespace PointOfSale.Tests.Integration;
 
-public sealed class CommerceHubMultiVendorCheckoutIntegrationTests
+public sealed partial class CommerceHubMultiVendorCheckoutIntegrationTests
 {
     [Fact]
     public async Task CheckoutAsync_TwoStores_PersistsCanonicalSplitReservationsAndReplay()
@@ -260,7 +260,9 @@ public sealed class CommerceHubMultiVendorCheckoutIntegrationTests
         IProductVariantStockRepository stockRepository,
         IEventPublisher eventPublisher,
         CheckoutFixture fixture,
-        TenantContext? tenantContext = null)
+        TenantContext? tenantContext = null,
+        ICommissionService? commissionAuthority = null,
+        IEnumerable<PointOfSale.API.Services.Payments.ProviderContracts.IPaymentProviderAdapter>? providerAdapters = null)
     {
         var financialControl = new Mock<ICommerceHubVendorFinancialControlService>();
         financialControl
@@ -304,7 +306,7 @@ public sealed class CommerceHubMultiVendorCheckoutIntegrationTests
             stockRepository,
             new InventoryConsistencyService(context, NullLogger<InventoryConsistencyService>.Instance),
             CreateShippingService(fixture),
-            commissionService.Object,
+            commissionAuthority ?? commissionService.Object,
             new PromoService(context),
             financialControl.Object,
             orderAccessService.Object,
@@ -313,7 +315,7 @@ public sealed class CommerceHubMultiVendorCheckoutIntegrationTests
             lockService.Object,
             eventPublisher,
             new CommerceHubPriceAuthority(),
-            Array.Empty<PointOfSale.API.Services.Payments.ProviderContracts.IPaymentProviderAdapter>(),
+            providerAdapters ?? Array.Empty<PointOfSale.API.Services.Payments.ProviderContracts.IPaymentProviderAdapter>(),
             tenantContext ?? new TenantContext(),
             NullLogger<CommerceHubCheckoutService>.Instance);
     }
@@ -468,6 +470,7 @@ public sealed class CommerceHubMultiVendorCheckoutIntegrationTests
             Id = vendor.StoreId,
             Name = $"M-1C Vendor {vendor.Label}",
             Currency = "EGP",
+            Country = "EG",
             IsActive = true,
             Status = TenantStatus.Active
         });
@@ -543,6 +546,14 @@ public sealed class CommerceHubMultiVendorCheckoutIntegrationTests
             DisplayName = "Cash on delivery",
             IsEnabled = true,
             SupportsOffline = true
+        });
+        context.ShippingMethods.Add(new ShippingMethod
+        {
+            Id = vendor.ShippingOptionId,
+            TenantId = vendor.StoreId,
+            Name = $"Fixture shipping {vendor.Label}",
+            FulfillmentWarehouseId = vendor.WarehouseId,
+            IsActive = true
         });
     }
 

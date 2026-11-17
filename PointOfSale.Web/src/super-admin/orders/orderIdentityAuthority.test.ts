@@ -54,6 +54,8 @@ const detailOrder: SuperAdminOrderDetails = {
         },
     ],
     orderItems: [],
+    statusHistory: [],
+    refunds: [],
 }
 
 describe('Super Admin order identity authority', () => {
@@ -115,6 +117,7 @@ describe('Super Admin order identity authority', () => {
                     quantity: 1,
                     unitPrice: 100,
                     totalPrice: 100,
+                    refunds: [],
                 },
             ],
         }, 'order-1')).toThrow(/split item/)

@@ -1,0 +1,13 @@
+{
+  "sdkVersion": "10.0.404",
+  "runtimeVersion": "10.0.15",
+  "platform": "win-x64",
+  "sourceMetadata": "https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/10.0/releases.json",
+  "download": "https://dotnetcli.blob.core.windows.net/dotnet/Sdk/10.0.404/dotnet-sdk-10.0.404-win-x64.zip",
+  "officialSha512": "330ddd2665b43cd2e428216a0d8ea1ac7bb19b5434fdc530e62010dc3b52823a620bf95489d628e1ed6f5122401793ee4887cca4a019122361a1231497f632ee",
+  "downloadSha512Matched": true,
+  "sdkVersionCommandPassed": true,
+  "machineWideSdkModified": false,
+  "globalJsonModified": false,
+  "redundantArchiveRemovedAfterVerification": true
+}

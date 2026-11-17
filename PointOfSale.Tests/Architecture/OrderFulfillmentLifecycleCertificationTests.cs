@@ -438,7 +438,13 @@ public sealed class OrderFulfillmentLifecycleCertificationTests
         var source = ReadRepoFile("PointOfSale.Core/Events/OrderFulfillmentEvents.cs");
 
         Assert.Contains("FulfillmentRequestSource Source", source, StringComparison.Ordinal);
-        Assert.Contains("string? IdempotencyKey", source, StringComparison.Ordinal);
+        // The replay key must be the inherited outbox key, not a hidden second property.
+        var property = typeof(PointOfSale.Core.Events.FulfillmentConfirmedEvent)
+            .GetProperty(nameof(PointOfSale.Core.Events.IntegrationEvent.IdempotencyKey));
+        Assert.NotNull(property);
+        Assert.Equal(typeof(PointOfSale.Core.Events.IntegrationEvent), property.DeclaringType);
+        var fulfillment = new PointOfSale.Core.Events.FulfillmentConfirmedEvent { IdempotencyKey = "fixture-replay" };
+        Assert.Equal("fixture-replay", ((PointOfSale.Core.Events.IntegrationEvent)fulfillment).IdempotencyKey);
         Assert.Contains("Guid OrderId", source, StringComparison.Ordinal);
         Assert.Contains("string OrderNumber", source, StringComparison.Ordinal);
         Assert.Contains("FulfillmentStatus OldStatus", source, StringComparison.Ordinal);

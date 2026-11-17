@@ -1,0 +1,375 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="44f18f8c-0b70-4b89-8aa2-72743bd7b3b9" name="fadya@FADYADEL 2026-11-17 18:11:28" runUser="FADYADEL\fadya" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-11-17T18:11:29.3804571+02:00" queuing="2026-11-17T18:11:29.3804583+02:00" start="2026-11-17T18:09:32.8431510+02:00" finish="2026-11-17T18:16:47.0286176+02:00" />
+  <TestSettings name="default" id="d5b063ef-e46b-461b-a3c3-f9c9c43a92fb">
+    <Deployment runDeploymentRoot="fadya_FADYADEL_2026-11-17_18_11_28" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="46404e1b-0553-45b0-aeac-48c8b3c6f79f" testId="03667946-9fa6-5cf5-9d1c-e08b9c811c87" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.EverySort_HasStableNonOverlappingPageBoundaries(sort: CreatedAt)" computerName="FADYADEL" duration="00:00:05.4157325" startTime="2026-11-17T18:14:29.8727825+02:00" endTime="2026-11-17T18:14:29.8727830+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="46404e1b-0553-45b0-aeac-48c8b3c6f79f" />
+    <UnitTestResult executionId="d81eaa14-6046-4d8e-8bcf-1bd07186c917" testId="62611307-15eb-a3cc-c734-950d0b20eacc" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.Search_IsLiteralCaseInsensitiveAndParameterized(search: &quot;ch-test&quot;, count: 1)" computerName="FADYADEL" duration="00:00:03.4827681" startTime="2026-11-17T18:14:04.4780509+02:00" endTime="2026-11-17T18:14:04.4780516+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d81eaa14-6046-4d8e-8bcf-1bd07186c917" />
+    <UnitTestResult executionId="c7fedcf4-08f8-4d3b-b963-d9c07d362002" testId="e2b76b15-be78-28a2-79cb-a1317c4b1d9d" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.IdentifierSearchAndSplitStoreFilter_CountEachParentOnce" computerName="FADYADEL" duration="00:00:06.0980226" startTime="2026-11-17T18:15:01.0288285+02:00" endTime="2026-11-17T18:15:01.0288293+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c7fedcf4-08f8-4d3b-b963-d9c07d362002" />
+    <UnitTestResult executionId="d24c19d4-5b34-412d-835e-f9ea58c6c695" testId="2604b335-1b1d-4830-0560-7d68032d81df" testName="PointOfSale.Tests.Integration.CommerceHubMultiVendorCheckoutIntegrationTests.OrdersForensic_CodSplitCheckoutFulfillmentCancellationAndReadModel_ReconcileRealServices" computerName="FADYADEL" duration="00:00:08.0686018" startTime="2026-11-17T18:16:46.7485884+02:00" endTime="2026-11-17T18:16:46.7485890+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d24c19d4-5b34-412d-835e-f9ea58c6c695">
+      <Output>
+        <ErrorInfo>
+          <Message>Npgsql.PostgresException : 42P01: relation "CommerceHubMarketplaceOrderNumberSeq" does not exist&#xD;
+&#xD;
+POSITION: 16</Message>
+          <StackTrace>   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)&#xD;
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource&lt;TResult&gt;.GetResult(Int16 token)&#xD;
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)&#xD;
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)&#xD;
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+   at Npgsql.NpgsqlCommand.ExecuteScalar(Boolean async, CancellationToken cancellationToken)&#xD;
+   at PointOfSale.API.Services.CommerceHub.CommerceHubCheckoutService.GetNextMarketplaceOrderSequenceAsync(CancellationToken cancellationToken) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\Services\CommerceHub\CommerceHubCheckoutService.cs:line 1758&#xD;
+   at PointOfSale.API.Services.CommerceHub.CommerceHubCheckoutService.GetNextMarketplaceOrderSequenceAsync(CancellationToken cancellationToken) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\Services\CommerceHub\CommerceHubCheckoutService.cs:line 1759&#xD;
+   at PointOfSale.API.Services.CommerceHub.CommerceHubCheckoutService.GetNextMarketplaceOrderSequenceAsync(CancellationToken cancellationToken) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\Services\CommerceHub\CommerceHubCheckoutService.cs:line 1767&#xD;
+   at PointOfSale.API.Services.CommerceHub.CommerceHubCheckoutService.GenerateMarketplaceOrderNumberAsync(CancellationToken cancellationToken) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\Services\CommerceHub\CommerceHubCheckoutService.cs:line 1728&#xD;
+   at PointOfSale.API.Services.CommerceHub.CommerceHubCheckoutService.CheckoutAsync(CommerceHubCheckoutRequestDto request, Guid customerId, String correlationId, String idempotencyKey, CancellationToken cancellationToken) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\Services\CommerceHub\CommerceHubCheckoutService.cs:line 711&#xD;
+   at PointOfSale.API.Services.CommerceHub.CommerceHubCheckoutService.CheckoutAsync(CommerceHubCheckoutRequestDto request, Guid customerId, String correlationId, String idempotencyKey, CancellationToken cancellationToken) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\Services\CommerceHub\CommerceHubCheckoutService.cs:line 855&#xD;
+   at PointOfSale.API.Services.CommerceHub.CommerceHubCheckoutService.CheckoutAsync(CommerceHubCheckoutRequestDto request, Guid customerId, String correlationId, String idempotencyKey, CancellationToken cancellationToken) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\Services\CommerceHub\CommerceHubCheckoutService.cs:line 863&#xD;
+   at PointOfSale.API.Services.CommerceHub.CommerceHubCheckoutService.CheckoutAsync(CommerceHubCheckoutRequestDto request, Guid customerId, String correlationId, String idempotencyKey, CancellationToken cancellationToken) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\Services\CommerceHub\CommerceHubCheckoutService.cs:line 876&#xD;
+   at PointOfSale.Tests.Integration.CommerceHubMultiVendorCheckoutIntegrationTests.OrdersForensic_CodSplitCheckoutFulfillmentCancellationAndReadModel_ReconcileRealServices() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Integration\CommerceHubMultiVendorCheckoutIntegrationTests.OrdersForensic.cs:line 39&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="0ac2e3b6-5bd8-444c-9cd1-9dff8baa5332" testId="520e3a3e-d561-65fa-a2db-2a9aca28e1ea" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.EverySort_HasStableNonOverlappingPageBoundaries(sort: Status)" computerName="FADYADEL" duration="00:00:07.0487299" startTime="2026-11-17T18:14:12.4659902+02:00" endTime="2026-11-17T18:14:12.4659906+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0ac2e3b6-5bd8-444c-9cd1-9dff8baa5332" />
+    <UnitTestResult executionId="3d3564dd-f5e0-4def-8b64-4dce881316d8" testId="9cd06b49-f252-448c-40e2-0c596dc36743" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.PersistedRefundAndTransitionHistory_AreBoundToTheirOrderAndUseFrozenAmounts" computerName="FADYADEL" duration="00:00:02.8247746" startTime="2026-11-17T18:16:38.6297082+02:00" endTime="2026-11-17T18:16:38.6297089+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3d3564dd-f5e0-4def-8b64-4dce881316d8" />
+    <UnitTestResult executionId="b9a89a15-acb4-4328-8c98-cfaa1b6dd17d" testId="f31b8363-7c15-8842-9e87-75b8e5b76945" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.Csv_ExportsAllFilteredRowsNotPage_AndNeutralizesFormulaCells" computerName="FADYADEL" duration="00:00:04.5726188" startTime="2026-11-17T18:16:05.5654431+02:00" endTime="2026-11-17T18:16:05.5654435+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b9a89a15-acb4-4328-8c98-cfaa1b6dd17d" />
+    <UnitTestResult executionId="999d1d0a-2ac6-4b26-9e81-714471433b56" testId="18e42103-0bfd-93d6-a226-ac960b92939f" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.LargeExport_IsRejectedBeforeMaterializingTheFilteredPopulation" computerName="FADYADEL" duration="00:00:11.4155257" startTime="2026-11-17T18:16:35.8020463+02:00" endTime="2026-11-17T18:16:35.8020470+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="999d1d0a-2ac6-4b26-9e81-714471433b56" />
+    <UnitTestResult executionId="6f1e8258-c3b9-4747-a13c-dee1b4b55239" testId="f4739a1d-0e2c-13e4-ac2a-7c5ddc3d2079" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.EmptyPopulation_IsNotOnePageOrAFabricatedRow" computerName="FADYADEL" duration="00:00:00.0010000" startTime="2026-11-17T18:11:27.2891546+02:00" endTime="2026-11-17T18:11:27.2893116+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6f1e8258-c3b9-4747-a13c-dee1b4b55239">
+      <Output>
+        <ErrorInfo>
+          <Message>Npgsql.NpgsqlException : The operation has timed out&#xD;
+---- System.TimeoutException : The operation has timed out.</Message>
+          <StackTrace>   at Npgsql.ThrowHelper.ThrowNpgsqlExceptionWithInnerTimeoutException(String message)&#xD;
+   at Npgsql.Util.NpgsqlTimeout.Check()&#xD;
+   at Npgsql.Util.NpgsqlTimeout.CheckAndGetTimeLeft()&#xD;
+   at Npgsql.Internal.NpgsqlConnector.Connect(NpgsqlTimeout timeout)&#xD;
+   at Npgsql.Internal.NpgsqlConnector.RawOpen(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)&#xD;
+   at Npgsql.Internal.NpgsqlConnector.&lt;Open&gt;g__OpenCore|209_0(NpgsqlConnector conn, String username, SslMode sslMode, GssEncryptionMode gssEncMode, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)&#xD;
+   at Npgsql.Internal.NpgsqlConnector.&lt;Open&gt;g__OpenCore|209_0(NpgsqlConnector conn, String username, SslMode sslMode, GssEncryptionMode gssEncMode, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)&#xD;
+   at Npgsql.Internal.NpgsqlConnector.Open(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)&#xD;
+   at Npgsql.UnpooledDataSource.Get(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)&#xD;
+   at Npgsql.NpgsqlConnection.&lt;Open&gt;g__OpenAsync|42_0(Boolean async, CancellationToken cancellationToken)&#xD;
+   at Npgsql.NpgsqlConnection.Open()&#xD;
+   at PointOfSale.Tests.Infrastructure.FinancePostgresTestContext.Create() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\FinancePostgresTestContext.cs:line 49&#xD;
+   at PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests..ctor() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\SuperAdmin\SuperAdminOrdersForensicTests.cs:line 18&#xD;
+   at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+----- Inner Stack Trace -----&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="908c4a95-85b9-46c3-910e-38f642b04074" testId="303d4d6f-a89b-6a04-9c22-3fbb2e739e09" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.EverySort_HasStableNonOverlappingPageBoundaries(sort: PaymentStatus)" computerName="FADYADEL" duration="00:00:06.0922973" startTime="2026-11-17T18:14:18.5733540+02:00" endTime="2026-11-17T18:14:18.5733543+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="908c4a95-85b9-46c3-910e-38f642b04074" />
+    <UnitTestResult executionId="67ce6e79-bb32-4dce-854e-0f37afa2f9af" testId="fa903f1b-aa1c-c63a-fd1d-f4d8f4bc696b" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.DateBoundaries_AreInclusiveUtcCalendarDays(from: True, to: False, count: 2)" computerName="FADYADEL" duration="00:00:06.2942365" startTime="2026-11-17T18:16:20.7700004+02:00" endTime="2026-11-17T18:16:20.7700012+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="67ce6e79-bb32-4dce-854e-0f37afa2f9af" />
+    <UnitTestResult executionId="f0a35548-eee1-47ca-aaa2-f7a2a7c5864a" testId="ba9b51df-54fa-0fa9-63e5-eae4a0ee602a" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.PaymentFilter_PartitionsActualStoredStatesWithoutCountingAttempts(filter: Failed, count: 4)" computerName="FADYADEL" duration="00:00:12.6864448" startTime="2026-11-17T18:15:49.2486279+02:00" endTime="2026-11-17T18:15:49.2486283+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f0a35548-eee1-47ca-aaa2-f7a2a7c5864a" />
+    <UnitTestResult executionId="072b6aa4-3949-493c-b5d7-8292f010bc94" testId="62f6c8dc-4e4f-efce-4859-3cb4a52420c7" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.Search_IsLiteralCaseInsensitiveAndParameterized(search: &quot;_&quot;, count: 1)" computerName="FADYADEL" duration="00:00:06.5622364" startTime="2026-11-17T18:13:57.2698189+02:00" endTime="2026-11-17T18:13:57.2698194+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="072b6aa4-3949-493c-b5d7-8292f010bc94">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: 1&#xD;
+Actual:   0</Message>
+          <StackTrace>   at PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.Search_IsLiteralCaseInsensitiveAndParameterized(String search, Int32 count) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\SuperAdmin\SuperAdminOrdersForensicTests.cs:line 106&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="7863bcb4-4db2-4194-8517-94123c7acaae" testId="ebf42c49-cb8c-c7f0-d37e-0cc696005e0f" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.Search_IsLiteralCaseInsensitiveAndParameterized(search: &quot;' OR 1=1 --&quot;, count: 0)" computerName="FADYADEL" duration="00:00:03.7066371" startTime="2026-11-17T18:14:00.9879914+02:00" endTime="2026-11-17T18:14:00.9879922+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7863bcb4-4db2-4194-8517-94123c7acaae" />
+    <UnitTestResult executionId="ba83bd0f-fabf-4fc5-8fbb-12fe5422f631" testId="071a622d-2cf4-4902-0517-655b4fff1b2e" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.DateBoundaries_AreInclusiveUtcCalendarDays(from: False, to: True, count: 2)" computerName="FADYADEL" duration="00:00:05.0174196" startTime="2026-11-17T18:16:14.4464666+02:00" endTime="2026-11-17T18:16:14.4464674+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ba83bd0f-fabf-4fc5-8fbb-12fe5422f631" />
+    <UnitTestResult executionId="944a2f67-f556-4acc-a5c1-5307e0298408" testId="72fd37b4-fbd1-9bf6-f8d7-8ac50dc8f00d" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.EverySort_HasStableNonOverlappingPageBoundaries(sort: Customer)" computerName="FADYADEL" duration="00:00:06.6156634" startTime="2026-11-17T18:14:47.8994163+02:00" endTime="2026-11-17T18:14:47.8994169+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="944a2f67-f556-4acc-a5c1-5307e0298408" />
+    <UnitTestResult executionId="cae4e553-9d60-4135-bbbe-b4d6ba6dfb10" testId="f3fcef04-4b3c-32e3-f8d7-0167e60d5ae0" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.EverySort_HasStableNonOverlappingPageBoundaries(sort: VendorCount)" computerName="FADYADEL" duration="00:00:06.5572054" startTime="2026-11-17T18:14:41.2717888+02:00" endTime="2026-11-17T18:14:41.2717892+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="cae4e553-9d60-4135-bbbe-b4d6ba6dfb10" />
+    <UnitTestResult executionId="27de9f8c-f162-42b5-b331-353700a1054c" testId="4818510c-c30a-4219-18c8-46ccfa4fd80c" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.EverySort_HasStableNonOverlappingPageBoundaries(sort: TotalAmount)" computerName="FADYADEL" duration="00:00:04.8320753" startTime="2026-11-17T18:14:34.7119819+02:00" endTime="2026-11-17T18:14:34.7119826+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="27de9f8c-f162-42b5-b331-353700a1054c" />
+    <UnitTestResult executionId="5a3401a8-485a-4825-ba72-c9dce3ab176e" testId="2a068b07-5bb9-a548-5e8a-93ddbaf0c2ac" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.PaymentFilter_PartitionsActualStoredStatesWithoutCountingAttempts(filter: Paid, count: 4)" computerName="FADYADEL" duration="00:00:16.6927065" startTime="2026-11-17T18:15:17.7237455+02:00" endTime="2026-11-17T18:15:17.7237459+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5a3401a8-485a-4825-ba72-c9dce3ab176e" />
+    <UnitTestResult executionId="a8848cc0-063c-4d87-b149-0a35473b8686" testId="4f8ce165-e50e-1c4b-b1d7-9217a59d0f97" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.Search_IsLiteralCaseInsensitiveAndParameterized(search: &quot;%&quot;, count: 1)" computerName="FADYADEL" duration="00:02:06.9584933" startTime="2026-11-17T18:13:50.6825088+02:00" endTime="2026-11-17T18:13:50.6825094+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a8848cc0-063c-4d87-b149-0a35473b8686">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: 1&#xD;
+Actual:   0</Message>
+          <StackTrace>   at PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.Search_IsLiteralCaseInsensitiveAndParameterized(String search, Int32 count) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\SuperAdmin\SuperAdminOrdersForensicTests.cs:line 106&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="ca9bf83f-a4c9-439e-aa8a-5b9378f8e346" testId="6ee52fab-bd9c-887c-e546-81139a9682fb" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.InvalidEnumsDatesAndPagination_AreRejectedByQueryContract" computerName="FADYADEL" duration="00:00:00.9278641" startTime="2026-11-17T18:14:05.4113580+02:00" endTime="2026-11-17T18:14:05.4113584+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ca9bf83f-a4c9-439e-aa8a-5b9378f8e346" />
+    <UnitTestResult executionId="22ef4415-739a-4a00-87cc-89eb77377b60" testId="f752627d-d157-56fe-0d0b-d51b433cb1af" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.EverySort_HasStableNonOverlappingPageBoundaries(sort: OrderNumber)" computerName="FADYADEL" duration="00:00:05.8724533" startTime="2026-11-17T18:14:24.4486202+02:00" endTime="2026-11-17T18:14:24.4486206+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="22ef4415-739a-4a00-87cc-89eb77377b60" />
+    <UnitTestResult executionId="877528d0-53e0-4a82-9486-ef5a0000d06a" testId="2551c55c-0189-88fb-d4c9-645cd39bcf77" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.Stats_UseUtcCreationFinalPaymentStateAndCollectedSubOrderTime" computerName="FADYADEL" duration="00:00:11.7213296" startTime="2026-11-17T18:16:00.9888819+02:00" endTime="2026-11-17T18:16:00.9888826+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="877528d0-53e0-4a82-9486-ef5a0000d06a" />
+    <UnitTestResult executionId="5752b504-6e23-4e3b-827a-be94151a9df5" testId="65439e3b-3004-ccdb-6c62-2dc63a2bbb47" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.FreshRead_DoesNotReuseOldRedisSnapshot" computerName="FADYADEL" duration="00:00:03.6099364" startTime="2026-11-17T18:16:24.3839832+02:00" endTime="2026-11-17T18:16:24.3839839+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5752b504-6e23-4e3b-827a-be94151a9df5" />
+    <UnitTestResult executionId="e3c76f59-d62c-4bde-9979-41b01eff3015" testId="54aa9c70-ffde-f31a-8864-9219399550dd" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.Search_IsLiteralCaseInsensitiveAndParameterized(search: &quot;isolated&quot;, count: 2)" computerName="FADYADEL" duration="00:00:00.0010000" startTime="2026-11-17T18:11:43.5095729+02:00" endTime="2026-11-17T18:11:43.5095733+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e3c76f59-d62c-4bde-9979-41b01eff3015">
+      <Output>
+        <ErrorInfo>
+          <Message>Npgsql.NpgsqlException : The operation has timed out&#xD;
+---- System.TimeoutException : The operation has timed out.</Message>
+          <StackTrace>   at Npgsql.ThrowHelper.ThrowNpgsqlExceptionWithInnerTimeoutException(String message)&#xD;
+   at Npgsql.Util.NpgsqlTimeout.Check()&#xD;
+   at Npgsql.Util.NpgsqlTimeout.CheckAndGetTimeLeft()&#xD;
+   at Npgsql.Internal.NpgsqlConnector.Connect(NpgsqlTimeout timeout)&#xD;
+   at Npgsql.Internal.NpgsqlConnector.RawOpen(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)&#xD;
+   at Npgsql.Internal.NpgsqlConnector.&lt;Open&gt;g__OpenCore|209_0(NpgsqlConnector conn, String username, SslMode sslMode, GssEncryptionMode gssEncMode, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)&#xD;
+   at Npgsql.Internal.NpgsqlConnector.&lt;Open&gt;g__OpenCore|209_0(NpgsqlConnector conn, String username, SslMode sslMode, GssEncryptionMode gssEncMode, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)&#xD;
+   at Npgsql.Internal.NpgsqlConnector.Open(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)&#xD;
+   at Npgsql.UnpooledDataSource.Get(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)&#xD;
+   at Npgsql.NpgsqlConnection.&lt;Open&gt;g__OpenAsync|42_0(Boolean async, CancellationToken cancellationToken)&#xD;
+   at Npgsql.NpgsqlConnection.Open()&#xD;
+   at PointOfSale.Tests.Infrastructure.FinancePostgresTestContext.Create() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\FinancePostgresTestContext.cs:line 49&#xD;
+   at PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests..ctor() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\SuperAdmin\SuperAdminOrdersForensicTests.cs:line 18&#xD;
+   at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+----- Inner Stack Trace -----&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="684d9278-4aab-4b74-aba0-6c915a3b8b7b" testId="1107a891-3e42-718c-2780-04e152724883" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.PaymentFilter_PartitionsActualStoredStatesWithoutCountingAttempts(filter: Unpaid, count: 5)" computerName="FADYADEL" duration="00:00:18.8347997" startTime="2026-11-17T18:15:36.5602936+02:00" endTime="2026-11-17T18:15:36.5602941+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="684d9278-4aab-4b74-aba0-6c915a3b8b7b" />
+    <UnitTestResult executionId="f75d9b70-4fe0-4958-a749-25a96bc2d51a" testId="2e3529dd-10c2-cda0-4cfd-1e230242a748" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.EverySort_HasStableNonOverlappingPageBoundaries(sort: Tenant)" computerName="FADYADEL" duration="00:00:06.9767100" startTime="2026-11-17T18:14:54.8853328+02:00" endTime="2026-11-17T18:14:54.8853335+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f75d9b70-4fe0-4958-a749-25a96bc2d51a" />
+    <UnitTestResult executionId="7eeabeaa-90bd-4c94-96f8-87d93a45c864" testId="88028a5a-efba-2602-5bfc-3a4ada9c7ab9" testName="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.DateBoundaries_AreInclusiveUtcCalendarDays(from: True, to: True, count: 1)" computerName="FADYADEL" duration="00:00:03.8131356" startTime="2026-11-17T18:16:09.3836884+02:00" endTime="2026-11-17T18:16:09.3836890+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7eeabeaa-90bd-4c94-96f8-87d93a45c864" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.EverySort_HasStableNonOverlappingPageBoundaries(sort: Status)" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="520e3a3e-d561-65fa-a2db-2a9aca28e1ea">
+      <Execution id="0ac2e3b6-5bd8-444c-9cd1-9dff8baa5332" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="EverySort_HasStableNonOverlappingPageBoundaries" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.IdentifierSearchAndSplitStoreFilter_CountEachParentOnce" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="e2b76b15-be78-28a2-79cb-a1317c4b1d9d">
+      <Execution id="c7fedcf4-08f8-4d3b-b963-d9c07d362002" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="IdentifierSearchAndSplitStoreFilter_CountEachParentOnce" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.PaymentFilter_PartitionsActualStoredStatesWithoutCountingAttempts(filter: Unpaid, count: 5)" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="1107a891-3e42-718c-2780-04e152724883">
+      <Execution id="684d9278-4aab-4b74-aba0-6c915a3b8b7b" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="PaymentFilter_PartitionsActualStoredStatesWithoutCountingAttempts" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.Stats_UseUtcCreationFinalPaymentStateAndCollectedSubOrderTime" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="2551c55c-0189-88fb-d4c9-645cd39bcf77">
+      <Execution id="877528d0-53e0-4a82-9486-ef5a0000d06a" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="Stats_UseUtcCreationFinalPaymentStateAndCollectedSubOrderTime" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.EverySort_HasStableNonOverlappingPageBoundaries(sort: TotalAmount)" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="4818510c-c30a-4219-18c8-46ccfa4fd80c">
+      <Execution id="27de9f8c-f162-42b5-b331-353700a1054c" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="EverySort_HasStableNonOverlappingPageBoundaries" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.EverySort_HasStableNonOverlappingPageBoundaries(sort: Tenant)" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="2e3529dd-10c2-cda0-4cfd-1e230242a748">
+      <Execution id="f75d9b70-4fe0-4958-a749-25a96bc2d51a" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="EverySort_HasStableNonOverlappingPageBoundaries" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.EmptyPopulation_IsNotOnePageOrAFabricatedRow" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="f4739a1d-0e2c-13e4-ac2a-7c5ddc3d2079">
+      <Execution id="6f1e8258-c3b9-4747-a13c-dee1b4b55239" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="EmptyPopulation_IsNotOnePageOrAFabricatedRow" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.PersistedRefundAndTransitionHistory_AreBoundToTheirOrderAndUseFrozenAmounts" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="9cd06b49-f252-448c-40e2-0c596dc36743">
+      <Execution id="3d3564dd-f5e0-4def-8b64-4dce881316d8" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="PersistedRefundAndTransitionHistory_AreBoundToTheirOrderAndUseFrozenAmounts" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.Csv_ExportsAllFilteredRowsNotPage_AndNeutralizesFormulaCells" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="f31b8363-7c15-8842-9e87-75b8e5b76945">
+      <Execution id="b9a89a15-acb4-4328-8c98-cfaa1b6dd17d" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="Csv_ExportsAllFilteredRowsNotPage_AndNeutralizesFormulaCells" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.EverySort_HasStableNonOverlappingPageBoundaries(sort: VendorCount)" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="f3fcef04-4b3c-32e3-f8d7-0167e60d5ae0">
+      <Execution id="cae4e553-9d60-4135-bbbe-b4d6ba6dfb10" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="EverySort_HasStableNonOverlappingPageBoundaries" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.FreshRead_DoesNotReuseOldRedisSnapshot" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="65439e3b-3004-ccdb-6c62-2dc63a2bbb47">
+      <Execution id="5752b504-6e23-4e3b-827a-be94151a9df5" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="FreshRead_DoesNotReuseOldRedisSnapshot" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.DateBoundaries_AreInclusiveUtcCalendarDays(from: False, to: True, count: 2)" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="071a622d-2cf4-4902-0517-655b4fff1b2e">
+      <Execution id="ba83bd0f-fabf-4fc5-8fbb-12fe5422f631" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="DateBoundaries_AreInclusiveUtcCalendarDays" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.PaymentFilter_PartitionsActualStoredStatesWithoutCountingAttempts(filter: Failed, count: 4)" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="ba9b51df-54fa-0fa9-63e5-eae4a0ee602a">
+      <Execution id="f0a35548-eee1-47ca-aaa2-f7a2a7c5864a" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="PaymentFilter_PartitionsActualStoredStatesWithoutCountingAttempts" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.PaymentFilter_PartitionsActualStoredStatesWithoutCountingAttempts(filter: Paid, count: 4)" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="2a068b07-5bb9-a548-5e8a-93ddbaf0c2ac">
+      <Execution id="5a3401a8-485a-4825-ba72-c9dce3ab176e" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="PaymentFilter_PartitionsActualStoredStatesWithoutCountingAttempts" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.EverySort_HasStableNonOverlappingPageBoundaries(sort: PaymentStatus)" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="303d4d6f-a89b-6a04-9c22-3fbb2e739e09">
+      <Execution id="908c4a95-85b9-46c3-910e-38f642b04074" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="EverySort_HasStableNonOverlappingPageBoundaries" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.Search_IsLiteralCaseInsensitiveAndParameterized(search: &quot;%&quot;, count: 1)" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="4f8ce165-e50e-1c4b-b1d7-9217a59d0f97">
+      <Execution id="a8848cc0-063c-4d87-b149-0a35473b8686" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="Search_IsLiteralCaseInsensitiveAndParameterized" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.Search_IsLiteralCaseInsensitiveAndParameterized(search: &quot;ch-test&quot;, count: 1)" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="62611307-15eb-a3cc-c734-950d0b20eacc">
+      <Execution id="d81eaa14-6046-4d8e-8bcf-1bd07186c917" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="Search_IsLiteralCaseInsensitiveAndParameterized" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.InvalidEnumsDatesAndPagination_AreRejectedByQueryContract" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="6ee52fab-bd9c-887c-e546-81139a9682fb">
+      <Execution id="ca9bf83f-a4c9-439e-aa8a-5b9378f8e346" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="InvalidEnumsDatesAndPagination_AreRejectedByQueryContract" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.EverySort_HasStableNonOverlappingPageBoundaries(sort: Customer)" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="72fd37b4-fbd1-9bf6-f8d7-8ac50dc8f00d">
+      <Execution id="944a2f67-f556-4acc-a5c1-5307e0298408" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="EverySort_HasStableNonOverlappingPageBoundaries" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.DateBoundaries_AreInclusiveUtcCalendarDays(from: True, to: True, count: 1)" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="88028a5a-efba-2602-5bfc-3a4ada9c7ab9">
+      <Execution id="7eeabeaa-90bd-4c94-96f8-87d93a45c864" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="DateBoundaries_AreInclusiveUtcCalendarDays" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.EverySort_HasStableNonOverlappingPageBoundaries(sort: OrderNumber)" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="f752627d-d157-56fe-0d0b-d51b433cb1af">
+      <Execution id="22ef4415-739a-4a00-87cc-89eb77377b60" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="EverySort_HasStableNonOverlappingPageBoundaries" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.Search_IsLiteralCaseInsensitiveAndParameterized(search: &quot;' OR 1=1 --&quot;, count: 0)" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="ebf42c49-cb8c-c7f0-d37e-0cc696005e0f">
+      <Execution id="7863bcb4-4db2-4194-8517-94123c7acaae" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="Search_IsLiteralCaseInsensitiveAndParameterized" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.Search_IsLiteralCaseInsensitiveAndParameterized(search: &quot;isolated&quot;, count: 2)" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="54aa9c70-ffde-f31a-8864-9219399550dd">
+      <Execution id="e3c76f59-d62c-4bde-9979-41b01eff3015" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="Search_IsLiteralCaseInsensitiveAndParameterized" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.Search_IsLiteralCaseInsensitiveAndParameterized(search: &quot;_&quot;, count: 1)" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="62f6c8dc-4e4f-efce-4859-3cb4a52420c7">
+      <Execution id="072b6aa4-3949-493c-b5d7-8292f010bc94" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="Search_IsLiteralCaseInsensitiveAndParameterized" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.Integration.CommerceHubMultiVendorCheckoutIntegrationTests.OrdersForensic_CodSplitCheckoutFulfillmentCancellationAndReadModel_ReconcileRealServices" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="2604b335-1b1d-4830-0560-7d68032d81df">
+      <Execution id="d24c19d4-5b34-412d-835e-f9ea58c6c695" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.Integration.CommerceHubMultiVendorCheckoutIntegrationTests" name="OrdersForensic_CodSplitCheckoutFulfillmentCancellationAndReadModel_ReconcileRealServices" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.DateBoundaries_AreInclusiveUtcCalendarDays(from: True, to: False, count: 2)" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="fa903f1b-aa1c-c63a-fd1d-f4d8f4bc696b">
+      <Execution id="67ce6e79-bb32-4dce-854e-0f37afa2f9af" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="DateBoundaries_AreInclusiveUtcCalendarDays" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.LargeExport_IsRejectedBeforeMaterializingTheFilteredPopulation" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="18e42103-0bfd-93d6-a226-ac960b92939f">
+      <Execution id="999d1d0a-2ac6-4b26-9e81-714471433b56" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="LargeExport_IsRejectedBeforeMaterializingTheFilteredPopulation" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.EverySort_HasStableNonOverlappingPageBoundaries(sort: CreatedAt)" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="03667946-9fa6-5cf5-9d1c-e08b9c811c87">
+      <Execution id="46404e1b-0553-45b0-aeac-48c8b3c6f79f" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests" name="EverySort_HasStableNonOverlappingPageBoundaries" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="03667946-9fa6-5cf5-9d1c-e08b9c811c87" executionId="46404e1b-0553-45b0-aeac-48c8b3c6f79f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="62611307-15eb-a3cc-c734-950d0b20eacc" executionId="d81eaa14-6046-4d8e-8bcf-1bd07186c917" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e2b76b15-be78-28a2-79cb-a1317c4b1d9d" executionId="c7fedcf4-08f8-4d3b-b963-d9c07d362002" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2604b335-1b1d-4830-0560-7d68032d81df" executionId="d24c19d4-5b34-412d-835e-f9ea58c6c695" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="520e3a3e-d561-65fa-a2db-2a9aca28e1ea" executionId="0ac2e3b6-5bd8-444c-9cd1-9dff8baa5332" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9cd06b49-f252-448c-40e2-0c596dc36743" executionId="3d3564dd-f5e0-4def-8b64-4dce881316d8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f31b8363-7c15-8842-9e87-75b8e5b76945" executionId="b9a89a15-acb4-4328-8c98-cfaa1b6dd17d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="18e42103-0bfd-93d6-a226-ac960b92939f" executionId="999d1d0a-2ac6-4b26-9e81-714471433b56" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f4739a1d-0e2c-13e4-ac2a-7c5ddc3d2079" executionId="6f1e8258-c3b9-4747-a13c-dee1b4b55239" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="303d4d6f-a89b-6a04-9c22-3fbb2e739e09" executionId="908c4a95-85b9-46c3-910e-38f642b04074" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="fa903f1b-aa1c-c63a-fd1d-f4d8f4bc696b" executionId="67ce6e79-bb32-4dce-854e-0f37afa2f9af" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ba9b51df-54fa-0fa9-63e5-eae4a0ee602a" executionId="f0a35548-eee1-47ca-aaa2-f7a2a7c5864a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="62f6c8dc-4e4f-efce-4859-3cb4a52420c7" executionId="072b6aa4-3949-493c-b5d7-8292f010bc94" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ebf42c49-cb8c-c7f0-d37e-0cc696005e0f" executionId="7863bcb4-4db2-4194-8517-94123c7acaae" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="071a622d-2cf4-4902-0517-655b4fff1b2e" executionId="ba83bd0f-fabf-4fc5-8fbb-12fe5422f631" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="72fd37b4-fbd1-9bf6-f8d7-8ac50dc8f00d" executionId="944a2f67-f556-4acc-a5c1-5307e0298408" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f3fcef04-4b3c-32e3-f8d7-0167e60d5ae0" executionId="cae4e553-9d60-4135-bbbe-b4d6ba6dfb10" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4818510c-c30a-4219-18c8-46ccfa4fd80c" executionId="27de9f8c-f162-42b5-b331-353700a1054c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2a068b07-5bb9-a548-5e8a-93ddbaf0c2ac" executionId="5a3401a8-485a-4825-ba72-c9dce3ab176e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4f8ce165-e50e-1c4b-b1d7-9217a59d0f97" executionId="a8848cc0-063c-4d87-b149-0a35473b8686" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6ee52fab-bd9c-887c-e546-81139a9682fb" executionId="ca9bf83f-a4c9-439e-aa8a-5b9378f8e346" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f752627d-d157-56fe-0d0b-d51b433cb1af" executionId="22ef4415-739a-4a00-87cc-89eb77377b60" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2551c55c-0189-88fb-d4c9-645cd39bcf77" executionId="877528d0-53e0-4a82-9486-ef5a0000d06a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="65439e3b-3004-ccdb-6c62-2dc63a2bbb47" executionId="5752b504-6e23-4e3b-827a-be94151a9df5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="54aa9c70-ffde-f31a-8864-9219399550dd" executionId="e3c76f59-d62c-4bde-9979-41b01eff3015" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1107a891-3e42-718c-2780-04e152724883" executionId="684d9278-4aab-4b74-aba0-6c915a3b8b7b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2e3529dd-10c2-cda0-4cfd-1e230242a748" executionId="f75d9b70-4fe0-4958-a749-25a96bc2d51a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="88028a5a-efba-2602-5bfc-3a4ada9c7ab9" executionId="7eeabeaa-90bd-4c94-96f8-87d93a45c864" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="28" executed="28" passed="23" failed="5" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 10.0.15)&#xD;
+[xUnit.net 00:00:14.77]   Discovering: PointOfSale.Tests&#xD;
+[xUnit.net 00:01:17.25]   Discovered:  PointOfSale.Tests&#xD;
+[xUnit.net 00:01:18.87]   Starting:    PointOfSale.Tests&#xD;
+[xUnit.net 00:01:52.87]       Npgsql.NpgsqlException : The operation has timed out&#xD;
+[xUnit.net 00:01:52.87]       ---- System.TimeoutException : The operation has timed out.&#xD;
+[xUnit.net 00:01:52.87]       Stack Trace:&#xD;
+[xUnit.net 00:01:52.87]            at Npgsql.ThrowHelper.ThrowNpgsqlExceptionWithInnerTimeoutException(String message)&#xD;
+[xUnit.net 00:01:52.87]            at Npgsql.Util.NpgsqlTimeout.Check()&#xD;
+[xUnit.net 00:01:52.87]            at Npgsql.Util.NpgsqlTimeout.CheckAndGetTimeLeft()&#xD;
+[xUnit.net 00:01:52.87]            at Npgsql.Internal.NpgsqlConnector.Connect(NpgsqlTimeout timeout)&#xD;
+[xUnit.net 00:01:52.87]            at Npgsql.Internal.NpgsqlConnector.RawOpen(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:01:52.87]            at Npgsql.Internal.NpgsqlConnector.&lt;Open&gt;g__OpenCore|209_0(NpgsqlConnector conn, String username, SslMode sslMode, GssEncryptionMode gssEncMode, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:01:52.87]            at Npgsql.Internal.NpgsqlConnector.&lt;Open&gt;g__OpenCore|209_0(NpgsqlConnector conn, String username, SslMode sslMode, GssEncryptionMode gssEncMode, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:01:52.87]            at Npgsql.Internal.NpgsqlConnector.Open(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:01:52.87]            at Npgsql.UnpooledDataSource.Get(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:01:52.88]            at Npgsql.NpgsqlConnection.&lt;Open&gt;g__OpenAsync|42_0(Boolean async, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:01:52.88]            at Npgsql.NpgsqlConnection.Open()&#xD;
+[xUnit.net 00:01:52.88]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\FinancePostgresTestContext.cs(49,0): at PointOfSale.Tests.Infrastructure.FinancePostgresTestContext.Create()&#xD;
+[xUnit.net 00:01:52.88]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\SuperAdmin\SuperAdminOrdersForensicTests.cs(18,0): at PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests..ctor()&#xD;
+[xUnit.net 00:01:52.88]            at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+[xUnit.net 00:01:52.88]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:01:52.88]         &#xD;
+[xUnit.net 00:02:09.13]       Npgsql.NpgsqlException : The operation has timed out&#xD;
+[xUnit.net 00:02:09.13]       ---- System.TimeoutException : The operation has timed out.&#xD;
+[xUnit.net 00:02:09.13]       Stack Trace:&#xD;
+[xUnit.net 00:02:09.13]            at Npgsql.ThrowHelper.ThrowNpgsqlExceptionWithInnerTimeoutException(String message)&#xD;
+[xUnit.net 00:02:09.14]            at Npgsql.Util.NpgsqlTimeout.Check()&#xD;
+[xUnit.net 00:02:09.14]            at Npgsql.Util.NpgsqlTimeout.CheckAndGetTimeLeft()&#xD;
+[xUnit.net 00:02:09.14]            at Npgsql.Internal.NpgsqlConnector.Connect(NpgsqlTimeout timeout)&#xD;
+[xUnit.net 00:02:09.14]            at Npgsql.Internal.NpgsqlConnector.RawOpen(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:02:09.14]            at Npgsql.Internal.NpgsqlConnector.&lt;Open&gt;g__OpenCore|209_0(NpgsqlConnector conn, String username, SslMode sslMode, GssEncryptionMode gssEncMode, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:02:09.14]            at Npgsql.Internal.NpgsqlConnector.&lt;Open&gt;g__OpenCore|209_0(NpgsqlConnector conn, String username, SslMode sslMode, GssEncryptionMode gssEncMode, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:02:09.14]            at Npgsql.Internal.NpgsqlConnector.Open(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:02:09.14]            at Npgsql.UnpooledDataSource.Get(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:02:09.15]            at Npgsql.NpgsqlConnection.&lt;Open&gt;g__OpenAsync|42_0(Boolean async, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:02:09.15]            at Npgsql.NpgsqlConnection.Open()&#xD;
+[xUnit.net 00:02:09.15]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\FinancePostgresTestContext.cs(49,0): at PointOfSale.Tests.Infrastructure.FinancePostgresTestContext.Create()&#xD;
+[xUnit.net 00:02:09.15]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\SuperAdmin\SuperAdminOrdersForensicTests.cs(18,0): at PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests..ctor()&#xD;
+[xUnit.net 00:02:09.15]            at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+[xUnit.net 00:02:09.15]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:02:09.17]         &#xD;
+[xUnit.net 00:04:16.34]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:04:16.34]       Expected: 1&#xD;
+[xUnit.net 00:04:16.34]       Actual:   0&#xD;
+[xUnit.net 00:04:16.34]       Stack Trace:&#xD;
+[xUnit.net 00:04:16.34]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\SuperAdmin\SuperAdminOrdersForensicTests.cs(106,0): at PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.Search_IsLiteralCaseInsensitiveAndParameterized(String search, Int32 count)&#xD;
+[xUnit.net 00:04:16.34]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:04:22.93]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:04:22.93]       Expected: 1&#xD;
+[xUnit.net 00:04:22.93]       Actual:   0&#xD;
+[xUnit.net 00:04:22.93]       Stack Trace:&#xD;
+[xUnit.net 00:04:22.93]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\SuperAdmin\SuperAdminOrdersForensicTests.cs(106,0): at PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.Search_IsLiteralCaseInsensitiveAndParameterized(String search, Int32 count)&#xD;
+[xUnit.net 00:04:22.93]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:07:12.40]       Npgsql.PostgresException : 42P01: relation "CommerceHubMarketplaceOrderNumberSeq" does not exist&#xD;
+[xUnit.net 00:07:12.40]       &#xD;
+[xUnit.net 00:07:12.40]       POSITION: 16&#xD;
+[xUnit.net 00:07:12.40]       Stack Trace:&#xD;
+[xUnit.net 00:07:12.41]            at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)&#xD;
+[xUnit.net 00:07:12.41]            at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource&lt;TResult&gt;.GetResult(Int16 token)&#xD;
+[xUnit.net 00:07:12.41]            at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:07:12.41]            at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:07:12.41]            at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:07:12.41]            at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:07:12.41]            at Npgsql.NpgsqlCommand.ExecuteScalar(Boolean async, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:07:12.41]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\Services\CommerceHub\CommerceHubCheckoutService.cs(1758,0): at PointOfSale.API.Services.CommerceHub.CommerceHubCheckoutService.GetNextMarketplaceOrderSequenceAsync(CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:07:12.41]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\Services\CommerceHub\CommerceHubCheckoutService.cs(1759,0): at PointOfSale.API.Services.CommerceHub.CommerceHubCheckoutService.GetNextMarketplaceOrderSequenceAsync(CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:07:12.41]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\Services\CommerceHub\CommerceHubCheckoutService.cs(1767,0): at PointOfSale.API.Services.CommerceHub.CommerceHubCheckoutService.GetNextMarketplaceOrderSequenceAsync(CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:07:12.41]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\Services\CommerceHub\CommerceHubCheckoutService.cs(1728,0): at PointOfSale.API.Services.CommerceHub.CommerceHubCheckoutService.GenerateMarketplaceOrderNumberAsync(CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:07:12.41]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\Services\CommerceHub\CommerceHubCheckoutService.cs(711,0): at PointOfSale.API.Services.CommerceHub.CommerceHubCheckoutService.CheckoutAsync(CommerceHubCheckoutRequestDto request, Guid customerId, String correlationId, String idempotencyKey, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:07:12.41]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\Services\CommerceHub\CommerceHubCheckoutService.cs(855,0): at PointOfSale.API.Services.CommerceHub.CommerceHubCheckoutService.CheckoutAsync(CommerceHubCheckoutRequestDto request, Guid customerId, String correlationId, String idempotencyKey, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:07:12.41]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\Services\CommerceHub\CommerceHubCheckoutService.cs(863,0): at PointOfSale.API.Services.CommerceHub.CommerceHubCheckoutService.CheckoutAsync(CommerceHubCheckoutRequestDto request, Guid customerId, String correlationId, String idempotencyKey, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:07:12.41]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\Services\CommerceHub\CommerceHubCheckoutService.cs(876,0): at PointOfSale.API.Services.CommerceHub.CommerceHubCheckoutService.CheckoutAsync(CommerceHubCheckoutRequestDto request, Guid customerId, String correlationId, String idempotencyKey, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:07:12.41]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Integration\CommerceHubMultiVendorCheckoutIntegrationTests.OrdersForensic.cs(39,0): at PointOfSale.Tests.Integration.CommerceHubMultiVendorCheckoutIntegrationTests.OrdersForensic_CodSplitCheckoutFulfillmentCancellationAndReadModel_ReconcileRealServices()&#xD;
+[xUnit.net 00:07:12.41]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:07:12.42]   Finished:    PointOfSale.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T18:11:27.2097870+02:00">
+        <Text>[xUnit.net 00:01:52.87]     PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.EmptyPopulation_IsNotOnePageOrAFabricatedRow [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T18:11:43.4686466+02:00">
+        <Text>[xUnit.net 00:02:09.13]     PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.Search_IsLiteralCaseInsensitiveAndParameterized(search: "isolated", count: 2) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T18:13:50.6815212+02:00">
+        <Text>[xUnit.net 00:04:16.34]     PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.Search_IsLiteralCaseInsensitiveAndParameterized(search: "%", count: 1) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T18:13:57.2690388+02:00">
+        <Text>[xUnit.net 00:04:22.93]     PointOfSale.Tests.SuperAdmin.SuperAdminOrdersForensicTests.Search_IsLiteralCaseInsensitiveAndParameterized(search: "_", count: 1) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T18:16:46.7446573+02:00">
+        <Text>[xUnit.net 00:07:12.40]     PointOfSale.Tests.Integration.CommerceHubMultiVendorCheckoutIntegrationTests.OrdersForensic_CodSplitCheckoutFulfillmentCancellationAndReadModel_ReconcileRealServices [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

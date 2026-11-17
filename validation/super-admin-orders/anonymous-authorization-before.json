@@ -1,0 +1,32 @@
+{
+  "capturedAtUtc": "2026-11-17T15:51:45.746Z",
+  "credentialsUsed": false,
+  "results": [
+    {
+      "path": "/api/super-admin/orders",
+      "status": 401,
+      "denied": true
+    },
+    {
+      "path": "/api/super-admin/orders/stats",
+      "status": 401,
+      "denied": true
+    },
+    {
+      "path": "/api/super-admin/orders/export",
+      "status": 401,
+      "denied": true
+    },
+    {
+      "path": "/api/super-admin/orders/00000000-0000-0000-0000-000000000000",
+      "status": 401,
+      "denied": true
+    },
+    {
+      "path": "/api/tenants",
+      "status": 401,
+      "denied": true
+    }
+  ],
+  "pass": true
+}

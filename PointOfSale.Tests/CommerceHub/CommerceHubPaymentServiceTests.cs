@@ -798,6 +798,56 @@ public sealed class CommerceHubPaymentServiceTests : IDisposable
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task VerifiedNonCollectedPaymobCallback_PersistsEvidenceWithoutRecognizingMoney(bool authorizationOnly)
+    {
+        var payment = await SeedPendingPaymentAsync();
+        var logsBefore = await _dbContext.CommerceHubPaymentLogs.CountAsync();
+        _paymobAdapterMock.Setup(a => a.ParseWebhookAsync(
+                It.IsAny<PaymentProviderWebhookRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new PaymentProviderWebhookResult
+            {
+                ProviderReference = payment.ProviderReference,
+                ProviderIntentId = payment.ProviderIntentId,
+                TransactionId = "isolated-pending-transaction",
+                EventType = "TRANSACTION",
+                Currency = "EGP",
+                AmountMinorUnits = checked((long)(payment.Amount * 100)),
+                Pending = !authorizationOnly,
+                AuthorizationOnly = authorizationOnly
+            });
+
+        var result = await _service.ProcessWebhookAsync("PAYMOB", "adapter-verified", "{}", "pending-regression");
+
+        Assert.Equal(authorizationOnly, result.Processed);
+        Assert.False(result.ShouldRetry);
+        Assert.Equal(logsBefore + 1, await _dbContext.CommerceHubPaymentLogs.CountAsync());
+        Assert.Equal(CommerceHubPaymentRecordStatus.Pending, payment.Status);
+        Assert.Null(payment.PaidAtUtc);
+        _financialWorkflowServiceMock.Verify(s => s.ApplyOnlinePaymentSuccessAsync(
+            It.IsAny<CommerceHubMarketplaceOrder>(), It.IsAny<CommerceHubPayment>(),
+            It.IsAny<DateTime>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task PendingPaymobCallback_WithRejectedSignature_CannotWriteEvidence()
+    {
+        await SeedPendingPaymentAsync();
+        var logsBefore = await _dbContext.CommerceHubPaymentLogs.CountAsync();
+        _paymobAdapterMock.Setup(a => a.ParseWebhookAsync(
+                It.IsAny<PaymentProviderWebhookRequest>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new PaymentProviderAdapterException(
+                CanonicalProviderError.Validation("PAYMOB", "HMAC_INVALID", "Isolated rejected signature")));
+
+        var exception = await Assert.ThrowsAsync<CommerceHubCheckoutException>(() =>
+            _service.ProcessWebhookAsync("PAYMOB", "rejected", "{}", "rejected-pending-regression"));
+
+        Assert.Equal("PAYMOB_INVALID_SIGNATURE", exception.Code);
+        Assert.Equal(logsBefore, await _dbContext.CommerceHubPaymentLogs.CountAsync());
+    }
+
     [Fact]
     public async Task ApplyWebhookOutcomeAsync_WhenPaymentAlreadyCompleted_DoesNotDuplicateCompletionSideEffects()
     {

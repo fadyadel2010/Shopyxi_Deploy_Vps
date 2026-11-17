@@ -4,22 +4,13 @@ import { requireSuperAdminOrderDetailAuthority, requireSuperAdminOrderListAuthor
 
 export type SuperAdminOrderStatus =
     | 'Pending'
-    | 'Awaiting Payment'
-    | 'AwaitingPayment'
-    | 'Payment Pending'
-    | 'PaymentPending'
     | 'Confirmed'
     | 'Processing'
-    | 'Packed'
-    | 'Ready For Shipment'
-    | 'ReadyForShipment'
     | 'Shipped'
     | 'Delivered'
     | 'Completed'
     | 'Cancelled'
-    | 'Returned'
     | 'Refunded'
-    | 'Failed'
     | 'OnHold'
 
 export type SuperAdminOrderPaymentFilter = 'Paid' | 'Unpaid' | 'Failed'
@@ -41,6 +32,7 @@ export type SuperAdminPaymentStatus =
     | 'AmountMismatch'
 
 export type SuperAdminPaymentRecordStatus = 'Pending' | 'Paid' | 'Failed' | 'Ignored'
+    | 'RefundRequired' | 'Refunded' | 'RefundFailed'
 
 export type SuperAdminOrdersSortField =
     | 'CreatedAt'
@@ -101,6 +93,20 @@ export interface SuperAdminOrderPaymentDetails {
     createdAt: string
     processedAtUtc?: string | null
     paidAtUtc?: string | null
+    attempts: SuperAdminOrderPaymentAttempt[]
+}
+
+export interface SuperAdminOrderPaymentAttempt {
+    attemptId: string
+    attemptNumber: number
+    provider: string
+    status: SuperAdminPaymentRecordStatus
+    providerReference: string
+    providerIntentId?: string | null
+    providerTransactionId?: string | null
+    failureReason?: string | null
+    createdAt: string
+    completedAtUtc?: string | null
 }
 
 export interface SuperAdminOrderSubOrderDetails {
@@ -133,6 +139,48 @@ export interface SuperAdminOrderItem {
     quantity: number
     unitPrice: number
     totalPrice: number
+    refunds: SuperAdminOrderRefundRequest[]
+}
+
+export interface SuperAdminOrderRefundRequest {
+    refundId: string
+    quantity: number
+    amount: number
+    status: string
+    reason: string
+    createdAt: string
+    updatedAt?: string | null
+}
+
+export interface SuperAdminOrderStatusHistory {
+    historyId: string
+    subOrderId: string
+    previousStatus: SuperAdminOrderStatus
+    newStatus: SuperAdminOrderStatus
+    reason?: string | null
+    correlationId?: string | null
+    changedAtUtc: string
+}
+
+export interface SuperAdminOrderRefundDetails {
+    refundId: string
+    subOrderId: string
+    refundRequestId?: string | null
+    orderItemId?: string | null
+    quantity?: number | null
+    amount: number
+    commissionReversalAmount: number
+    promoDiscountReversalAmount: number
+    vendorEarningReversalAmount: number
+    currency: string
+    status: string
+    reason: string
+    failureReason?: string | null
+    isFullRefund: boolean
+    isPostPayoutAdjustment: boolean
+    createdAt: string
+    processingStartedAtUtc?: string | null
+    processedAtUtc?: string | null
 }
 
 export interface SuperAdminOrderDetails {
@@ -165,6 +213,8 @@ export interface SuperAdminOrderDetails {
     payments: SuperAdminOrderPaymentDetails[]
     subOrders: SuperAdminOrderSubOrderDetails[]
     orderItems: SuperAdminOrderItem[]
+    statusHistory: SuperAdminOrderStatusHistory[]
+    refunds: SuperAdminOrderRefundDetails[]
 }
 
 export interface SuperAdminOrdersStats {
@@ -175,7 +225,7 @@ export interface SuperAdminOrdersStats {
     totalOrdersToday: number
     pendingOrders: number
     failedPayments: number
-    revenueToday: number
+    capturedSalesToday: number
 }
 
 export interface SuperAdminOrdersFilters {
@@ -192,6 +242,7 @@ export interface SuperAdminOrdersFilters {
 }
 
 export interface SuperAdminOrdersMeta extends SuperAdminApiMeta {
+    asOfUtc?: string
     totalPages?: number
     sortBy?: string
     sortDirection?: string
@@ -204,19 +255,13 @@ export interface SuperAdminOrdersResult {
 
 export const SUPER_ADMIN_ORDER_STATUS_OPTIONS: SuperAdminOrderStatus[] = [
     'Pending',
-    'Awaiting Payment',
-    'Payment Pending',
     'Confirmed',
     'Processing',
-    'Packed',
-    'Ready For Shipment',
     'Shipped',
     'Delivered',
     'Completed',
     'Cancelled',
-    'Returned',
     'Refunded',
-    'Failed',
     'OnHold',
 ]
 
@@ -249,7 +294,7 @@ export function isFailedPaymentStatus(status: SuperAdminPaymentStatus | null | u
 }
 
 export function isPendingOrderStatus(status: SuperAdminOrderStatus | null | undefined): boolean {
-    return status === 'Pending' || status === 'Awaiting Payment' || status === 'AwaitingPayment' || status === 'Payment Pending' || status === 'PaymentPending'
+    return status === 'Pending'
 }
 
 export function isPaidPaymentStatus(status: SuperAdminPaymentStatus | null | undefined): boolean {
@@ -346,7 +391,12 @@ export async function downloadSuperAdminOrdersCsv(
     filters: SuperAdminOrdersFilters,
 ): Promise<Blob> {
     const params = buildOrdersQueryParams(filters, { includePagination: false })
-    return superAdminApiClient.getBlob(`/orders/export?${params.toString()}`)
+    // getBlob resolves paths against the origin, unlike the JSON client's baseURL.
+    const blob = await superAdminApiClient.getBlob(`/api/super-admin/orders/export?${params.toString()}`)
+    if (!blob.type.toLowerCase().includes('text/csv')) {
+        throw new Error('Orders export did not return a CSV file.')
+    }
+    return blob
 }
 
 export async function getSuperAdminOrderTenants(): Promise<SuperAdminTenantOption[]> {

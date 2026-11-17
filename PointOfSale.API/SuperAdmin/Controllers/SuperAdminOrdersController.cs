@@ -8,6 +8,7 @@ using PointOfSale.Core.Enums;
 namespace PointOfSale.API.SuperAdmin.Controllers;
 
 [Route("api/super-admin/orders")]
+[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
 public sealed class SuperAdminOrdersController : SuperAdminBaseController
 {
     private readonly ISuperAdminOrdersService _ordersService;
@@ -73,6 +74,7 @@ public sealed class SuperAdminOrdersController : SuperAdminBaseController
             ["pageSize"] = result.PageSize,
             ["totalCount"] = result.TotalCount,
             ["totalPages"] = result.TotalPages,
+            ["asOfUtc"] = result.AsOfUtc,
             ["sortBy"] = query.SortBy.ToString(),
             ["sortDirection"] = query.SortDirection.ToString()
         };
@@ -98,7 +100,7 @@ public sealed class SuperAdminOrdersController : SuperAdminBaseController
             {
                 query.Page,
                 query.PageSize,
-                query.Search,
+                SearchApplied = !string.IsNullOrWhiteSpace(query.NormalizedSearch),
                 query.Status,
                 query.PaymentStatus,
                 query.TenantId,
@@ -168,7 +170,23 @@ public sealed class SuperAdminOrdersController : SuperAdminBaseController
                 validationError);
         }
 
-        var csv = await _ordersService.ExportOrdersCsvAsync(query, cancellationToken);
+        SuperAdminOrdersCsvExport export;
+        try
+        {
+            export = await _ordersService.ExportOrdersCsvAsync(query, cancellationToken);
+        }
+        catch (SuperAdminOrdersExportLimitExceededException exception)
+        {
+            return ErrorResponse(
+                StatusCodes.Status422UnprocessableEntity,
+                "EXPORT_LIMIT_EXCEEDED",
+                exception.Message,
+                new Dictionary<string, object?>
+                {
+                    ["rowCount"] = exception.RowCount,
+                    ["maximumRows"] = exception.MaximumRows
+                });
+        }
         var fileName = $"commercehub_orders_{DateTime.UtcNow:yyyyMMddHHmm}.csv";
 
         _logger.LogInformation(
@@ -187,20 +205,28 @@ public sealed class SuperAdminOrdersController : SuperAdminBaseController
             success: true,
             details: new
             {
-                query.Search,
+                SearchApplied = !string.IsNullOrWhiteSpace(query.NormalizedSearch),
                 query.Status,
                 query.PaymentStatus,
                 query.TenantId,
                 query.FromDate,
                 query.ToDate,
                 query.SortBy,
-                query.SortDirection
+                query.SortDirection,
+                export.RowCount
             },
             actorId: CurrentSuperAdminId,
             actorEmail: CurrentSuperAdminEmail,
             cancellationToken: cancellationToken);
 
-        return File(Encoding.UTF8.GetBytes(csv), "text/csv", fileName);
+        Response.Headers["X-Export-Row-Count"] = export.RowCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        var utf8Bom = new UTF8Encoding(encoderShouldEmitUTF8Identifier: true);
+        var preamble = utf8Bom.GetPreamble();
+        var content = utf8Bom.GetBytes(export.Content);
+        var bytes = new byte[preamble.Length + content.Length];
+        Buffer.BlockCopy(preamble, 0, bytes, 0, preamble.Length);
+        Buffer.BlockCopy(content, 0, bytes, preamble.Length, content.Length);
+        return File(bytes, "text/csv; charset=utf-8", fileName);
     }
 
     [HttpGet("{orderId:guid}")]

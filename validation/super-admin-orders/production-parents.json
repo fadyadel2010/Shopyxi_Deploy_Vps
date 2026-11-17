@@ -1,0 +1,12 @@
+{
+  "api": {
+    "image": "localhost/shopixy/api@sha256:5a3bab31b628f8a3dfebd88c9eb0d60083176f9fc5f0b8a4d7c43845844e67ba",
+    "archive": "api-parent.tar",
+    "archiveSha256": "c620a7c94d90bc5287cccbaa5f52a62a96ee3a488f91f716b044750e12c61abe"
+  },
+  "web": {
+    "image": "localhost/shopixy/web@sha256:207a1794c0411b5a895a9cb411b4b91836c779b3283bfea127cc7e888eb216bf",
+    "archive": "web-parent.tar",
+    "archiveSha256": "c7f6cc54f691bd96e191e05f79f270566501cbd7134d837b575cee24a6fa5497"
+  }
+}

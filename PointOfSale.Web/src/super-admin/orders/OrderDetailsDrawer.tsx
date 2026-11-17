@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
     Bug,
     ChevronDown,
@@ -65,6 +65,20 @@ const PAYMENT_STATUS_LABELS: Record<string, string> = {
     Unpaid: 'غير مدفوع',
     Pending: 'معلّق',
     Ignored: 'متجاهل',
+    Authorized: 'مفوّض',
+    PartiallyPaid: 'مدفوع جزئيًا',
+    AwaitingVerification: 'بانتظار التحقق',
+    CashOnDelivery: 'الدفع عند الاستلام',
+    RefundRequired: 'الاسترداد مطلوب',
+    RefundFailed: 'فشل الاسترداد',
+}
+
+const REFUND_STATUS_LABELS: Record<string, string> = {
+    Pending: 'معلّق', Processing: 'قيد المعالجة', Completed: 'مكتمل',
+    Failed: 'فاشل', ReconciliationRequired: 'تتطلب مطابقة',
+    Requested: 'مطلوب', Approved: 'موافق عليه', Rejected: 'مرفوض',
+    UnderReview: 'قيد المراجعة', Cancelled: 'ملغى', WaitingForReturn: 'بانتظار الإرجاع',
+    AwaitingPayout: 'بانتظار الصرف', Paid: 'مدفوع',
 }
 
 function formatJson(value?: string | null): string {
@@ -133,7 +147,32 @@ export default function OrderDetailsDrawer({
     onRetry,
 }: OrderDetailsDrawerProps) {
     const [showDebugInfo, setShowDebugInfo] = useState(false)
+    const drawerRef = useRef<HTMLElement>(null)
     const { tr, locale, formatCurrency, formatPercent, formatDateTime } = useSuperAdminLocale()
+
+    useEffect(() => {
+        if (!isOpen) return
+        const previous = document.activeElement as HTMLElement | null
+        const oldOverflow = document.body.style.overflow
+        document.body.style.overflow = 'hidden'
+        drawerRef.current?.querySelector<HTMLButtonElement>('button')?.focus()
+        const trapFocus = (event: KeyboardEvent) => {
+            if (event.key !== 'Tab') return
+            const controls = Array.from(drawerRef.current?.querySelectorAll<HTMLElement>(
+                'button:not([disabled]),a[href],input:not([disabled]),select:not([disabled]),[tabindex="0"]',
+            ) ?? [])
+            const first = controls[0]
+            const last = controls[controls.length - 1]
+            if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus() }
+            else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus() }
+        }
+        document.addEventListener('keydown', trapFocus)
+        return () => {
+            document.body.style.overflow = oldOverflow
+            document.removeEventListener('keydown', trapFocus)
+            previous?.focus()
+        }
+    }, [isOpen])
 
     useEffect(() => {
         if (!isOpen) {
@@ -209,6 +248,8 @@ export default function OrderDetailsDrawer({
     const statusLabel = (value: string) => tr(value, ORDER_STATUS_LABELS[value] ?? value)
     const paymentStatusLabel = (value: string) => tr(value, PAYMENT_STATUS_LABELS[value] ?? value)
 
+    if (!isOpen) return null
+
     return (
         <>
             <div
@@ -219,6 +260,10 @@ export default function OrderDetailsDrawer({
             />
 
             <aside
+                ref={drawerRef}
+                role="dialog"
+                aria-modal="true"
+                aria-label={tr('Order details', 'تفاصيل الطلب')}
                 className={`fixed end-0 top-0 z-50 flex h-full w-full max-w-[780px] transform flex-col border-s border-slate-200 bg-white shadow-2xl transition-transform duration-300 ${
                     isOpen ? 'translate-x-0' : 'translate-x-full rtl:-translate-x-full'
                 }`}
@@ -341,7 +386,11 @@ export default function OrderDetailsDrawer({
                                         <div className="space-y-2 text-sm text-slate-600">
                                             <div className="flex items-center justify-between gap-3">
                                                 <span>{tr('Tenant summary', 'ملخص المتجر')}</span>
-                                                <span className="font-semibold text-slate-950">{order.tenantName}</span>
+                                                <span className="font-semibold text-slate-950">
+                                                    {order.vendorCount > 1
+                                                        ? tr(`${order.subOrders[0]?.vendorName} +${order.vendorCount - 1} more`, `${order.subOrders[0]?.vendorName} و${order.vendorCount - 1} آخرون`)
+                                                        : order.subOrders[0]?.vendorName || tr('No vendors', 'لا يوجد بائعون')}
+                                                </span>
                                             </div>
                                             <div className="flex items-center justify-between gap-3">
                                                 <span>{tr('Created at', 'تاريخ الإنشاء')}</span>
@@ -476,10 +525,10 @@ export default function OrderDetailsDrawer({
                                         <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
                                             {tr('Delivery address', 'عنوان التسليم')}
                                         </p>
-                                        <p className="mt-1 text-sm leading-6 text-slate-700">
+                                                                 <p className="mt-1 text-sm leading-6 text-slate-700">
                                             {[order.addressLine, order.area, order.city].filter(Boolean).join(', ') ||
                                                 tr('Unavailable', 'غير متاح')}
-                                        </p>
+                                                                 </p>
                                         <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
                                             {tr('Notes', 'ملاحظات')}
                                         </p>
@@ -566,6 +615,117 @@ export default function OrderDetailsDrawer({
                                                         {tr('Failure reason:', 'سبب الفشل:')} {payment.failureReason}
                                                     </div>
                                                 ) : null}
+
+                                                {payment.attempts.length > 0 ? (
+                                                    <div className="mt-3 border-t border-slate-200 pt-3">
+                                                        <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+                                                            {tr('Payment attempts', 'محاولات الدفع')}
+                                                        </p>
+                                                        <div className="mt-2 space-y-2">
+                                                            {payment.attempts.map((attempt) => (
+                                                                <div key={attempt.attemptId} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs text-slate-600">
+                                                                    <div className="flex flex-wrap items-center justify-between gap-2">
+                                                                        <span className="font-semibold text-slate-950">
+                                                                            {tr(`Attempt ${attempt.attemptNumber}`, `المحاولة ${attempt.attemptNumber}`)} · {attempt.provider}
+                                                                        </span>
+                                                                        <StatusBadge tone={attempt.status === 'Paid' ? 'emerald' : attempt.status === 'Failed' ? 'rose' : 'amber'}>
+                                                                            {paymentStatusLabel(attempt.status)}
+                                                                        </StatusBadge>
+                                                                    </div>
+                                                                    <p className="mt-1 break-all font-mono" dir="ltr">
+                                                                        {attempt.providerReference || tr('No provider reference', 'لا يوجد مرجع مزوّد')}
+                                                                    </p>
+                                                                    <p className="mt-1" dir="auto">
+                                                                        {tr('Completed:', 'اكتملت:')} {formatDateTime(attempt.completedAtUtc)}
+                                                                    </p>
+                                                                    {attempt.failureReason ? (
+                                                                        <p className="mt-1 text-rose-700">
+                                                                            {tr('Failure:', 'الفشل:')} {attempt.failureReason}
+                                                                        </p>
+                                                                    ) : null}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                ) : null}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </section>
+
+                            <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+                                <div className="flex items-center gap-2 text-slate-900">
+                                    <Clock3 className="h-4 w-4 text-amber-600" />
+                                    <h3 className="text-base font-semibold">{tr('Lifecycle history', 'سجل دورة الطلب')}</h3>
+                                </div>
+
+                                {order.statusHistory.length === 0 ? (
+                                    <div className="mt-3">
+                                        <EmptyState
+                                            title={tr('No persisted transitions', 'لا توجد انتقالات محفوظة')}
+                                            description={tr(
+                                                'No sub-order status transition history is stored for this order.',
+                                                'لا يوجد سجل محفوظ لانتقالات حالة الطلبات الفرعية لهذا الطلب.',
+                                            )}
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className="mt-3 space-y-2">
+                                        {order.statusHistory.map((history) => (
+                                            <div key={history.historyId} className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5">
+                                                <div className="flex flex-wrap items-center justify-between gap-2">
+                                                    <p className="text-sm font-semibold text-slate-950">
+                                                        {statusLabel(history.previousStatus)} → {statusLabel(history.newStatus)}
+                                                    </p>
+                                                    <p className="text-xs text-slate-500" dir="auto">{formatDateTime(history.changedAtUtc)}</p>
+                                                </div>
+                                                {history.reason ? <p className="mt-1 text-sm text-slate-600">{history.reason}</p> : null}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </section>
+
+                            <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+                                <div className="flex items-center gap-2 text-slate-900">
+                                    <ReceiptText className="h-4 w-4 text-rose-600" />
+                                    <h3 className="text-base font-semibold">{tr('Refund history', 'سجل الاسترداد')}</h3>
+                                </div>
+
+                                {order.refunds.length === 0 ? (
+                                    <div className="mt-3">
+                                        <EmptyState
+                                            title={tr('No executed refunds', 'لا توجد استردادات منفذة')}
+                                            description={tr(
+                                                'No persisted refund execution is linked to this order.',
+                                                'لا يوجد تنفيذ استرداد محفوظ مرتبط بهذا الطلب.',
+                                            )}
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className="mt-3 space-y-3">
+                                        {order.refunds.map((refund) => (
+                                            <div key={refund.refundId} className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                                                <div className="flex flex-wrap items-start justify-between gap-2">
+                                                    <div>
+                                                        <p className="text-sm font-semibold text-slate-950" dir="auto">
+                                                            {formatCurrency(refund.amount, refund.currency)} · {refund.reason}
+                                                        </p>
+                                                        <p className="mt-0.5 text-xs text-slate-500" dir="auto">
+                                                            {tr('Processed:', 'تمت المعالجة:')} {formatDateTime(refund.processedAtUtc)}
+                                                        </p>
+                                                    </div>
+                                                    <StatusBadge tone={refund.status === 'Completed' ? 'emerald' : refund.status === 'Failed' ? 'rose' : 'amber'}>
+                                                        {tr(refund.status, REFUND_STATUS_LABELS[refund.status] ?? refund.status)}
+                                                    </StatusBadge>
+                                                </div>
+                                                <div className="mt-3 grid gap-2 sm:grid-cols-3">
+                                                    <DetailCard label={tr('Commission reversal', 'عكس العمولة')} value={formatCurrency(refund.commissionReversalAmount, refund.currency)} />
+                                                    <DetailCard label={tr('Promo reversal', 'عكس العرض')} value={formatCurrency(refund.promoDiscountReversalAmount, refund.currency)} />
+                                                    <DetailCard label={tr('Vendor reversal', 'عكس البائع')} value={formatCurrency(refund.vendorEarningReversalAmount, refund.currency)} />
+                                                </div>
+                                                {refund.failureReason ? <p className="mt-2 text-sm text-rose-700">{refund.failureReason}</p> : null}
                                             </div>
                                         ))}
                                     </div>
@@ -632,13 +792,20 @@ export default function OrderDetailsDrawer({
                                                                 <p className="mt-0.5 text-sm text-slate-600">
                                                                     {item.variantName || tr('Base product', 'المنتج الأساسي')}
                                                                 </p>
-                                                                <div className="mt-2 flex flex-wrap gap-3 text-xs text-slate-500">
+                                                                    <div className="mt-2 flex flex-wrap gap-3 text-xs text-slate-500">
                                                                     <span>{tr('Qty:', 'الكمية:')} {item.quantity}</span>
                                                                     <span dir="auto">
                                                                         {tr('Unit:', 'الوحدة:')}{' '}
                                                                         {formatCurrency(item.unitPrice, order.currency)}
                                                                     </span>
-                                                                </div>
+                                                                    </div>
+                                                                    {item.refunds.map((request) => (
+                                                                        <div key={request.refundId} className="mt-2 rounded border border-amber-200 bg-amber-50 p-2 text-xs text-amber-900">
+                                                                            {tr('Refund request:', 'طلب استرداد:')}{' '}
+                                                                            {tr(request.status, REFUND_STATUS_LABELS[request.status] ?? request.status)} ·{' '}
+                                                                            {formatCurrency(request.amount, order.currency)} · {request.reason}
+                                                                        </div>
+                                                                    ))}
                                                             </div>
 
                                                             <div className="self-center text-start md:text-end">

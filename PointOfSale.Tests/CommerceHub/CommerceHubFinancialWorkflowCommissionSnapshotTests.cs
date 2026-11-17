@@ -9,6 +9,7 @@ using PointOfSale.Core.Entities;
 using PointOfSale.Core.Enums;
 using PointOfSale.Core.Enums.CommerceHubFinance;
 using PointOfSale.Infrastructure.Data;
+using PointOfSale.Tests.Infrastructure;
 
 namespace PointOfSale.Tests.CommerceHub;
 
@@ -18,11 +19,7 @@ public sealed class CommerceHubFinancialWorkflowCommissionSnapshotTests : IDispo
 
     public CommerceHubFinancialWorkflowCommissionSnapshotTests()
     {
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(Guid.NewGuid().ToString())
-            .Options;
-
-        _dbContext = new ApplicationDbContext(options);
+        _dbContext = FinancePostgresTestContext.Create();
     }
 
     [Fact]
@@ -602,6 +599,15 @@ public sealed class CommerceHubFinancialWorkflowCommissionSnapshotTests : IDispo
 
     private async Task SaveCommerceHubFixtureAsync()
     {
+        foreach (var entry in _dbContext.ChangeTracker.Entries<CommerceHubMarketplaceOrder>()
+                     .Where(e => e.State == EntityState.Added && e.Entity.CustomerId == Guid.Empty).ToList())
+        {
+            var customer = CommerceHubCustomer.Create(
+                $"{Guid.NewGuid():N}@snapshot.example.test", "Isolated snapshot customer", "01000000000", null);
+            _dbContext.CommerceHubCustomers.Add(customer);
+            entry.Entity.Customer = customer;
+            entry.Entity.CustomerId = customer.Id;
+        }
         using (CommerceHubBoundaryMutationScope.BeginOrderLifecycle())
         using (CommerceHubBoundaryMutationScope.BeginPayment())
         using (CommerceHubBoundaryMutationScope.BeginPaymentLifecycle())

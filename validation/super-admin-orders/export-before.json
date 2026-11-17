@@ -1,0 +1,9 @@
+{
+  "capturedAtUtc": "2026-11-17T16:07:12.110Z",
+  "actualHeadedBrowser": true,
+  "credentialsReadOrInjected": false,
+  "action": "CLICK_EXISTING_EXPORT_BUTTON",
+  "requests": [],
+  "expectedApiPath": "/api/super-admin/orders/export",
+  "defectReproduced": false
+}

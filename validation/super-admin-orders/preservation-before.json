@@ -1,0 +1,126 @@
+{
+  "capturedAtUtc": "2026-11-17T16:11:54.006Z",
+  "readOnly": true,
+  "snapshots": [
+    {
+      "scope": "SalesInvoices",
+      "count": 3,
+      "fingerprint": "a5c7daca2716a1d1917f117028a5eceb"
+    },
+    {
+      "scope": "Returns",
+      "count": 5,
+      "fingerprint": "6bd76dbb651501e52cb5e6904c4da588"
+    },
+    {
+      "scope": "LedgerJournalEntries",
+      "count": 26,
+      "fingerprint": "06d5674def48fb0dc551b4decda8686b"
+    },
+    {
+      "scope": "LedgerLines",
+      "count": 60,
+      "fingerprint": "7ac997116fc70f034b1e5b6f67233f58"
+    },
+    {
+      "scope": "CommissionRules",
+      "count": 1,
+      "fingerprint": "45ff34f89ca896df75197a421de98ac8"
+    },
+    {
+      "scope": "PromoCodes",
+      "count": 0,
+      "fingerprint": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "scope": "CommerceHubFinancialTransactions",
+      "count": 0,
+      "fingerprint": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "scope": "CommerceHubRefunds",
+      "count": 0,
+      "fingerprint": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "scope": "CommerceHubVendorEarnings",
+      "count": 0,
+      "fingerprint": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "scope": "CommerceHubPayouts",
+      "count": 0,
+      "fingerprint": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "scope": "CommerceHubVendorSettlements",
+      "count": 0,
+      "fingerprint": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "scope": "ProductVariantStocks",
+      "count": 3,
+      "fingerprint": "300a600d088e7a91a85d788b370e0779"
+    },
+    {
+      "scope": "WarehouseStocks",
+      "count": 0,
+      "fingerprint": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "scope": "CommerceHubMarketplaceOrders",
+      "count": 0,
+      "fingerprint": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "scope": "CommerceHubSubOrders",
+      "count": 0,
+      "fingerprint": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "scope": "CommerceHubSubOrderItems",
+      "count": 0,
+      "fingerprint": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "scope": "CommerceHubCustomers",
+      "count": 0,
+      "fingerprint": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "scope": "CommerceHubPayments",
+      "count": 0,
+      "fingerprint": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "scope": "CommerceHubPaymentAttempts",
+      "count": 0,
+      "fingerprint": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "scope": "CommerceHubRefundRequests",
+      "count": 0,
+      "fingerprint": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "scope": "InventoryReservations",
+      "count": 3,
+      "fingerprint": "f7834b3261063d327cca317c422c04d9"
+    },
+    {
+      "scope": "Orders",
+      "count": 3,
+      "fingerprint": "3fea382cb474fc4421655fe0286e117b"
+    },
+    {
+      "scope": "variantPriceState",
+      "count": 7,
+      "fingerprint": "33b4c5cdb352c81ab54eb296c4d8cb15"
+    },
+    {
+      "scope": "listingPricePublicationState",
+      "count": 1,
+      "fingerprint": "24abd9619e097cb554a815086b1a4a3f"
+    }
+  ]
+}
