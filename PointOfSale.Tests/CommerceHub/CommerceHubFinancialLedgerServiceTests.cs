@@ -8,6 +8,7 @@ using PointOfSale.Core.Enums;
 using PointOfSale.Core.Enums.CommerceHubFinance;
 using PointOfSale.Core.Financial;
 using PointOfSale.Infrastructure.Data;
+using PointOfSale.Tests.Infrastructure;
 
 namespace PointOfSale.Tests.CommerceHub;
 
@@ -18,11 +19,7 @@ public sealed class CommerceHubFinancialLedgerServiceTests : IDisposable
 
     public CommerceHubFinancialLedgerServiceTests()
     {
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(Guid.NewGuid().ToString())
-            .Options;
-
-        _dbContext = new ApplicationDbContext(options);
+        _dbContext = FinancePostgresTestContext.Create();
         _service = new CommerceHubFinancialLedgerService(
             _dbContext,
             NullLogger<CommerceHubFinancialLedgerService>.Instance);

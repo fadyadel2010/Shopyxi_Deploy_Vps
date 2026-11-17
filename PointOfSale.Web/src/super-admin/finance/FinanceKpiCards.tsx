@@ -97,10 +97,11 @@ export default function FinanceKpiCards({ data, isLoading }: FinanceKpiCardsProp
     const { tr, formatCurrency, formatNumber, formatPercent } = useSuperAdminLocale()
 
     const formatScopedCurrency = (value: number | undefined) => {
+        if (value == null || !Number.isFinite(value)) return '—'
         if (String(data?.currency ?? 'EGP').trim().toUpperCase() !== 'EGP') {
             return tr('CommerceHub currency blocked', 'عملة CommerceHub غير مدعومة')
         }
-        return formatCurrency(Number(value ?? 0), 'EGP')
+        return formatCurrency(value, 'EGP')
     }
 
     return (
@@ -112,7 +113,7 @@ export default function FinanceKpiCards({ data, isLoading }: FinanceKpiCardsProp
                         <KpiCard
                             key={card.key}
                             label={tr(card.label, card.labelAr)}
-                            value={formatScopedCurrency(Number(data?.[card.key] ?? 0))}
+                            value={formatScopedCurrency(data?.[card.key])}
                             hint={tr(card.description, card.descriptionAr)}
                             tone={card.tone}
                             isLoading={isLoading && !data}
@@ -128,12 +129,12 @@ export default function FinanceKpiCards({ data, isLoading }: FinanceKpiCardsProp
                         {tr('Orders in scope', 'الطلبات داخل النطاق')}
                     </p>
                     <p className="mt-1 text-xl font-semibold text-slate-950" dir="auto">
-                        {formatNumber(data?.totalOrdersCount ?? 0)}
+                        {data ? formatNumber(data.totalOrdersCount) : '—'}
                     </p>
                     <p className="mt-0.5 text-xs leading-5 text-slate-500">
                         {tr(
-                            'Counted at recognized sub-order commission rows.',
-                            'تُحتسب عند صفوف عمولة الطلبات الفرعية المعترف بها.',
+                            'Distinct financially recognized CommerceHub sub-orders, including zero-rate orders.',
+                            'طلبات CommerceHub الفرعية المعترف بها ماليًا دون تكرار، بما فيها الطلبات بعمولة صفرية.',
                         )}
                     </p>
                 </div>
@@ -143,11 +144,11 @@ export default function FinanceKpiCards({ data, isLoading }: FinanceKpiCardsProp
                         {tr('Refund rate', 'معدل المرتجعات')}
                     </p>
                     <p className="mt-1 text-xl font-semibold text-slate-950" dir="auto">
-                        {formatPercent(data?.refundRate ?? 0)}
+                        {data ? formatPercent(data.refundRate) : '—'}
                     </p>
                     <p className="mt-0.5 text-xs leading-5 text-slate-500">
-                        {formatNumber(data?.refundedOrdersCount ?? 0)}{' '}
-                        {tr('refunded orders within scope.', 'طلب مرتجع داخل النطاق.')}
+                        {data ? formatNumber(data.refundedOrdersCount) : '—'}{' '}
+                        {tr('recognized sub-orders in this window with a completed refund in this window.', 'طلب فرعي معترف به في هذه الفترة وله استرداد مكتمل في الفترة نفسها.')}
                     </p>
                 </div>
 
@@ -156,7 +157,7 @@ export default function FinanceKpiCards({ data, isLoading }: FinanceKpiCardsProp
                         {tr('Revenue drag', 'تأثير الإيراد')}
                     </p>
                     <p className="mt-1 text-xl font-semibold text-slate-950" dir="auto">
-                        {formatScopedCurrency(data?.refundImpactOnRevenue ?? 0)}
+                        {formatScopedCurrency(data?.refundImpactOnRevenue)}
                     </p>
                     <p className="mt-0.5 text-xs leading-5 text-slate-500">
                         {tr(

@@ -504,7 +504,10 @@ public class RefundExecutionService : IRefundExecutionService, IRefundExecutionR
             ValidateRefundEligibility(subOrder, payment);
 
             var refundAmount = RefundFinancialCalculator.RoundCurrency(refundRequest.TotalAmount);
-            var refundBreakdown = RefundFinancialCalculator.CalculateItemBreakdown(orderItem, refundRequest.Quantity);
+            var refundedItemQuantity = await GetRefundedItemQuantityAsync(
+                orderItem.Id, trackedRefund?.Id, cancellationToken);
+            var refundBreakdown = RefundFinancialCalculator.CalculateItemBreakdown(
+                orderItem, refundRequest.Quantity, refundedItemQuantity);
             var grossCommissionReversalAmount = refundBreakdown.GrossCommissionReversalAmount;
             var commissionReversalAmount = refundBreakdown.CommissionReversalAmount;
             var promoDiscountReversalAmount = refundBreakdown.PromoDiscountReversalAmount;
@@ -946,7 +949,8 @@ public class RefundExecutionService : IRefundExecutionService, IRefundExecutionR
                 refundRequest.Quantity,
                 refundedAmountSoFar,
                 trackedRefund.Amount,
-                totalAfterRefund >= RoundCurrency(subOrder.Total));
+                totalAfterRefund >= RoundCurrency(subOrder.Total),
+                await GetRefundedItemQuantityAsync(orderItem.Id, trackedRefund.Id, cancellationToken));
             var refundBreakdown = NormalizeTrackedRefundBreakdown(trackedRefund, fallbackBreakdown);
 
             await EnsureNoProcessingPayoutForRefundEarningsAsync(
@@ -1853,7 +1857,8 @@ public class RefundExecutionService : IRefundExecutionService, IRefundExecutionR
                 refundRequest.Quantity,
                 refundedAmountSoFar,
                 refundAmount,
-                isFullRefund);
+                isFullRefund,
+                await GetRefundedItemQuantityAsync(refundRequest.OrderItem.Id, trackedRefund?.Id, cancellationToken));
             var resolvedBreakdown = trackedRefund == null
                 ? fallbackBreakdown
                 : NormalizeTrackedRefundBreakdown(trackedRefund, fallbackBreakdown);
@@ -2128,7 +2133,7 @@ public class RefundExecutionService : IRefundExecutionService, IRefundExecutionR
             count += 1;
         }
 
-        if (refund.CommissionReversalAmount > 0m)
+        if (grossCommissionReversalAmount > 0m)
         {
             count += 1;
         }
@@ -2153,9 +2158,10 @@ public class RefundExecutionService : IRefundExecutionService, IRefundExecutionR
         int quantity,
         decimal refundedAmountSoFar,
         decimal refundAmount,
-        bool isFullRefund)
+        bool isFullRefund,
+        int refundedItemQuantity)
     {
-        var itemBreakdown = RefundFinancialCalculator.CalculateItemBreakdown(orderItem, quantity);
+        var itemBreakdown = RefundFinancialCalculator.CalculateItemBreakdown(orderItem, quantity, refundedItemQuantity);
         if (IsBreakdownConsistent(itemBreakdown, refundAmount))
         {
             return itemBreakdown;
@@ -2167,6 +2173,14 @@ public class RefundExecutionService : IRefundExecutionService, IRefundExecutionR
             refundAmount,
             isFullRefund);
     }
+
+    private Task<int> GetRefundedItemQuantityAsync(
+        Guid orderItemId, Guid? excludedRefundId, CancellationToken cancellationToken) =>
+        _dbContext.CommerceHubRefunds.AsNoTracking()
+            .Where(refund => refund.OrderItemId == orderItemId &&
+                             (!excludedRefundId.HasValue || refund.Id != excludedRefundId.Value) &&
+                             refund.Status != CommerceHubRefundStatus.Failed && !refund.IsDeleted)
+            .SumAsync(refund => refund.Quantity ?? 0, cancellationToken);
 
     private static RefundFinancialBreakdown NormalizeTrackedRefundBreakdown(
         CommerceHubRefund trackedRefund,

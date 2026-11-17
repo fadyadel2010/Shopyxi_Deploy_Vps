@@ -12,7 +12,8 @@ internal static class RefundFinancialCalculator
 {
     public static RefundFinancialBreakdown CalculateItemBreakdown(
         CommerceHubSubOrderItem orderItem,
-        int quantity)
+        int quantity,
+        int refundedQuantitySoFar = 0)
     {
         var refundAmount = CalculateRefundAmount(orderItem, quantity);
         if (quantity <= 0 || orderItem.Quantity <= 0 || refundAmount <= 0m)
@@ -20,21 +21,17 @@ internal static class RefundFinancialCalculator
             return new RefundFinancialBreakdown(0m, 0m, 0m, 0m);
         }
 
-        var grossCommission = Prorate(
-            orderItem.PlatformCommissionAmount,
-            quantity,
-            orderItem.Quantity);
-        var finalCommission = Prorate(
-            ResolveFinalCommissionAmount(orderItem.FinalPlatformCommissionAmount, orderItem.PlatformCommissionAmount),
-            quantity,
-            orderItem.Quantity);
-        var promoDiscount = Prorate(orderItem.PromoDiscountAmount, quantity, orderItem.Quantity);
+        if (refundedQuantitySoFar < 0 || (long)refundedQuantitySoFar + quantity > orderItem.Quantity)
+        {
+            throw new ArgumentOutOfRangeException(nameof(quantity), "Refund quantity exceeds the remaining item quantity.");
+        }
 
-        return new RefundFinancialBreakdown(
-            GrossCommissionReversalAmount: grossCommission,
-            CommissionReversalAmount: finalCommission,
-            PromoDiscountReversalAmount: promoDiscount,
-            VendorEarningReversalAmount: RoundCurrency(Math.Max(0m, refundAmount - grossCommission)));
+        ValidateCommissionSplit(orderItem.PlatformCommissionAmount,
+            orderItem.FinalPlatformCommissionAmount, orderItem.PromoDiscountAmount);
+        return CalculateCumulativeBreakdown(
+            orderItem.PlatformCommissionAmount, orderItem.PromoDiscountAmount,
+            refundedQuantitySoFar / (decimal)orderItem.Quantity,
+            (refundedQuantitySoFar + quantity) / (decimal)orderItem.Quantity, refundAmount);
     }
 
     public static RefundFinancialBreakdown CalculateSubOrderBreakdown(
@@ -49,10 +46,9 @@ internal static class RefundFinancialCalculator
         }
 
         var grossCommission = RoundCurrency(Math.Max(0m, subOrder.PlatformCommissionAmount));
-        var finalCommission = RoundCurrency(ResolveFinalCommissionAmount(
-            subOrder.FinalPlatformCommissionAmount,
-            subOrder.PlatformCommissionAmount));
         var promoDiscount = RoundCurrency(Math.Max(0m, subOrder.PromoDiscountAmount));
+        ValidateCommissionSplit(subOrder.PlatformCommissionAmount,
+            subOrder.FinalPlatformCommissionAmount, subOrder.PromoDiscountAmount);
 
         if (grossCommission <= 0m)
         {
@@ -61,15 +57,6 @@ internal static class RefundFinancialCalculator
                 0m,
                 0m,
                 RoundCurrency(refundAmount));
-        }
-
-        if (isFullRefund || subOrder.Total <= 0m)
-        {
-            return new RefundFinancialBreakdown(
-                GrossCommissionReversalAmount: grossCommission,
-                CommissionReversalAmount: finalCommission,
-                PromoDiscountReversalAmount: promoDiscount,
-                VendorEarningReversalAmount: RoundCurrency(Math.Max(0m, refundAmount - grossCommission)));
         }
 
         if (subOrder.Subtotal <= 0m)
@@ -84,22 +71,13 @@ internal static class RefundFinancialCalculator
         var commissionableRefundedBefore = Math.Clamp(refundedAmountSoFar - subOrder.Shipping, 0m, subOrder.Subtotal);
         var commissionableRefundedAfter = Math.Clamp(refundedAmountSoFar + refundAmount - subOrder.Shipping, 0m, subOrder.Subtotal);
 
-        var grossBefore = RoundCurrency(grossCommission * (commissionableRefundedBefore / subOrder.Subtotal));
-        var grossAfter = RoundCurrency(grossCommission * (commissionableRefundedAfter / subOrder.Subtotal));
-        var finalBefore = RoundCurrency(finalCommission * (commissionableRefundedBefore / subOrder.Subtotal));
-        var finalAfter = RoundCurrency(finalCommission * (commissionableRefundedAfter / subOrder.Subtotal));
-        var promoBefore = RoundCurrency(promoDiscount * (commissionableRefundedBefore / subOrder.Subtotal));
-        var promoAfter = RoundCurrency(promoDiscount * (commissionableRefundedAfter / subOrder.Subtotal));
-
-        var grossDelta = Math.Max(0m, RoundCurrency(grossAfter - grossBefore));
-        var finalDelta = Math.Max(0m, RoundCurrency(finalAfter - finalBefore));
-        var promoDelta = Math.Max(0m, RoundCurrency(promoAfter - promoBefore));
-
-        return new RefundFinancialBreakdown(
-            GrossCommissionReversalAmount: grossDelta,
-            CommissionReversalAmount: finalDelta,
-            PromoDiscountReversalAmount: promoDelta,
-            VendorEarningReversalAmount: RoundCurrency(Math.Max(0m, refundAmount - grossDelta)));
+        // A final refund reverses only the remaining commission, never the
+        // original commission again. The existing shipping-first allocation
+        // remains unchanged; the lifecycle flag cannot override money bounds.
+        return CalculateCumulativeBreakdown(
+            grossCommission, promoDiscount,
+            commissionableRefundedBefore / subOrder.Subtotal,
+            commissionableRefundedAfter / subOrder.Subtotal, refundAmount);
     }
 
     public static decimal CalculateCommissionReversal(
@@ -131,28 +109,32 @@ internal static class RefundFinancialCalculator
     public static decimal RoundCurrency(decimal amount) =>
         CommissionCalculator.RoundAmount(amount);
 
-    private static decimal Prorate(decimal amount, int quantity, int totalQuantity)
+    private static RefundFinancialBreakdown CalculateCumulativeBreakdown(
+        decimal grossCommission, decimal promoDiscount, decimal fractionBefore,
+        decimal fractionAfter, decimal refundAmount)
     {
-        if (quantity <= 0 || totalQuantity <= 0 || amount <= 0m)
-        {
-            return 0m;
-        }
-
-        if (quantity >= totalQuantity)
-        {
-            return RoundCurrency(amount);
-        }
-
-        return RoundCurrency(amount * quantity / totalQuantity);
+        var grossBefore = RoundCurrency(grossCommission * fractionBefore);
+        var grossAfter = RoundCurrency(grossCommission * fractionAfter);
+        // Allocate the already-rounded gross cents, not three independent
+        // rounded amounts. This preserves gross = net + promo at every step
+        // and recovers all residual cents on the last partial refund.
+        var promoBefore = grossCommission == 0m ? 0m : RoundCurrency(promoDiscount * grossBefore / grossCommission);
+        var promoAfter = grossCommission == 0m ? 0m : RoundCurrency(promoDiscount * grossAfter / grossCommission);
+        var grossDelta = RoundCurrency(grossAfter - grossBefore);
+        var promoDelta = RoundCurrency(promoAfter - promoBefore);
+        return new RefundFinancialBreakdown(grossDelta,
+            RoundCurrency(grossDelta - promoDelta), promoDelta,
+            RoundCurrency(refundAmount - grossDelta));
     }
 
-    private static decimal ResolveFinalCommissionAmount(decimal storedFinalAmount, decimal grossAmount)
+    private static void ValidateCommissionSplit(decimal grossAmount, decimal storedFinalAmount, decimal promoAmount)
     {
-        if (storedFinalAmount > 0m)
+        if (grossAmount < 0m || storedFinalAmount < 0m || promoAmount < 0m || promoAmount > grossAmount ||
+            (storedFinalAmount > 0m && RoundCurrency(storedFinalAmount + promoAmount) != RoundCurrency(grossAmount)))
         {
-            return storedFinalAmount;
+            throw new InvalidOperationException("Refund commission snapshot does not reconcile gross, net, and platform funding.");
         }
-
-        return grossAmount;
+        // A stored zero is valid when fully platform-funded. For legacy
+        // missing final fields, gross and frozen promo still define the split.
     }
 }

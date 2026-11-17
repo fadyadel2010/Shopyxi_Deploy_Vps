@@ -1,0 +1,23 @@
+{
+  "checkedAtUtc": "2026-11-17T12:13:44.591361+00:00",
+  "salesInvoicesAllTime": 3,
+  "invoiceArithmeticMismatchCount": 0,
+  "negativeInvoiceValueCount": 0,
+  "invoiceStatusCounts": {
+    "4": 3
+  },
+  "salesJournalCount": 3,
+  "salesCogsJournalCount": 3,
+  "salesJournalWithoutSourceCount": 0,
+  "unbalancedJournalCount": 0,
+  "crossTenantJournalLineCount": 0,
+  "pendingPosAccountingOutboxCount": 0,
+  "failedPosAccountingOutboxCount": 0,
+  "posInvoicesWithRevenueJournalCount": 3,
+  "salesReturnsAllTime": 3,
+  "returnRevenueJournalCount": 3,
+  "returnCogsJournalCount": 3,
+  "fullyReturnedInvoicePrincipalMismatchCount": 0,
+  "salesReturnWithoutJournalCount": 0,
+  "salesReturnAllocationMismatchCount": 0
+}

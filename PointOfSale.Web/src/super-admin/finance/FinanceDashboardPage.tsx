@@ -16,6 +16,7 @@ import FinanceKpiCards from './FinanceKpiCards'
 import FinancePerformanceTables from './FinancePerformanceTables'
 import FinanceReconciliationPanel from './FinanceReconciliationPanel'
 import VendorFinanceWorkspace from './VendorFinanceWorkspace'
+import { financeIntegrityLabel, financeSourceLabel } from './financePresentation'
 import {
     getFinancialIntegrityCheck,
     getFinancialOverview,
@@ -32,10 +33,6 @@ import {
 const COMMERCEHUB_AUTHORITY_CURRENCY = 'EGP'
 const UNSUPPORTED_COMMERCEHUB_CURRENCY = 'CommerceHub currency blocked'
 
-function getErrorMessage(error: unknown, fallback: string): string {
-    return error instanceof Error && error.message ? error.message : fallback
-}
-
 export default function FinanceDashboardPage() {
     const {
         tr,
@@ -49,7 +46,8 @@ export default function FinanceDashboardPage() {
         if (String(currency || '').trim().toUpperCase() !== COMMERCEHUB_AUTHORITY_CURRENCY) {
             return tr(UNSUPPORTED_COMMERCEHUB_CURRENCY, 'عملة CommerceHub غير مدعومة')
         }
-        return formatLocalizedCurrency(Number(value ?? 0), COMMERCEHUB_AUTHORITY_CURRENCY)
+        if (value == null || !Number.isFinite(value)) return '—'
+        return formatLocalizedCurrency(value, COMMERCEHUB_AUTHORITY_CURRENCY)
     }
 
     const formatDateTime = (value?: string | null) =>
@@ -76,13 +74,13 @@ export default function FinanceDashboardPage() {
             case 'PROMO_HEAVY_REFUNDS':
                 return tr('Promo-heavy refunds', 'مرتجعات مرتبطة بالعروض')
             default:
-                return alertType
+                return tr('Refund signal', 'إشارة استرداد')
         }
     }
 
     const today = new Date()
     const defaultFrom = new Date(today)
-    defaultFrom.setDate(today.getDate() - 29)
+    defaultFrom.setUTCDate(today.getUTCDate() - 29)
 
     const [filters, setFilters] = useState({
         fromDate: defaultFrom.toISOString().slice(0, 10),
@@ -166,12 +164,12 @@ export default function FinanceDashboardPage() {
         refetchOnWindowFocus: true,
     })
 
-    const overviewError = getErrorMessage(overviewQuery.error, 'Unable to load the financial overview.')
-    const trendsError = trendsQuery.isError ? getErrorMessage(trendsQuery.error, 'Unable to load financial trends.') : null
-    const promosError = promosQuery.isError ? getErrorMessage(promosQuery.error, 'Unable to load promo analytics.') : null
-    const vendorsError = vendorsQuery.isError ? getErrorMessage(vendorsQuery.error, 'Unable to load vendor performance.') : null
-    const refundsError = refundsQuery.isError ? getErrorMessage(refundsQuery.error, 'Unable to load refund analysis.') : null
-    const integrityError = integrityQuery.isError ? getErrorMessage(integrityQuery.error, 'Unable to load the integrity check.') : null
+    const overviewError = tr('Unable to load the financial overview.', 'تعذر تحميل الملخص المالي.')
+    const trendsError = trendsQuery.isError ? tr('Unable to load financial trends.', 'تعذر تحميل الاتجاهات المالية.') : null
+    const promosError = promosQuery.isError ? tr('Unable to load promo analytics.', 'تعذر تحميل تحليلات العروض.') : null
+    const vendorsError = vendorsQuery.isError ? tr('Unable to load vendor performance.', 'تعذر تحميل أداء البائعين.') : null
+    const refundsError = refundsQuery.isError ? tr('Unable to load refund analysis.', 'تعذر تحميل تحليل المرتجعات.') : null
+    const integrityError = integrityQuery.isError ? tr('Unable to load the integrity check.', 'تعذر تحميل فحص السلامة.') : null
 
     async function refreshAll() {
         await Promise.all([
@@ -187,7 +185,7 @@ export default function FinanceDashboardPage() {
     function resetFilters() {
         const resetToday = new Date()
         const resetFrom = new Date(resetToday)
-        resetFrom.setDate(resetToday.getDate() - 29)
+        resetFrom.setUTCDate(resetToday.getUTCDate() - 29)
 
         setFilters({
             fromDate: resetFrom.toISOString().slice(0, 10),
@@ -255,7 +253,7 @@ export default function FinanceDashboardPage() {
                 'Use the vendor finance workspace below for vendor-level balances and holds.',
             ],
             statuses: [
-                { label: 'Integrity OK', description: 'The integrity check found no ledger issues in the selected scope.' },
+                { label: 'Selected checks passed', description: 'No issues were found by the selected checks. Filtered scans exclude global balance and duplicate-pair checks; this is not full accounting certification.' },
                 { label: 'Integrity issues', description: 'Mismatch flags were found; open the reconciliation panel and investigate before acting.' },
                 { label: 'CRITICAL / WARNING / INFO', description: 'Refund signal severity. CRITICAL needs immediate review; WARNING should be checked the same day.' },
                 { label: 'LIVE_LEDGER', description: 'Values were aggregated from live CommerceHub ledger records, subject to the stated freshness note.' },
@@ -281,10 +279,10 @@ export default function FinanceDashboardPage() {
                 'استخدم مساحة مالية البائعين أدناه لأرصدة البائعين والحجوزات.',
             ],
             statuses: [
-                { label: 'السلامة سليمة', description: 'لم يجد فحص السلامة أي مشاكل في دفتر الأستاذ داخل النطاق المحدد.' },
+                { label: 'اجتازت الفحوص المحددة', description: 'لم تجد الفحوص المحددة مشاكل. لا يشمل الفحص المصفّى الأرصدة العامة وأزواج القيود المكررة، وليس شهادة محاسبية شاملة.' },
                 { label: 'مشاكل السلامة', description: 'تم رصد علامات عدم تطابق؛ افتح لوحة المطابقة وحقّق قبل اتخاذ أي إجراء.' },
-                { label: 'CRITICAL / WARNING / INFO', description: 'درجة خطورة إشارة المرتجع. CRITICAL يتطلب مراجعة فورية، وWARNING يُراجع في نفس اليوم.' },
-                { label: 'LIVE_LEDGER', description: 'تم تجميع القيم من سجلات دفتر CommerceHub المباشر مع مراعاة ملاحظة الحداثة المذكورة.' },
+                { label: 'حرج / تحذير / معلومة', description: 'درجات خطورة إشارات المرتجعات. الحالة الحرجة تتطلب مراجعة فورية، والتحذير يُراجع في نفس اليوم.' },
+                { label: 'دفتر الأستاذ المباشر', description: 'تم تجميع القيم من سجلات دفتر CommerceHub المباشر مع مراعاة ملاحظة الحداثة المذكورة.' },
             ],
             safety: [
                 'كل الأرقام مشتقة؛ تغيير المرشحات يغيّر النطاق ولا يعيد حساب المعادلات المالية في المتصفح.',
@@ -317,12 +315,12 @@ export default function FinanceDashboardPage() {
                 }
                 aside={
                     <div className="flex flex-wrap items-center gap-2">
-                        <StatusBadge tone={integrity?.status === 'OK' ? 'emerald' : 'rose'}>
+                        <StatusBadge tone={integrityError ? 'slate' : integrity?.status === 'OK' ? 'emerald' : integrity?.status === 'ISSUES_DETECTED' ? 'rose' : 'slate'}>
                             <ShieldCheck className="h-3.5 w-3.5" />
-                            {tr('Integrity', 'السلامة')}: {integrity?.status ?? tr('CHECKING', 'قيد الفحص')}
+                            {tr('Integrity', 'السلامة')}: {financeIntegrityLabel(integrityError ? 'UNAVAILABLE' : integrity?.status, tr)}
                         </StatusBadge>
                         <StatusBadge tone={(integrity?.totalIssueCount ?? 0) > 0 ? 'rose' : 'slate'}>
-                            {formatNumber(integrity?.totalIssueCount ?? 0)}{' '}
+                            {integrity && !integrityError ? formatNumber(integrity.totalIssueCount) : '—'}{' '}
                             {tr('issue flags', 'علامة مشكلة')}
                         </StatusBadge>
                     </div>
@@ -332,7 +330,7 @@ export default function FinanceDashboardPage() {
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                 <div className="rounded-xl border border-slate-200 bg-white px-3.5 py-3 shadow-sm">
                     <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
-                        {tr('Reporting window', 'فترة التقرير')}
+                        {tr('Reporting window (UTC)', 'فترة التقرير (UTC)')}
                     </p>
                     <p className="mt-1 text-sm font-semibold text-slate-900" dir="auto">
                         {formatScopeDate(overview?.fromDateUtc)} → {formatScopeDate(overview?.toDateUtc)}
@@ -343,7 +341,7 @@ export default function FinanceDashboardPage() {
                         {tr('Net revenue', 'صافي الإيراد')}
                     </p>
                     <p className="mt-1 text-sm font-semibold text-slate-900" dir="auto">
-                        {formatCurrency(overview?.netRevenue ?? 0, overview?.currency)}
+                        {formatCurrency(overview?.netRevenue, overview?.currency)}
                     </p>
                 </div>
                 <div className="rounded-xl border border-slate-200 bg-white px-3.5 py-3 shadow-sm">
@@ -351,7 +349,7 @@ export default function FinanceDashboardPage() {
                         {tr('Refund alerts', 'تنبيهات المرتجعات')}
                     </p>
                     <p className="mt-1 text-sm font-semibold text-slate-900" dir="auto">
-                        {formatNumber(refunds?.alerts.length ?? 0)}{' '}
+                        {refunds && !refundsError ? formatNumber(refunds.alerts.length) : '—'}{' '}
                         {(refunds?.alerts.length ?? 0) === 1
                             ? tr('active signal', 'إشارة نشطة')
                             : tr('active signals', 'إشارات نشطة')}
@@ -369,29 +367,36 @@ export default function FinanceDashboardPage() {
 
             <GuidePanel guide={guide} />
 
+            {overviewQuery.isError && overview ? (
+                <InlineNotice tone="amber" title={tr('Refresh failed — showing previous results', 'فشل التحديث — تُعرض النتائج السابقة')}>
+                    {tr('These values are not a successful refresh of the current financial data. Retry before relying on them.', 'هذه القيم ليست نتيجة تحديث ناجح للبيانات المالية الحالية. أعد المحاولة قبل الاعتماد عليها.')}
+                </InlineNotice>
+            ) : null}
+
+            {overview && !overviewQuery.isError && overview.totalOrdersCount === 0 &&
+                overview.totalRefundAmount === 0 && overview.totalGrossCommission === 0 &&
+                overview.totalPromoCost === 0 ? (
+                <InlineNotice tone="sky" title={tr('No recognized financial activity in this scope', 'لا يوجد نشاط مالي معترف به في هذا النطاق')}>
+                    {tr('This view covers CommerceHub financial recognition, not ordinary POS or Storefront sales. Zero values do not establish that no business orders exist.', 'تغطي هذه الصفحة الاعتراف المالي في CommerceHub، وليس مبيعات نقاط البيع أو واجهة المتجر العادية. القيم الصفرية لا تثبت عدم وجود طلبات تجارية.')}
+                </InlineNotice>
+            ) : null}
+
             <InlineNotice tone="amber" title={tr('Financial data freshness', 'حداثة البيانات المالية')}>
-                {overview?.dataFreshnessNote ? (
-                    <p dir="auto">{overview.dataFreshnessNote}</p>
-                ) : (
                     <p>
                         {tr(
                             'Financial data may be slightly delayed due to processing.',
                             'قد تتأخر البيانات المالية قليلًا بسبب المعالجة.',
                         )}
                     </p>
-                )}
-                {overview?.consistencyModel ? (
-                    <p className="mt-1" dir="auto">{overview.consistencyModel}</p>
-                ) : (
                     <p className="mt-1">
                         {tr(
                             'Strong consistency applies to a single order flow. Aggregated dashboard metrics are eventually consistent.',
                             'ينطبق الاتساق القوي على تدفق طلب واحد. أما مؤشرات اللوحة المجمعة فهي متسقة نهائيًا بشكل تدريجي.',
                         )}
                     </p>
-                )}
+                <p className="mt-1">{tr('Query time is not proof that all payment, refund, or projection processing has completed.', 'وقت الاستعلام لا يثبت اكتمال معالجة جميع المدفوعات أو المرتجعات أو الإسقاطات.')}</p>
                 <p className="mt-1 text-xs opacity-80" dir="auto">
-                    {tr('Source', 'المصدر')} {overview?.dataSource ?? 'LIVE_LEDGER'} ·{' '}
+                    {tr('Source', 'المصدر')} {financeSourceLabel(overview?.dataSource, tr)} ·{' '}
                     {tr('Aggregated through', 'تم التجميع حتى')}{' '}
                     {formatDateTime(overview?.aggregatedThroughUtc ?? overview?.generatedAtUtc)}
                 </p>
@@ -522,7 +527,7 @@ export default function FinanceDashboardPage() {
                                     className={`rounded-xl border px-3.5 py-3 ${alert.severity === 'CRITICAL' ? 'border-rose-200 bg-rose-50 text-rose-900' : alert.severity === 'WARNING' ? 'border-amber-200 bg-amber-50 text-amber-900' : 'border-sky-200 bg-sky-50 text-sky-900'}`}
                                 >
                                     <p className="text-sm font-semibold" dir="auto">{getRefundAlertLabel(alert.alertType)}</p>
-                                    <p className="mt-1 text-sm" dir="auto">{alert.message}</p>
+                                    <p className="mt-1 text-sm" dir="auto">{tr('Review completed refunds and their linked financial records before acting.', 'راجع المرتجعات المكتملة وسجلاتها المالية المرتبطة قبل اتخاذ إجراء.')}</p>
                                     {alert.bucketStartUtc ? (
                                         <p className="mt-1.5 text-xs opacity-80">{formatDateTime(alert.bucketStartUtc)}</p>
                                     ) : null}

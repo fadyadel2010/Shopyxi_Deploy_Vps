@@ -1,0 +1,213 @@
+{
+  "capturedAtUtc": "2026-11-17T12:14:26.043Z",
+  "actualHeadedBrowser": true,
+  "authenticatedByUser": true,
+  "credentialsReadOrInjected": false,
+  "sourcePhase": "baseline-expanded",
+  "status": "OBSERVED_NOT_RELEASE_ACCEPTANCE",
+  "checksPassed": false,
+  "captures": [
+    {
+      "language": "en",
+      "direction": "ltr",
+      "width": 1440,
+      "horizontalOverflow": false,
+      "reportingInputs": [
+        "2026-10-19",
+        "2026-11-17"
+      ],
+      "rawIntegrityEnumVisible": true,
+      "hasVisibleError": false,
+      "window": "default",
+      "screenshot": "finance-baseline-expanded-default-en-1440.png"
+    },
+    {
+      "language": "en",
+      "direction": "ltr",
+      "width": 390,
+      "horizontalOverflow": false,
+      "reportingInputs": [
+        "2026-10-19",
+        "2026-11-17"
+      ],
+      "rawIntegrityEnumVisible": true,
+      "hasVisibleError": false,
+      "window": "default",
+      "screenshot": "finance-baseline-expanded-default-en-390.png"
+    },
+    {
+      "language": "ar",
+      "direction": "rtl",
+      "width": 1440,
+      "horizontalOverflow": false,
+      "reportingInputs": [
+        "2026-10-19",
+        "2026-11-17"
+      ],
+      "rawIntegrityEnumVisible": true,
+      "hasVisibleError": false,
+      "window": "default",
+      "screenshot": "finance-baseline-expanded-default-ar-1440.png"
+    },
+    {
+      "language": "ar",
+      "direction": "rtl",
+      "width": 390,
+      "horizontalOverflow": false,
+      "reportingInputs": [
+        "2026-10-19",
+        "2026-11-17"
+      ],
+      "rawIntegrityEnumVisible": true,
+      "hasVisibleError": false,
+      "window": "default",
+      "screenshot": "finance-baseline-expanded-default-ar-390.png"
+    },
+    {
+      "language": "en",
+      "direction": "ltr",
+      "width": 1440,
+      "horizontalOverflow": false,
+      "reportingInputs": [
+        "2026-10-18",
+        "2026-11-16"
+      ],
+      "rawIntegrityEnumVisible": true,
+      "hasVisibleError": false,
+      "window": "historical",
+      "screenshot": "finance-baseline-expanded-historical-en-1440.png"
+    },
+    {
+      "language": "en",
+      "direction": "ltr",
+      "width": 390,
+      "horizontalOverflow": false,
+      "reportingInputs": [
+        "2026-10-18",
+        "2026-11-16"
+      ],
+      "rawIntegrityEnumVisible": true,
+      "hasVisibleError": false,
+      "window": "historical",
+      "screenshot": "finance-baseline-expanded-historical-en-390.png"
+    },
+    {
+      "language": "ar",
+      "direction": "rtl",
+      "width": 1440,
+      "horizontalOverflow": false,
+      "reportingInputs": [
+        "2026-10-18",
+        "2026-11-16"
+      ],
+      "rawIntegrityEnumVisible": true,
+      "hasVisibleError": false,
+      "window": "historical",
+      "screenshot": "finance-baseline-expanded-historical-ar-1440.png"
+    },
+    {
+      "language": "ar",
+      "direction": "rtl",
+      "width": 390,
+      "horizontalOverflow": false,
+      "reportingInputs": [
+        "2026-10-18",
+        "2026-11-16"
+      ],
+      "rawIntegrityEnumVisible": true,
+      "hasVisibleError": false,
+      "window": "historical",
+      "screenshot": "finance-baseline-expanded-historical-ar-390.png"
+    }
+  ],
+  "responses": [
+    {
+      "path": "/api/super-admin/finance/vendors",
+      "status": 200
+    },
+    {
+      "path": "/api/super-admin/finance/trends",
+      "status": 200
+    },
+    {
+      "path": "/api/super-admin/finance/promos",
+      "status": 200
+    },
+    {
+      "path": "/api/super-admin/finance/refunds",
+      "status": 200
+    },
+    {
+      "path": "/api/super-admin/finance/integrity-check",
+      "status": 200
+    },
+    {
+      "path": "/api/super-admin/finance/overview",
+      "status": 200,
+      "allRequiredMetricsZero": true,
+      "source": "LIVE_LEDGER",
+      "fromDateUtc": "2026-10-19T00:00:00Z",
+      "toDateUtc": "2026-11-17T12:14:20.1230361Z"
+    },
+    {
+      "path": "/api/super-admin/finance/promos",
+      "status": 200
+    },
+    {
+      "path": "/api/super-admin/finance/vendors",
+      "status": 200
+    },
+    {
+      "path": "/api/super-admin/finance/refunds",
+      "status": 200
+    },
+    {
+      "path": "/api/super-admin/finance/trends",
+      "status": 200
+    },
+    {
+      "path": "/api/super-admin/finance/trends",
+      "status": 200
+    },
+    {
+      "path": "/api/super-admin/finance/refunds",
+      "status": 200
+    },
+    {
+      "path": "/api/super-admin/finance/vendors",
+      "status": 200
+    },
+    {
+      "path": "/api/super-admin/finance/promos",
+      "status": 200
+    },
+    {
+      "path": "/api/super-admin/finance/integrity-check",
+      "status": 200
+    },
+    {
+      "path": "/api/super-admin/finance/overview",
+      "status": 200,
+      "allRequiredMetricsZero": true,
+      "source": "LIVE_LEDGER",
+      "fromDateUtc": "2026-10-18T00:00:00Z",
+      "toDateUtc": "2026-11-16T23:59:59.999Z"
+    },
+    {
+      "path": "/api/super-admin/finance/integrity-check",
+      "status": 200
+    },
+    {
+      "path": "/api/super-admin/finance/overview",
+      "status": 200,
+      "allRequiredMetricsZero": true,
+      "source": "LIVE_LEDGER",
+      "fromDateUtc": "2026-10-18T00:00:00Z",
+      "toDateUtc": "2026-11-17T12:14:22.9591718Z"
+    }
+  ],
+  "failedRequiredRequests": [],
+  "consoleErrorCount": 0,
+  "exceptionCount": 0,
+  "businessWriteCount": 0
+}

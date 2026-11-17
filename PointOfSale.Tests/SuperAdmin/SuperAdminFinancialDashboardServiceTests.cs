@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
+using Moq;
+using PointOfSale.API.Configuration;
+using PointOfSale.API.Instrumentation;
 using PointOfSale.API.Services.CommerceHub;
 using PointOfSale.API.SuperAdmin.DTOs;
 using PointOfSale.API.SuperAdmin.Services;
@@ -8,14 +12,16 @@ using PointOfSale.Core.Entities.CommerceHubFinance;
 using PointOfSale.Core.Enums;
 using PointOfSale.Core.Enums.CommerceHubFinance;
 using PointOfSale.Infrastructure.Data;
+using PointOfSale.Core.Interfaces;
+using PointOfSale.Tests.Infrastructure;
 
 namespace PointOfSale.Tests.SuperAdmin;
 
 public sealed class SuperAdminFinancialDashboardServiceTests : IDisposable
 {
-    private readonly ApplicationDbContext _dbContext;
+    private ApplicationDbContext _dbContext;
     private readonly StubCommerceHubDailyFinancialAggregateService _aggregateService;
-    private readonly SuperAdminFinancialDashboardService _service;
+    private SuperAdminFinancialDashboardService _service;
 
     public SuperAdminFinancialDashboardServiceTests()
     {
@@ -48,8 +54,8 @@ public sealed class SuperAdminFinancialDashboardServiceTests : IDisposable
         Assert.Equal(2.4m, overview.TotalPromoCost);
         Assert.Equal(32.6m, overview.TotalNetCommission);
         Assert.Equal(77m, overview.TotalRefundAmount);
-        Assert.Equal(7m, overview.RefundImpactOnRevenue);
-        Assert.Equal(25.6m, overview.NetRevenue);
+        Assert.Equal(7.6m, overview.RefundImpactOnRevenue);
+        Assert.Equal(25m, overview.NetRevenue);
         Assert.Equal(3, overview.TotalOrdersCount);
         Assert.Equal(128.33m, overview.AverageOrderValue);
         Assert.Equal(2, overview.RefundedOrdersCount);
@@ -67,8 +73,8 @@ public sealed class SuperAdminFinancialDashboardServiceTests : IDisposable
         Assert.Equal("Day", trends.GroupBy);
         Assert.Equal(35m, trends.Points.Sum(point => point.GrossCommission));
         Assert.Equal(2.4m, trends.Points.Sum(point => point.PromoCost));
-        Assert.Equal(7m, trends.Points.Sum(point => point.CommissionReversals));
-        Assert.Equal(25.6m, trends.Points.Sum(point => point.NetRevenue));
+        Assert.Equal(7.6m, trends.Points.Sum(point => point.CommissionReversals));
+        Assert.Equal(25m, trends.Points.Sum(point => point.NetRevenue));
         Assert.Equal(77m, trends.Points.Sum(point => point.RefundAmount));
         Assert.Equal(3, trends.Points.Sum(point => point.OrdersCount));
 
@@ -88,8 +94,8 @@ public sealed class SuperAdminFinancialDashboardServiceTests : IDisposable
         Assert.Equal(1, promo.TotalUsageCount);
         Assert.Equal(2.4m, promo.TotalPromoCost);
         Assert.Equal(10m, promo.RevenueGenerated);
-        Assert.Equal(2m, promo.CommissionReversals);
-        Assert.Equal(5.6m, promo.NetImpact);
+        Assert.Equal(2.6m, promo.CommissionReversals);
+        Assert.Equal(5m, promo.NetImpact);
         Assert.Equal(2.4m, promo.AverageDiscountPerUse);
 
         var vendors = await _service.GetVendorPerformanceAsync(new SuperAdminVendorPerformanceQueryDto
@@ -111,11 +117,11 @@ public sealed class SuperAdminFinancialDashboardServiceTests : IDisposable
         Assert.Equal(165m, vendorAlpha.TotalSales);
         Assert.Equal(15m, vendorAlpha.GrossCommission);
         Assert.Equal(2.4m, vendorAlpha.PromoCost);
-        Assert.Equal(7m, vendorAlpha.CommissionReversals);
+        Assert.Equal(7.6m, vendorAlpha.CommissionReversals);
         Assert.Equal(77m, vendorAlpha.TotalRefundAmount);
         Assert.Equal(2, vendorAlpha.RefundedOrdersCount);
         Assert.Equal(1m, vendorAlpha.RefundRate);
-        Assert.Equal(5.6m, vendorAlpha.NetContribution);
+        Assert.Equal(5m, vendorAlpha.NetContribution);
 
         var refunds = await _service.GetRefundAnalysisAsync(new SuperAdminRefundAnalysisQueryDto
         {
@@ -156,8 +162,8 @@ public sealed class SuperAdminFinancialDashboardServiceTests : IDisposable
         Assert.Equal(2.4m, overview.TotalPromoCost);
         Assert.Equal(7.6m, overview.TotalNetCommission);
         Assert.Equal(22m, overview.TotalRefundAmount);
-        Assert.Equal(2m, overview.RefundImpactOnRevenue);
-        Assert.Equal(5.6m, overview.NetRevenue);
+        Assert.Equal(2.6m, overview.RefundImpactOnRevenue);
+        Assert.Equal(5m, overview.NetRevenue);
         Assert.Equal(1, overview.TotalOrdersCount);
         Assert.Equal(110m, overview.AverageOrderValue);
         Assert.Equal(1, overview.RefundedOrdersCount);
@@ -169,7 +175,7 @@ public sealed class SuperAdminFinancialDashboardServiceTests : IDisposable
     public async Task GetOverviewAsync_ShouldUseDailyAggregatesWhenFreshAndUnfiltered()
     {
         var fromDateUtc = new DateTime(2026, 3, 1, 0, 0, 0, DateTimeKind.Utc);
-        var toDateUtc = new DateTime(2026, 3, 2, 23, 59, 59, DateTimeKind.Utc);
+        var toDateUtc = new DateTime(2026, 3, 3, 0, 0, 0, DateTimeKind.Utc).AddTicks(-1);
         var calculatedAtUtc = new DateTime(2026, 3, 27, 12, 0, 0, DateTimeKind.Utc);
 
         _aggregateService.Window = new CommerceHubDailyAggregateWindow(
@@ -233,8 +239,10 @@ public sealed class SuperAdminFinancialDashboardServiceTests : IDisposable
         Assert.Equal(15m, overview.NetRevenue);
         Assert.Equal(3, overview.TotalOrdersCount);
         Assert.Equal(66.67m, overview.AverageOrderValue);
-        Assert.Equal(1, overview.RefundedOrdersCount);
-        Assert.Equal(0.3333m, overview.RefundRate);
+        Assert.Equal(0, overview.RefundedOrdersCount);
+        // A projection's per-day distinct count is not authoritative for a
+        // multi-day window. No completed source refunds exist in this fixture.
+        Assert.Equal(0m, overview.RefundRate);
         Assert.Equal(calculatedAtUtc, overview.AggregatedThroughUtc);
     }
 
@@ -500,6 +508,277 @@ public sealed class SuperAdminFinancialDashboardServiceTests : IDisposable
         _dbContext.Dispose();
     }
 
+    [Theory]
+    [InlineData(false, "0", "0.10", false)]
+    [InlineData(false, "3", "0.10", false)]
+    [InlineData(false, "3", "0.10", true)]
+    [InlineData(false, "10", "0.10", false)]
+    [InlineData(true, "3", "0.10", false)]
+    [InlineData(true, "10", "0.10", false)]
+    [InlineData(false, "0", "0", false)]
+    [InlineData(true, "0", "0", false)]
+    public async Task RealResolverLedgerAndRefundLifecycle_MustReconcileToZeroNetRevenue(
+        bool cod, string funding, string configuredRate, bool afterPayout)
+    {
+        UseIsolatedPostgres();
+        var promo = decimal.Parse(funding, System.Globalization.CultureInfo.InvariantCulture);
+        var rate = decimal.Parse(configuredRate, System.Globalization.CultureInfo.InvariantCulture);
+        var vendor = CreateTenant(Guid.NewGuid(), "Lifecycle test vendor", "lifecycle");
+        var customer = CreateCustomer("finance-lifecycle@example.test", "Isolated lifecycle");
+        _dbContext.CommissionRules.Add(new CommissionRule
+        {
+            Id = Guid.NewGuid(), ScopeType = CommissionRuleScopeType.Global, Rate = rate, IsActive = true
+        });
+        await _dbContext.SaveChangesAsync();
+        var resolver = new CommissionService(_dbContext, Options.Create(new CommerceHubPaymentsOptions()),
+            new CommissionServiceTelemetry(TimeSpan.FromMinutes(5)), NullLogger<CommissionService>.Instance,
+            Mock.Of<IEventPublisher>());
+        var resolved = resolver.ResolveCommission(vendor.Id, null);
+        Assert.Equal(rate, resolved.Rate);
+        Assert.False(resolved.UsedLegacyFallback);
+        var gross = CommissionCalculator.RoundAmount(100m * resolved.Rate);
+        var order = CreateMarketplaceOrder(Guid.NewGuid(), customer.Id, "FINANCE-LIFECYCLE",
+            DateTime.UtcNow.AddMinutes(-2), 110m, 100m, 10m);
+        var subOrder = CreateSubOrder(Guid.NewGuid(), order, vendor.Id, vendor.Name,
+            "FINANCE-LIFECYCLE-A", order.CreatedAt, 110m, 100m, 10m,
+            gross, gross - promo, promo, 110m - gross);
+        subOrder.PlatformCommissionRate = resolved.Rate;
+        subOrder.PaymentMethod = cod ? CommerceHubPaymentMethod.CashOnDelivery : CommerceHubPaymentMethod.Online;
+        subOrder.PaymentStatus = PaymentStatus.Collected;
+        _dbContext.Tenants.Add(vendor);
+        _dbContext.CommerceHubCustomers.Add(customer);
+        _dbContext.CommerceHubMarketplaceOrders.Add(order);
+        _dbContext.CommerceHubSubOrders.Add(subOrder);
+        await SaveCommerceHubFixtureAsync();
+        var ledger = new PointOfSale.API.Services.CommerceHub.FinancialLedger.CommerceHubFinancialLedgerService(
+            _dbContext, NullLogger<PointOfSale.API.Services.CommerceHub.FinancialLedger.CommerceHubFinancialLedgerService>.Instance);
+        await ledger.RecordOrderAsync(order, subOrder);
+        await ledger.RecordOrderAsync(order, subOrder); // Real idempotent retry.
+        var initial = await _service.GetOverviewAsync(new());
+        Assert.Equal(gross - promo, initial.NetRevenue);
+        Assert.Equal(1, initial.TotalOrdersCount);
+        Assert.Equal(110m, initial.AverageOrderValue);
+
+        var split = RefundFinancialCalculator.CalculateSubOrderBreakdown(subOrder, 0m, 110m, true);
+        var refund = CreateRefund(Guid.NewGuid(), vendor.Id, subOrder, null, null, DateTime.UtcNow,
+            110m, split.VendorEarningReversalAmount, split.CommissionReversalAmount,
+            split.PromoDiscountReversalAmount, true);
+        refund.IsPostPayoutAdjustment = afterPayout;
+        _dbContext.CommerceHubRefunds.Add(refund);
+        await SaveCommerceHubFixtureAsync();
+        await ledger.RecordRefundAsync(order, subOrder, refund);
+        var entryCount = await _dbContext.CommerceHubFinancialTransactions.CountAsync();
+        await ledger.RecordRefundAsync(order, subOrder, refund); // No duplicate recognition.
+        Assert.Equal(entryCount, await _dbContext.CommerceHubFinancialTransactions.CountAsync());
+        subOrder.PaymentStatus = PaymentStatus.Refunded;
+        subOrder.Status = OrderStatus.Refunded;
+        await SaveCommerceHubFixtureAsync();
+        var final = await _service.GetOverviewAsync(new());
+        Assert.Equal(gross, final.TotalGrossCommission);
+        Assert.Equal(0m, final.TotalPromoCost);
+        Assert.Equal(gross, final.RefundImpactOnRevenue);
+        Assert.Equal(0m, final.NetRevenue);
+        Assert.Equal(110m, final.TotalRefundAmount);
+        Assert.Equal(1, final.TotalOrdersCount);
+        Assert.Equal(1m, final.RefundRate);
+        var trends = await _service.GetTrendsAsync(new());
+        Assert.Equal(final.NetRevenue, trends.Points.Sum(point => point.NetRevenue));
+        var vendors = await _service.GetVendorPerformanceAsync(new());
+        Assert.Equal(final.NetRevenue, Assert.Single(vendors.Items).NetContribution);
+        var refunds = await _service.GetRefundAnalysisAsync(new());
+        Assert.Equal(final.TotalRefundAmount, refunds.TotalRefundAmount);
+        Assert.Equal(final.RefundRate, refunds.RefundRate);
+        var transactions = await _dbContext.CommerceHubFinancialTransactions.AsNoTracking().ToListAsync();
+        var outbox = await _dbContext.AccountingOutboxMessages.IgnoreQueryFilters().AsNoTracking().ToListAsync();
+        Assert.Equal(transactions.Count, outbox.Count);
+        Assert.All(outbox, message => Assert.Equal(vendor.Id, message.TenantId));
+        var aggregates = await new CommerceHubDailyFinancialAggregateService(_dbContext,
+            NullLogger<CommerceHubDailyFinancialAggregateService>.Instance)
+            .RecalculateWindowAsync(DateTime.UtcNow.Date.AddDays(-1), DateTime.UtcNow.Date);
+        Assert.Equal(final.NetRevenue, aggregates.Sum(row => row.NetRevenue));
+        var integrity = await _service.GetIntegrityCheckAsync(new() { MaxIssues = 100 });
+        Assert.DoesNotContain(integrity.Issues, issue => issue.IssueType == "REFUND_LEDGER_MISMATCH");
+    }
+
+    [Fact]
+    public async Task RefundOnlyWindow_RateMustNotIncludeOrdersRecognizedOutsideItsCohort()
+    {
+        var scenario = await SeedHealthyScenarioAsync();
+        var overview = await _service.GetOverviewAsync(new()
+        {
+            FromDateUtc = new DateTime(2026, 3, 13, 0, 0, 0, DateTimeKind.Utc),
+            ToDateUtc = scenario.ToDateUtc
+        });
+        Assert.Equal(77m, overview.TotalRefundAmount);
+        Assert.Equal(0, overview.TotalOrdersCount);
+        Assert.Equal(0, overview.RefundedOrdersCount);
+        Assert.Equal(0m, overview.RefundRate);
+    }
+
+    [Fact]
+    public async Task RepeatedRefundsOnDifferentDays_CountEachRecognizedSubOrderOnce()
+    {
+        var scenario = await SeedHealthyScenarioAsync();
+        var first = await _dbContext.CommerceHubRefunds.OrderBy(row => row.CreatedAt).FirstAsync();
+        var subOrder = await _dbContext.CommerceHubSubOrders.SingleAsync(row => row.Id == first.SubOrderId);
+        _dbContext.CommerceHubRefunds.Add(CreateRefund(Guid.NewGuid(), subOrder.StoreId, subOrder, null, null,
+            new DateTime(2026, 3, 14, 17, 0, 0, DateTimeKind.Utc), 11m, 10m, 0.7m, 0.3m, false));
+        await SaveCommerceHubFixtureAsync();
+        var overview = await _service.GetOverviewAsync(new()
+        {
+            FromDateUtc = scenario.FromDateUtc, ToDateUtc = scenario.ToDateUtc
+        });
+        Assert.Equal(88m, overview.TotalRefundAmount);
+        Assert.Equal(2, overview.RefundedOrdersCount);
+        Assert.Equal(0.6667m, overview.RefundRate);
+    }
+
+    [Fact]
+    public async Task ScopedIntegrity_IncludesOlderOrdersRecognizedInTheWindow()
+    {
+        var vendor = CreateTenant(Guid.NewGuid(), "Late recognition", "late-recognition");
+        var customer = CreateCustomer("late-recognition@example.test", "Isolated fixture");
+        var created = new DateTime(2026, 3, 1, 0, 0, 0, DateTimeKind.Utc);
+        var recognized = created.AddDays(9);
+        var order = CreateMarketplaceOrder(Guid.NewGuid(), customer.Id, "LATE", created, 110m, 100m, 10m);
+        var subOrder = CreateSubOrder(Guid.NewGuid(), order, vendor.Id, vendor.Name, "LATE-A",
+            created, 110m, 100m, 10m, 10m, 10m, 0m, 100m);
+        _dbContext.Tenants.Add(vendor);
+        _dbContext.CommerceHubCustomers.Add(customer);
+        _dbContext.CommerceHubMarketplaceOrders.Add(order);
+        _dbContext.CommerceHubSubOrders.Add(subOrder);
+        AddPlatformTransaction(CommerceHubFinancialTransactionType.Commission,
+            CommerceHubFinancialTransactionDirection.Credit, 10m, CommerceHubFinancialReferenceType.Order,
+            subOrder.Id, recognized, "Delayed recognition");
+        await SaveCommerceHubFixtureAsync();
+        var integrity = await _service.GetIntegrityCheckAsync(new()
+        {
+            FromDateUtc = recognized.Date, ToDateUtc = recognized.AddDays(1), MaxIssues = 100
+        });
+        Assert.Equal(1, integrity.CheckedOrderCount);
+        Assert.False(integrity.IncludesGlobalLedgerChecks);
+    }
+
+    [Fact]
+    public async Task PartialDayWindow_MustNotUseWholeDayAggregates()
+    {
+        var scenario = await SeedHealthyScenarioAsync();
+        _aggregateService.Window = new CommerceHubDailyAggregateWindow(
+            [new() { DateUtc = scenario.FromDateUtc, CurrencyCode = "EGP", GrossCommission = 999m }],
+            true, true, DateTime.UtcNow, DateTime.UtcNow, "EGP");
+
+        var overview = await _service.GetOverviewAsync(new()
+        {
+            FromDateUtc = scenario.FromDateUtc.AddHours(12),
+            ToDateUtc = scenario.ToDateUtc
+        });
+
+        Assert.Equal("LIVE_LEDGER", overview.DataSource);
+        Assert.Equal(25m, overview.TotalGrossCommission);
+    }
+
+    [Fact]
+    public async Task RefundOnlyDay_AggregatePromoCostMustMatchSignedLiveLedger()
+    {
+        var scenario = await SeedHealthyScenarioAsync();
+        var realAggregates = new CommerceHubDailyFinancialAggregateService(
+            _dbContext, NullLogger<CommerceHubDailyFinancialAggregateService>.Instance);
+        var rows = await realAggregates.RecalculateWindowAsync(
+            scenario.FromDateUtc, scenario.ToDateUtc);
+
+        Assert.Equal(-0.6m, rows.Single(row => row.DateUtc.Day == 13).PromoCost);
+        Assert.Equal(2.4m, rows.Sum(row => row.PromoCost));
+    }
+
+    [Fact]
+    public async Task GlobalIntegrity_MustNotDoubleCountPromoAndReversalFlags()
+    {
+        await SeedBrokenScenarioAsync();
+        var result = await _service.GetIntegrityCheckAsync(new() { MaxIssues = 100 });
+        Assert.Equal(result.Issues.Count, result.TotalIssueCount);
+    }
+
+    [Fact]
+    public async Task GlobalIntegrity_MustRespectSnapshotForOrphanEntries()
+    {
+        AddPlatformTransaction(CommerceHubFinancialTransactionType.Commission,
+            CommerceHubFinancialTransactionDirection.Credit, 1m,
+            CommerceHubFinancialReferenceType.Order, Guid.NewGuid(),
+            new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc), "Future orphan");
+        await SaveCommerceHubFixtureAsync();
+
+        var result = await _service.GetIntegrityCheckAsync(new()
+        {
+            SnapshotBoundaryUtc = new DateTime(2026, 3, 15, 0, 0, 0, DateTimeKind.Utc)
+        });
+        Assert.Equal(0, result.OrphanTransactionsCount);
+    }
+
+    [Fact]
+    public async Task EmptyIntegrity_MustIdentifyVacuousCoverage()
+    {
+        var result = await _service.GetIntegrityCheckAsync(new());
+        Assert.Equal("NO_RECORDS", result.Status);
+    }
+
+    [Fact]
+    public async Task DuplicatePromoUsage_MustNotMultiplyRecognizedMoney()
+    {
+        var scenario = await SeedHealthyScenarioAsync();
+        var usage = await _dbContext.PromoCodeUsages.SingleAsync();
+        _dbContext.PromoCodeUsages.Add(new PromoCodeUsage
+        {
+            Id = Guid.NewGuid(), PromoCodeId = usage.PromoCodeId,
+            MarketplaceOrderId = usage.MarketplaceOrderId, CustomerId = usage.CustomerId,
+            PromoCodeSnapshot = usage.PromoCodeSnapshot, DiscountAmount = usage.DiscountAmount,
+            AppliedAtUtc = usage.AppliedAtUtc.AddSeconds(1), CreatedAt = usage.CreatedAt
+        });
+        await SaveCommerceHubFixtureAsync();
+        var overview = await _service.GetOverviewAsync(new()
+        {
+            FromDateUtc = scenario.FromDateUtc, ToDateUtc = scenario.ToDateUtc
+        });
+        Assert.Equal(35m, overview.TotalGrossCommission);
+        Assert.Equal(3, overview.TotalOrdersCount);
+        Assert.Equal(77m, overview.TotalRefundAmount);
+    }
+
+    [Fact]
+    public async Task ZeroCommissionOrder_StillHasFinanciallyRecognizedOrderValue()
+    {
+        UseIsolatedPostgres();
+        var vendor = CreateTenant(Guid.NewGuid(), "Zero-rate test vendor", "zero-rate");
+        var customer = CreateCustomer("zero-rate@example.test", "Isolated test");
+        var order = CreateMarketplaceOrder(Guid.NewGuid(), customer.Id, "ZERO-RATE",
+            DateTime.UtcNow.AddMinutes(-1), 220m, 200m, 20m);
+        var subOrder = CreateSubOrder(Guid.NewGuid(), order, vendor.Id, vendor.Name,
+            "ZERO-RATE-A", order.CreatedAt, 220m, 200m, 20m, 0m, 0m, 0m, 220m);
+        _dbContext.Tenants.Add(vendor);
+        _dbContext.CommerceHubCustomers.Add(customer);
+        _dbContext.CommerceHubMarketplaceOrders.Add(order);
+        _dbContext.CommerceHubSubOrders.Add(subOrder);
+        await SaveCommerceHubFixtureAsync();
+        var ledger = new PointOfSale.API.Services.CommerceHub.FinancialLedger.CommerceHubFinancialLedgerService(
+            _dbContext, NullLogger<PointOfSale.API.Services.CommerceHub.FinancialLedger.CommerceHubFinancialLedgerService>.Instance);
+        await ledger.RecordOrderAsync(order, subOrder);
+        var overview = await _service.GetOverviewAsync(new()
+        {
+            FromDate = DateTime.UtcNow.AddDays(-1), ToDate = DateTime.UtcNow
+        });
+        Assert.Equal(1, overview.TotalOrdersCount);
+        Assert.Equal(0m, overview.TotalGrossCommission);
+        Assert.Equal(220m, overview.AverageOrderValue);
+    }
+
+    private void UseIsolatedPostgres()
+    {
+        _dbContext.Dispose();
+        _dbContext = FinancePostgresTestContext.Create();
+        _service = new SuperAdminFinancialDashboardService(_dbContext,
+            new StubCommerceHubFinanceReconciliationReadService(), _aggregateService,
+            NullLogger<SuperAdminFinancialDashboardService>.Instance);
+    }
+
     private async Task SaveCommerceHubFixtureAsync()
     {
         using (CommerceHubBoundaryMutationScope.BeginOrderLifecycle())
@@ -712,7 +991,7 @@ public sealed class SuperAdminFinancialDashboardServiceTests : IDisposable
         AddPlatformTransaction(
             CommerceHubFinancialTransactionType.Commission,
             CommerceHubFinancialTransactionDirection.Debit,
-            2m,
+            2.6m,
             CommerceHubFinancialReferenceType.Refund,
             promoRefund.Id,
             promoRefund.ProcessedAtUtc ?? promoRefund.CreatedAt,

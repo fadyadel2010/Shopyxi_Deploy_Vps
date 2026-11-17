@@ -2,6 +2,7 @@ import { ActivitySquare, AlertTriangle, ShieldCheck, Workflow } from 'lucide-rea
 import { useSuperAdminLocale } from '../i18n/useSuperAdminLocale'
 import { EmptyState, ErrorState, LoadingState, SectionCard, StatusBadge, saTable } from '../ui/SuperAdminUI'
 import type { SuperAdminFinancialIntegrityCheck } from './financeService'
+import { financeIntegrityLabel, financeIssueLabel } from './financePresentation'
 
 interface FinanceReconciliationPanelProps {
     data?: SuperAdminFinancialIntegrityCheck
@@ -31,6 +32,7 @@ export default function FinanceReconciliationPanel({
     errorMessage,
 }: FinanceReconciliationPanelProps) {
     const { tr, formatNumber, formatDateTime, formatCurrency } = useSuperAdminLocale()
+    const available = !!data && !errorMessage
 
     const formatScopedCurrency = (value: number | null | undefined, currency = 'EGP') => {
         if (String(currency || '').trim().toUpperCase() !== COMMERCEHUB_AUTHORITY_CURRENCY) {
@@ -47,9 +49,9 @@ export default function FinanceReconciliationPanel({
                 'تتحقق اللوحة من حسابات الطلبات والمرتجعات وتعبئة استخدام العروض وربطها بالدفتر والعكس المفقود والمراجع اليتيمة. ويُستبعد توازن المدين/الدائن العام عمدًا لأن CommerceHub يستخدم دفتر حزم تشغيليًا لا دفترًا عامًا.',
             )}
             actions={
-                <StatusBadge tone={data?.status === 'OK' ? 'emerald' : 'rose'}>
-                    {data?.status === 'OK' ? <ShieldCheck className="h-3.5 w-3.5" /> : <AlertTriangle className="h-3.5 w-3.5" />}
-                    {data?.status ?? tr('UNKNOWN', 'غير معروف')}
+                <StatusBadge tone={available && data.status === 'OK' ? 'emerald' : available && data.status === 'ISSUES_DETECTED' ? 'rose' : 'slate'}>
+                    {available && data.status === 'OK' ? <ShieldCheck className="h-3.5 w-3.5" /> : <AlertTriangle className="h-3.5 w-3.5" />}
+                    {financeIntegrityLabel(errorMessage ? 'UNAVAILABLE' : data?.status, tr)}
                 </StatusBadge>
             }
         >
@@ -61,10 +63,17 @@ export default function FinanceReconciliationPanel({
                 </div>
             ) : null}
 
-            {data ? (
+            {data && available ? (
                 <div className="space-y-3">
+                    <p className="rounded-lg border border-amber-200 bg-amber-50 px-3.5 py-2.5 text-sm text-amber-950">
+                        {data.includesGlobalLedgerChecks
+                            ? tr('Selected operational-ledger checks only. This is not a complete accounting certification.', 'فحوص محددة لدفتر العمليات فقط. ليست شهادة محاسبية شاملة.')
+                            : tr('Global balance and duplicate-pair checks are not included in this filtered scan. A zero flag count does not certify all financial invariants.', 'لا يشمل هذا الفحص المصفّى فحوص الأرصدة العامة وأزواج القيود المكررة. صفر علامات لا يثبت جميع الثوابت المالية.')}
+                    </p>
                     <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-5">
                         {counters.map((counter) => {
+                            const notChecked = !data.includesGlobalLedgerChecks &&
+                                ['duplicateEntryCount', 'payableMismatchCount', 'receivableMismatchCount'].includes(counter.key)
                             const rawValue = Number(data[counter.key] ?? 0)
                             const hasIssue = rawValue > 0
                             return (
@@ -78,7 +87,7 @@ export default function FinanceReconciliationPanel({
                                         </p>
                                         <Workflow className="h-3 w-3 opacity-40" />
                                     </div>
-                                    <p className="mt-1 text-lg font-semibold" dir="auto">{formatNumber(rawValue)}</p>
+                                    <p className="mt-1 text-lg font-semibold" dir="auto">{notChecked ? tr('Not checked', 'لم يُفحص') : formatNumber(rawValue)}</p>
                                 </div>
                             )
                         })}
@@ -95,17 +104,17 @@ export default function FinanceReconciliationPanel({
                         </div>
                         <div className="rounded-lg border border-slate-200 bg-white px-3 py-2.5">
                             <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">{tr('Debit/credit parity', 'توازن المدين/الدائن')}</p>
-                            <p className="mt-1 text-sm font-semibold text-slate-950">{data.debitCreditParityStatus}</p>
+                            <p className="mt-1 text-sm font-semibold text-slate-950">{tr('Not applicable', 'غير منطبق')}</p>
                         </div>
                         <div className="rounded-lg border border-slate-200 bg-white px-3 py-2.5">
                             <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">{tr('Scope', 'النطاق')}</p>
-                            <p className="mt-1 text-sm font-semibold text-slate-950">{data.scopeDescription}</p>
+                            <p className="mt-1 text-sm font-semibold text-slate-950">{data.includesGlobalLedgerChecks ? tr('Full ledger', 'دفتر الأستاذ الكامل') : tr('Selected reporting filters', 'مرشحات التقرير المحددة')}</p>
                         </div>
                     </div>
 
                     {data.debitCreditParityNote ? (
                         <p className="rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-600">
-                            {data.debitCreditParityNote}
+                            {tr('CommerceHub uses an operational bucket ledger, not a full double-entry general ledger. Global debit/credit equality is not an applicable test.', 'يستخدم CommerceHub دفتر عمليات حسب الحزم، وليس دفترًا عامًا متكاملًا بالقيد المزدوج. تساوي إجمالي المدين والدائن ليس فحصًا منطبقًا.')}
                         </p>
                     ) : null}
 
@@ -143,21 +152,21 @@ export default function FinanceReconciliationPanel({
                                             <tr key={`${issue.issueType}-${issue.referenceId ?? 'none'}-${issue.summary}`} className="align-top">
                                                 <td className={saTable.cell}>
                                                     <StatusBadge tone={issue.severity === 'ERROR' ? 'rose' : 'amber'}>
-                                                        {issue.severity}
+                                                        {issue.severity === 'ERROR' ? tr('Error', 'خطأ') : tr('Warning', 'تحذير')}
                                                     </StatusBadge>
                                                 </td>
-                                                <td className={`${saTable.cell} font-medium text-slate-900`}>{issue.issueType}</td>
+                                                <td className={`${saTable.cell} font-medium text-slate-900`}>{financeIssueLabel(issue.issueType, tr)}</td>
                                                 <td className={`${saTable.cell} text-slate-600`}>
-                                                    <div>{issue.referenceType}</div>
-                                                    <div className="mt-0.5 break-all text-xs">{issue.referenceId ?? 'n/a'}</div>
+                                                    <div>{issue.referenceType === 'Order' ? tr('Order', 'طلب') : issue.referenceType === 'Refund' ? tr('Refund', 'استرداد') : tr('Financial record', 'سجل مالي')}</div>
+                                                    <div className="mt-0.5 break-all text-xs">{issue.referenceId ?? '—'}</div>
                                                     <div className="mt-0.5 text-xs">{formatDateTime(issue.occurredAtUtc ?? undefined)}</div>
                                                 </td>
-                                                <td className={`${saTable.cell} text-slate-600`}>{issue.summary}</td>
+                                                <td className={`${saTable.cell} text-slate-600`}>{financeIssueLabel(issue.issueType, tr)}</td>
                                                 <td className={`${saTable.cell} text-slate-700`}>
-                                                    {issue.expectedAmount == null ? 'n/a' : formatScopedCurrency(issue.expectedAmount, issue.currency || 'EGP')}
+                                                    {issue.expectedAmount == null ? '—' : formatScopedCurrency(issue.expectedAmount, issue.currency || 'EGP')}
                                                 </td>
                                                 <td className={`${saTable.cell} text-slate-700`}>
-                                                    {issue.actualAmount == null ? 'n/a' : formatScopedCurrency(issue.actualAmount, issue.currency || 'EGP')}
+                                                    {issue.actualAmount == null ? '—' : formatScopedCurrency(issue.actualAmount, issue.currency || 'EGP')}
                                                 </td>
                                             </tr>
                                         ))}

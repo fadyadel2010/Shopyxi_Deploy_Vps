@@ -534,6 +534,7 @@ public sealed class FinancialReconciliationService : IFinancialReconciliationSer
             }
 
             var refundedAmountSoFar = 0m;
+            var refundedQuantityByItem = new Dictionary<Guid, int>();
             foreach (var refund in group.Value.OrderBy(GetRefundOccurredAtUtc).ThenBy(refund => refund.Id))
             {
                 var refundLedger = context.RefundLedgerByRefundId.GetValueOrDefault(refund.Id);
@@ -590,7 +591,10 @@ public sealed class FinancialReconciliationService : IFinancialReconciliationSer
 
                     expectedBreakdown = RefundFinancialCalculator.CalculateItemBreakdown(
                         orderItem,
-                        refund.Quantity.GetValueOrDefault());
+                        refund.Quantity.GetValueOrDefault(),
+                        refundedQuantityByItem.GetValueOrDefault(orderItem.Id));
+                    refundedQuantityByItem[orderItem.Id] =
+                        refundedQuantityByItem.GetValueOrDefault(orderItem.Id) + refund.Quantity.GetValueOrDefault();
                 }
                 else
                 {
@@ -678,7 +682,7 @@ public sealed class FinancialReconciliationService : IFinancialReconciliationSer
                 occurredAtUtc));
         }
 
-        if (expectedBreakdown.CommissionReversalAmount > 0m && (refundLedger?.CommissionDebits ?? 0m) <= 0m)
+        if (expectedGrossReversal > 0m && (refundLedger?.CommissionDebits ?? 0m) <= 0m)
         {
             findings.Add(new ReconciliationFinding(
                 "ERROR",
@@ -687,7 +691,7 @@ public sealed class FinancialReconciliationService : IFinancialReconciliationSer
                 refund.Id,
                 "Refund is missing the platform commission reversal ledger entry.",
                 refund.Currency,
-                expectedBreakdown.CommissionReversalAmount,
+                expectedGrossReversal,
                 refundLedger?.CommissionDebits ?? 0m,
                 occurredAtUtc));
         }
@@ -706,7 +710,7 @@ public sealed class FinancialReconciliationService : IFinancialReconciliationSer
                 occurredAtUtc));
         }
 
-        if (RoundCurrency(refundLedger?.CommissionDebits ?? 0m) != RoundCurrency(refund.CommissionReversalAmount))
+        if (RoundCurrency(refundLedger?.CommissionDebits ?? 0m) != actualGrossReversal)
         {
             findings.Add(new ReconciliationFinding(
                 "ERROR",
@@ -715,7 +719,7 @@ public sealed class FinancialReconciliationService : IFinancialReconciliationSer
                 refund.Id,
                 "Refund commission reversal ledger entries do not match the refund record.",
                 refund.Currency,
-                refund.CommissionReversalAmount,
+                actualGrossReversal,
                 refundLedger?.CommissionDebits ?? 0m,
                 occurredAtUtc));
         }

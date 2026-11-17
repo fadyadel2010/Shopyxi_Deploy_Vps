@@ -1,0 +1,263 @@
+{
+  "capturedAtUtc": "2026-11-16T23:27:29.884Z",
+  "readOnly": true,
+  "sqlSha256": "ce9d9a349e16544648a0c460fbbbafa7d82962e06d0338e62cbd52b3e6c6a252",
+  "database": {
+    "checkedAtUtc": "2026-11-16T23:27:29.93632+00:00",
+    "reportFromUtc": "2026-10-18T00:00:00Z",
+    "reportToExclusiveUtc": "2026-11-17T00:00:00Z",
+    "marketplaceOrdersAllTime": 0,
+    "marketplaceSubOrdersAllTime": 0,
+    "marketplacePaymentsAllTime": 0,
+    "marketplaceRefundsAllTime": 0,
+    "marketplaceLedgerEntriesAllTime": 0,
+    "marketplaceLedgerEntriesInWindow": 0,
+    "globalRuleVerified": true,
+    "activeGlobalRuleCount": 1,
+    "activeOverrideRuleCount": 0,
+    "unsupportedLedgerCurrencyCount": 0,
+    "orphanOrderLedgerCount": 0,
+    "orphanRefundLedgerCount": 0,
+    "duplicateIdempotencyGroupCount": 0,
+    "overRefundedSubOrderCount": 0,
+    "nonMarketplaceOrdersExist": true,
+    "allExistingNonMarketplaceOrdersCancelledUnrecognized": true,
+    "independentListingOverrideExists": true
+  },
+  "deployments": [
+    {
+      "name": "shopixy-api",
+      "uid": "068cb6d0-406c-4a7b-a4c1-a35c71acb481",
+      "generation": 64,
+      "observedGeneration": 64,
+      "replicas": 1,
+      "readyReplicas": 1,
+      "specSha256": "df93ad645db3af3e22662b3e06ac680689afc6c355bc4f89a3a08085c7061f51",
+      "containers": [
+        {
+          "name": "api",
+          "image": "docker.io/shopixy/api@sha256:cb900c183069f94311142ad9c5a16fa23266611d3c29f674bae64040189ac307"
+        },
+        {
+          "name": "clientip-edge",
+          "image": "docker.io/shopixy/web@sha256:f35e1b9cd384244049d0008af9476ee3d6fb974ca7fbb8e7e1f9fe70c11b0a42"
+        }
+      ]
+    },
+    {
+      "name": "shopixy-baileys",
+      "uid": "1508c900-532b-413c-b818-76fbc1227d41",
+      "generation": 7,
+      "observedGeneration": 7,
+      "replicas": 1,
+      "readyReplicas": 1,
+      "specSha256": "3a854bd043a2af474003ad7b578bff56168e9d6bd60d03d1e2b54b972ea8573e",
+      "containers": [
+        {
+          "name": "baileys",
+          "image": "docker.io/shopixy/baileys@sha256:fb31e748e0262895030f609b6cb2edd50ea2a1703d5d5e6010d01c6e1988d3c4"
+        }
+      ]
+    },
+    {
+      "name": "shopixy-commercehub",
+      "uid": "97e8c43e-fc18-481c-aeb7-c6bc812bda56",
+      "generation": 6,
+      "observedGeneration": 6,
+      "replicas": 1,
+      "readyReplicas": 1,
+      "specSha256": "4f691e5a558e94cf62c7f9114d44ec27e79114bd9857cc84fb3db3e1be2a7867",
+      "containers": [
+        {
+          "name": "commercehub",
+          "image": "docker.io/shopixy/commercehub@sha256:dd2bf0247adca5be3c48b29adaadd3310c991fc5d53d392ef26ad174ff3d80a8"
+        }
+      ]
+    },
+    {
+      "name": "shopixy-r2-egress",
+      "uid": "371fe354-669e-41d7-a966-a985024bc0de",
+      "generation": 4,
+      "observedGeneration": 4,
+      "replicas": 1,
+      "readyReplicas": 1,
+      "specSha256": "601c5fbbeb7cff4b115cf86f25ae92814571842df8d610b2b6842aabeeba94c9",
+      "containers": [
+        {
+          "name": "r2-egress",
+          "image": "docker.io/shopixy/baileys@sha256:a396a42d133883cfe1a1a6c3cf1ab73f10920c3d3931c7c8cb106da601f48291"
+        }
+      ]
+    },
+    {
+      "name": "shopixy-storefront",
+      "uid": "49900d1f-c203-4c54-8de8-98fcf6ea841f",
+      "generation": 10,
+      "observedGeneration": 10,
+      "replicas": 1,
+      "readyReplicas": 1,
+      "specSha256": "a8dc72f11b84d588d5c57b18f5943fc5e10292644b5c1d3b96a95d387ed1f2a7",
+      "containers": [
+        {
+          "name": "storefront",
+          "image": "docker.io/shopixy/storefront@sha256:e9333f609aa664d6de713d4db00b18deba054e3a8acbb559099d9ab245f9f3df"
+        }
+      ]
+    },
+    {
+      "name": "shopixy-web",
+      "uid": "f70122dc-ff87-4ec6-a1ab-28c49b0e2905",
+      "generation": 23,
+      "observedGeneration": 23,
+      "replicas": 1,
+      "readyReplicas": 1,
+      "specSha256": "35d18fb2e8658db6f1a112fb4e1f226aa2b582d7acc5a34659fa4ceec1b2b4b8",
+      "containers": [
+        {
+          "name": "web",
+          "image": "docker.io/shopixy/web@sha256:627af0b79e1a8bfa4be76691df0f43c938c9b586727d11c2f223e43580c21568"
+        }
+      ]
+    }
+  ],
+  "pods": [
+    {
+      "name": "shopixy-api-5b46f7bb8c-jvbg7",
+      "phase": "Running",
+      "containers": [
+        {
+          "name": "api",
+          "ready": true,
+          "restartCount": 0,
+          "imageID": "docker.io/library/commercehub-publishing-import@sha256:bc02dd4a2391737c74b011e550d3e20953d685839fd3386388c7e5d8643886d7"
+        },
+        {
+          "name": "clientip-edge",
+          "ready": true,
+          "restartCount": 0,
+          "imageID": "docker.io/shopixy/web@sha256:f35e1b9cd384244049d0008af9476ee3d6fb974ca7fbb8e7e1f9fe70c11b0a42"
+        }
+      ]
+    },
+    {
+      "name": "shopixy-baileys-57cd6749bf-lznml",
+      "phase": "Running",
+      "containers": [
+        {
+          "name": "baileys",
+          "ready": true,
+          "restartCount": 4,
+          "imageID": "docker.io/library/import-2026-11-14@sha256:6ac6d8142097b44a1c5a8b685be738ab949e866d604527dbe7621287b39e21b5"
+        }
+      ]
+    },
+    {
+      "name": "shopixy-commercehub-58f5c88ccf-ffnps",
+      "phase": "Running",
+      "containers": [
+        {
+          "name": "commercehub",
+          "ready": true,
+          "restartCount": 2,
+          "imageID": "docker.io/shopixy/commercehub@sha256:dd2bf0247adca5be3c48b29adaadd3310c991fc5d53d392ef26ad174ff3d80a8"
+        }
+      ]
+    },
+    {
+      "name": "shopixy-crl-renewal-29913133-dq298",
+      "phase": "Succeeded",
+      "containers": [
+        {
+          "name": "renew",
+          "ready": false,
+          "restartCount": 0,
+          "imageID": "ghcr.io/cloudnative-pg/plugin-barman-cloud-sidecar@sha256:eb61ec74fddfcadc956fa49d99306daf9d6ec84b59594b183614037e2b5a5785"
+        }
+      ]
+    },
+    {
+      "name": "shopixy-dp-protected-backup-29911815-w2k9t",
+      "phase": "Succeeded",
+      "containers": [
+        {
+          "name": "backup",
+          "ready": false,
+          "restartCount": 0,
+          "imageID": "ghcr.io/cloudnative-pg/plugin-barman-cloud-sidecar@sha256:eb61ec74fddfcadc956fa49d99306daf9d6ec84b59594b183614037e2b5a5785"
+        }
+      ]
+    },
+    {
+      "name": "shopixy-dp-protected-backup-29913255-tpncf",
+      "phase": "Succeeded",
+      "containers": [
+        {
+          "name": "backup",
+          "ready": false,
+          "restartCount": 0,
+          "imageID": "ghcr.io/cloudnative-pg/plugin-barman-cloud-sidecar@sha256:eb61ec74fddfcadc956fa49d99306daf9d6ec84b59594b183614037e2b5a5785"
+        }
+      ]
+    },
+    {
+      "name": "shopixy-pki-lifecycle-guard-29914065-54s2f",
+      "phase": "Failed",
+      "containers": [
+        {
+          "name": "guard",
+          "ready": false,
+          "restartCount": 0,
+          "imageID": "ghcr.io/cloudnative-pg/plugin-barman-cloud-sidecar@sha256:eb61ec74fddfcadc956fa49d99306daf9d6ec84b59594b183614037e2b5a5785"
+        }
+      ]
+    },
+    {
+      "name": "shopixy-pki-lifecycle-guard-29914485-qlwdg",
+      "phase": "Succeeded",
+      "containers": [
+        {
+          "name": "guard",
+          "ready": false,
+          "restartCount": 0,
+          "imageID": "ghcr.io/cloudnative-pg/plugin-barman-cloud-sidecar@sha256:eb61ec74fddfcadc956fa49d99306daf9d6ec84b59594b183614037e2b5a5785"
+        }
+      ]
+    },
+    {
+      "name": "shopixy-r2-egress-7d64497fc5-nlw4q",
+      "phase": "Running",
+      "containers": [
+        {
+          "name": "r2-egress",
+          "ready": true,
+          "restartCount": 1,
+          "imageID": "docker.io/library/import-2026-11-07@sha256:7f582835462bef29d28d93497594cbdbb9d930213bbdf92dff07171d5fcff4d7"
+        }
+      ]
+    },
+    {
+      "name": "shopixy-storefront-95dbbc769-tsbbk",
+      "phase": "Running",
+      "containers": [
+        {
+          "name": "storefront",
+          "ready": true,
+          "restartCount": 2,
+          "imageID": "docker.io/library/import-2026-11-13@sha256:dcd3573b806201db6bf8d5f124008773f2c38742457e6af8e9829c0c380a64b7"
+        }
+      ]
+    },
+    {
+      "name": "shopixy-web-6bdb8f8bc8-s8fbz",
+      "phase": "Running",
+      "containers": [
+        {
+          "name": "web",
+          "ready": true,
+          "restartCount": 0,
+          "imageID": "docker.io/library/commercehub-closure-import@sha256:f42d80e358918253a1d1a6f8b63600b5344f106772dbacb0e6117997b820bcd2"
+        }
+      ]
+    }
+  ]
+}

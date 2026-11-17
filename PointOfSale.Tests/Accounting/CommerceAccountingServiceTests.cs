@@ -71,6 +71,7 @@ public class CommerceAccountingServiceTests : IDisposable
     private readonly Guid _accountsReceivableId = Guid.NewGuid();
     private readonly Guid _supplierPayablesId = Guid.NewGuid();
     private readonly Guid _openingBalanceEquityId = Guid.NewGuid();
+    private readonly Guid _expenseId = Guid.NewGuid();
     
     public CommerceAccountingServiceTests()
     {
@@ -110,6 +111,35 @@ public class CommerceAccountingServiceTests : IDisposable
             logger);
     }
     
+    [Fact]
+    public async Task CommerceHubGrossRefundAndPromoRecovery_MustCancelRevenueAndExpenseInGlBridge()
+    {
+        var requests = new List<PostingRequest>();
+        _mockPostingService.Setup(service => service.PostJournalAsync(It.IsAny<PostingRequest>(), It.IsAny<CancellationToken>()))
+            .Callback<PostingRequest, CancellationToken>((request, _) => requests.Add(request))
+            .ReturnsAsync((PostingRequest request, CancellationToken _) => JournalEntry.Create(
+                request.TenantId, "FINANCE-BRIDGE", request.JournalDate, request.SourceType,
+                request.SourceId, request.SourceReference, request.Description, request.IdempotencyKey, request.UserId));
+        foreach (var (type, direction, amount) in new[]
+                 { ("Commission", "Credit", 10m), ("Promotion", "Debit", 3m),
+                   ("Commission", "Debit", 10m), ("Promotion", "Credit", 3m) })
+        {
+            var result = await _service.PostCommerceHubFinancialTransactionAsync(
+                _tenantId, Guid.NewGuid(), type, direction, "Platform", "Receivable",
+                amount, "EGP", "Isolated gross refund and promo recovery", DateTime.UtcNow);
+            Assert.True(result.Success);
+        }
+        Assert.Equal(4, requests.Count);
+        Assert.All(requests, request =>
+        {
+            Assert.Equal("CommerceHubFinancialTransaction", request.SourceType);
+            Assert.Equal(request.Lines.Sum(line => line.DebitAmount), request.Lines.Sum(line => line.CreditAmount));
+        });
+        foreach (var accountId in new[] { _ecomSalesId, _expenseId })
+            Assert.Equal(0m, requests.SelectMany(request => request.Lines)
+                .Where(line => line.AccountId == accountId).Sum(line => line.CreditAmount - line.DebitAmount));
+    }
+
     private void SetupAccountResolver()
     {
         var accounts = new Dictionary<string, Account>
@@ -132,7 +162,8 @@ public class CommerceAccountingServiceTests : IDisposable
             [AccountCodes.GatewayFees] = CreateAccount(_gatewayFeesId, AccountCodes.GatewayFees),
             [AccountCodes.AccountsReceivable] = CreateAccount(_accountsReceivableId, AccountCodes.AccountsReceivable),
             [AccountCodes.SupplierPayables] = CreateAccount(_supplierPayablesId, AccountCodes.SupplierPayables),
-            [AccountCodes.OpeningBalanceEquity] = CreateAccount(_openingBalanceEquityId, AccountCodes.OpeningBalanceEquity)
+            [AccountCodes.OpeningBalanceEquity] = CreateAccount(_openingBalanceEquityId, AccountCodes.OpeningBalanceEquity),
+            [AccountCodes.Expenses] = CreateAccount(_expenseId, AccountCodes.Expenses)
         };
         
         _mockAccountResolver

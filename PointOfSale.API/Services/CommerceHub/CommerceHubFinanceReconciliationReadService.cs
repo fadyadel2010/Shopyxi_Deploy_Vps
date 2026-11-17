@@ -227,7 +227,7 @@ public sealed class CommerceHubFinanceReconciliationReadService : ICommerceHubFi
                     refund.Id,
                     refund.Amount,
                     refund.VendorEarningReversalAmount,
-                    refund.CommissionReversalAmount,
+                    GrossCommissionReversalAmount = refund.CommissionReversalAmount + refund.PromoDiscountReversalAmount,
                     refund.IsPostPayoutAdjustment,
                     IsCashOnDelivery = subOrder.PaymentMethod == CommerceHubPaymentMethod.CashOnDelivery
                 })
@@ -239,7 +239,7 @@ public sealed class CommerceHubFinanceReconciliationReadService : ICommerceHubFi
                     IsPostPayoutAdjustment = row.IsPostPayoutAdjustment,
                     Amount = row.Amount,
                     VendorEarningReversalAmount = row.VendorEarningReversalAmount,
-                    CommissionReversalAmount = row.CommissionReversalAmount
+                    CommissionReversalAmount = row.GrossCommissionReversalAmount
                 },
                 cancellationToken);
 

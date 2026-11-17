@@ -1,0 +1,273 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="c9d01ecf-a8b3-42dc-a2ce-07ed068cb5cf" name="fadya@FADYADEL 2026-11-17 01:43:09" runUser="FADYADEL\fadya" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-11-17T01:43:09.6101102+02:00" queuing="2026-11-17T01:43:09.6101105+02:00" start="2026-11-17T01:43:05.7335201+02:00" finish="2026-11-17T01:43:22.5484380+02:00" />
+  <TestSettings name="default" id="e4f2e5b0-fe06-43ce-be6b-ce18c0f4f8d0">
+    <Deployment runDeploymentRoot="fadya_FADYADEL_2026-11-17_01_43_09" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="a3559f39-d933-4e49-b239-028631f39163" testId="8b2b090f-1fad-08c1-a7ae-da102047b668" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.DashboardQueries_ShouldReconcileOverviewTrendsPromosVendorsAndRefunds" computerName="FADYADEL" duration="00:00:02.2458246" startTime="2026-11-17T01:43:20.8436740+02:00" endTime="2026-11-17T01:43:20.8436744+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a3559f39-d933-4e49-b239-028631f39163" />
+    <UnitTestResult executionId="80dd6066-8709-4df7-b497-ae12221e0c01" testId="a3875726-1996-ce70-c30f-125ac7b6d043" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.RefundOnlyDay_AggregatePromoCostMustMatchSignedLiveLedger" computerName="FADYADEL" duration="00:00:00.5103682" startTime="2026-11-17T01:43:16.3152219+02:00" endTime="2026-11-17T01:43:16.3152223+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="80dd6066-8709-4df7-b497-ae12221e0c01">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: -0.6&#xD;
+Actual:   0</Message>
+          <StackTrace>   at PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.RefundOnlyDay_AggregatePromoCostMustMatchSignedLiveLedger() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\SuperAdmin\SuperAdminFinancialDashboardServiceTests.cs:line 530&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="62f0c63f-f5b3-40fb-9c26-b8d9fec547b7" testId="8fb41836-db44-7e52-8297-7d4e76d748fa" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.EmptyIntegrity_MustIdentifyVacuousCoverage" computerName="FADYADEL" duration="00:00:00.0306409" startTime="2026-11-17T01:43:17.2690177+02:00" endTime="2026-11-17T01:43:17.2690179+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="62f0c63f-f5b3-40fb-9c26-b8d9fec547b7">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Strings differ&#xD;
+           ↓ (pos 0)&#xD;
+Expected: "NO_RECORDS"&#xD;
+Actual:   "OK"&#xD;
+           ↑ (pos 0)</Message>
+          <StackTrace>   at PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.EmptyIntegrity_MustIdentifyVacuousCoverage() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\SuperAdmin\SuperAdminFinancialDashboardServiceTests.cs:line 562&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="0ed6b496-9e9e-4539-9854-edcf4f0167c7" testId="59b9aea7-fec9-f61c-1f40-d1c69d7007fe" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetIntegrityCheckAsync_ShouldDetectScopedFinancialInconsistencies" computerName="FADYADEL" duration="00:00:06.5983206" startTime="2026-11-17T01:43:15.1340545+02:00" endTime="2026-11-17T01:43:15.1340548+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0ed6b496-9e9e-4539-9854-edcf4f0167c7" />
+    <UnitTestResult executionId="4afab02f-2a29-49a7-bc2c-8a2f8474a83d" testId="25f890e6-65d8-d187-60fc-45fdf1552fc9" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetIntegrityCheckAsync_GlobalScope_ShouldKeepLiveCountersAlignedWithSampledIssues" computerName="FADYADEL" duration="00:00:00.0672117" startTime="2026-11-17T01:43:22.2755246+02:00" endTime="2026-11-17T01:43:22.2755248+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4afab02f-2a29-49a7-bc2c-8a2f8474a83d" />
+    <UnitTestResult executionId="e5c6f64a-84f0-4a68-ab9a-969788a31912" testId="da99393b-0982-6a68-a7fa-cdeaa1734540" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetIntegrityCheckAsync_ShouldNotRequireLedgerForPendingCodSiblingOfPartiallyRefundedOrder" computerName="FADYADEL" duration="00:00:00.6236640" startTime="2026-11-17T01:43:18.5976459+02:00" endTime="2026-11-17T01:43:18.5976460+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e5c6f64a-84f0-4a68-ab9a-969788a31912" />
+    <UnitTestResult executionId="fcb1de91-45a4-4c5b-948d-b4f1196d7eee" testId="508a7d4c-86bd-1a88-4bb3-69d617033fb1" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.ZeroCommissionOrder_StillHasFinanciallyRecognizedOrderValue" computerName="FADYADEL" duration="00:00:00.1735439" startTime="2026-11-17T01:43:17.2361873+02:00" endTime="2026-11-17T01:43:17.2361878+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fcb1de91-45a4-4c5b-948d-b4f1196d7eee">
+      <Output>
+        <ErrorInfo>
+          <Message>PointOfSale.Infrastructure.Accounting.AccountingPeriodException : Accounting period authority requires a relational database.</Message>
+          <StackTrace>   at PointOfSale.Infrastructure.Accounting.AccountingPeriodPostingGuard.LockAsync(ApplicationDbContext db, Guid tenantId, Boolean create, CancellationToken ct) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Infrastructure\Accounting\AccountingPeriodService.cs:line 29&#xD;
+   at PointOfSale.Infrastructure.Accounting.AccountingPeriodPostingGuard.RequireOpenAsync(ApplicationDbContext db, Guid tenantId, DateTime date, CancellationToken ct) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Infrastructure\Accounting\AccountingPeriodService.cs:line 51&#xD;
+   at PointOfSale.Infrastructure.Data.ApplicationDbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Infrastructure\Data\ApplicationDbContext.cs:line 3721&#xD;
+   at PointOfSale.Infrastructure.Data.ApplicationDbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Infrastructure\Data\ApplicationDbContext.cs:line 3725&#xD;
+   at PointOfSale.API.Services.CommerceHub.FinancialLedger.CommerceHubFinancialLedgerService.&lt;&gt;c__DisplayClass4_0.&lt;&lt;RecordOrderAsync&gt;b__0&gt;d.MoveNext() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\Services\CommerceHub\FinancialLedger\CommerceHubFinancialLedgerService.cs:line 264&#xD;
+--- End of stack trace from previous location ---&#xD;
+   at PointOfSale.API.Services.CommerceHub.FinancialLedger.CommerceHubFinancialLedgerService.ExecuteAtomicAsync(Func`2 recorder, CancellationToken cancellationToken) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\Services\CommerceHub\FinancialLedger\CommerceHubFinancialLedgerService.cs:line 877&#xD;
+   at PointOfSale.API.Services.CommerceHub.FinancialLedger.CommerceHubFinancialLedgerService.RecordOrderAsync(CommerceHubMarketplaceOrder marketplaceOrder, CommerceHubSubOrder subOrder, CancellationToken cancellationToken) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\Services\CommerceHub\FinancialLedger\CommerceHubFinancialLedgerService.cs:line 173&#xD;
+   at PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.ZeroCommissionOrder_StillHasFinanciallyRecognizedOrderValue() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\SuperAdmin\SuperAdminFinancialDashboardServiceTests.cs:line 603&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="b012818f-df39-4872-8179-1a3f52cf4ca4" testId="7a9ee6e1-1425-6f77-1629-43bcf1c6b8b2" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GlobalIntegrity_MustNotDoubleCountPromoAndReversalFlags" computerName="FADYADEL" duration="00:00:00.0547398" startTime="2026-11-17T01:43:17.9737892+02:00" endTime="2026-11-17T01:43:17.9737893+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b012818f-df39-4872-8179-1a3f52cf4ca4">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: 7&#xD;
+Actual:   9</Message>
+          <StackTrace>   at PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GlobalIntegrity_MustNotDoubleCountPromoAndReversalFlags() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\SuperAdmin\SuperAdminFinancialDashboardServiceTests.cs:line 539&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="d0a87cb5-89c7-46c9-ae29-ebb4ae7860db" testId="06c18a3f-6d87-3f10-fc13-73f291a662bd" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetOverviewAsync_ShouldUseDailyAggregatesWhenFreshAndUnfiltered" computerName="FADYADEL" duration="00:00:00.4275424" startTime="2026-11-17T01:43:08.5318465+02:00" endTime="2026-11-17T01:43:08.5318696+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d0a87cb5-89c7-46c9-ae29-ebb4ae7860db" />
+    <UnitTestResult executionId="a4984b26-a2b2-456a-8a95-70b28c503923" testId="5f9a1b07-aaad-7c9d-9557-d6025a179ea3" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.DuplicatePromoUsage_MustNotMultiplyRecognizedMoney" computerName="FADYADEL" duration="00:00:00.6902275" startTime="2026-11-17T01:43:17.0068923+02:00" endTime="2026-11-17T01:43:17.0068926+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a4984b26-a2b2-456a-8a95-70b28c503923">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: 35&#xD;
+Actual:   45</Message>
+          <StackTrace>   at PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.DuplicatePromoUsage_MustNotMultiplyRecognizedMoney() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\SuperAdmin\SuperAdminFinancialDashboardServiceTests.cs:line 582&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="01bf62e8-37d7-4cbe-8cee-823a3fa30c54" testId="653c85bb-485f-bfc6-6ea7-beafda2391b1" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetOverviewAsync_ShouldApplyPromoCodeFilterCaseInsensitively" computerName="FADYADEL" duration="00:00:00.7263903" startTime="2026-11-17T01:43:22.2081349+02:00" endTime="2026-11-17T01:43:22.2081353+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="01bf62e8-37d7-4cbe-8cee-823a3fa30c54" />
+    <UnitTestResult executionId="b63036e0-42c6-4e41-8b1d-7d8348487091" testId="86dc59f5-a610-3539-a22a-b68159b5281e" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetIntegrityCheckAsync_ShouldDetectDuplicatePromoUsageWithoutLedger" computerName="FADYADEL" duration="00:00:00.6374885" startTime="2026-11-17T01:43:21.4813887+02:00" endTime="2026-11-17T01:43:21.4813889+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b63036e0-42c6-4e41-8b1d-7d8348487091" />
+    <UnitTestResult executionId="e8b96ee6-d7cd-4d59-bf3d-40618e1f7612" testId="9abdfe96-dbb1-d6ec-66a7-b871c3924d6e" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.PartialDayWindow_MustNotUseWholeDayAggregates" computerName="FADYADEL" duration="00:00:00.1731571" startTime="2026-11-17T01:43:22.4499950+02:00" endTime="2026-11-17T01:43:22.4499952+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e8b96ee6-d7cd-4d59-bf3d-40618e1f7612">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Strings differ&#xD;
+           ↓ (pos 0)&#xD;
+Expected: "LIVE_LEDGER"&#xD;
+Actual:   "DAILY_AGGREGATE"&#xD;
+           ↑ (pos 0)</Message>
+          <StackTrace>   at PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.PartialDayWindow_MustNotUseWholeDayAggregates() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\SuperAdmin\SuperAdminFinancialDashboardServiceTests.cs:line 517&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="3b9e8ef1-bd99-4b1d-a424-3ae3e428ad11" testId="c80f0462-c5e1-fe23-6089-f285a9717ca5" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GlobalIntegrity_MustRespectSnapshotForOrphanEntries" computerName="FADYADEL" duration="00:00:00.6540823" startTime="2026-11-17T01:43:15.8035800+02:00" endTime="2026-11-17T01:43:15.8035802+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3b9e8ef1-bd99-4b1d-a424-3ae3e428ad11">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: 0&#xD;
+Actual:   1</Message>
+          <StackTrace>   at PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GlobalIntegrity_MustRespectSnapshotForOrphanEntries() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\SuperAdmin\SuperAdminFinancialDashboardServiceTests.cs:line 555&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="ac75d9bd-f242-40ce-bf17-19eefd35367c" testId="d4f3040e-a915-5a71-7061-01ca4bfde52e" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetPromoAnalyticsAsync_ShouldExcludeUnrecognizedFailedPromoOrders" computerName="FADYADEL" duration="00:00:00.6489365" startTime="2026-11-17T01:43:17.9182762+02:00" endTime="2026-11-17T01:43:17.9182766+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ac75d9bd-f242-40ce-bf17-19eefd35367c" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GlobalIntegrity_MustRespectSnapshotForOrphanEntries" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="c80f0462-c5e1-fe23-6089-f285a9717ca5">
+      <Execution id="3b9e8ef1-bd99-4b1d-a424-3ae3e428ad11" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="GlobalIntegrity_MustRespectSnapshotForOrphanEntries" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.PartialDayWindow_MustNotUseWholeDayAggregates" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="9abdfe96-dbb1-d6ec-66a7-b871c3924d6e">
+      <Execution id="e8b96ee6-d7cd-4d59-bf3d-40618e1f7612" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="PartialDayWindow_MustNotUseWholeDayAggregates" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetOverviewAsync_ShouldApplyPromoCodeFilterCaseInsensitively" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="653c85bb-485f-bfc6-6ea7-beafda2391b1">
+      <Execution id="01bf62e8-37d7-4cbe-8cee-823a3fa30c54" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="GetOverviewAsync_ShouldApplyPromoCodeFilterCaseInsensitively" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.EmptyIntegrity_MustIdentifyVacuousCoverage" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="8fb41836-db44-7e52-8297-7d4e76d748fa">
+      <Execution id="62f0c63f-f5b3-40fb-9c26-b8d9fec547b7" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="EmptyIntegrity_MustIdentifyVacuousCoverage" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.DashboardQueries_ShouldReconcileOverviewTrendsPromosVendorsAndRefunds" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="8b2b090f-1fad-08c1-a7ae-da102047b668">
+      <Execution id="a3559f39-d933-4e49-b239-028631f39163" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="DashboardQueries_ShouldReconcileOverviewTrendsPromosVendorsAndRefunds" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GlobalIntegrity_MustNotDoubleCountPromoAndReversalFlags" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="7a9ee6e1-1425-6f77-1629-43bcf1c6b8b2">
+      <Execution id="b012818f-df39-4872-8179-1a3f52cf4ca4" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="GlobalIntegrity_MustNotDoubleCountPromoAndReversalFlags" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetOverviewAsync_ShouldUseDailyAggregatesWhenFreshAndUnfiltered" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="06c18a3f-6d87-3f10-fc13-73f291a662bd">
+      <Execution id="d0a87cb5-89c7-46c9-ae29-ebb4ae7860db" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="GetOverviewAsync_ShouldUseDailyAggregatesWhenFreshAndUnfiltered" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.DuplicatePromoUsage_MustNotMultiplyRecognizedMoney" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="5f9a1b07-aaad-7c9d-9557-d6025a179ea3">
+      <Execution id="a4984b26-a2b2-456a-8a95-70b28c503923" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="DuplicatePromoUsage_MustNotMultiplyRecognizedMoney" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetIntegrityCheckAsync_ShouldDetectDuplicatePromoUsageWithoutLedger" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="86dc59f5-a610-3539-a22a-b68159b5281e">
+      <Execution id="b63036e0-42c6-4e41-8b1d-7d8348487091" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="GetIntegrityCheckAsync_ShouldDetectDuplicatePromoUsageWithoutLedger" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetPromoAnalyticsAsync_ShouldExcludeUnrecognizedFailedPromoOrders" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="d4f3040e-a915-5a71-7061-01ca4bfde52e">
+      <Execution id="ac75d9bd-f242-40ce-bf17-19eefd35367c" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="GetPromoAnalyticsAsync_ShouldExcludeUnrecognizedFailedPromoOrders" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.RefundOnlyDay_AggregatePromoCostMustMatchSignedLiveLedger" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="a3875726-1996-ce70-c30f-125ac7b6d043">
+      <Execution id="80dd6066-8709-4df7-b497-ae12221e0c01" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="RefundOnlyDay_AggregatePromoCostMustMatchSignedLiveLedger" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetIntegrityCheckAsync_GlobalScope_ShouldKeepLiveCountersAlignedWithSampledIssues" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="25f890e6-65d8-d187-60fc-45fdf1552fc9">
+      <Execution id="4afab02f-2a29-49a7-bc2c-8a2f8474a83d" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="GetIntegrityCheckAsync_GlobalScope_ShouldKeepLiveCountersAlignedWithSampledIssues" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.ZeroCommissionOrder_StillHasFinanciallyRecognizedOrderValue" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="508a7d4c-86bd-1a88-4bb3-69d617033fb1">
+      <Execution id="fcb1de91-45a4-4c5b-948d-b4f1196d7eee" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="ZeroCommissionOrder_StillHasFinanciallyRecognizedOrderValue" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetIntegrityCheckAsync_ShouldDetectScopedFinancialInconsistencies" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="59b9aea7-fec9-f61c-1f40-d1c69d7007fe">
+      <Execution id="0ed6b496-9e9e-4539-9854-edcf4f0167c7" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="GetIntegrityCheckAsync_ShouldDetectScopedFinancialInconsistencies" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetIntegrityCheckAsync_ShouldNotRequireLedgerForPendingCodSiblingOfPartiallyRefundedOrder" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="da99393b-0982-6a68-a7fa-cdeaa1734540">
+      <Execution id="e5c6f64a-84f0-4a68-ab9a-969788a31912" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="GetIntegrityCheckAsync_ShouldNotRequireLedgerForPendingCodSiblingOfPartiallyRefundedOrder" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="8b2b090f-1fad-08c1-a7ae-da102047b668" executionId="a3559f39-d933-4e49-b239-028631f39163" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a3875726-1996-ce70-c30f-125ac7b6d043" executionId="80dd6066-8709-4df7-b497-ae12221e0c01" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8fb41836-db44-7e52-8297-7d4e76d748fa" executionId="62f0c63f-f5b3-40fb-9c26-b8d9fec547b7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="59b9aea7-fec9-f61c-1f40-d1c69d7007fe" executionId="0ed6b496-9e9e-4539-9854-edcf4f0167c7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="25f890e6-65d8-d187-60fc-45fdf1552fc9" executionId="4afab02f-2a29-49a7-bc2c-8a2f8474a83d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="da99393b-0982-6a68-a7fa-cdeaa1734540" executionId="e5c6f64a-84f0-4a68-ab9a-969788a31912" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="508a7d4c-86bd-1a88-4bb3-69d617033fb1" executionId="fcb1de91-45a4-4c5b-948d-b4f1196d7eee" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7a9ee6e1-1425-6f77-1629-43bcf1c6b8b2" executionId="b012818f-df39-4872-8179-1a3f52cf4ca4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="06c18a3f-6d87-3f10-fc13-73f291a662bd" executionId="d0a87cb5-89c7-46c9-ae29-ebb4ae7860db" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5f9a1b07-aaad-7c9d-9557-d6025a179ea3" executionId="a4984b26-a2b2-456a-8a95-70b28c503923" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="653c85bb-485f-bfc6-6ea7-beafda2391b1" executionId="01bf62e8-37d7-4cbe-8cee-823a3fa30c54" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="86dc59f5-a610-3539-a22a-b68159b5281e" executionId="b63036e0-42c6-4e41-8b1d-7d8348487091" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9abdfe96-dbb1-d6ec-66a7-b871c3924d6e" executionId="e8b96ee6-d7cd-4d59-bf3d-40618e1f7612" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c80f0462-c5e1-fe23-6089-f285a9717ca5" executionId="3b9e8ef1-bd99-4b1d-a424-3ae3e428ad11" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d4f3040e-a915-5a71-7061-01ca4bfde52e" executionId="ac75d9bd-f242-40ce-bf17-19eefd35367c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="15" executed="15" passed="8" failed="7" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 10.0.15)&#xD;
+[xUnit.net 00:00:00.49]   Discovering: PointOfSale.Tests&#xD;
+[xUnit.net 00:00:01.80]   Discovered:  PointOfSale.Tests&#xD;
+[xUnit.net 00:00:01.82]   Starting:    PointOfSale.Tests&#xD;
+[xUnit.net 00:00:09.58]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:09.58]       Expected: 0&#xD;
+[xUnit.net 00:00:09.58]       Actual:   1&#xD;
+[xUnit.net 00:00:09.58]       Stack Trace:&#xD;
+[xUnit.net 00:00:09.58]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\SuperAdmin\SuperAdminFinancialDashboardServiceTests.cs(555,0): at PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GlobalIntegrity_MustRespectSnapshotForOrphanEntries()&#xD;
+[xUnit.net 00:00:09.58]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:10.09]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:10.09]       Expected: -0.6&#xD;
+[xUnit.net 00:00:10.09]       Actual:   0&#xD;
+[xUnit.net 00:00:10.09]       Stack Trace:&#xD;
+[xUnit.net 00:00:10.09]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\SuperAdmin\SuperAdminFinancialDashboardServiceTests.cs(530,0): at PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.RefundOnlyDay_AggregatePromoCostMustMatchSignedLiveLedger()&#xD;
+[xUnit.net 00:00:10.09]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:10.78]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:10.78]       Expected: 35&#xD;
+[xUnit.net 00:00:10.78]       Actual:   45&#xD;
+[xUnit.net 00:00:10.78]       Stack Trace:&#xD;
+[xUnit.net 00:00:10.78]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\SuperAdmin\SuperAdminFinancialDashboardServiceTests.cs(582,0): at PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.DuplicatePromoUsage_MustNotMultiplyRecognizedMoney()&#xD;
+[xUnit.net 00:00:10.78]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:11.01]       PointOfSale.Infrastructure.Accounting.AccountingPeriodException : Accounting period authority requires a relational database.&#xD;
+[xUnit.net 00:00:11.01]       Stack Trace:&#xD;
+[xUnit.net 00:00:11.01]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Infrastructure\Accounting\AccountingPeriodService.cs(29,0): at PointOfSale.Infrastructure.Accounting.AccountingPeriodPostingGuard.LockAsync(ApplicationDbContext db, Guid tenantId, Boolean create, CancellationToken ct)&#xD;
+[xUnit.net 00:00:11.01]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Infrastructure\Accounting\AccountingPeriodService.cs(51,0): at PointOfSale.Infrastructure.Accounting.AccountingPeriodPostingGuard.RequireOpenAsync(ApplicationDbContext db, Guid tenantId, DateTime date, CancellationToken ct)&#xD;
+[xUnit.net 00:00:11.01]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Infrastructure\Data\ApplicationDbContext.cs(3721,0): at PointOfSale.Infrastructure.Data.ApplicationDbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:11.01]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Infrastructure\Data\ApplicationDbContext.cs(3725,0): at PointOfSale.Infrastructure.Data.ApplicationDbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:11.01]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\Services\CommerceHub\FinancialLedger\CommerceHubFinancialLedgerService.cs(264,0): at PointOfSale.API.Services.CommerceHub.FinancialLedger.CommerceHubFinancialLedgerService.&lt;&gt;c__DisplayClass4_0.&lt;&lt;RecordOrderAsync&gt;b__0&gt;d.MoveNext()&#xD;
+[xUnit.net 00:00:11.01]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:11.01]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\Services\CommerceHub\FinancialLedger\CommerceHubFinancialLedgerService.cs(877,0): at PointOfSale.API.Services.CommerceHub.FinancialLedger.CommerceHubFinancialLedgerService.ExecuteAtomicAsync(Func`2 recorder, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:11.01]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\Services\CommerceHub\FinancialLedger\CommerceHubFinancialLedgerService.cs(173,0): at PointOfSale.API.Services.CommerceHub.FinancialLedger.CommerceHubFinancialLedgerService.RecordOrderAsync(CommerceHubMarketplaceOrder marketplaceOrder, CommerceHubSubOrder subOrder, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:11.01]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\SuperAdmin\SuperAdminFinancialDashboardServiceTests.cs(603,0): at PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.ZeroCommissionOrder_StillHasFinanciallyRecognizedOrderValue()&#xD;
+[xUnit.net 00:00:11.01]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:11.05]       Assert.Equal() Failure: Strings differ&#xD;
+[xUnit.net 00:00:11.05]                  ↓ (pos 0)&#xD;
+[xUnit.net 00:00:11.05]       Expected: "NO_RECORDS"&#xD;
+[xUnit.net 00:00:11.05]       Actual:   "OK"&#xD;
+[xUnit.net 00:00:11.05]                  ↑ (pos 0)&#xD;
+[xUnit.net 00:00:11.05]       Stack Trace:&#xD;
+[xUnit.net 00:00:11.05]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\SuperAdmin\SuperAdminFinancialDashboardServiceTests.cs(562,0): at PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.EmptyIntegrity_MustIdentifyVacuousCoverage()&#xD;
+[xUnit.net 00:00:11.05]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:11.75]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:11.75]       Expected: 7&#xD;
+[xUnit.net 00:00:11.75]       Actual:   9&#xD;
+[xUnit.net 00:00:11.75]       Stack Trace:&#xD;
+[xUnit.net 00:00:11.75]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\SuperAdmin\SuperAdminFinancialDashboardServiceTests.cs(539,0): at PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GlobalIntegrity_MustNotDoubleCountPromoAndReversalFlags()&#xD;
+[xUnit.net 00:00:11.75]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:16.23]       Assert.Equal() Failure: Strings differ&#xD;
+[xUnit.net 00:00:16.23]                  ↓ (pos 0)&#xD;
+[xUnit.net 00:00:16.23]       Expected: "LIVE_LEDGER"&#xD;
+[xUnit.net 00:00:16.23]       Actual:   "DAILY_AGGREGATE"&#xD;
+[xUnit.net 00:00:16.23]                  ↑ (pos 0)&#xD;
+[xUnit.net 00:00:16.23]       Stack Trace:&#xD;
+[xUnit.net 00:00:16.23]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\SuperAdmin\SuperAdminFinancialDashboardServiceTests.cs(517,0): at PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.PartialDayWindow_MustNotUseWholeDayAggregates()&#xD;
+[xUnit.net 00:00:16.23]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:16.23]   Finished:    PointOfSale.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T01:43:15.8009277+02:00">
+        <Text>[xUnit.net 00:00:09.58]     PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GlobalIntegrity_MustRespectSnapshotForOrphanEntries [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T01:43:16.3155277+02:00">
+        <Text>[xUnit.net 00:00:10.09]     PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.RefundOnlyDay_AggregatePromoCostMustMatchSignedLiveLedger [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T01:43:17.0065861+02:00">
+        <Text>[xUnit.net 00:00:10.78]     PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.DuplicatePromoUsage_MustNotMultiplyRecognizedMoney [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T01:43:17.2353000+02:00">
+        <Text>[xUnit.net 00:00:11.01]     PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.ZeroCommissionOrder_StillHasFinanciallyRecognizedOrderValue [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T01:43:17.2685714+02:00">
+        <Text>[xUnit.net 00:00:11.05]     PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.EmptyIntegrity_MustIdentifyVacuousCoverage [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T01:43:17.9739961+02:00">
+        <Text>[xUnit.net 00:00:11.75]     PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GlobalIntegrity_MustNotDoubleCountPromoAndReversalFlags [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T01:43:22.4495024+02:00">
+        <Text>[xUnit.net 00:00:16.23]     PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.PartialDayWindow_MustNotUseWholeDayAggregates [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

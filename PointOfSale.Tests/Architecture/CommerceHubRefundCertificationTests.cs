@@ -91,7 +91,10 @@ public sealed class CommerceHubRefundCertificationTests
 
         Assert.Contains("REFUND_WORKFLOW_REQUIRED", directController, StringComparison.Ordinal);
         Assert.Contains("Direct CommerceHub refund mutation is disabled", directController, StringComparison.Ordinal);
-        Assert.Contains("[Authorize(Roles = \"Owner,Admin\")]", directController, StringComparison.Ordinal);
+        // Legacy merchant mutation routes are authenticated tombstones (410),
+        // not Owner/Admin execution paths. The Super Admin workflow owns writes.
+        Assert.Contains("[Authorize]", directController, StringComparison.Ordinal);
+        Assert.Contains("StatusCodes.Status410Gone", directController, StringComparison.Ordinal);
         Assert.DoesNotContain("_refundService.CreateRefundAsync(", directController, StringComparison.Ordinal);
         Assert.DoesNotContain("_refundService.ConfirmRefundAsync(", directController, StringComparison.Ordinal);
         Assert.DoesNotContain("_refundService.FailRefundAsync(", directController, StringComparison.Ordinal);

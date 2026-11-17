@@ -60,13 +60,17 @@ public sealed partial class SuperAdminFinancialDashboardService
     }
 
     private static bool ShouldUseDailyAggregates(DashboardFilterContext filter) =>
-        !filter.HasVendorFilter && !filter.HasPromoFilter;
+        !filter.HasVendorFilter && !filter.HasPromoFilter &&
+        filter.FromDateUtc.HasValue && filter.ToDateUtc.HasValue &&
+        filter.FromDateUtc.Value == filter.FromDateUtc.Value.Date &&
+        filter.ToDateUtc.Value == filter.ToDateUtc.Value.Date.AddDays(1).AddTicks(-1);
 
     private static SuperAdminFinancialOverviewDto BuildOverviewFromAggregateWindow(
         DashboardFilterContext filter,
         CommerceHubDailyAggregateWindow aggregateWindow,
         DateTime generatedAtUtc,
-        CommerceHubFinanceReconciliationResult reconciliationSnapshot)
+        CommerceHubFinanceReconciliationResult reconciliationSnapshot,
+        int distinctRefundedOrders)
     {
         var projection = ResolveAggregateProjection(aggregateWindow);
         var grossSales = RoundCurrency(aggregateWindow.Rows.Sum(row => projection.SelectGrossSales(row)));
@@ -75,7 +79,7 @@ public sealed partial class SuperAdminFinancialDashboardService
         var refundAmount = RoundCurrency(aggregateWindow.Rows.Sum(row => projection.SelectRefundAmount(row)));
         var refundImpact = RoundCurrency(aggregateWindow.Rows.Sum(row => projection.SelectRefundImpact(row)));
         var orderCount = aggregateWindow.Rows.Sum(row => row.OrdersCount);
-        var refundedOrdersCount = aggregateWindow.Rows.Sum(row => row.RefundedOrdersCount);
+        var refundedOrdersCount = distinctRefundedOrders;
         var netCommission = RoundCurrency(grossCommission - promoCost);
         var netRevenue = RoundCurrency(grossCommission - promoCost - refundImpact);
 
@@ -157,7 +161,8 @@ public sealed partial class SuperAdminFinancialDashboardService
     private static AggregateRefundSnapshot BuildRefundSnapshotFromAggregateWindow(
         DashboardFilterContext filter,
         SuperAdminFinancialTrendGroupBy groupBy,
-        CommerceHubDailyAggregateWindow aggregateWindow)
+        CommerceHubDailyAggregateWindow aggregateWindow,
+        int distinctRefundedOrders)
     {
         var projection = ResolveAggregateProjection(aggregateWindow);
         var buckets = InitializeRefundBuckets(filter, groupBy);
@@ -171,7 +176,7 @@ public sealed partial class SuperAdminFinancialDashboardService
         }
 
         var orderCount = aggregateWindow.Rows.Sum(row => row.OrdersCount);
-        var refundedOrdersCount = aggregateWindow.Rows.Sum(row => row.RefundedOrdersCount);
+        var refundedOrdersCount = distinctRefundedOrders;
 
         return new AggregateRefundSnapshot
         {

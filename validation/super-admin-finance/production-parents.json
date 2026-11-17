@@ -1,0 +1,12 @@
+{
+  "api": {
+    "image": "docker.io/shopixy/api@sha256:cb900c183069f94311142ad9c5a16fa23266611d3c29f674bae64040189ac307",
+    "archive": "api-parent.tar",
+    "archiveSha256": "5be6080efe6ade320ae1af90c34f3146463d492dc9cddc214598247972c48fb8"
+  },
+  "web": {
+    "image": "docker.io/shopixy/web@sha256:627af0b79e1a8bfa4be76691df0f43c938c9b586727d11c2f223e43580c21568",
+    "archive": "web-parent.tar",
+    "archiveSha256": "a8ec196afa3150be3cbec9e2b187a2d304aa7a10ff77a45ab51d264e11d7f595"
+  }
+}

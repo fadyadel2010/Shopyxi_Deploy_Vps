@@ -1,0 +1,1035 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="08cc5683-96d5-4780-b009-c1a47dd039dd" name="fadya@FADYADEL 2026-11-17 01:42:05" runUser="FADYADEL\fadya" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-11-17T01:42:05.1957855+02:00" queuing="2026-11-17T01:42:05.1957869+02:00" start="2026-11-17T01:41:50.3038438+02:00" finish="2026-11-17T01:42:05.4199167+02:00" />
+  <TestSettings name="default" id="f9cfd694-ed8b-4dc1-8882-b0ca3cda246f">
+    <Deployment runDeploymentRoot="fadya_FADYADEL_2026-11-17_01_42_05" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="55eb7d48-b0e6-4101-a7fd-2996106f2804" testId="7a9ee6e1-1425-6f77-1629-43bcf1c6b8b2" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GlobalIntegrity_MustNotDoubleCountPromoAndReversalFlags" computerName="FADYADEL" duration="00:00:00.0010000" startTime="2026-11-17T01:42:05.1563943+02:00" endTime="2026-11-17T01:42:05.1563945+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="55eb7d48-b0e6-4101-a7fd-2996106f2804">
+      <Output>
+        <ErrorInfo>
+          <Message>System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.</Message>
+          <StackTrace>   at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+   at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+   at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+   at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+   at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+   at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+   at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+   at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0() in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+   at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+----- Inner Stack Trace -----&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+   at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 77&#xD;
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+   at System.Lazy`1.CreateValue()&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 212&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 37&#xD;
+   at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs:line 16&#xD;
+   at .cctor()</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="dd645dbd-6107-4a6f-ad8c-9aacab131370" testId="86dc59f5-a610-3539-a22a-b68159b5281e" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetIntegrityCheckAsync_ShouldDetectDuplicatePromoUsageWithoutLedger" computerName="FADYADEL" duration="00:00:00.0010000" startTime="2026-11-17T01:42:05.1806268+02:00" endTime="2026-11-17T01:42:05.1806270+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="dd645dbd-6107-4a6f-ad8c-9aacab131370">
+      <Output>
+        <ErrorInfo>
+          <Message>System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.</Message>
+          <StackTrace>   at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+   at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+   at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+   at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+   at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+   at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+   at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+   at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0() in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+   at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+----- Inner Stack Trace -----&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+   at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 77&#xD;
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+   at System.Lazy`1.CreateValue()&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 212&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 37&#xD;
+   at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs:line 16&#xD;
+   at .cctor()</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="19f3776a-8bff-43ad-a160-1b3b26bfd1d3" testId="9abdfe96-dbb1-d6ec-66a7-b871c3924d6e" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.PartialDayWindow_MustNotUseWholeDayAggregates" computerName="FADYADEL" duration="00:00:00.0010000" startTime="2026-11-17T01:42:05.2145706+02:00" endTime="2026-11-17T01:42:05.2145708+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="19f3776a-8bff-43ad-a160-1b3b26bfd1d3">
+      <Output>
+        <ErrorInfo>
+          <Message>System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.</Message>
+          <StackTrace>   at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+   at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+   at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+   at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+   at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+   at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+   at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+   at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0() in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+   at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+----- Inner Stack Trace -----&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+   at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 77&#xD;
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+   at System.Lazy`1.CreateValue()&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 212&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 37&#xD;
+   at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs:line 16&#xD;
+   at .cctor()</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="62a1eb86-9d5a-4173-a3ba-6e2c6943791e" testId="8fb41836-db44-7e52-8297-7d4e76d748fa" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.EmptyIntegrity_MustIdentifyVacuousCoverage" computerName="FADYADEL" duration="00:00:00.0010000" startTime="2026-11-17T01:42:05.1466947+02:00" endTime="2026-11-17T01:42:05.1466949+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="62a1eb86-9d5a-4173-a3ba-6e2c6943791e">
+      <Output>
+        <ErrorInfo>
+          <Message>System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.</Message>
+          <StackTrace>   at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+   at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+   at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+   at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+   at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+   at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+   at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+   at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0() in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+   at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+----- Inner Stack Trace -----&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+   at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 77&#xD;
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+   at System.Lazy`1.CreateValue()&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 212&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 37&#xD;
+   at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs:line 16&#xD;
+   at .cctor()</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="38aea6c3-75f5-40a5-aec7-dc6778805205" testId="da99393b-0982-6a68-a7fa-cdeaa1734540" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetIntegrityCheckAsync_ShouldNotRequireLedgerForPendingCodSiblingOfPartiallyRefundedOrder" computerName="FADYADEL" duration="00:00:00.0010000" startTime="2026-11-17T01:42:05.1747698+02:00" endTime="2026-11-17T01:42:05.1747699+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="38aea6c3-75f5-40a5-aec7-dc6778805205">
+      <Output>
+        <ErrorInfo>
+          <Message>System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.</Message>
+          <StackTrace>   at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+   at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+   at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+   at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+   at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+   at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+   at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+   at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0() in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+   at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+----- Inner Stack Trace -----&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+   at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 77&#xD;
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+   at System.Lazy`1.CreateValue()&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 212&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 37&#xD;
+   at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs:line 16&#xD;
+   at .cctor()</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="b6545ad3-5ecd-4f95-a508-71bcfaa77dc1" testId="5f9a1b07-aaad-7c9d-9557-d6025a179ea3" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.DuplicatePromoUsage_MustNotMultiplyRecognizedMoney" computerName="FADYADEL" duration="00:00:00.0010000" startTime="2026-11-17T01:42:05.1395888+02:00" endTime="2026-11-17T01:42:05.1395890+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b6545ad3-5ecd-4f95-a508-71bcfaa77dc1">
+      <Output>
+        <ErrorInfo>
+          <Message>System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.</Message>
+          <StackTrace>   at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+   at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+   at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+   at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+   at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+   at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+   at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+   at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0() in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+   at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+----- Inner Stack Trace -----&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+   at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 77&#xD;
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+   at System.Lazy`1.CreateValue()&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 212&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 37&#xD;
+   at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs:line 16&#xD;
+   at .cctor()</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="fc9b5291-7ed0-40bb-80f4-61d1d9e9d349" testId="25f890e6-65d8-d187-60fc-45fdf1552fc9" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetIntegrityCheckAsync_GlobalScope_ShouldKeepLiveCountersAlignedWithSampledIssues" computerName="FADYADEL" duration="00:00:00.0010000" startTime="2026-11-17T01:42:05.1889241+02:00" endTime="2026-11-17T01:42:05.1889243+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fc9b5291-7ed0-40bb-80f4-61d1d9e9d349">
+      <Output>
+        <ErrorInfo>
+          <Message>System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.</Message>
+          <StackTrace>   at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+   at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+   at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+   at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+   at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+   at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+   at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+   at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0() in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+   at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+----- Inner Stack Trace -----&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+   at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 77&#xD;
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+   at System.Lazy`1.CreateValue()&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 212&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 37&#xD;
+   at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs:line 16&#xD;
+   at .cctor()</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="0274378b-02cf-4932-a3ca-fcefdaa73bd1" testId="508a7d4c-86bd-1a88-4bb3-69d617033fb1" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.ZeroCommissionOrder_StillHasFinanciallyRecognizedOrderValue" computerName="FADYADEL" duration="00:00:00.0010000" startTime="2026-11-17T01:42:05.1435952+02:00" endTime="2026-11-17T01:42:05.1435954+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0274378b-02cf-4932-a3ca-fcefdaa73bd1">
+      <Output>
+        <ErrorInfo>
+          <Message>System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.</Message>
+          <StackTrace>   at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+   at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+   at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+   at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+   at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+   at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+   at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+   at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0() in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+   at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+----- Inner Stack Trace -----&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+   at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 77&#xD;
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+   at System.Lazy`1.CreateValue()&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 212&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 37&#xD;
+   at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs:line 16&#xD;
+   at .cctor()</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="fec279b3-8d11-4744-b782-43132512c703" testId="653c85bb-485f-bfc6-6ea7-beafda2391b1" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetOverviewAsync_ShouldApplyPromoCodeFilterCaseInsensitively" computerName="FADYADEL" duration="00:00:00.0010000" startTime="2026-11-17T01:42:05.1836389+02:00" endTime="2026-11-17T01:42:05.1836390+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fec279b3-8d11-4744-b782-43132512c703">
+      <Output>
+        <ErrorInfo>
+          <Message>System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.</Message>
+          <StackTrace>   at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+   at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+   at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+   at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+   at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+   at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+   at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+   at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0() in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+   at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+----- Inner Stack Trace -----&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+   at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 77&#xD;
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+   at System.Lazy`1.CreateValue()&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 212&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 37&#xD;
+   at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs:line 16&#xD;
+   at .cctor()</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="9361c6bf-3ab0-43b1-82ba-392a034567b2" testId="c80f0462-c5e1-fe23-6089-f285a9717ca5" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GlobalIntegrity_MustRespectSnapshotForOrphanEntries" computerName="FADYADEL" duration="00:00:00.0010000" startTime="2026-11-17T01:42:05.1334612+02:00" endTime="2026-11-17T01:42:05.1334614+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9361c6bf-3ab0-43b1-82ba-392a034567b2">
+      <Output>
+        <ErrorInfo>
+          <Message>System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.</Message>
+          <StackTrace>   at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+   at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+   at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+   at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+   at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+   at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+   at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+   at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0() in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+   at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+----- Inner Stack Trace -----&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+   at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 77&#xD;
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+   at System.Lazy`1.CreateValue()&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 212&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 37&#xD;
+   at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs:line 16&#xD;
+   at .cctor()</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="2c879371-c134-49a1-a896-ed447cdfd542" testId="d4f3040e-a915-5a71-7061-01ca4bfde52e" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetPromoAnalyticsAsync_ShouldExcludeUnrecognizedFailedPromoOrders" computerName="FADYADEL" duration="00:00:00.0010000" startTime="2026-11-17T01:42:05.1509629+02:00" endTime="2026-11-17T01:42:05.1509631+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2c879371-c134-49a1-a896-ed447cdfd542">
+      <Output>
+        <ErrorInfo>
+          <Message>System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.</Message>
+          <StackTrace>   at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+   at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+   at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+   at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+   at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+   at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+   at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+   at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0() in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+   at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+----- Inner Stack Trace -----&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+   at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 77&#xD;
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+   at System.Lazy`1.CreateValue()&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 212&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 37&#xD;
+   at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs:line 16&#xD;
+   at .cctor()</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="6f8b583f-59d8-4de2-b22d-b2e6626c081b" testId="a3875726-1996-ce70-c30f-125ac7b6d043" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.RefundOnlyDay_AggregatePromoCostMustMatchSignedLiveLedger" computerName="FADYADEL" duration="00:00:00.0010000" startTime="2026-11-17T01:42:05.1360512+02:00" endTime="2026-11-17T01:42:05.1360513+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6f8b583f-59d8-4de2-b22d-b2e6626c081b">
+      <Output>
+        <ErrorInfo>
+          <Message>System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.</Message>
+          <StackTrace>   at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+   at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+   at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+   at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+   at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+   at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+   at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+   at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0() in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+   at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+----- Inner Stack Trace -----&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+   at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 77&#xD;
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+   at System.Lazy`1.CreateValue()&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 212&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 37&#xD;
+   at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs:line 16&#xD;
+   at .cctor()</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="4c0dab86-4f29-4bf3-9842-b93f427a1a49" testId="59b9aea7-fec9-f61c-1f40-d1c69d7007fe" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetIntegrityCheckAsync_ShouldDetectScopedFinancialInconsistencies" computerName="FADYADEL" duration="00:00:00.0010000" startTime="2026-11-17T01:42:05.1285914+02:00" endTime="2026-11-17T01:42:05.1285916+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4c0dab86-4f29-4bf3-9842-b93f427a1a49">
+      <Output>
+        <ErrorInfo>
+          <Message>System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.</Message>
+          <StackTrace>   at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+   at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+   at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+   at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+   at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+   at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+   at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+   at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0() in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+   at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+----- Inner Stack Trace -----&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+   at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 77&#xD;
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+   at System.Lazy`1.CreateValue()&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 212&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 37&#xD;
+   at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs:line 16&#xD;
+   at .cctor()</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="c911226a-b3d0-4686-883a-69c304305d25" testId="06c18a3f-6d87-3f10-fc13-73f291a662bd" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetOverviewAsync_ShouldUseDailyAggregatesWhenFreshAndUnfiltered" computerName="FADYADEL" duration="00:00:00.0010000" startTime="2026-11-17T01:42:05.1200013+02:00" endTime="2026-11-17T01:42:05.1200604+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c911226a-b3d0-4686-883a-69c304305d25">
+      <Output>
+        <ErrorInfo>
+          <Message>System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.</Message>
+          <StackTrace>   at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+   at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+   at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+   at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+   at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+   at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+   at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+   at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0() in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+   at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+----- Inner Stack Trace -----&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+   at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 77&#xD;
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+   at System.Lazy`1.CreateValue()&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 212&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 37&#xD;
+   at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs:line 16&#xD;
+   at .cctor()</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="58a98403-e830-4e73-84c4-b6a980e967b7" testId="8b2b090f-1fad-08c1-a7ae-da102047b668" testName="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.DashboardQueries_ShouldReconcileOverviewTrendsPromosVendorsAndRefunds" computerName="FADYADEL" duration="00:00:00.0010000" startTime="2026-11-17T01:42:05.1775983+02:00" endTime="2026-11-17T01:42:05.1775985+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="58a98403-e830-4e73-84c4-b6a980e967b7">
+      <Output>
+        <ErrorInfo>
+          <Message>System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.</Message>
+          <StackTrace>   at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+   at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+   at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+   at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+   at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+   at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+   at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+   at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0() in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+   at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 42&#xD;
+----- Inner Stack Trace -----&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+   at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 77&#xD;
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+   at System.Lazy`1.CreateValue()&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path) in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 212&#xD;
+   at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs:line 37&#xD;
+   at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize() in C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs:line 16&#xD;
+   at .cctor()</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GlobalIntegrity_MustRespectSnapshotForOrphanEntries" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="c80f0462-c5e1-fe23-6089-f285a9717ca5">
+      <Execution id="9361c6bf-3ab0-43b1-82ba-392a034567b2" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="GlobalIntegrity_MustRespectSnapshotForOrphanEntries" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.PartialDayWindow_MustNotUseWholeDayAggregates" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="9abdfe96-dbb1-d6ec-66a7-b871c3924d6e">
+      <Execution id="19f3776a-8bff-43ad-a160-1b3b26bfd1d3" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="PartialDayWindow_MustNotUseWholeDayAggregates" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetOverviewAsync_ShouldApplyPromoCodeFilterCaseInsensitively" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="653c85bb-485f-bfc6-6ea7-beafda2391b1">
+      <Execution id="fec279b3-8d11-4744-b782-43132512c703" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="GetOverviewAsync_ShouldApplyPromoCodeFilterCaseInsensitively" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.EmptyIntegrity_MustIdentifyVacuousCoverage" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="8fb41836-db44-7e52-8297-7d4e76d748fa">
+      <Execution id="62a1eb86-9d5a-4173-a3ba-6e2c6943791e" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="EmptyIntegrity_MustIdentifyVacuousCoverage" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.DashboardQueries_ShouldReconcileOverviewTrendsPromosVendorsAndRefunds" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="8b2b090f-1fad-08c1-a7ae-da102047b668">
+      <Execution id="58a98403-e830-4e73-84c4-b6a980e967b7" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="DashboardQueries_ShouldReconcileOverviewTrendsPromosVendorsAndRefunds" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GlobalIntegrity_MustNotDoubleCountPromoAndReversalFlags" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="7a9ee6e1-1425-6f77-1629-43bcf1c6b8b2">
+      <Execution id="55eb7d48-b0e6-4101-a7fd-2996106f2804" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="GlobalIntegrity_MustNotDoubleCountPromoAndReversalFlags" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetOverviewAsync_ShouldUseDailyAggregatesWhenFreshAndUnfiltered" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="06c18a3f-6d87-3f10-fc13-73f291a662bd">
+      <Execution id="c911226a-b3d0-4686-883a-69c304305d25" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="GetOverviewAsync_ShouldUseDailyAggregatesWhenFreshAndUnfiltered" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.DuplicatePromoUsage_MustNotMultiplyRecognizedMoney" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="5f9a1b07-aaad-7c9d-9557-d6025a179ea3">
+      <Execution id="b6545ad3-5ecd-4f95-a508-71bcfaa77dc1" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="DuplicatePromoUsage_MustNotMultiplyRecognizedMoney" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetIntegrityCheckAsync_ShouldDetectDuplicatePromoUsageWithoutLedger" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="86dc59f5-a610-3539-a22a-b68159b5281e">
+      <Execution id="dd645dbd-6107-4a6f-ad8c-9aacab131370" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="GetIntegrityCheckAsync_ShouldDetectDuplicatePromoUsageWithoutLedger" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetPromoAnalyticsAsync_ShouldExcludeUnrecognizedFailedPromoOrders" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="d4f3040e-a915-5a71-7061-01ca4bfde52e">
+      <Execution id="2c879371-c134-49a1-a896-ed447cdfd542" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="GetPromoAnalyticsAsync_ShouldExcludeUnrecognizedFailedPromoOrders" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.RefundOnlyDay_AggregatePromoCostMustMatchSignedLiveLedger" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="a3875726-1996-ce70-c30f-125ac7b6d043">
+      <Execution id="6f8b583f-59d8-4de2-b22d-b2e6626c081b" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="RefundOnlyDay_AggregatePromoCostMustMatchSignedLiveLedger" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetIntegrityCheckAsync_GlobalScope_ShouldKeepLiveCountersAlignedWithSampledIssues" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="25f890e6-65d8-d187-60fc-45fdf1552fc9">
+      <Execution id="fc9b5291-7ed0-40bb-80f4-61d1d9e9d349" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="GetIntegrityCheckAsync_GlobalScope_ShouldKeepLiveCountersAlignedWithSampledIssues" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.ZeroCommissionOrder_StillHasFinanciallyRecognizedOrderValue" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="508a7d4c-86bd-1a88-4bb3-69d617033fb1">
+      <Execution id="0274378b-02cf-4932-a3ca-fcefdaa73bd1" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="ZeroCommissionOrder_StillHasFinanciallyRecognizedOrderValue" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetIntegrityCheckAsync_ShouldDetectScopedFinancialInconsistencies" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="59b9aea7-fec9-f61c-1f40-d1c69d7007fe">
+      <Execution id="4c0dab86-4f29-4bf3-9842-b93f427a1a49" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="GetIntegrityCheckAsync_ShouldDetectScopedFinancialInconsistencies" />
+    </UnitTest>
+    <UnitTest name="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetIntegrityCheckAsync_ShouldNotRequireLedgerForPendingCodSiblingOfPartiallyRefundedOrder" storage="c:\users\fadya\appdata\local\temp\opencode\shopixy-affiliate-analytics-20261115\source\pointofsale.tests\bin\debug\net10.0\pointofsale.tests.dll" id="da99393b-0982-6a68-a7fa-cdeaa1734540">
+      <Execution id="38aea6c3-75f5-40a5-aec7-dc6778805205" />
+      <TestMethod codeBase="C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests" name="GetIntegrityCheckAsync_ShouldNotRequireLedgerForPendingCodSiblingOfPartiallyRefundedOrder" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="7a9ee6e1-1425-6f77-1629-43bcf1c6b8b2" executionId="55eb7d48-b0e6-4101-a7fd-2996106f2804" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="86dc59f5-a610-3539-a22a-b68159b5281e" executionId="dd645dbd-6107-4a6f-ad8c-9aacab131370" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9abdfe96-dbb1-d6ec-66a7-b871c3924d6e" executionId="19f3776a-8bff-43ad-a160-1b3b26bfd1d3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8fb41836-db44-7e52-8297-7d4e76d748fa" executionId="62a1eb86-9d5a-4173-a3ba-6e2c6943791e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="da99393b-0982-6a68-a7fa-cdeaa1734540" executionId="38aea6c3-75f5-40a5-aec7-dc6778805205" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5f9a1b07-aaad-7c9d-9557-d6025a179ea3" executionId="b6545ad3-5ecd-4f95-a508-71bcfaa77dc1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="25f890e6-65d8-d187-60fc-45fdf1552fc9" executionId="fc9b5291-7ed0-40bb-80f4-61d1d9e9d349" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="508a7d4c-86bd-1a88-4bb3-69d617033fb1" executionId="0274378b-02cf-4932-a3ca-fcefdaa73bd1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="653c85bb-485f-bfc6-6ea7-beafda2391b1" executionId="fec279b3-8d11-4744-b782-43132512c703" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c80f0462-c5e1-fe23-6089-f285a9717ca5" executionId="9361c6bf-3ab0-43b1-82ba-392a034567b2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d4f3040e-a915-5a71-7061-01ca4bfde52e" executionId="2c879371-c134-49a1-a896-ed447cdfd542" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a3875726-1996-ce70-c30f-125ac7b6d043" executionId="6f8b583f-59d8-4de2-b22d-b2e6626c081b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="59b9aea7-fec9-f61c-1f40-d1c69d7007fe" executionId="4c0dab86-4f29-4bf3-9842-b93f427a1a49" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="06c18a3f-6d87-3f10-fc13-73f291a662bd" executionId="c911226a-b3d0-4686-883a-69c304305d25" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8b2b090f-1fad-08c1-a7ae-da102047b668" executionId="58a98403-e830-4e73-84c4-b6a980e967b7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="15" executed="15" passed="0" failed="15" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 10.0.15)&#xD;
+[xUnit.net 00:00:10.90]   Discovering: PointOfSale.Tests&#xD;
+[xUnit.net 00:00:13.28]   Discovered:  PointOfSale.Tests&#xD;
+[xUnit.net 00:00:13.34]   Starting:    PointOfSale.Tests&#xD;
+[xUnit.net 00:00:13.43]       System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+[xUnit.net 00:00:13.43]       ---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.&#xD;
+[xUnit.net 00:00:13.43]       Stack Trace:&#xD;
+[xUnit.net 00:00:13.43]            at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+[xUnit.net 00:00:13.43]            at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+[xUnit.net 00:00:13.43]            at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.43]            at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.43]            at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+[xUnit.net 00:00:13.43]            at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+[xUnit.net 00:00:13.43]            at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+[xUnit.net 00:00:13.43]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0()&#xD;
+[xUnit.net 00:00:13.43]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)&#xD;
+[xUnit.net 00:00:13.43]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:13.43]            at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+[xUnit.net 00:00:13.43]            at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.43]            at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.43]            at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.44]            at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+[xUnit.net 00:00:13.44]            at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+[xUnit.net 00:00:13.44]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(77,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings()&#xD;
+[xUnit.net 00:00:13.44]            at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+[xUnit.net 00:00:13.44]            at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+[xUnit.net 00:00:13.44]            at System.Lazy`1.CreateValue()&#xD;
+[xUnit.net 00:00:13.44]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(212,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path)&#xD;
+[xUnit.net 00:00:13.44]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(37,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot()&#xD;
+[xUnit.net 00:00:13.44]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs(16,0): at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize()&#xD;
+[xUnit.net 00:00:13.44]            at .cctor()&#xD;
+[xUnit.net 00:00:13.44]       System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+[xUnit.net 00:00:13.44]       ---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.&#xD;
+[xUnit.net 00:00:13.45]       Stack Trace:&#xD;
+[xUnit.net 00:00:13.45]            at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+[xUnit.net 00:00:13.45]            at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+[xUnit.net 00:00:13.45]            at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.45]            at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.45]            at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+[xUnit.net 00:00:13.45]            at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+[xUnit.net 00:00:13.45]            at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+[xUnit.net 00:00:13.45]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0()&#xD;
+[xUnit.net 00:00:13.45]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)&#xD;
+[xUnit.net 00:00:13.45]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:13.45]            at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+[xUnit.net 00:00:13.45]            at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.45]            at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.45]            at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.45]            at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+[xUnit.net 00:00:13.45]            at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+[xUnit.net 00:00:13.45]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(77,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings()&#xD;
+[xUnit.net 00:00:13.45]            at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+[xUnit.net 00:00:13.45]            at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+[xUnit.net 00:00:13.45]            at System.Lazy`1.CreateValue()&#xD;
+[xUnit.net 00:00:13.45]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(212,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path)&#xD;
+[xUnit.net 00:00:13.45]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(37,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot()&#xD;
+[xUnit.net 00:00:13.45]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs(16,0): at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize()&#xD;
+[xUnit.net 00:00:13.45]            at .cctor()&#xD;
+[xUnit.net 00:00:13.45]       System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+[xUnit.net 00:00:13.45]       ---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.&#xD;
+[xUnit.net 00:00:13.45]       Stack Trace:&#xD;
+[xUnit.net 00:00:13.45]            at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+[xUnit.net 00:00:13.45]            at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+[xUnit.net 00:00:13.45]            at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.45]            at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.45]            at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+[xUnit.net 00:00:13.45]            at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+[xUnit.net 00:00:13.45]            at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+[xUnit.net 00:00:13.45]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0()&#xD;
+[xUnit.net 00:00:13.45]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)&#xD;
+[xUnit.net 00:00:13.45]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:13.45]            at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+[xUnit.net 00:00:13.45]            at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.45]            at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.45]            at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.45]            at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+[xUnit.net 00:00:13.45]            at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+[xUnit.net 00:00:13.45]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(77,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings()&#xD;
+[xUnit.net 00:00:13.45]            at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+[xUnit.net 00:00:13.45]            at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+[xUnit.net 00:00:13.45]            at System.Lazy`1.CreateValue()&#xD;
+[xUnit.net 00:00:13.45]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(212,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path)&#xD;
+[xUnit.net 00:00:13.45]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(37,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot()&#xD;
+[xUnit.net 00:00:13.45]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs(16,0): at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize()&#xD;
+[xUnit.net 00:00:13.45]            at .cctor()&#xD;
+[xUnit.net 00:00:13.45]       System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+[xUnit.net 00:00:13.45]       ---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.&#xD;
+[xUnit.net 00:00:13.45]       Stack Trace:&#xD;
+[xUnit.net 00:00:13.45]            at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+[xUnit.net 00:00:13.45]            at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+[xUnit.net 00:00:13.45]            at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.45]            at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.45]            at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+[xUnit.net 00:00:13.45]            at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+[xUnit.net 00:00:13.45]            at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+[xUnit.net 00:00:13.45]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0()&#xD;
+[xUnit.net 00:00:13.45]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)&#xD;
+[xUnit.net 00:00:13.45]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:13.45]            at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+[xUnit.net 00:00:13.45]            at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.45]            at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.45]            at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.45]            at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+[xUnit.net 00:00:13.45]            at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+[xUnit.net 00:00:13.45]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(77,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings()&#xD;
+[xUnit.net 00:00:13.45]            at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+[xUnit.net 00:00:13.45]            at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+[xUnit.net 00:00:13.45]            at System.Lazy`1.CreateValue()&#xD;
+[xUnit.net 00:00:13.45]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(212,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path)&#xD;
+[xUnit.net 00:00:13.45]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(37,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot()&#xD;
+[xUnit.net 00:00:13.45]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs(16,0): at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize()&#xD;
+[xUnit.net 00:00:13.45]            at .cctor()&#xD;
+[xUnit.net 00:00:13.45]       System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+[xUnit.net 00:00:13.46]       ---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.&#xD;
+[xUnit.net 00:00:13.46]       Stack Trace:&#xD;
+[xUnit.net 00:00:13.46]            at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+[xUnit.net 00:00:13.46]            at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+[xUnit.net 00:00:13.46]            at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.46]            at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.46]            at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+[xUnit.net 00:00:13.46]            at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+[xUnit.net 00:00:13.46]            at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+[xUnit.net 00:00:13.46]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0()&#xD;
+[xUnit.net 00:00:13.46]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)&#xD;
+[xUnit.net 00:00:13.46]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:13.46]            at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+[xUnit.net 00:00:13.46]            at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.46]            at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.46]            at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.46]            at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+[xUnit.net 00:00:13.46]            at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+[xUnit.net 00:00:13.46]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(77,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings()&#xD;
+[xUnit.net 00:00:13.46]            at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+[xUnit.net 00:00:13.46]            at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+[xUnit.net 00:00:13.46]            at System.Lazy`1.CreateValue()&#xD;
+[xUnit.net 00:00:13.46]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(212,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path)&#xD;
+[xUnit.net 00:00:13.46]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(37,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot()&#xD;
+[xUnit.net 00:00:13.46]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs(16,0): at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize()&#xD;
+[xUnit.net 00:00:13.46]            at .cctor()&#xD;
+[xUnit.net 00:00:13.46]       System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+[xUnit.net 00:00:13.46]       ---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.&#xD;
+[xUnit.net 00:00:13.46]       Stack Trace:&#xD;
+[xUnit.net 00:00:13.46]            at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+[xUnit.net 00:00:13.46]            at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+[xUnit.net 00:00:13.46]            at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.46]            at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.46]            at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+[xUnit.net 00:00:13.46]            at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+[xUnit.net 00:00:13.46]            at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+[xUnit.net 00:00:13.46]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0()&#xD;
+[xUnit.net 00:00:13.46]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)&#xD;
+[xUnit.net 00:00:13.46]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:13.46]            at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+[xUnit.net 00:00:13.46]            at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.46]            at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.46]            at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.46]            at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+[xUnit.net 00:00:13.46]            at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+[xUnit.net 00:00:13.46]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(77,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings()&#xD;
+[xUnit.net 00:00:13.46]            at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+[xUnit.net 00:00:13.46]            at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+[xUnit.net 00:00:13.46]            at System.Lazy`1.CreateValue()&#xD;
+[xUnit.net 00:00:13.46]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(212,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path)&#xD;
+[xUnit.net 00:00:13.46]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(37,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot()&#xD;
+[xUnit.net 00:00:13.46]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs(16,0): at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize()&#xD;
+[xUnit.net 00:00:13.46]            at .cctor()&#xD;
+[xUnit.net 00:00:13.46]       System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+[xUnit.net 00:00:13.46]       ---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.&#xD;
+[xUnit.net 00:00:13.46]       Stack Trace:&#xD;
+[xUnit.net 00:00:13.46]            at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+[xUnit.net 00:00:13.46]            at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+[xUnit.net 00:00:13.46]            at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.46]            at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.46]            at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+[xUnit.net 00:00:13.46]            at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+[xUnit.net 00:00:13.46]            at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+[xUnit.net 00:00:13.46]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0()&#xD;
+[xUnit.net 00:00:13.46]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)&#xD;
+[xUnit.net 00:00:13.46]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:13.46]            at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+[xUnit.net 00:00:13.46]            at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.46]            at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.46]            at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.46]            at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+[xUnit.net 00:00:13.46]            at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+[xUnit.net 00:00:13.46]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(77,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings()&#xD;
+[xUnit.net 00:00:13.46]            at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+[xUnit.net 00:00:13.46]            at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+[xUnit.net 00:00:13.46]            at System.Lazy`1.CreateValue()&#xD;
+[xUnit.net 00:00:13.46]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(212,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path)&#xD;
+[xUnit.net 00:00:13.46]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(37,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot()&#xD;
+[xUnit.net 00:00:13.46]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs(16,0): at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize()&#xD;
+[xUnit.net 00:00:13.46]            at .cctor()&#xD;
+[xUnit.net 00:00:13.47]       System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+[xUnit.net 00:00:13.47]       ---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.&#xD;
+[xUnit.net 00:00:13.47]       Stack Trace:&#xD;
+[xUnit.net 00:00:13.47]            at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+[xUnit.net 00:00:13.47]            at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+[xUnit.net 00:00:13.47]            at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.47]            at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.47]            at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+[xUnit.net 00:00:13.47]            at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+[xUnit.net 00:00:13.47]            at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+[xUnit.net 00:00:13.47]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0()&#xD;
+[xUnit.net 00:00:13.47]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)&#xD;
+[xUnit.net 00:00:13.47]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:13.47]            at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+[xUnit.net 00:00:13.47]            at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.47]            at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.47]            at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.47]            at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+[xUnit.net 00:00:13.47]            at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+[xUnit.net 00:00:13.47]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(77,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings()&#xD;
+[xUnit.net 00:00:13.47]            at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+[xUnit.net 00:00:13.47]            at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+[xUnit.net 00:00:13.47]            at System.Lazy`1.CreateValue()&#xD;
+[xUnit.net 00:00:13.47]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(212,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path)&#xD;
+[xUnit.net 00:00:13.47]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(37,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot()&#xD;
+[xUnit.net 00:00:13.47]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs(16,0): at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize()&#xD;
+[xUnit.net 00:00:13.47]            at .cctor()&#xD;
+[xUnit.net 00:00:13.47]       System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+[xUnit.net 00:00:13.47]       ---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.&#xD;
+[xUnit.net 00:00:13.47]       Stack Trace:&#xD;
+[xUnit.net 00:00:13.47]            at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+[xUnit.net 00:00:13.47]            at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+[xUnit.net 00:00:13.47]            at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.47]            at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.47]            at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+[xUnit.net 00:00:13.47]            at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+[xUnit.net 00:00:13.47]            at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+[xUnit.net 00:00:13.47]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0()&#xD;
+[xUnit.net 00:00:13.47]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)&#xD;
+[xUnit.net 00:00:13.47]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:13.47]            at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+[xUnit.net 00:00:13.47]            at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.47]            at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.47]            at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.47]            at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+[xUnit.net 00:00:13.47]            at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+[xUnit.net 00:00:13.47]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(77,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings()&#xD;
+[xUnit.net 00:00:13.47]            at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+[xUnit.net 00:00:13.47]            at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+[xUnit.net 00:00:13.47]            at System.Lazy`1.CreateValue()&#xD;
+[xUnit.net 00:00:13.47]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(212,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path)&#xD;
+[xUnit.net 00:00:13.47]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(37,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot()&#xD;
+[xUnit.net 00:00:13.47]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs(16,0): at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize()&#xD;
+[xUnit.net 00:00:13.47]            at .cctor()&#xD;
+[xUnit.net 00:00:13.49]       System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+[xUnit.net 00:00:13.49]       ---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.&#xD;
+[xUnit.net 00:00:13.49]       Stack Trace:&#xD;
+[xUnit.net 00:00:13.49]            at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+[xUnit.net 00:00:13.49]            at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+[xUnit.net 00:00:13.49]            at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.49]            at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.49]            at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+[xUnit.net 00:00:13.49]            at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+[xUnit.net 00:00:13.49]            at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+[xUnit.net 00:00:13.49]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0()&#xD;
+[xUnit.net 00:00:13.49]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)&#xD;
+[xUnit.net 00:00:13.49]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:13.49]            at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+[xUnit.net 00:00:13.49]            at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.49]            at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.49]            at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.49]            at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+[xUnit.net 00:00:13.49]            at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+[xUnit.net 00:00:13.49]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(77,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings()&#xD;
+[xUnit.net 00:00:13.49]            at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+[xUnit.net 00:00:13.49]            at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+[xUnit.net 00:00:13.49]            at System.Lazy`1.CreateValue()&#xD;
+[xUnit.net 00:00:13.49]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(212,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path)&#xD;
+[xUnit.net 00:00:13.49]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(37,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot()&#xD;
+[xUnit.net 00:00:13.49]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs(16,0): at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize()&#xD;
+[xUnit.net 00:00:13.49]            at .cctor()&#xD;
+[xUnit.net 00:00:13.49]       System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+[xUnit.net 00:00:13.49]       ---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.&#xD;
+[xUnit.net 00:00:13.49]       Stack Trace:&#xD;
+[xUnit.net 00:00:13.49]            at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+[xUnit.net 00:00:13.49]            at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+[xUnit.net 00:00:13.49]            at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.49]            at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.49]            at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+[xUnit.net 00:00:13.49]            at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+[xUnit.net 00:00:13.49]            at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+[xUnit.net 00:00:13.49]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0()&#xD;
+[xUnit.net 00:00:13.49]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)&#xD;
+[xUnit.net 00:00:13.49]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:13.49]            at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+[xUnit.net 00:00:13.49]            at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.49]            at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.49]            at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.49]            at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+[xUnit.net 00:00:13.49]            at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+[xUnit.net 00:00:13.50]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(77,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings()&#xD;
+[xUnit.net 00:00:13.50]            at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+[xUnit.net 00:00:13.50]            at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+[xUnit.net 00:00:13.50]            at System.Lazy`1.CreateValue()&#xD;
+[xUnit.net 00:00:13.50]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(212,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path)&#xD;
+[xUnit.net 00:00:13.50]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(37,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot()&#xD;
+[xUnit.net 00:00:13.50]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs(16,0): at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize()&#xD;
+[xUnit.net 00:00:13.50]            at .cctor()&#xD;
+[xUnit.net 00:00:13.50]       System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+[xUnit.net 00:00:13.50]       ---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.&#xD;
+[xUnit.net 00:00:13.50]       Stack Trace:&#xD;
+[xUnit.net 00:00:13.50]            at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+[xUnit.net 00:00:13.50]            at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+[xUnit.net 00:00:13.50]            at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.50]            at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.50]            at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+[xUnit.net 00:00:13.50]            at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+[xUnit.net 00:00:13.50]            at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+[xUnit.net 00:00:13.50]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0()&#xD;
+[xUnit.net 00:00:13.50]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)&#xD;
+[xUnit.net 00:00:13.50]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:13.50]            at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+[xUnit.net 00:00:13.50]            at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.50]            at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.50]            at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.50]            at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+[xUnit.net 00:00:13.50]            at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+[xUnit.net 00:00:13.50]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(77,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings()&#xD;
+[xUnit.net 00:00:13.50]            at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+[xUnit.net 00:00:13.50]            at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+[xUnit.net 00:00:13.50]            at System.Lazy`1.CreateValue()&#xD;
+[xUnit.net 00:00:13.50]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(212,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path)&#xD;
+[xUnit.net 00:00:13.50]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(37,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot()&#xD;
+[xUnit.net 00:00:13.50]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs(16,0): at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize()&#xD;
+[xUnit.net 00:00:13.50]            at .cctor()&#xD;
+[xUnit.net 00:00:13.50]       System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+[xUnit.net 00:00:13.50]       ---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.&#xD;
+[xUnit.net 00:00:13.50]       Stack Trace:&#xD;
+[xUnit.net 00:00:13.50]            at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+[xUnit.net 00:00:13.50]            at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+[xUnit.net 00:00:13.50]            at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.50]            at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.50]            at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+[xUnit.net 00:00:13.50]            at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+[xUnit.net 00:00:13.50]            at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+[xUnit.net 00:00:13.50]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0()&#xD;
+[xUnit.net 00:00:13.50]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)&#xD;
+[xUnit.net 00:00:13.50]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:13.50]            at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+[xUnit.net 00:00:13.50]            at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.50]            at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.50]            at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.50]            at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+[xUnit.net 00:00:13.50]            at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+[xUnit.net 00:00:13.50]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(77,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings()&#xD;
+[xUnit.net 00:00:13.50]            at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+[xUnit.net 00:00:13.50]            at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+[xUnit.net 00:00:13.50]            at System.Lazy`1.CreateValue()&#xD;
+[xUnit.net 00:00:13.50]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(212,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path)&#xD;
+[xUnit.net 00:00:13.50]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(37,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot()&#xD;
+[xUnit.net 00:00:13.50]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs(16,0): at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize()&#xD;
+[xUnit.net 00:00:13.50]            at .cctor()&#xD;
+[xUnit.net 00:00:13.50]       System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+[xUnit.net 00:00:13.50]       ---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.&#xD;
+[xUnit.net 00:00:13.50]       Stack Trace:&#xD;
+[xUnit.net 00:00:13.50]            at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+[xUnit.net 00:00:13.50]            at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+[xUnit.net 00:00:13.50]            at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.50]            at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.50]            at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+[xUnit.net 00:00:13.50]            at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+[xUnit.net 00:00:13.50]            at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+[xUnit.net 00:00:13.50]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0()&#xD;
+[xUnit.net 00:00:13.50]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)&#xD;
+[xUnit.net 00:00:13.50]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:13.50]            at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+[xUnit.net 00:00:13.50]            at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.50]            at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.50]            at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.50]            at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+[xUnit.net 00:00:13.50]            at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+[xUnit.net 00:00:13.50]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(77,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings()&#xD;
+[xUnit.net 00:00:13.51]            at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+[xUnit.net 00:00:13.51]            at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+[xUnit.net 00:00:13.51]            at System.Lazy`1.CreateValue()&#xD;
+[xUnit.net 00:00:13.51]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(212,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path)&#xD;
+[xUnit.net 00:00:13.51]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(37,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot()&#xD;
+[xUnit.net 00:00:13.51]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs(16,0): at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize()&#xD;
+[xUnit.net 00:00:13.51]            at .cctor()&#xD;
+[xUnit.net 00:00:13.51]       System.TypeInitializationException : The type initializer for '&lt;Module&gt;' threw an exception.&#xD;
+[xUnit.net 00:00:13.51]       ---- System.IO.FileNotFoundException : Could not find file 'C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.API\appsettings.Test.json'.&#xD;
+[xUnit.net 00:00:13.53]       Stack Trace:&#xD;
+[xUnit.net 00:00:13.53]            at System.RuntimeTypeHandle.GetActivationInfo(RuntimeType rt, &amp; pfnAllocator, Void*&amp; vAllocatorFirstArg, &amp; pfnRefCtor, &amp; pfnValueCtor, Boolean&amp; ctorIsPublic)&#xD;
+[xUnit.net 00:00:13.53]            at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)&#xD;
+[xUnit.net 00:00:13.53]            at System.RuntimeType.ActivatorCache.Create(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.53]            at System.RuntimeType.IGenericCacheEntry`1.CreateAndCache(RuntimeType type)&#xD;
+[xUnit.net 00:00:13.53]            at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)&#xD;
+[xUnit.net 00:00:13.53]            at System.RuntimeType.CreateInstanceImpl(BindingFlags bindingAttr, Binder binder, Object[] args, CultureInfo culture)&#xD;
+[xUnit.net 00:00:13.53]            at System.Activator.CreateInstance(Type type, Object[] args)&#xD;
+[xUnit.net 00:00:13.53]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.&lt;&gt;c__DisplayClass0_0.&lt;CreateTestClass&gt;b__0()&#xD;
+[xUnit.net 00:00:13.53]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(42,0): at ReflectionAbstractionExtensions.CreateTestClass(ITest test, Type testClassType, Object[] constructorArguments, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)&#xD;
+[xUnit.net 00:00:13.53]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:13.53]            at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+[xUnit.net 00:00:13.53]            at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.53]            at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.53]            at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:13.53]            at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Int32 bufferSize)&#xD;
+[xUnit.net 00:00:13.53]            at System.IO.File.ReadAllText(String path, Encoding encoding)&#xD;
+[xUnit.net 00:00:13.53]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(77,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.LoadSettings()&#xD;
+[xUnit.net 00:00:13.53]            at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)&#xD;
+[xUnit.net 00:00:13.53]            at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)&#xD;
+[xUnit.net 00:00:13.53]            at System.Lazy`1.CreateValue()&#xD;
+[xUnit.net 00:00:13.53]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(212,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.TryGetJsonString(String[] path)&#xD;
+[xUnit.net 00:00:13.53]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestConfiguration.cs(37,0): at PointOfSale.Tests.Infrastructure.TestConfiguration.GetSharedTempRoot()&#xD;
+[xUnit.net 00:00:13.53]         C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\Infrastructure\TestEnvironmentBootstrap.cs(16,0): at PointOfSale.Tests.Infrastructure.TestEnvironmentBootstrap.Initialize()&#xD;
+[xUnit.net 00:00:13.53]            at .cctor()&#xD;
+[xUnit.net 00:00:13.54]   Finished:    PointOfSale.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T01:42:05.1127755+02:00">
+        <Text>[xUnit.net 00:00:13.43]     PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetOverviewAsync_ShouldUseDailyAggregatesWhenFreshAndUnfiltered [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T01:42:05.1271137+02:00">
+        <Text>[xUnit.net 00:00:13.44]     PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetIntegrityCheckAsync_ShouldDetectScopedFinancialInconsistencies [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T01:42:05.1324111+02:00">
+        <Text>[xUnit.net 00:00:13.45]     PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GlobalIntegrity_MustRespectSnapshotForOrphanEntries [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T01:42:05.1345211+02:00">
+        <Text>[xUnit.net 00:00:13.45]     PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.RefundOnlyDay_AggregatePromoCostMustMatchSignedLiveLedger [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T01:42:05.1371528+02:00">
+        <Text>[xUnit.net 00:00:13.45]     PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.DuplicatePromoUsage_MustNotMultiplyRecognizedMoney [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T01:42:05.1412075+02:00">
+        <Text>[xUnit.net 00:00:13.46]     PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.ZeroCommissionOrder_StillHasFinanciallyRecognizedOrderValue [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T01:42:05.1446518+02:00">
+        <Text>[xUnit.net 00:00:13.46]     PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.EmptyIntegrity_MustIdentifyVacuousCoverage [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T01:42:05.1478597+02:00">
+        <Text>[xUnit.net 00:00:13.47]     PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetPromoAnalyticsAsync_ShouldExcludeUnrecognizedFailedPromoOrders [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T01:42:05.1518827+02:00">
+        <Text>[xUnit.net 00:00:13.47]     PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GlobalIntegrity_MustNotDoubleCountPromoAndReversalFlags [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T01:42:05.4114422+02:00">
+        <Text>[xUnit.net 00:00:13.49]     PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetIntegrityCheckAsync_ShouldNotRequireLedgerForPendingCodSiblingOfPartiallyRefundedOrder [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T01:42:05.4116273+02:00">
+        <Text>[xUnit.net 00:00:13.49]     PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.DashboardQueries_ShouldReconcileOverviewTrendsPromosVendorsAndRefunds [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T01:42:05.4118081+02:00">
+        <Text>[xUnit.net 00:00:13.50]     PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetIntegrityCheckAsync_ShouldDetectDuplicatePromoUsageWithoutLedger [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T01:42:05.4119792+02:00">
+        <Text>[xUnit.net 00:00:13.50]     PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetOverviewAsync_ShouldApplyPromoCodeFilterCaseInsensitively [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T01:42:05.4121699+02:00">
+        <Text>[xUnit.net 00:00:13.50]     PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.GetIntegrityCheckAsync_GlobalScope_ShouldKeepLiveCountersAlignedWithSampledIssues [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="FADYADEL" outcome="Error" timestamp="2026-11-17T01:42:05.4123361+02:00">
+        <Text>[xUnit.net 00:00:13.51]     PointOfSale.Tests.SuperAdmin.SuperAdminFinancialDashboardServiceTests.PartialDayWindow_MustNotUseWholeDayAggregates [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>
