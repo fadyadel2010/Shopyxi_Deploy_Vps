@@ -30,10 +30,11 @@ def image_manifest(archive):
             body = blob(manifest)
         return manifest["digest"], body["config"]["digest"]
 
-dirty = run("git", "status", "--porcelain", "--untracked-files=no")
+git = "/mnt/c/Program Files/Git/cmd/git.exe"
+dirty = run(git, "status", "--porcelain", "--untracked-files=no")
 if dirty:
     raise RuntimeError("Commit validated tracked source before release build.")
-revision = run("git", "rev-parse", "HEAD")
+revision = run(git, "rev-parse", "HEAD")
 parents = json.loads((source / "validation/super-admin-finance/production-parents.json").read_text())
 receipt = {"sourceCommit": revision, "delivery": "SSH_OCI_ARCHIVE_TO_K3S_CONTAINERD", "components": {}}
 for component in ("api", "web"):
