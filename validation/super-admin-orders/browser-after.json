@@ -1,0 +1,490 @@
+{
+  "capturedAtUtc": "2026-11-17T19:51:57.881Z",
+  "actualHeadedBrowser": true,
+  "credentialsReadOrInjected": false,
+  "sourcePhase": "after",
+  "expectedBundle": "index-BiaZNAT9.js",
+  "loadedBundles": [
+    "/assets/index-BiaZNAT9.js"
+  ],
+  "baseline": {
+    "emptyState": true,
+    "nativeDateValues": [
+      "",
+      ""
+    ],
+    "statusOptions": [
+      "",
+      "Pending",
+      "Confirmed",
+      "Processing",
+      "Shipped",
+      "Delivered",
+      "Completed",
+      "Cancelled",
+      "Refunded",
+      "OnHold"
+    ],
+    "paginationUsesArtificialPage": false
+  },
+  "captures": [
+    {
+      "language": "en",
+      "direction": "ltr",
+      "horizontalOverflow": false,
+      "dateInputTypes": [
+        "date",
+        "date"
+      ],
+      "emptyState": true,
+      "width": 1440,
+      "screenshot": "orders-after-en-1440.png"
+    },
+    {
+      "language": "en",
+      "direction": "ltr",
+      "horizontalOverflow": false,
+      "dateInputTypes": [
+        "date",
+        "date"
+      ],
+      "emptyState": true,
+      "width": 390,
+      "screenshot": "orders-after-en-390.png"
+    },
+    {
+      "language": "ar",
+      "direction": "rtl",
+      "horizontalOverflow": false,
+      "dateInputTypes": [
+        "date",
+        "date"
+      ],
+      "emptyState": true,
+      "width": 1440,
+      "screenshot": "orders-after-ar-1440.png"
+    },
+    {
+      "language": "ar",
+      "direction": "rtl",
+      "horizontalOverflow": false,
+      "dateInputTypes": [
+        "date",
+        "date"
+      ],
+      "emptyState": true,
+      "width": 390,
+      "screenshot": "orders-after-ar-390.png"
+    }
+  ],
+  "apiChecks": {
+    "tests": [
+      {
+        "query": "",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?search=ORDERS-AUDIT-NONEXISTENT",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?status=Pending",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?status=Confirmed",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?status=Processing",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?status=Shipped",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?status=Delivered",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?status=Completed",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?status=Cancelled",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?status=Refunded",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?status=OnHold",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?paymentStatus=Paid",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?paymentStatus=Unpaid",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?paymentStatus=Failed",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?fromDate=2026-10-18",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?toDate=2026-11-16",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?fromDate=2026-10-18&toDate=2026-11-16",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?fromDate=2026-11-17&toDate=2026-11-16",
+        "status": 400,
+        "expected": 400,
+        "correct": true
+      },
+      {
+        "query": "?status=not-a-status",
+        "status": 400,
+        "expected": 400,
+        "correct": true
+      },
+      {
+        "query": "?paymentStatus=999",
+        "status": 400,
+        "expected": 400,
+        "correct": true
+      },
+      {
+        "query": "?page=0",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?pageSize=101",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?sortBy=CreatedAt&sortDirection=Asc",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?sortBy=CreatedAt&sortDirection=Desc",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?sortBy=OrderNumber&sortDirection=Asc",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?sortBy=OrderNumber&sortDirection=Desc",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?sortBy=Customer&sortDirection=Asc",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?sortBy=Customer&sortDirection=Desc",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?sortBy=Tenant&sortDirection=Asc",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?sortBy=Tenant&sortDirection=Desc",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?sortBy=VendorCount&sortDirection=Asc",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?sortBy=VendorCount&sortDirection=Desc",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?sortBy=TotalAmount&sortDirection=Asc",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?sortBy=TotalAmount&sortDirection=Desc",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?sortBy=Status&sortDirection=Asc",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?sortBy=Status&sortDirection=Desc",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?sortBy=PaymentStatus&sortDirection=Asc",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?sortBy=PaymentStatus&sortDirection=Desc",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "?page=2&pageSize=20",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "totalPages": 0,
+        "correct": true
+      },
+      {
+        "query": "store-filter-redacted",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "correct": true
+      },
+      {
+        "query": "store-filter-redacted",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "correct": true
+      },
+      {
+        "query": "store-filter-redacted",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "correct": true
+      },
+      {
+        "query": "store-filter-redacted",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "correct": true
+      },
+      {
+        "query": "store-filter-redacted",
+        "status": 200,
+        "expected": 200,
+        "count": 0,
+        "rows": 0,
+        "correct": true
+      }
+    ],
+    "stats": {
+      "status": 200,
+      "totalOrdersToday": 0,
+      "pendingOrders": 0,
+      "failedPayments": 0,
+      "capturedSalesToday": 0,
+      "asOfUtc": "2026-11-17T19:51:56.2207621Z"
+    },
+    "csv": {
+      "status": 200,
+      "headerOnly": true,
+      "utf8Bom": true,
+      "rowCountHeader": "0"
+    },
+    "tenantOptionCount": 5,
+    "missingDetailStatus": 404
+  },
+  "consoleErrorCount": 0,
+  "exceptionCount": 0,
+  "businessWriteCount": 0,
+  "networkFailures": [],
+  "checksPassed": true,
+  "productionScope": "EMPTY_COMMERCEHUB_ONLY",
+  "populatedLifecyclesCertifiedByProduction": false,
+  "status": "PASS_BROWSER_EMPTY_PRODUCTION_SCOPE"
+}

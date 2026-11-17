@@ -1,0 +1,14 @@
+{
+  "applicationCommit": "4f72d0060a9c4fa7fea4b0b9945cf1b7ea9c500e",
+  "initialFailure": "Local disk exhausted during API OCI archive export; no deployment executed",
+  "failedOwnedArchiveBytesRemoved": 293404672,
+  "validatedApiImageConfigRetained": "sha256:3985a2a315eded9c69ae009a65393757a4d6cffe620ebc167c4bfc290e7cea2e",
+  "validatedApiContextRetained": true,
+  "ownedWindowsSdkRemovedAfterBuildServerShutdown": true,
+  "sdkWasAuditOwnedVerified100404Installation": true,
+  "applicationSourceChanged": false,
+  "applicationRebuiltDuringRecovery": false,
+  "recoveryTransport": "Local gzip-compressed OCI archive; no registry push",
+  "recoveryScript": "recover-package.py",
+  "acceptanceAuthority": "Passing test-gates.json, unchanged sealed source/artifact manifests, verified parent archives, context and image-label admission checks"
+}

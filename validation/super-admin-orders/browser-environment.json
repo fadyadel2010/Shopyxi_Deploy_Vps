@@ -1,0 +1,23 @@
+{
+  "headed": true,
+  "dedicatedExistingUserAuthenticatedProfile": true,
+  "credentialsReadOrInjected": false,
+  "initialPollingCandidate": "browser-actions-first-after.json",
+  "initialPollingDiagnosis": "browser-runtime-diagnostics.json",
+  "diagnosedVisibility": "hidden",
+  "diagnosedUi": "Auto-refresh correctly reported paused",
+  "windowsOcclusionMitigation": [
+    "--disable-features=CalculateNativeWinOcclusion",
+    "--disable-backgrounding-occluded-windows"
+  ],
+  "browserRestart": "Graceful Browser.close; same dedicated profile",
+  "documentVisibilityOverriddenWithJavaScriptOrCDP": false,
+  "finalActionsRequireVisibleOnlineTab": true,
+  "securityPolicyChanged": false,
+  "cspBlockedThirdPartyTelemetry": {
+    "origin": "https://static.cloudflareinsights.com",
+    "resourceType": "Script",
+    "blockedReason": "csp",
+    "treatment": "Explicitly retained policy-blocked resource, not classified as an Orders API transport failure; all other failures fail acceptance"
+  }
+}

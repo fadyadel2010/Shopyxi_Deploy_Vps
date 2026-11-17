@@ -1,0 +1,26 @@
+{
+  "capturedAtUtc": "2026-11-17T20:04:09.530Z",
+  "applicationCommit": "4f72d0060a9c4fa7fea4b0b9945cf1b7ea9c500e",
+  "productionScope": "EMPTY_COMMERCEHUB_ONLY",
+  "productionPopulatedLifecyclesCertified": false,
+  "gates": {
+    "validatedTestsAndBuilds": true,
+    "parentRuntimeCompatible": true,
+    "sourceCommitMatchesDeployment": true,
+    "qualityReceiptIdentity": true,
+    "immutableImagesMatchRelease": true,
+    "imageOnlyDeploymentVerified": true,
+    "actualHeadedBrowserEmptyScope": true,
+    "actualControlsCsvAndPolling": true,
+    "visibleOnlinePolling": true,
+    "noApplicationNetworkFailures": true,
+    "rollbackRetained": true,
+    "inspectedBusinessStatePreserved": true,
+    "anonymousAccessDenied": true,
+    "allSixWorkloadsReady": true,
+    "noNewApplicationContainerRestarts": true,
+    "globalCommissionPreserved": true,
+    "marketplaceRemainsGenuinelyEmpty": true
+  },
+  "pass": true
+}

@@ -1,0 +1,53 @@
+{
+  "startedAtUtc": "2026-11-17T19:50:49.007552+00:00",
+  "sourceCommit": "4f72d0060a9c4fa7fea4b0b9945cf1b7ea9c500e",
+  "migrationsExecuted": false,
+  "businessDataWritesExecuted": false,
+  "components": {
+    "api": {
+      "oldImage": "localhost/shopixy/api@sha256:5a3bab31b628f8a3dfebd88c9eb0d60083176f9fc5f0b8a4d7c43845844e67ba",
+      "newImage": "localhost/shopixy/api@sha256:75f49cb501bae5f3add2677367300bcdbb70a9799a257041fd7d38b01d084e04",
+      "manifestDigest": "sha256:75f49cb501bae5f3add2677367300bcdbb70a9799a257041fd7d38b01d084e04",
+      "configDigest": "sha256:3985a2a315eded9c69ae009a65393757a4d6cffe620ebc167c4bfc290e7cea2e",
+      "sourceInputSha256": "8ef64fcea94b2b52bc30b2bf005eeb6c92b8512d66a0d51a3e5463b4a6b81c41",
+      "deploymentUid": "068cb6d0-406c-4a7b-a4c1-a35c71acb481",
+      "beforeSpecSha256": "70ae5ac6358ac1e037c853ec04bf5b32c0d14a5ca96ac122c4c87c81da6d8a56",
+      "afterSpecSha256": "08a516adf95e01a6091bb82ca0015314e656330dc57e7d9a77422275e14fbb9c",
+      "readyReplicas": 1,
+      "pod": "shopixy-api-758d44d9b6-qwhpv",
+      "runningImageId": "localhost/shopixy/api@sha256:75f49cb501bae5f3add2677367300bcdbb70a9799a257041fd7d38b01d084e04",
+      "runtimeArtifactHashesMatched": true,
+      "verifiedRuntimeFiles": [
+        "PointOfSale.Core.dll",
+        "PointOfSale.Infrastructure.dll",
+        "PointOfSale.API.dll"
+      ]
+    },
+    "web": {
+      "oldImage": "localhost/shopixy/web@sha256:207a1794c0411b5a895a9cb411b4b91836c779b3283bfea127cc7e888eb216bf",
+      "newImage": "localhost/shopixy/web@sha256:21f8562eaee261db6be807e480427eb826adde886c989020146d86a49c4f373d",
+      "manifestDigest": "sha256:21f8562eaee261db6be807e480427eb826adde886c989020146d86a49c4f373d",
+      "configDigest": "sha256:52ea82ad064e40d46b006547c9bcc887986073491002fefe20b92199825072dd",
+      "sourceInputSha256": "bfbea62edf89e66355b2d13554059c925826deb11c538dbe1e59ed2958290df5",
+      "deploymentUid": "f70122dc-ff87-4ec6-a1ab-28c49b0e2905",
+      "beforeSpecSha256": "d969575c15dc6b9609993f5df879412f4a0b2259727adbe1423235ee8c42ead9",
+      "afterSpecSha256": "ec5f5d21cd1a2f75ce41b4912862f0bae054e454c07b23a3916383f7b9681d33",
+      "readyReplicas": 1,
+      "pod": "shopixy-web-5f8dc95b5d-fckxj",
+      "runningImageId": "localhost/shopixy/web@sha256:21f8562eaee261db6be807e480427eb826adde886c989020146d86a49c4f373d",
+      "runtimeArtifactHashesMatched": true,
+      "verifiedRuntimeFiles": [
+        "assets/index-BiaZNAT9.js",
+        "index.html"
+      ]
+    }
+  },
+  "status": "DEPLOYED_RUNTIME_VERIFIED_BROWSER_PENDING",
+  "unchangedOtherDeployments": [
+    "shopixy-baileys",
+    "shopixy-commercehub",
+    "shopixy-r2-egress",
+    "shopixy-storefront"
+  ],
+  "completedAtUtc": "2026-11-17T19:51:26.152275+00:00"
+}

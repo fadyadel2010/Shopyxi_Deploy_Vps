@@ -1,0 +1,63 @@
+{
+  "capturedAtUtc": "2026-11-17T19:58:00.330Z",
+  "actualHeadedBrowser": true,
+  "credentialsReadOrInjected": false,
+  "before": {
+    "path": "/super-admin/orders",
+    "visibility": "hidden",
+    "online": true,
+    "focused": true,
+    "monitoring": [
+      "تحديث",
+      "التحديث التلقائي متوقف مؤقتًا",
+      "المرشحات النشطة",
+      "تُحدَّث الطلبات والإحصاءات كل ٣٠ ثانية ما دام التبويب نشطًا. تشمل مرشحات التاريخ أيام UTC كاملة؛ ويتحكم المتصفح بتنسيق حقل التاريخ الأصلي."
+    ]
+  },
+  "after": {
+    "path": "/super-admin/orders",
+    "visibility": "hidden",
+    "online": true,
+    "focused": false,
+    "monitoring": [
+      "تحديث",
+      "التحديث التلقائي متوقف مؤقتًا",
+      "المرشحات النشطة",
+      "تُحدَّث الطلبات والإحصاءات كل ٣٠ ثانية ما دام التبويب نشطًا. تشمل مرشحات التاريخ أيام UTC كاملة؛ ويتحكم المتصفح بتنسيق حقل التاريخ الأصلي."
+    ]
+  },
+  "observedMs": 65003,
+  "requests": [
+    {
+      "origin": "https://admin.shopyxi.com",
+      "path": "/api/super-admin/orders",
+      "resourceType": "XHR",
+      "at": 1794945462764
+    }
+  ],
+  "responses": [
+    {
+      "path": "/api/super-admin/orders/stats",
+      "status": 200,
+      "at": 1794945415190
+    },
+    {
+      "path": "/api/super-admin/orders",
+      "status": 200,
+      "at": 1794945415210
+    },
+    {
+      "path": "/api/super-admin/orders",
+      "status": 200,
+      "at": 1794945463398
+    }
+  ],
+  "failures": [
+    {
+      "origin": "https://static.cloudflareinsights.com",
+      "resourceType": "Script",
+      "error": "",
+      "blockedReason": "csp"
+    }
+  ]
+}

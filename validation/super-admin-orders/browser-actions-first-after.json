@@ -1,0 +1,194 @@
+{
+  "capturedAtUtc": "2026-11-17T19:53:32.494Z",
+  "actualHeadedBrowser": true,
+  "credentialsReadOrInjected": false,
+  "businessWriteCount": 0,
+  "consoleErrorCount": 0,
+  "exceptionCount": 0,
+  "networkFailures": [
+    {
+      "type": "network-failure"
+    },
+    {
+      "type": "network-failure"
+    },
+    {
+      "type": "network-failure"
+    }
+  ],
+  "checks": [
+    {
+      "name": "search-url",
+      "pass": true
+    },
+    {
+      "name": "status-Pending",
+      "pass": true
+    },
+    {
+      "name": "status-Confirmed",
+      "pass": true
+    },
+    {
+      "name": "status-Processing",
+      "pass": true
+    },
+    {
+      "name": "status-Shipped",
+      "pass": true
+    },
+    {
+      "name": "status-Delivered",
+      "pass": true
+    },
+    {
+      "name": "status-Completed",
+      "pass": true
+    },
+    {
+      "name": "status-Cancelled",
+      "pass": true
+    },
+    {
+      "name": "status-Refunded",
+      "pass": true
+    },
+    {
+      "name": "status-OnHold",
+      "pass": true
+    },
+    {
+      "name": "paymentStatus-Paid",
+      "pass": true
+    },
+    {
+      "name": "paymentStatus-Unpaid",
+      "pass": true
+    },
+    {
+      "name": "paymentStatus-Failed",
+      "pass": true
+    },
+    {
+      "name": "store-filter-redacted",
+      "pass": true
+    },
+    {
+      "name": "store-filter-redacted",
+      "pass": true
+    },
+    {
+      "name": "store-filter-redacted",
+      "pass": true
+    },
+    {
+      "name": "store-filter-redacted",
+      "pass": true
+    },
+    {
+      "name": "store-filter-redacted",
+      "pass": true
+    },
+    {
+      "name": "from-only",
+      "pass": true
+    },
+    {
+      "name": "to-only",
+      "pass": true
+    },
+    {
+      "name": "combined-dates",
+      "pass": true
+    },
+    {
+      "name": "reload-shareable",
+      "pass": true
+    },
+    {
+      "name": "sort-column-0",
+      "pass": true
+    },
+    {
+      "name": "sort-column-1",
+      "pass": true
+    },
+    {
+      "name": "sort-column-2",
+      "pass": true
+    },
+    {
+      "name": "sort-column-3",
+      "pass": true
+    },
+    {
+      "name": "sort-column-4",
+      "pass": true
+    },
+    {
+      "name": "sort-column-5",
+      "pass": true
+    },
+    {
+      "name": "sort-column-6",
+      "pass": true
+    },
+    {
+      "name": "sort-column-7",
+      "pass": true
+    },
+    {
+      "name": "page-size-50",
+      "pass": true
+    },
+    {
+      "name": "page-size-100",
+      "pass": true
+    },
+    {
+      "name": "page-size-20",
+      "pass": true
+    },
+    {
+      "name": "reversed-date-blocked",
+      "pass": true
+    },
+    {
+      "name": "reset-all",
+      "pass": true
+    },
+    {
+      "name": "refresh-preserves-default-url",
+      "pass": true
+    },
+    {
+      "name": "real-ui-export-api-and-mime",
+      "pass": true
+    },
+    {
+      "name": "real-downloaded-file-empty-scope-bom-and-header",
+      "pass": true
+    },
+    {
+      "name": "both-orders-and-stats-poll",
+      "pass": false
+    },
+    {
+      "name": "truthful-active-indicator",
+      "pass": false
+    },
+    {
+      "name": "poll-cleanup-on-leaving",
+      "pass": true
+    }
+  ],
+  "exportResponses": [
+    {
+      "path": "/api/super-admin/orders/export",
+      "status": 200,
+      "mimeType": "text/csv"
+    }
+  ],
+  "pollingObservedMs": 66866,
+  "pass": false
+}
