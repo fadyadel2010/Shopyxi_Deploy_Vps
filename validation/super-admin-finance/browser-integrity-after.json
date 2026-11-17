@@ -1,0 +1,63 @@
+{
+  "capturedAtUtc": "2026-11-17T13:13:08.167Z",
+  "actualHeadedBrowser": true,
+  "credentialsReadOrInjected": false,
+  "sourcePhase": "after",
+  "english": {
+    "language": "en",
+    "direction": "ltr",
+    "screenshot": "finance-after-integrity-en-1440.png",
+    "accountChromeHiddenForPrivacy": true,
+    "signedInEmailVisible": false,
+    "noRecordsLabel": true,
+    "limitedCoverageNotice": true,
+    "notCheckedLabels": 3,
+    "rawEnumVisible": false,
+    "visibleError": false
+  },
+  "arabic": {
+    "language": "ar",
+    "direction": "rtl",
+    "screenshot": "finance-after-integrity-ar-1440.png",
+    "accountChromeHiddenForPrivacy": false,
+    "signedInEmailVisible": false,
+    "noRecordsLabel": true,
+    "limitedCoverageNotice": true,
+    "notCheckedLabels": 3,
+    "rawEnumVisible": false,
+    "visibleError": false
+  },
+  "integrityApi": {
+    "httpStatus": 200,
+    "status": "NO_RECORDS",
+    "includesGlobalLedgerChecks": false,
+    "totalIssueCount": 0,
+    "issueCount": 0,
+    "counters": {
+      "checkedOrderCount": 0,
+      "checkedRefundCount": 0,
+      "checkedLedgerEntryCount": 0,
+      "totalIssueCount": 0,
+      "orphanTransactionsCount": 0,
+      "orderFlowMismatchCount": 0,
+      "refundFlowMismatchCount": 0,
+      "payoutFlowMismatchCount": 0,
+      "adjustmentFlowMismatchCount": 0,
+      "payableMismatchCount": 0,
+      "receivableMismatchCount": 0,
+      "promoUsageWithoutLedgerCount": 0,
+      "promoLedgerWithoutUsageCount": 0,
+      "duplicatePromoUsageCount": 0,
+      "missingRefundReversalCount": 0,
+      "correlationIntegrityMismatchCount": 0,
+      "missingPairCount": 0,
+      "duplicateEntryCount": 0,
+      "missingIdempotencyKeyCount": 0,
+      "missingCorrelationIdCount": 0,
+      "multiCurrencyReferenceCount": 0,
+      "invalidEntityScopeCount": 0,
+      "aggregateMismatchCount": 0
+    }
+  },
+  "passed": true
+}

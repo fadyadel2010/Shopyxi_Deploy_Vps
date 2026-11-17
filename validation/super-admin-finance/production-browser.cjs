@@ -4,6 +4,7 @@ const fs = require('node:fs')
 const path = require('node:path')
 const phase = process.argv[2] || 'before'
 if (!/^[a-z-]+$/.test(phase)) throw new Error('Invalid evidence phase')
+const expectedBundle = process.argv[3] || null
 const out = name => path.join(__dirname, name)
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -72,6 +73,7 @@ async function main() {
     await send('Page.enable')
     await send('Runtime.enable')
     await send('Network.enable')
+    await send('Network.setCacheDisabled', { cacheDisabled: true })
     await send('Page.bringToFront')
     const initialPath = await evaluate('location.pathname')
     if (initialPath.includes('/login')) {
@@ -87,6 +89,8 @@ async function main() {
     await waitFor(`location.pathname.includes('/login') || document.querySelectorAll('input[type=date]').length >= 2`)
     if ((await evaluate('location.pathname')).includes('/login')) throw new Error('User login is required')
     await waitFor(`!Array.from(document.querySelectorAll('button')).some(b => b.innerText === 'Refreshing' || b.innerText === 'جارٍ التحديث')`)
+    const loadedBundles = await evaluate(`performance.getEntriesByType('resource').map(e => new URL(e.name).pathname).filter(path => path.startsWith('/assets/index-') && path.endsWith('.js'))`)
+    const bundleLoaded = !expectedBundle || loadedBundles.some(path => path.endsWith('/' + expectedBundle))
     const captures = []
     for (const window of ['default', 'historical']) {
       if (window === 'historical') {
@@ -159,9 +163,11 @@ async function main() {
         (c.window !== 'historical' || c.reportingInputs.join(',') === '2026-10-18,2026-11-16')) &&
         required.every(endpoint => sanitized.some(r => r.path.endsWith('/'+endpoint) && r.status === 200)) &&
         sanitized.filter(r => r.path.endsWith('/overview')).every(r => r.allRequiredMetricsZero) &&
+        bundleLoaded &&
         !failures.length && !consoleErrorCount && !exceptionCount && !businessWriteCount
     const result = { capturedAtUtc: new Date().toISOString(), actualHeadedBrowser: true,
         authenticatedByUser: true, credentialsReadOrInjected: false, sourcePhase: phase,
+        expectedBundle, loadedBundles, bundleLoaded,
         status: phase === 'after' && checksPassed ? 'PASS_BROWSER_EMPTY_PRODUCTION_SCOPE' : 'OBSERVED_NOT_RELEASE_ACCEPTANCE',
         checksPassed, captures, responses: sanitized,
         failedRequiredRequests: failures, consoleErrorCount, exceptionCount, businessWriteCount }

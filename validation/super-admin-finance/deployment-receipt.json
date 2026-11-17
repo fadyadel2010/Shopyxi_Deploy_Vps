@@ -1,0 +1,59 @@
+{
+  "startedAtUtc": "2026-11-17T12:57:32.152081+00:00",
+  "sourceCommit": "c5a18b5804c794465a6af8746787696c214a859b",
+  "migrationsExecuted": false,
+  "businessDataWritesExecuted": false,
+  "components": {
+    "api": {
+      "oldImage": "docker.io/shopixy/api@sha256:cb900c183069f94311142ad9c5a16fa23266611d3c29f674bae64040189ac307",
+      "newImage": "localhost/shopixy/api@sha256:5a3bab31b628f8a3dfebd88c9eb0d60083176f9fc5f0b8a4d7c43845844e67ba",
+      "manifestDigest": "sha256:5a3bab31b628f8a3dfebd88c9eb0d60083176f9fc5f0b8a4d7c43845844e67ba",
+      "configDigest": "sha256:29a4c811c107791767f3bb86705c87084417df2b421e6e9b1598b30fd590b5bb",
+      "sourceInputSha256": "a59f5e357b6f8c5804bb8941c2c290e76bd01b505fc80334bc33cf4a82b3aa8f",
+      "deploymentUid": "068cb6d0-406c-4a7b-a4c1-a35c71acb481",
+      "beforeSpecSha256": "df93ad645db3af3e22662b3e06ac680689afc6c355bc4f89a3a08085c7061f51",
+      "resumedVerification": true,
+      "firstVerificationAtUtc": "2026-11-17T12:57:32.152081+00:00",
+      "resumedVerificationAtUtc": "2026-11-17T13:00:11.612900+00:00",
+      "reconstructedBeforeSpecSha256": "df93ad645db3af3e22662b3e06ac680689afc6c355bc4f89a3a08085c7061f51",
+      "afterSpecSha256": "70ae5ac6358ac1e037c853ec04bf5b32c0d14a5ca96ac122c4c87c81da6d8a56",
+      "readyReplicas": 1,
+      "pod": "shopixy-api-c7f6b6db7-6kb6x",
+      "runningImageId": "localhost/shopixy/api@sha256:5a3bab31b628f8a3dfebd88c9eb0d60083176f9fc5f0b8a4d7c43845844e67ba",
+      "execRuntimeArtifactHashesMatched": true,
+      "verifiedRuntimeFiles": [
+        "PointOfSale.API.dll",
+        "PointOfSale.Core.dll",
+        "PointOfSale.Infrastructure.dll"
+      ]
+    },
+    "web": {
+      "oldImage": "docker.io/shopixy/web@sha256:627af0b79e1a8bfa4be76691df0f43c938c9b586727d11c2f223e43580c21568",
+      "newImage": "localhost/shopixy/web@sha256:207a1794c0411b5a895a9cb411b4b91836c779b3283bfea127cc7e888eb216bf",
+      "manifestDigest": "sha256:207a1794c0411b5a895a9cb411b4b91836c779b3283bfea127cc7e888eb216bf",
+      "configDigest": "sha256:fc4363269b6dd62cc4d22b3875b738e8fa4e9ab362859a629c1d6531a75bd3d8",
+      "sourceInputSha256": "1bfe9a2e6e3f15abf4759d7dde08720063b957daf9602760a7aa09c88b5e9d63",
+      "deploymentUid": "f70122dc-ff87-4ec6-a1ab-28c49b0e2905",
+      "beforeSpecSha256": "35d18fb2e8658db6f1a112fb4e1f226aa2b582d7acc5a34659fa4ceec1b2b4b8",
+      "afterSpecSha256": "d969575c15dc6b9609993f5df879412f4a0b2259727adbe1423235ee8c42ead9",
+      "readyReplicas": 1,
+      "pod": "shopixy-web-7cbcb5dbc6-rwxgq",
+      "runningImageId": "localhost/shopixy/web@sha256:207a1794c0411b5a895a9cb411b4b91836c779b3283bfea127cc7e888eb216bf",
+      "execRuntimeArtifactHashesMatched": true,
+      "verifiedRuntimeFiles": [
+        "assets/index-eZGOKluk.js",
+        "index.html"
+      ]
+    }
+  },
+  "status": "DEPLOYED_RUNTIME_VERIFIED_BROWSER_PENDING",
+  "resumedAtUtc": "2026-11-17T13:00:11.612900+00:00",
+  "resumeReason": "Initial runner tested CRI imageID against the config digest; containerd reports the manifest digest. shopixy-api had already rolled out and was fully ready. This continuation re-verifies the reconstructed pre-change API spec against the receipt and committed predeploy baseline, verifies API runtime artifacts, then deploys Web. No rollback or unrelated change occurred.",
+  "unchangedOtherDeployments": [
+    "shopixy-baileys",
+    "shopixy-commercehub",
+    "shopixy-r2-egress",
+    "shopixy-storefront"
+  ],
+  "completedAtUtc": "2026-11-17T13:00:20.103581+00:00"
+}

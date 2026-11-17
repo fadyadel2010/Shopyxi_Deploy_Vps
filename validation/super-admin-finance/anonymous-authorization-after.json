@@ -1,0 +1,57 @@
+{
+  "checkedAtUtc": "2026-11-17T13:05:55.935Z",
+  "credentialsSent": false,
+  "results": [
+    {
+      "path": "overview",
+      "status": 401,
+      "financialPayloadReturned": false
+    },
+    {
+      "path": "trends",
+      "status": 401,
+      "financialPayloadReturned": false
+    },
+    {
+      "path": "promos",
+      "status": 401,
+      "financialPayloadReturned": false
+    },
+    {
+      "path": "vendors",
+      "status": 401,
+      "financialPayloadReturned": false
+    },
+    {
+      "path": "refunds",
+      "status": 401,
+      "financialPayloadReturned": false
+    },
+    {
+      "path": "integrity-check",
+      "status": 401,
+      "financialPayloadReturned": false
+    },
+    {
+      "path": "ledger-overview",
+      "status": 401,
+      "financialPayloadReturned": false
+    },
+    {
+      "path": "cashflow",
+      "status": 401,
+      "financialPayloadReturned": false
+    },
+    {
+      "path": "pnl",
+      "status": 401,
+      "financialPayloadReturned": false
+    },
+    {
+      "path": "reconciliation",
+      "status": 401,
+      "financialPayloadReturned": false
+    }
+  ],
+  "passed": true
+}

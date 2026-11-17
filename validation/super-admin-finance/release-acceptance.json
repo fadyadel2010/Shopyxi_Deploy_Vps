@@ -1,0 +1,42 @@
+{
+  "checkedAtUtc": "2026-11-17T13:15:07.832Z",
+  "sourceCommit": "c5a18b5804c794465a6af8746787696c214a859b",
+  "branch": "finance/super-admin-forensic-audit-20261117",
+  "status": "PASS_EMPTY_PRODUCTION_SCOPE",
+  "criteria": {
+    "sourceCommitMatches": true,
+    "apiImmutableImage": true,
+    "webImmutableImage": true,
+    "bothFullyReady": true,
+    "unrelatedDeploymentsUnchanged": true,
+    "preservationUnchanged": true,
+    "anonymousDenied": true,
+    "readOnlyProductionClean": true,
+    "browserAccepted": true,
+    "integrityTruthful": true,
+    "noEvidenceSecretFindings": true
+  },
+  "images": {
+    "api": {
+      "image": "localhost/shopixy/api@sha256:5a3bab31b628f8a3dfebd88c9eb0d60083176f9fc5f0b8a4d7c43845844e67ba",
+      "manifestDigest": "sha256:5a3bab31b628f8a3dfebd88c9eb0d60083176f9fc5f0b8a4d7c43845844e67ba",
+      "configDigest": "sha256:29a4c811c107791767f3bb86705c87084417df2b421e6e9b1598b30fd590b5bb",
+      "archiveSha256": "0809a79bfa4b4885836724e833dece48de960a771095df5b2968e124709b84b5"
+    },
+    "web": {
+      "image": "localhost/shopixy/web@sha256:207a1794c0411b5a895a9cb411b4b91836c779b3283bfea127cc7e888eb216bf",
+      "manifestDigest": "sha256:207a1794c0411b5a895a9cb411b4b91836c779b3283bfea127cc7e888eb216bf",
+      "configDigest": "sha256:fc4363269b6dd62cc4d22b3875b738e8fa4e9ab362859a629c1d6531a75bd3d8",
+      "archiveSha256": "3a2bd3d190efc3f086cc2137ab3b1b3695a9ce5b5caa025861fe9c6125d6cac4"
+    }
+  },
+  "evidenceSha256": {
+    "deployment-receipt.json": "02f601ba75e1161611b3f5fb53eb354ecc64ae5d2038b3953a1e4854aca930b8",
+    "browser-after.json": "c7cb4620fef6a89cd5a3a60c7f344419aa71237919164ebb7eb7a2a036d09e4b",
+    "browser-integrity-after.json": "a07e8a0cd818281c7d6e25dd569ec236d42e88dac5385ae5e1a1496079dd5a11",
+    "preservation-after.json": "537e2002c870dcd334006479a52555ade75ae17b12f4cfa89fc6a4a0004e25e3",
+    "production-after.json": "0a1d6ce2a32bf7c86742e68c92e9e3e84aee1edeeb50b7ebc05c004c9656dd26",
+    "anonymous-authorization-after.json": "c81f2f8a1d2cda316dd8b29bbaa6c117fb9e2aeea4add3e7b06b512f0aa9488b"
+  },
+  "scopeStatement": "Production CommerceHub financial data is empty all-time. This acceptance proves the deployed release behaves truthfully on that empty production scope; it does not certify live marketplace commission, promotion, refund, settlement or payout lifecycles. POS invoices remain a separate population."
+}

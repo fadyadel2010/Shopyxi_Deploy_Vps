@@ -49,8 +49,16 @@ for component, artifact in inputs["components"].items():
         raise RuntimeError("Imported image config identity mismatch.")
     image = artifact["tag"].split(":")[0] + "@" + artifact["manifestDigest"]
     command(["k3s", "ctr", "-n", "k8s.io", "images", "tag", artifact["tag"], image])
+    imported = json.loads(command(["k3s", "crictl", "inspecti", image]))
+    if imported["status"]["id"] != artifact["configDigest"]:
+        raise RuntimeError("Digest-pinned image config identity mismatch.")
+    listing = command(["k3s", "ctr", "-n", "k8s.io", "images", "ls"]).splitlines()
+    rows = [line.split() for line in listing[1:] if line.split() and line.split()[0] == image]
+    if not rows or rows[0][2] != artifact["manifestDigest"]:
+        raise RuntimeError("Imported manifest digest mismatch; refusing to patch.")
     receipt["components"][component] = {
         "oldImage": container["image"], "newImage": image,
+        "manifestDigest": artifact["manifestDigest"],
         "configDigest": artifact["configDigest"], "sourceInputSha256": artifact["sourceInputSha256"],
         "deploymentUid": deployment["metadata"]["uid"],
         "beforeSpecSha256": seal(deployment["spec"]),
@@ -87,6 +95,10 @@ for component, row in receipt["components"].items():
                    any(c["name"] == component and c["image"] == row["newImage"] for c in p["spec"]["containers"])]
     pod = next(p for p in current if all(c.get("ready") for c in p["status"].get("containerStatuses", [])))
     row["pod"] = pod["metadata"]["name"]
+    container_status = next(c for c in pod["status"]["containerStatuses"] if c["name"] == component)
+    if container_status["imageID"].split("@")[-1] not in (row["manifestDigest"], row["configDigest"]):
+        raise RuntimeError("Running pod image identity mismatch.")
+    row["runningImageId"] = container_status["imageID"]
     if component == "api":
         paths = {name: "/app/" + name for name in inputs["components"][component]["artifactSha256"]}
     else:
