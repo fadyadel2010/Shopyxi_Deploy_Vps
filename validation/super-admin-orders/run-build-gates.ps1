@@ -3,6 +3,9 @@ $root = Join-Path $env:LOCALAPPDATA 'Temp\opencode'
 $sdk = Join-Path $root 'orders-sdk-10.0.404\dotnet.exe'
 if (!(Test-Path -LiteralPath $sdk)) { $sdk = Join-Path $root 'finance-sdk-10.0.404\dotnet.exe' }
 if (!(Test-Path -LiteralPath $sdk)) { throw 'Verified .NET 10.0.404 SDK must be restored before building.' }
+foreach ($dependency in @('PointOfSale.Web/node_modules/typescript/bin/tsc','PointOfSale.Web/node_modules/vite/bin/vite.js')) {
+    if (!(Test-Path -LiteralPath $dependency)) { throw "Restore committed-lockfile dependencies before building: $dependency" }
+}
 function SourceDigest {
     $paths = git ls-files -c -o --exclude-standard PointOfSale.API PointOfSale.Core PointOfSale.Infrastructure PointOfSale.Web PointOfSale.Tests PointOfSale.Storefront theme-authority
     $lines = @($paths | Sort-Object -Unique | Where-Object { $_ -match '\.(cs|csproj|json|ts|tsx|js|jsx|css|html)$' } | ForEach-Object {
@@ -21,7 +24,7 @@ $ErrorActionPreference = 'Continue'
 $apiCode = $LASTEXITCODE
 Push-Location PointOfSale.Web
 try {
-    npx tsc --noEmit *> (Join-Path $root 'orders-sealed-typecheck-private.log')
+    node node_modules/typescript/bin/tsc --noEmit *> (Join-Path $root 'orders-sealed-typecheck-private.log')
     $typeCode = $LASTEXITCODE
     npm run build *> (Join-Path $root 'orders-sealed-web-build-private.log')
     $webCode = $LASTEXITCODE

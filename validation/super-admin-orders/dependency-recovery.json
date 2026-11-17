@@ -1,0 +1,12 @@
+{
+    "capturedAtUtc":  "2026-11-17T19:26:16.1377982Z",
+    "command":  "npm ci --no-audit --no-fund",
+    "exitCode":  0,
+    "packagesInstalled":  679,
+    "nodeVersion":  "v22.20.0",
+    "npmVersion":  "10.9.3",
+    "webLockfileSha256":  "402797d5820d15fe2f517ae02cbfd50a6b0ef3d804b3b686aa0143d5bb2c0441",
+    "ownedWebDependencies":  true,
+    "packageVersionsChanged":  false,
+    "storefrontTypesUseOwnedWebDependencyJunction":  true
+}

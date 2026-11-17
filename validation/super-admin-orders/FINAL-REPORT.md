@@ -214,7 +214,7 @@ created only inside the owned fixture, without weakening application guards.
 |---|---|
 | Focused initial Orders frontend | PASS: 35/35, `frontend-orders.json` |
 | First unrestricted Super Admin frontend | FAILED: 145/177 passed, 32 timing failures under concurrent compilation; retained in `frontend-super-admin.json` |
-| Controlled final Super Admin frontend | PASS: **182/182**, 37 files, `frontend-super-admin-serial.json`; no unrelated test changes |
+| Controlled final Super Admin frontend | PASS: **182/182**, 37 files, `frontend-super-admin-serial.json`, rerun after owned lockfile-exact dependency restoration; no unrelated test changes |
 | Initial PostgreSQL run | FAILED: 23/28 passed; 2 initial transport timeouts, 2 ILIKE escaping failures, 1 missing fixture sequence; `test-results/backend-orders-first-run.trx` |
 | COD lifecycle and six commission-snapshot scenarios | PASS: 7 tests in `test-results/backend-orders-fixture-retest-3.trx`; that historical run also retains 2 online fixture failures |
 | Online payment/retry/refund scenarios | PASS: 2/2, `test-results/backend-orders-online-boundary-retest.trx`; actual GL outbox posting and reconciliation, including blocked-unposted refund and over-refund rejection |
@@ -222,6 +222,7 @@ created only inside the owned fixture, without weakening application guards.
 | Final backend/query/lifecycle/regression | PASS: **170/170**, zero skipped, `test-results/backend-orders-final.trx`, after non-incremental API rebuild and stable-source full rerun |
 | Full Web TypeScript / production build | PASS for first candidate; final source/artifact binding pending |
 | API Debug / Release builds | PASS, 0 errors; final source/artifact binding pending |
+| First committed-source build (`2c21dd6`) | API PASS; Web TypeScript/build FAILED because dependency junctions disappeared; `build-gates-missing-dependencies.json` retained. Owned committed-lockfile restore succeeded and frontend 182/182 passed again; sealed build rerun pending |
 
 No passed InMemory/source-string unit test is mislabeled as a real PostgreSQL
 mutation integration test. No skipped/early-return harness is treated as executed
