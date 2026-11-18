@@ -1,0 +1,305 @@
+{
+  "startedAt": "2026-11-18T17:23:55.222Z",
+  "steps": [
+    {
+      "name": "01-products-desktop-ar",
+      "note": "All products, Arabic, desktop 1440px.",
+      "url": "https://mina-store.shopyxi.com/products",
+      "title": "Storefront",
+      "lang": "ar",
+      "dir": "rtl",
+      "bodyText": "mina-store\nCtrl+K\nEN\nØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„\nØ¥Ù†Ø´Ø§Ø¡ Ø­Ø³Ø§Ø¨\nØ§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©\nØ§Ù„Ù…Ù†ØªØ¬Ø§Øª\n\nØ§Ù„Ù…Ù†ØªØ¬Ø§Øª\n\nØ¬Ù…ÙŠØ¹ Ø§Ù„Ù…Ù†ØªØ¬Ø§Øª\n\n2 Ù†ØªÙŠØ¬Ø©\n\nCtrl+K\nØªØ±ØªÙŠØ¨ Ø­Ø³Ø¨:\nØ§Ù„Ø£ÙƒØ«Ø± ØµÙ„Ø©\nØ§Ù„Ø³Ø¹Ø±: Ù…Ù† Ø§Ù„Ø£Ù‚Ù„ Ù„Ù„Ø£Ø¹Ù„Ù‰\nØ§Ù„Ø³Ø¹Ø±: Ù…Ù† Ø§Ù„Ø£Ø¹Ù„Ù‰ Ù„Ù„Ø£Ù‚Ù„\nØ§Ù„Ø£Ø­Ø¯Ø«\nØ£ÙƒØ¨Ø± Ø®ØµÙ…\nAll Products\nUncategorized\nÙ‚Ø³Ù… Ø±Ø¦ÙŠØ³Ù‰\n\nØ§Ù„Ù…Ù†ØªØ¬Ø§Øª\n\n1 Ù…Ù†ØªØ¬ Ù…ØªÙˆÙØ±\n\nØ§Ù„ÙÙ„Ø§ØªØ±\nØ§Ù„Ù‚Ø³Ù…\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n(2)\nØ§Ù„Ø¹Ù„Ø§Ù…Ø© Ø§Ù„ØªØ¬Ø§Ø±ÙŠØ©\ntest\n(2)\nÙ†Ø·Ø§Ù‚ Ø§Ù„Ø³Ø¹Ø±\nØ¬Ù…ÙŠØ¹ Ø§Ù„Ø£Ø³Ø¹Ø§Ø±\n100 - 200 EGP\n(1)\n200 - 500 EGP\n(1)\nØ§Ù„ØªÙˆÙØ±\nØ§Ù„Ù…ØªÙˆÙØ± ÙÙ‚Ø·\n(1)\nØºÙŠØ± Ù…ØªÙˆÙØ±\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\ntest\nÙ…ØªØ¹Ø¯Ø¯ Ø§Ù„Ø§Ø®ØªÙŠØ§Ø±Ø§Øª\nØºÙŠØ± Ù…ØªÙˆÙØ±\nØ§Ø®ØªØ± Ø§Ù„Ø®ÙŠØ§Ø±Ø§Øª\nFEATURED\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\nÙ…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ\nEGP 111.00\nIN STOCK (100)\n+\nØ¥Ø¶Ø§ÙØ© Ø¥Ù„Ù‰ Ø§Ù„Ø³Ù„Ø©\nmina-store\nØ®Ø¯Ù…Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡\n\nÙ„Ù… ÙŠØªÙ… Ù†Ø´Ø± Ø±ÙˆØ§Ø¨Ø· Ø®Ø¯Ù…Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡ Ø¨Ø¹Ø¯.\n\nÂ© 2026 mina-store. Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø­Ù‚ÙˆÙ‚ Ù…Ø­ÙÙˆØ¸Ø©.",
+      "productAnchors": [
+        {
+          "href": "/products/test",
+          "text": "ØºÙŠØ± Ù…ØªÙˆÙØ±\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\ntest\nÙ…ØªØ¹Ø¯Ø¯ Ø§Ù„Ø§Ø®ØªÙŠØ§Ø±Ø§Øª"
+        },
+        {
+          "href": "/products/test",
+          "text": "Ø§Ø®ØªØ± Ø§Ù„Ø®ÙŠØ§Ø±Ø§Øª"
+        },
+        {
+          "href": "/products/product-64986ae7",
+          "text": "FEATURED\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\nÙ…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ\nEGP 111.00"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://mina-store.shopyxi.com/api/upload/product-media/c96999b9-0541-ea8b-69f2-3e3c4e17f6e3/dc47511de9fc4f3c8c2a855696441179.png",
+          "alt": "test",
+          "naturalWidth": 512,
+          "naturalHeight": 512
+        },
+        {
+          "src": "https://mina-store.shopyxi.com/api/upload/product-media/64986ae7-7fe9-13dd-4bfa-aa08ce5d8f65/e14465fe94524f36a535fcc76fe42a3d.jpg",
+          "alt": "Ù…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ",
+          "naturalWidth": 422,
+          "naturalHeight": 1023
+        }
+      ],
+      "horizontalOverflow": false,
+      "scrollWidth": 1425,
+      "innerWidth": 1440
+    },
+    {
+      "name": "02-category-main-ar",
+      "note": "Main category tab selected.",
+      "url": "https://mina-store.shopyxi.com/products?category=afa48c41-b281-4d25-9a43-ead35f4ecfd9",
+      "title": "Storefront",
+      "lang": "ar",
+      "dir": "rtl",
+      "bodyText": "mina-store\nCtrl+K\nEN\nØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„\nØ¥Ù†Ø´Ø§Ø¡ Ø­Ø³Ø§Ø¨\nØ§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©\nØ§Ù„Ù…Ù†ØªØ¬Ø§Øª\nÙ‚Ø³Ù… Ø±Ø¦ÙŠØ³Ù‰\n\nÙ‚Ø³Ù… Ø±Ø¦ÙŠØ³Ù‰\n\nÙ‚Ø³Ù… Ø±Ø¦ÙŠØ³Ù‰\n\n2 Ù†ØªÙŠØ¬Ø©\n\nCtrl+K\nØªØ±ØªÙŠØ¨ Ø­Ø³Ø¨:\nØ§Ù„Ø£ÙƒØ«Ø± ØµÙ„Ø©\nØ§Ù„Ø³Ø¹Ø±: Ù…Ù† Ø§Ù„Ø£Ù‚Ù„ Ù„Ù„Ø£Ø¹Ù„Ù‰\nØ§Ù„Ø³Ø¹Ø±: Ù…Ù† Ø§Ù„Ø£Ø¹Ù„Ù‰ Ù„Ù„Ø£Ù‚Ù„\nØ§Ù„Ø£Ø­Ø¯Ø«\nØ£ÙƒØ¨Ø± Ø®ØµÙ…\nAll Products\nUncategorized\nÙ‚Ø³Ù… Ø±Ø¦ÙŠØ³Ù‰\n\nÙ‚Ø³Ù… Ø±Ø¦ÙŠØ³Ù‰\n\n1 Ù…Ù†ØªØ¬ Ù…ØªÙˆÙØ±\n\nÙ‚Ø³Ù… Ø±Ø¦ÙŠØ³Ù‰\nÙ…Ø³Ø­ Ø§Ù„ÙƒÙ„\nØ§Ù„ÙÙ„Ø§ØªØ±\n1\nÙ…Ø³Ø­ Ø§Ù„ÙƒÙ„\nØ§Ù„Ù‚Ø³Ù…\n1\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n(2)\nØ§Ù„Ø¹Ù„Ø§Ù…Ø© Ø§Ù„ØªØ¬Ø§Ø±ÙŠØ©\ntest\n(2)\nÙ†Ø·Ø§Ù‚ Ø§Ù„Ø³Ø¹Ø±\nØ¬Ù…ÙŠØ¹ Ø§Ù„Ø£Ø³Ø¹Ø§Ø±\n100 - 200 EGP\n(1)\n200 - 500 EGP\n(1)\nØ§Ù„ØªÙˆÙØ±\nØ§Ù„Ù…ØªÙˆÙØ± ÙÙ‚Ø·\n(1)\nØºÙŠØ± Ù…ØªÙˆÙØ±\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\ntest\nÙ…ØªØ¹Ø¯Ø¯ Ø§Ù„Ø§Ø®ØªÙŠØ§Ø±Ø§Øª\nØºÙŠØ± Ù…ØªÙˆÙØ±\nØ§Ø®ØªØ± Ø§Ù„Ø®ÙŠØ§Ø±Ø§Øª\nFEATURED\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\nÙ…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ\nEGP 111.00\nIN STOCK (100)\n+\nØ¥Ø¶Ø§ÙØ© Ø¥Ù„Ù‰ Ø§Ù„Ø³Ù„Ø©\nmina-store\nØ®Ø¯Ù…Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡\n\nÙ„Ù… ÙŠØªÙ… Ù†Ø´Ø± Ø±ÙˆØ§Ø¨Ø· Ø®Ø¯Ù…Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡ Ø¨Ø¹Ø¯.\n\nÂ© 2026 mina-store. Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø­Ù‚ÙˆÙ‚ Ù…Ø­ÙÙˆØ¸Ø©.",
+      "productAnchors": [
+        {
+          "href": "/products/test",
+          "text": "ØºÙŠØ± Ù…ØªÙˆÙØ±\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\ntest\nÙ…ØªØ¹Ø¯Ø¯ Ø§Ù„Ø§Ø®ØªÙŠØ§Ø±Ø§Øª"
+        },
+        {
+          "href": "/products/test",
+          "text": "Ø§Ø®ØªØ± Ø§Ù„Ø®ÙŠØ§Ø±Ø§Øª"
+        },
+        {
+          "href": "/products/product-64986ae7",
+          "text": "FEATURED\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\nÙ…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ\nEGP 111.00"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://mina-store.shopyxi.com/api/upload/product-media/c96999b9-0541-ea8b-69f2-3e3c4e17f6e3/dc47511de9fc4f3c8c2a855696441179.png",
+          "alt": "test",
+          "naturalWidth": 512,
+          "naturalHeight": 512
+        },
+        {
+          "src": "https://mina-store.shopyxi.com/api/upload/product-media/64986ae7-7fe9-13dd-4bfa-aa08ce5d8f65/e14465fe94524f36a535fcc76fe42a3d.jpg",
+          "alt": "Ù…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ",
+          "naturalWidth": 422,
+          "naturalHeight": 1023
+        }
+      ],
+      "horizontalOverflow": false,
+      "scrollWidth": 1425,
+      "innerWidth": 1440
+    },
+    {
+      "name": "03-search-test-ar",
+      "note": "Search query \"test\" results.",
+      "url": "https://mina-store.shopyxi.com/products?category=afa48c41-b281-4d25-9a43-ead35f4ecfd9&q=test",
+      "title": "Storefront",
+      "lang": "ar",
+      "dir": "rtl",
+      "bodyText": "mina-store\nCtrl+K\nEN\nØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„\nØ¥Ù†Ø´Ø§Ø¡ Ø­Ø³Ø§Ø¨\nØ§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©\nØ§Ù„Ù…Ù†ØªØ¬Ø§Øª\nÙ‚Ø³Ù… Ø±Ø¦ÙŠØ³Ù‰\n\nÙ‚Ø³Ù… Ø±Ø¦ÙŠØ³Ù‰\n\nÙ‚Ø³Ù… Ø±Ø¦ÙŠØ³Ù‰\n\n2 Ù†ØªÙŠØ¬Ø©\n\nØªØ±ØªÙŠØ¨ Ø­Ø³Ø¨:\nØ§Ù„Ø£ÙƒØ«Ø± ØµÙ„Ø©\nØ§Ù„Ø³Ø¹Ø±: Ù…Ù† Ø§Ù„Ø£Ù‚Ù„ Ù„Ù„Ø£Ø¹Ù„Ù‰\nØ§Ù„Ø³Ø¹Ø±: Ù…Ù† Ø§Ù„Ø£Ø¹Ù„Ù‰ Ù„Ù„Ø£Ù‚Ù„\nØ§Ù„Ø£Ø­Ø¯Ø«\nØ£ÙƒØ¨Ø± Ø®ØµÙ…\nAll Products\nUncategorized\nÙ‚Ø³Ù… Ø±Ø¦ÙŠØ³Ù‰\n\nÙ‚Ø³Ù… Ø±Ø¦ÙŠØ³Ù‰\n\n1 Ù…Ù†ØªØ¬ Ù…ØªÙˆÙØ±\n\n\"test\"\nÙ‚Ø³Ù… Ø±Ø¦ÙŠØ³Ù‰\nÙ…Ø³Ø­ Ø§Ù„ÙƒÙ„\nØ§Ù„ÙÙ„Ø§ØªØ±\n2\nÙ…Ø³Ø­ Ø§Ù„ÙƒÙ„\nØ§Ù„Ù‚Ø³Ù…\n1\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n(2)\nØ§Ù„Ø¹Ù„Ø§Ù…Ø© Ø§Ù„ØªØ¬Ø§Ø±ÙŠØ©\ntest\n(2)\nÙ†Ø·Ø§Ù‚ Ø§Ù„Ø³Ø¹Ø±\nØ¬Ù…ÙŠØ¹ Ø§Ù„Ø£Ø³Ø¹Ø§Ø±\n100 - 200 EGP\n(1)\n200 - 500 EGP\n(1)\nØ§Ù„ØªÙˆÙØ±\nØ§Ù„Ù…ØªÙˆÙØ± ÙÙ‚Ø·\n(1)\nØºÙŠØ± Ù…ØªÙˆÙØ±\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\ntest\nÙ…ØªØ¹Ø¯Ø¯ Ø§Ù„Ø§Ø®ØªÙŠØ§Ø±Ø§Øª\nØºÙŠØ± Ù…ØªÙˆÙØ±\nØ§Ø®ØªØ± Ø§Ù„Ø®ÙŠØ§Ø±Ø§Øª\nFEATURED\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\nÙ…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ\nEGP 111.00\nIN STOCK (100)\n+\nØ¥Ø¶Ø§ÙØ© Ø¥Ù„Ù‰ Ø§Ù„Ø³Ù„Ø©\nmina-store\nØ®Ø¯Ù…Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡\n\nÙ„Ù… ÙŠØªÙ… Ù†Ø´Ø± Ø±ÙˆØ§Ø¨Ø· Ø®Ø¯Ù…Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡ Ø¨Ø¹Ø¯.\n\nÂ© 2026 mina-store. Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø­Ù‚ÙˆÙ‚ Ù…Ø­ÙÙˆØ¸Ø©.",
+      "productAnchors": [
+        {
+          "href": "/products/test",
+          "text": "ØºÙŠØ± Ù…ØªÙˆÙØ±\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\ntest\nÙ…ØªØ¹Ø¯Ø¯ Ø§Ù„Ø§Ø®ØªÙŠØ§Ø±Ø§Øª"
+        },
+        {
+          "href": "/products/test",
+          "text": "Ø§Ø®ØªØ± Ø§Ù„Ø®ÙŠØ§Ø±Ø§Øª"
+        },
+        {
+          "href": "/products/product-64986ae7",
+          "text": "FEATURED\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\nÙ…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ\nEGP 111.00"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://mina-store.shopyxi.com/api/upload/product-media/c96999b9-0541-ea8b-69f2-3e3c4e17f6e3/dc47511de9fc4f3c8c2a855696441179.png",
+          "alt": "test",
+          "naturalWidth": 512,
+          "naturalHeight": 512
+        },
+        {
+          "src": "https://mina-store.shopyxi.com/api/upload/product-media/64986ae7-7fe9-13dd-4bfa-aa08ce5d8f65/e14465fe94524f36a535fcc76fe42a3d.jpg",
+          "alt": "Ù…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ",
+          "naturalWidth": 422,
+          "naturalHeight": 1023
+        }
+      ],
+      "horizontalOverflow": false,
+      "scrollWidth": 1425,
+      "innerWidth": 1440
+    },
+    {
+      "name": "04-simple-product-detail-ar",
+      "note": "Simple product detail page, Arabic.",
+      "url": "https://mina-store.shopyxi.com/products/product-64986ae7",
+      "title": "Storefront",
+      "lang": "ar",
+      "dir": "rtl",
+      "bodyText": "mina-store\nCtrl+K\nEN\nØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„\nØ¥Ù†Ø´Ø§Ø¡ Ø­Ø³Ø§Ø¨\nHover to zoom\nPRODUCT GALLERY\nÙ…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ image 1\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\nÙ…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ\nEGP 111.00\n\nÙ…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ Ù…Ù† Ù…Ø§ÙŠØ¯Ù„ÙˆØŒ ØªØ±ÙƒÙŠØ¨Ø© Ø¹Ø§Ù„ÙŠØ© Ø§Ù„ØªØ±ÙƒÙŠØ²ØŒ Ø®Ø§Ù„ÙŠØ© Ù…Ù† Ø§Ù„Ø¹Ø·ÙˆØ±ØŒ 250 Ù…Ù„\n\nPURCHASE CONFIDENCE\n\nAVAILABILITY\nIn Stock (100)\nSKU\nAUTO-64986AE77FE913DD4BFAAA08CE5D8F65\nCATEGORY\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\nIn Stock (100)\nØ¥Ø¶Ø§ÙØ© Ø¥Ù„Ù‰ Ø§Ù„Ø³Ù„Ø©\nØ§Ù„Ù…Ù†ØªØ¬Ø§Øª\nCustomer Testimonials\nAdd testimonials in the builder to display customer feedback.\nRecommended Products\nØ¹Ø±Ø¶ Ø§Ù„ÙƒÙ„\nØºÙŠØ± Ù…ØªÙˆÙØ±\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\ntest\nÙ…ØªØ¹Ø¯Ø¯ Ø§Ù„Ø§Ø®ØªÙŠØ§Ø±Ø§Øª\nØºÙŠØ± Ù…ØªÙˆÙØ±\nØ§Ø®ØªØ± Ø§Ù„Ø®ÙŠØ§Ø±Ø§Øª\nmina-store\nØ®Ø¯Ù…Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡\n\nÙ„Ù… ÙŠØªÙ… Ù†Ø´Ø± Ø±ÙˆØ§Ø¨Ø· Ø®Ø¯Ù…Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡ Ø¨Ø¹Ø¯.\n\nÂ© 2026 mina-store. Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø­Ù‚ÙˆÙ‚ Ù…Ø­ÙÙˆØ¸Ø©.",
+      "productAnchors": [
+        {
+          "href": "/products/test",
+          "text": "ØºÙŠØ± Ù…ØªÙˆÙØ±\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\ntest\nÙ…ØªØ¹Ø¯Ø¯ Ø§Ù„Ø§Ø®ØªÙŠØ§Ø±Ø§Øª"
+        },
+        {
+          "href": "/products/test",
+          "text": "Ø§Ø®ØªØ± Ø§Ù„Ø®ÙŠØ§Ø±Ø§Øª"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://mina-store.shopyxi.com/api/upload/product-media/64986ae7-7fe9-13dd-4bfa-aa08ce5d8f65/e14465fe94524f36a535fcc76fe42a3d.jpg",
+          "alt": "Ù…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ image 1",
+          "naturalWidth": 422,
+          "naturalHeight": 1023
+        },
+        {
+          "src": "https://mina-store.shopyxi.com/api/upload/product-media/c96999b9-0541-ea8b-69f2-3e3c4e17f6e3/dc47511de9fc4f3c8c2a855696441179.png",
+          "alt": "test",
+          "naturalWidth": 512,
+          "naturalHeight": 512
+        }
+      ],
+      "horizontalOverflow": false,
+      "scrollWidth": 1425,
+      "innerWidth": 1440
+    },
+    {
+      "name": "05-variable-product-detail-ar",
+      "note": "Variable product detail page, Arabic.",
+      "url": "https://mina-store.shopyxi.com/products/test",
+      "title": "Storefront",
+      "lang": "ar",
+      "dir": "rtl",
+      "bodyText": "mina-store\nCtrl+K\nEN\nØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„\nØ¥Ù†Ø´Ø§Ø¡ Ø­Ø³Ø§Ø¨\nHover to zoom\nPRODUCT GALLERY\ntest image 1\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\ntest\nEGP 200.00\n\ntest\n\nØ§Ù„Ù„ÙˆÙ†: â€”\nØ§Ø¨ÙŠØ¶\nØ§Ø³ÙˆØ¯\n\nPURCHASE CONFIDENCE\n\nAVAILABILITY\nOut of stock\nSKU\nTEST\nCATEGORY\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\nSELECTED OPTION\nØ§Ø¨ÙŠØ¶\nOut of stock\nØºÙŠØ± Ù…ØªÙˆÙØ±\nØ§Ù„Ù…Ù†ØªØ¬Ø§Øª\nCustomer Testimonials\nAdd testimonials in the builder to display customer feedback.\nRecommended Products\nØ¹Ø±Ø¶ Ø§Ù„ÙƒÙ„\nFEATURED\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\nÙ…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ\nEGP 111.00\nIN STOCK (100)\n+\nØ¥Ø¶Ø§ÙØ© Ø¥Ù„Ù‰ Ø§Ù„Ø³Ù„Ø©\nmina-store\nØ®Ø¯Ù…Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡\n\nÙ„Ù… ÙŠØªÙ… Ù†Ø´Ø± Ø±ÙˆØ§Ø¨Ø· Ø®Ø¯Ù…Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡ Ø¨Ø¹Ø¯.\n\nÂ© 2026 mina-store. Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø­Ù‚ÙˆÙ‚ Ù…Ø­ÙÙˆØ¸Ø©.",
+      "productAnchors": [
+        {
+          "href": "/products/product-64986ae7",
+          "text": "FEATURED\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\nÙ…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ\nEGP 111.00"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://mina-store.shopyxi.com/api/upload/product-media/c96999b9-0541-ea8b-69f2-3e3c4e17f6e3/dc47511de9fc4f3c8c2a855696441179.png",
+          "alt": "test image 1",
+          "naturalWidth": 512,
+          "naturalHeight": 512
+        },
+        {
+          "src": "https://mina-store.shopyxi.com/api/upload/product-media/64986ae7-7fe9-13dd-4bfa-aa08ce5d8f65/e14465fe94524f36a535fcc76fe42a3d.jpg",
+          "alt": "Ù…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ",
+          "naturalWidth": 422,
+          "naturalHeight": 1023
+        }
+      ],
+      "horizontalOverflow": false,
+      "scrollWidth": 1425,
+      "innerWidth": 1440
+    },
+    {
+      "name": "06-products-desktop-en",
+      "note": "All products, English, desktop 1440px.",
+      "url": "https://mina-store.shopyxi.com/products",
+      "title": "Storefront",
+      "lang": "en",
+      "dir": "ltr",
+      "bodyText": "mina-store\nCtrl+K\nØ§Ù„Ø¹Ø±Ø¨ÙŠØ©\nLogin\nSign Up\nHome\nProducts\n\nPRODUCTS\n\nAll Products\n\n2 results\n\nCtrl+K\nSort by:\nRelevance\nPrice: Low to High\nPrice: High to Low\nNewest\nBiggest Discount\nAll Products\nUncategorized\nÙ‚Ø³Ù… Ø±Ø¦ÙŠØ³Ù‰\n\nPRODUCTS\n\n1 available products\n\nFilters\nCategory\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n(2)\nBrand\ntest\n(2)\nPrice Range\nAll prices\n100 - 200 EGP\n(1)\n200 - 500 EGP\n(1)\nAvailability\nIn stock only\n(1)\nOUT OF STOCK\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\ntest\nMultiple options\nOUT OF STOCK\nSELECT OPTIONS\nFEATURED\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\nÙ…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ\nEGP 111.00\nIN STOCK (100)\n+\nADD TO CART\nmina-store\nCUSTOMER SERVICE\n\nNo customer service links have been published yet.\n\nÂ© 2026 mina-store. All rights reserved.",
+      "productAnchors": [
+        {
+          "href": "/products/test",
+          "text": "OUT OF STOCK\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\ntest\nMultiple options"
+        },
+        {
+          "href": "/products/test",
+          "text": "SELECT OPTIONS"
+        },
+        {
+          "href": "/products/product-64986ae7",
+          "text": "FEATURED\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\nÙ…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ\nEGP 111.00"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://mina-store.shopyxi.com/api/upload/product-media/c96999b9-0541-ea8b-69f2-3e3c4e17f6e3/dc47511de9fc4f3c8c2a855696441179.png",
+          "alt": "test",
+          "naturalWidth": 512,
+          "naturalHeight": 512
+        },
+        {
+          "src": "https://mina-store.shopyxi.com/api/upload/product-media/64986ae7-7fe9-13dd-4bfa-aa08ce5d8f65/e14465fe94524f36a535fcc76fe42a3d.jpg",
+          "alt": "Ù…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ",
+          "naturalWidth": 422,
+          "naturalHeight": 1023
+        }
+      ],
+      "horizontalOverflow": false,
+      "scrollWidth": 1425,
+      "innerWidth": 1440
+    },
+    {
+      "name": "07-products-mobile-ar",
+      "note": "All products, Arabic, mobile 390x844.",
+      "url": "https://mina-store.shopyxi.com/products",
+      "title": "Storefront",
+      "lang": "ar",
+      "dir": "rtl",
+      "bodyText": "mina-store\nØ§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©\nØ§Ù„Ù…Ù†ØªØ¬Ø§Øª\n\nØ§Ù„Ù…Ù†ØªØ¬Ø§Øª\n\nØ¬Ù…ÙŠØ¹ Ø§Ù„Ù…Ù†ØªØ¬Ø§Øª\n\n2 Ù†ØªÙŠØ¬Ø©\n\nØªØ±ØªÙŠØ¨ Ø­Ø³Ø¨:\nØ§Ù„Ø£ÙƒØ«Ø± ØµÙ„Ø©\nØ§Ù„Ø³Ø¹Ø±: Ù…Ù† Ø§Ù„Ø£Ù‚Ù„ Ù„Ù„Ø£Ø¹Ù„Ù‰\nØ§Ù„Ø³Ø¹Ø±: Ù…Ù† Ø§Ù„Ø£Ø¹Ù„Ù‰ Ù„Ù„Ø£Ù‚Ù„\nØ§Ù„Ø£Ø­Ø¯Ø«\nØ£ÙƒØ¨Ø± Ø®ØµÙ…\nØ§Ù„ÙÙ„Ø§ØªØ±\nAll Products\nUncategorized\nÙ‚Ø³Ù… Ø±Ø¦ÙŠØ³Ù‰\n\nØ§Ù„Ù…Ù†ØªØ¬Ø§Øª\n\n1 Ù…Ù†ØªØ¬ Ù…ØªÙˆÙØ±\n\nØºÙŠØ± Ù…ØªÙˆÙØ±\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\ntest\nÙ…ØªØ¹Ø¯Ø¯ Ø§Ù„Ø§Ø®ØªÙŠØ§Ø±Ø§Øª\nØºÙŠØ± Ù…ØªÙˆÙØ±\nØ§Ø®ØªØ± Ø§Ù„Ø®ÙŠØ§Ø±Ø§Øª\nFEATURED\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\nÙ…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ\nEGP 111.00\nIN STOCK (100)\n+\nØ¥Ø¶Ø§ÙØ© Ø¥Ù„Ù‰ Ø§Ù„Ø³Ù„Ø©\nmina-store\nØ®Ø¯Ù…Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡\n\nÙ„Ù… ÙŠØªÙ… Ù†Ø´Ø± Ø±ÙˆØ§Ø¨Ø· Ø®Ø¯Ù…Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡ Ø¨Ø¹Ø¯.\n\nÂ© 2026 mina-store. Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø­Ù‚ÙˆÙ‚ Ù…Ø­ÙÙˆØ¸Ø©.",
+      "productAnchors": [
+        {
+          "href": "/products/test",
+          "text": "ØºÙŠØ± Ù…ØªÙˆÙØ±\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\ntest\nÙ…ØªØ¹Ø¯Ø¯ Ø§Ù„Ø§Ø®ØªÙŠØ§Ø±Ø§Øª"
+        },
+        {
+          "href": "/products/test",
+          "text": "Ø§Ø®ØªØ± Ø§Ù„Ø®ÙŠØ§Ø±Ø§Øª"
+        },
+        {
+          "href": "/products/product-64986ae7",
+          "text": "FEATURED\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\nÙ…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ\nEGP 111.00"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://mina-store.shopyxi.com/api/upload/product-media/c96999b9-0541-ea8b-69f2-3e3c4e17f6e3/dc47511de9fc4f3c8c2a855696441179.png",
+          "alt": "test",
+          "naturalWidth": 512,
+          "naturalHeight": 512
+        },
+        {
+          "src": "https://mina-store.shopyxi.com/api/upload/product-media/64986ae7-7fe9-13dd-4bfa-aa08ce5d8f65/e14465fe94524f36a535fcc76fe42a3d.jpg",
+          "alt": "Ù…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ",
+          "naturalWidth": 422,
+          "naturalHeight": 1023
+        }
+      ],
+      "horizontalOverflow": false,
+      "scrollWidth": 390,
+      "innerWidth": 390
+    }
+  ],
+  "consoleErrors": [
+    "[desktop-ar] The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element.",
+    "[desktop-ar] Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked.",
+    "[desktop-ar] Failed to load resource: the server responded with a status of 401 ()",
+    "[desktop-ar] Failed to load resource: the server responded with a status of 401 ()",
+    "[desktop-ar] The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element.",
+    "[desktop-ar] Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked.",
+    "[desktop-ar] Failed to load resource: the server responded with a status of 401 ()",
+    "[desktop-ar] Failed to load resource: the server responded with a status of 401 ()",
+    "[desktop-ar] The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element.",
+    "[desktop-ar] Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked.",
+    "[desktop-ar] Failed to load resource: the server responded with a status of 401 ()",
+    "[desktop-ar] Failed to load resource: the server responded with a status of 401 ()",
+    "[desktop-ar] The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element.",
+    "[desktop-ar] Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked.",
+    "[desktop-ar] Failed to load resource: the server responded with a status of 401 ()",
+    "[desktop-ar] Failed to load resource: the server responded with a status of 401 ()",
+    "[mobile-ar] The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element.",
+    "[mobile-ar] Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked.",
+    "[mobile-ar] Failed to load resource: the server responded with a status of 401 ()",
+    "[mobile-ar] Failed to load resource: the server responded with a status of 401 ()"
+  ],
+  "pageErrors": [],
+  "failedRequests": [
+    "[desktop-ar] GET https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092 :: csp",
+    "[desktop-ar] GET https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092 :: csp",
+    "[desktop-ar] GET https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092 :: csp",
+    "[desktop-ar] GET https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092 :: csp",
+    "[mobile-ar] GET https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092 :: csp"
+  ],
+  "badRequiredResponses": [],
+  "finishedAt": "2026-11-18T17:24:47.141Z"
+}

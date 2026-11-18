@@ -1,0 +1,106 @@
+{
+  "capturedAt": "2026-11-18T17:22Z",
+  "tenant": {
+    "id": "059aa5c5-b9db-4dd6-bf44-4004d1eb96a1",
+    "slug": "mina-store"
+  },
+  "hostname": "https://mina-store.shopyxi.com",
+  "source": {
+    "tenantProductCount": 2,
+    "products": [
+      {
+        "id": "64986ae7-7fe9-13dd-4bfa-aa08ce5d8f65",
+        "name": "Ù…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ",
+        "isActive": true,
+        "publishStatus": 1,
+        "isOnlineVisible": true,
+        "isSearchable": true,
+        "isDeleted": false,
+        "salePrice": 11,
+        "projectionMutationVersion": 9
+      },
+      {
+        "id": "c96999b9-0541-ea8b-69f2-3e3c4e17f6e3",
+        "name": "test",
+        "isActive": true,
+        "publishStatus": 1,
+        "isOnlineVisible": true,
+        "isSearchable": true,
+        "isDeleted": false,
+        "salePrice": 0,
+        "projectionMutationVersion": 5
+      }
+    ],
+    "variants": [
+      {
+        "productId": "64986ae7-7fe9-13dd-4bfa-aa08ce5d8f65",
+        "id": "3e5c9833-511f-46ee-8762-cd8400880f0c",
+        "price": 11,
+        "onlinePrice": 111,
+        "isActive": true,
+        "isDefault": true
+      },
+      {
+        "productId": "c96999b9-0541-ea8b-69f2-3e3c4e17f6e3",
+        "id": "ca5d9b7e-7620-4647-8cae-e31ce02db679",
+        "price": 200,
+        "onlinePrice": null,
+        "isActive": true,
+        "isDefault": true
+      },
+      {
+        "productId": "c96999b9-0541-ea8b-69f2-3e3c4e17f6e3",
+        "id": "10c0f12f-bcdc-4027-b833-f34aa14757bf",
+        "price": 200,
+        "onlinePrice": null,
+        "isActive": true,
+        "isDefault": false
+      }
+    ]
+  },
+  "outbox": {
+    "messages": 0,
+    "states": 0,
+    "previouslyUndelivered": 222,
+    "previouslyDistinctStates": 178,
+    "headSequenceBefore": 282
+  },
+  "mongodb": {
+    "totalProducts": 9,
+    "tenantProducts": 2,
+    "matchingIds": 2,
+    "duplicates": 0
+  },
+  "opensearch": {
+    "matchingHits": 2,
+    "ids": [
+      "059aa5c5-b9db-4dd6-bf44-4004d1eb96a1_64986ae7-7fe9-13dd-4bfa-aa08ce5d8f65",
+      "059aa5c5-b9db-4dd6-bf44-4004d1eb96a1_c96999b9-0541-ea8b-69f2-3e3c4e17f6e3"
+    ]
+  },
+  "storefrontApi": {
+    "totalCount": 2,
+    "ids": [
+      "c96999b9-0541-ea8b-69f2-3e3c4e17f6e3",
+      "64986ae7-7fe9-13dd-4bfa-aa08ce5d8f65"
+    ],
+    "searchTimeMs": 1035
+  },
+  "rabbitmq": {
+    "apiEventExchanges": 10,
+    "checkoutStartedExchangeCreated": true,
+    "accessRefusedLastAt": "2026-11-18T17:21:07Z",
+    "productQueuesEmpty": true,
+    "errorQueues": 3,
+    "errorQueueMessages": 21
+  },
+  "deployment": {
+    "applicationImageChanged": false,
+    "apiImage": "localhost/shopixy/api@sha256:75f49cb501bae5f3add2677367300bcdbb70a9799a257041fd7d38b01d084e04",
+    "apiDeploymentGeneration": 66,
+    "apiPods": 1,
+    "apiRestarts": 0,
+    "rabbitmqPods": 3,
+    "brokerRestarted": false
+  }
+}

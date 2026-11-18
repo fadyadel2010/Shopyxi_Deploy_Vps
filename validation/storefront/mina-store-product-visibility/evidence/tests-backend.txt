@@ -1,0 +1,4 @@
+Test run for C:\Users\fadya\AppData\Local\Temp\opencode\shopixy-affiliate-analytics-20261115\source\PointOfSale.Tests\bin\Debug\net10.0\PointOfSale.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:    55, Skipped:     0, Total:    55, Duration: 1 m 27 s - PointOfSale.Tests.dll (net10.0)

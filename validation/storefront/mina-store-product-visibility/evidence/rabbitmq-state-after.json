@@ -1,0 +1,146 @@
+{
+  "permission": {
+    "user": "shopixy-app",
+    "vhost": "shopixy",
+    "configure": "^(?:MassTransit:Fault|(?:((?:(?P<fault>MassTransit:Fault--)?PointOfSale\\.Core\\.Events(\\.(AbandonedCart|Affiliate|CommerceHub|Domain|Marketplace|WhatsApp))?:[A-Z][A-Za-z0-9]*(Event|EventBase|DomainEvent)(?(fault)--|)|PointOfSale\\.API\\.Events:[A-Z][A-Za-z0-9]*(?:Event|EventBase))|((abandoned|affiliate|analytics|authoritative|cart|checkout|cms|cod|commercehub|coupon|fulfillment|homepage|marketplace|navigation|online|order|payment|product|promotion|recovery|redis|refund|shipment|shipping|smart|storefront|tenant|wallet|whats)(-[a-z0-9]+){0,7}-(accounting|activity|affiliate|analytics|attribution|click|clicked|collected|confirmation|conversion|delivered|earning|event|events|index|invalidation|monitor|notification|orchestration|otp|projection|queue|requested|sync|updated|v1|v2|v7)|notifications|orders|products)(_(error|skipped))?|shopixy\\.events|shopixyapi_PointOfSaleAPI_bus_[a-z0-9]+|synthetic-qa-collection-affiliate(_(error|skipped))?)))$",
+    "write": "^(?:MassTransit:Fault|(?:((?:(?P<fault>MassTransit:Fault--)?PointOfSale\\.Core\\.Events(\\.(AbandonedCart|Affiliate|CommerceHub|Domain|Marketplace|WhatsApp))?:[A-Z][A-Za-z0-9]*(Event|EventBase|DomainEvent)(?(fault)--|)|PointOfSale\\.API\\.Events:[A-Z][A-Za-z0-9]*(?:Event|EventBase))|((abandoned|affiliate|analytics|authoritative|cart|checkout|cms|cod|commercehub|coupon|fulfillment|homepage|marketplace|navigation|online|order|payment|product|promotion|recovery|redis|refund|shipment|shipping|smart|storefront|tenant|wallet|whats)(-[a-z0-9]+){0,7}-(accounting|activity|affiliate|analytics|attribution|click|clicked|collected|confirmation|conversion|delivered|earning|event|events|index|invalidation|monitor|notification|orchestration|otp|projection|queue|requested|sync|updated|v1|v2|v7)|notifications|orders|products)(_(error|skipped))?|shopixy\\.events|shopixyapi_PointOfSaleAPI_bus_[a-z0-9]+|synthetic-qa-collection-affiliate(_(error|skipped))?)))$",
+    "read": "^(?:MassTransit:Fault|(?:((?:(?P<fault>MassTransit:Fault--)?PointOfSale\\.Core\\.Events(\\.(AbandonedCart|Affiliate|CommerceHub|Domain|Marketplace|WhatsApp))?:[A-Z][A-Za-z0-9]*(Event|EventBase|DomainEvent)(?(fault)--|)|PointOfSale\\.API\\.Events:[A-Z][A-Za-z0-9]*(?:Event|EventBase))|((abandoned|affiliate|analytics|authoritative|cart|checkout|cms|cod|commercehub|coupon|fulfillment|homepage|marketplace|navigation|online|order|payment|product|promotion|recovery|redis|refund|shipment|shipping|smart|storefront|tenant|wallet|whats)(-[a-z0-9]+){0,7}-(accounting|activity|affiliate|analytics|attribution|click|clicked|collected|confirmation|conversion|delivered|earning|event|events|index|invalidation|monitor|notification|orchestration|otp|projection|queue|requested|sync|updated|v1|v2|v7)|notifications|orders|products)(_(error|skipped))?|shopixy\\.events|shopixyapi_PointOfSaleAPI_bus_[a-z0-9]+|synthetic-qa-collection-affiliate(_(error|skipped))?)))$"
+  },
+  "totalQueues": 98,
+  "productQueues": [
+    {
+      "name": "affiliate-product-intelligence-projection",
+      "messages": 0,
+      "consumers": 1,
+      "state": "running"
+    },
+    {
+      "name": "affiliate-product-policy-projection",
+      "messages": 0,
+      "consumers": 1,
+      "state": "running"
+    },
+    {
+      "name": "affiliate-product-policy-projection_error",
+      "messages": 7,
+      "consumers": 0,
+      "state": "running"
+    },
+    {
+      "name": "product-cache-invalidation",
+      "messages": 0,
+      "consumers": 1,
+      "state": "running"
+    },
+    {
+      "name": "product-created-event",
+      "messages": 0,
+      "consumers": 1,
+      "state": "running"
+    },
+    {
+      "name": "product-deleted-search-index",
+      "messages": 0,
+      "consumers": 1,
+      "state": "running"
+    },
+    {
+      "name": "product-media-changed-event",
+      "messages": 0,
+      "consumers": 1,
+      "state": "running"
+    },
+    {
+      "name": "product-promotion-search-index",
+      "messages": 0,
+      "consumers": 1,
+      "state": "running"
+    },
+    {
+      "name": "product-search-index",
+      "messages": 0,
+      "consumers": 1,
+      "state": "running"
+    },
+    {
+      "name": "product-stock-price-search-index",
+      "messages": 0,
+      "consumers": 1,
+      "state": "running"
+    },
+    {
+      "name": "product-stock-price-search-index_error",
+      "messages": 7,
+      "consumers": 0,
+      "state": "running"
+    },
+    {
+      "name": "product-stock-projection",
+      "messages": 0,
+      "consumers": 1,
+      "state": "running"
+    },
+    {
+      "name": "product-stock-projection_error",
+      "messages": 7,
+      "consumers": 0,
+      "state": "running"
+    },
+    {
+      "name": "product-updated-event",
+      "messages": 0,
+      "consumers": 1,
+      "state": "running"
+    },
+    {
+      "name": "product-updated-queue",
+      "messages": 0,
+      "consumers": 1,
+      "state": "running"
+    },
+    {
+      "name": "product-updated-search-index",
+      "messages": 0,
+      "consumers": 1,
+      "state": "running"
+    },
+    {
+      "name": "product-variant-projection",
+      "messages": 0,
+      "consumers": 1,
+      "state": "running"
+    },
+    {
+      "name": "product-visibility-lifecycle-projection",
+      "messages": 0,
+      "consumers": 1,
+      "state": "running"
+    },
+    {
+      "name": "products",
+      "messages": 0,
+      "consumers": 0,
+      "state": "running"
+    }
+  ],
+  "errorQueues": [
+    {
+      "name": "affiliate-product-policy-projection_error",
+      "messages": 7,
+      "consumers": 0,
+      "state": "running"
+    },
+    {
+      "name": "product-stock-price-search-index_error",
+      "messages": 7,
+      "consumers": 0,
+      "state": "running"
+    },
+    {
+      "name": "product-stock-projection_error",
+      "messages": 7,
+      "consumers": 0,
+      "state": "running"
+    }
+  ]
+}

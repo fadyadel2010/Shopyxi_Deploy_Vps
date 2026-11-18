@@ -1,0 +1,12 @@
+
+> pointofsale-storefront@0.1.0 test
+> vitest --run src/pages/ProductListPage.catalogOwnership.test.ts src/services/api/productAuthority.test.ts src/services/api/storefrontProductDetailApi.test.ts src/hooks/useHomepageSectionProducts.test.ts
+
+
+ RUN  v4.1.12 C:/Users/fadya/AppData/Local/Temp/opencode/shopixy-affiliate-analytics-20261115/source/PointOfSale.Storefront
+
+
+ Test Files  4 passed (4)
+      Tests  31 passed (31)
+   Start at  19:30:26
+   Duration  310ms (transform 281ms, setup 0ms, import 380ms, tests 25ms, environment 0ms)

@@ -1,0 +1,59 @@
+{
+  "capturedAt": "2026-11-18T17:22Z",
+  "productId": "904b05b1-767b-59d8-98b0-40461b7667d6",
+  "tenantId": "cdbe20e0-f84a-4416-b20c-044e6bcf04d0",
+  "tenantSlug": "ahram",
+  "productName": "QA-ERP-R10-20261113-TRACKED",
+  "productActive": false,
+  "publishStatus": 2,
+  "variantId": "4c0faed0-ed21-49ee-a823-85e9bb2fffed",
+  "uniqueEvents": [
+    {
+      "stockVersion": 12,
+      "messageId": "dfb1abfa-5ecb-4bae-be28-893f27eb96c4"
+    },
+    {
+      "stockVersion": 13,
+      "messageId": "8e008f02-9761-4fee-9fc5-0b58b421d3c0"
+    },
+    {
+      "stockVersion": 14,
+      "messageId": "b3211151-5605-4003-b982-b2f5af8c7a36"
+    },
+    {
+      "stockVersion": 15,
+      "messageId": "a6dd1984-0cb5-43e9-9bbf-816a52c63473"
+    },
+    {
+      "stockVersion": 16,
+      "messageId": "b36c2674-db5f-45d6-83d4-c047cb6591ee"
+    },
+    {
+      "stockVersion": 17,
+      "messageId": "e505b7b4-40b5-4829-9129-a21dbea0aa00"
+    },
+    {
+      "stockVersion": 18,
+      "messageId": "3e9bb560-9df4-47d7-9b13-2bec5fbeb94c"
+    }
+  ],
+  "queues": [
+    {
+      "name": "affiliate-product-policy-projection_error",
+      "messages": 7
+    },
+    {
+      "name": "product-stock-price-search-index_error",
+      "messages": 7
+    },
+    {
+      "name": "product-stock-projection_error",
+      "messages": 7
+    }
+  ],
+  "explanation": "Existing ProductVariantStockChangedEvent messages (versions 12-18, authored 2026-11-13) were replayed after the outbox was unblocked. These three consumers require the product projection to have applied the corresponding stock event first; they observed the older projection and parked their copies. No Mina Store message is present. Messages were preserved, not deleted or requeued.",
+  "mongoProjectionObservation": {
+    "lastEventVersion": 44,
+    "lastStockEventVersion": 11
+  }
+}

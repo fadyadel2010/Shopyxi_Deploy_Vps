@@ -1,0 +1,31 @@
+{
+  "data": {
+    "url": "https://mina-store.shopyxi.com/products",
+    "bodyText": "mina-store\nØ§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©\nØ§Ù„Ù…Ù†ØªØ¬Ø§Øª\n\nØ§Ù„Ù…Ù†ØªØ¬Ø§Øª\n\nØ¬Ù…ÙŠØ¹ Ø§Ù„Ù…Ù†ØªØ¬Ø§Øª\n\n2 Ù†ØªÙŠØ¬Ø©\n\nØªØ±ØªÙŠØ¨ Ø­Ø³Ø¨:\nØ§Ù„Ø£ÙƒØ«Ø± ØµÙ„Ø©\nØ§Ù„Ø³Ø¹Ø±: Ù…Ù† Ø§Ù„Ø£Ù‚Ù„ Ù„Ù„Ø£Ø¹Ù„Ù‰\nØ§Ù„Ø³Ø¹Ø±: Ù…Ù† Ø§Ù„Ø£Ø¹Ù„Ù‰ Ù„Ù„Ø£Ù‚Ù„\nØ§Ù„Ø£Ø­Ø¯Ø«\nØ£ÙƒØ¨Ø± Ø®ØµÙ…\nØ§Ù„ÙÙ„Ø§ØªØ±\nAll Products\nUncategorized\nÙ‚Ø³Ù… Ø±Ø¦ÙŠØ³Ù‰\n\nØ§Ù„Ù…Ù†ØªØ¬Ø§Øª\n\n1 Ù…Ù†ØªØ¬ Ù…ØªÙˆÙØ±\n\nØºÙŠØ± Ù…ØªÙˆÙØ±\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\ntest\nÙ…ØªØ¹Ø¯Ø¯ Ø§Ù„Ø§Ø®ØªÙŠØ§Ø±Ø§Øª\nØºÙŠØ± Ù…ØªÙˆÙØ±\nØ§Ø®ØªØ± Ø§Ù„Ø®ÙŠØ§Ø±Ø§Øª\nFEATURED\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\nÙ…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ\nEGP 111.00\nIN STOCK (100)\n+\nØ¥Ø¶Ø§ÙØ© Ø¥Ù„Ù‰ Ø§Ù„Ø³Ù„Ø©\nmina-store\nØ®Ø¯Ù…Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡\n\nÙ„Ù… ÙŠØªÙ… Ù†Ø´Ø± Ø±ÙˆØ§Ø¨Ø· Ø®Ø¯Ù…Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡ Ø¨Ø¹Ø¯.\n\nÂ© 2026 mina-store. Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø­Ù‚ÙˆÙ‚ Ù…Ø­ÙÙˆØ¸Ø©.",
+    "images": [
+      {
+        "src": "https://mina-store.shopyxi.com/api/upload/product-media/c96999b9-0541-ea8b-69f2-3e3c4e17f6e3/dc47511de9fc4f3c8c2a855696441179.png",
+        "alt": "test",
+        "complete": true,
+        "naturalWidth": 512,
+        "naturalHeight": 512
+      },
+      {
+        "src": "https://mina-store.shopyxi.com/api/upload/product-media/64986ae7-7fe9-13dd-4bfa-aa08ce5d8f65/e14465fe94524f36a535fcc76fe42a3d.jpg",
+        "alt": "Ù…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ",
+        "complete": true,
+        "naturalWidth": 422,
+        "naturalHeight": 1023
+      }
+    ],
+    "overflow": false,
+    "scrollWidth": 390,
+    "innerWidth": 390
+  },
+  "errors": [
+    "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element.",
+    "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked.",
+    "Failed to load resource: the server responded with a status of 401 ()",
+    "Failed to load resource: the server responded with a status of 401 ()"
+  ]
+}

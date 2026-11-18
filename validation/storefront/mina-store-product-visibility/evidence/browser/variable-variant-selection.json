@@ -1,0 +1,15 @@
+{
+  "clicked": true,
+  "before": "mina-store\nCtrl+K\nEN\nØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„\nØ¥Ù†Ø´Ø§Ø¡ Ø­Ø³Ø§Ø¨\nHover to zoom\nPRODUCT GALLERY\ntest image 1\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\ntest\nEGP 200.00\n\ntest\n\nØ§Ù„Ù„ÙˆÙ†: â€”\nØ§Ø¨ÙŠØ¶\nØ§Ø³ÙˆØ¯\n\nPURCHASE CONFIDENCE\n\nAVAILABILITY\nOut of stock\nSKU\nTEST\nCATEGORY\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\nSELECTED OPTION\nØ§Ø¨ÙŠØ¶\nOut of stock\nØºÙŠØ± Ù…ØªÙˆÙØ±\nØ§Ù„Ù…Ù†ØªØ¬Ø§Øª\nCustomer Testimonials\nAdd testimonials in the builder to display customer feedback.\nRecommended Products\nØ¹Ø±Ø¶ Ø§Ù„ÙƒÙ„\nFEATURED\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\nÙ…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ\nEGP 111.00\nIN STOCK (100)\n+\nØ¥Ø¶Ø§ÙØ© Ø¥Ù„Ù‰ Ø§Ù„Ø³Ù„Ø©\nmina-store\nØ®Ø¯Ù…Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡\n\nÙ„Ù… ÙŠØªÙ… Ù†Ø´Ø± Ø±ÙˆØ§Ø¨Ø· Ø®Ø¯Ù…Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡ Ø¨Ø¹Ø¯.\n\nÂ© 2026 mina-store. Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø­Ù‚ÙˆÙ‚ Ù…Ø­ÙÙˆØ¸Ø©.",
+  "after": {
+    "bodyText": "mina-store\nCtrl+K\nEN\nØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„\nØ¥Ù†Ø´Ø§Ø¡ Ø­Ø³Ø§Ø¨\nHover to zoom\nPRODUCT GALLERY\ntest image 1\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\ntest\nEGP 200.00\n\ntest\n\nØ§Ù„Ù„ÙˆÙ†: Ø§Ø³ÙˆØ¯\nØ§Ø¨ÙŠØ¶\nØ§Ø³ÙˆØ¯\n\nPURCHASE CONFIDENCE\n\nAVAILABILITY\nOut of stock\nSKU\nTEST-2\nCATEGORY\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\nSELECTED OPTION\nØ§Ø³ÙˆØ¯\nOut of stock\nØºÙŠØ± Ù…ØªÙˆÙØ±\nØ§Ù„Ù…Ù†ØªØ¬Ø§Øª\nCustomer Testimonials\nAdd testimonials in the builder to display customer feedback.\nRecommended Products\nØ¹Ø±Ø¶ Ø§Ù„ÙƒÙ„\nFEATURED\n\nÙ‚Ø³Ù… ÙØ±Ø¹Ù‰\n\nÙ…Ù†Ø¸Ù ÙˆØ§Ù„Ø²Ø¬Ø§Ø¬Ø§Øª Ø¨Ø§Ø¨Ù„ Ø¬ÙˆÙŠ\nEGP 111.00\nIN STOCK (100)\n+\nØ¥Ø¶Ø§ÙØ© Ø¥Ù„Ù‰ Ø§Ù„Ø³Ù„Ø©\nmina-store\nØ®Ø¯Ù…Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡\n\nÙ„Ù… ÙŠØªÙ… Ù†Ø´Ø± Ø±ÙˆØ§Ø¨Ø· Ø®Ø¯Ù…Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡ Ø¨Ø¹Ø¯.\n\nÂ© 2026 mina-store. Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø­Ù‚ÙˆÙ‚ Ù…Ø­ÙÙˆØ¸Ø©.",
+    "selectedOptionText": "SELECTED OPTION\nØ§Ø³ÙˆØ¯",
+    "priceText": "EGP 200.00"
+  },
+  "errors": [
+    "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element.",
+    "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092' violates the following Content Security Policy directive: \"script-src 'self' https://js.stripe.com https://accounts.google.com https://connect.facebook.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked.",
+    "Failed to load resource: the server responded with a status of 401 ()",
+    "Failed to load resource: the server responded with a status of 401 ()"
+  ]
+}
