@@ -323,7 +323,7 @@ product was created, modified or published during this mission.
   tests
 - Dependency/egress commit: `e0da635` — exact OpenRouter egress and beacon
   boundary guard
-- Evidence/report commit: see the final commit on the branch
+- Evidence/report commit: `d5784f4` — FINAL-REPORT and sanitized evidence
 - Remote branch: `origin/ai/product-generation-production-fix-20261118`
 - PR creation URL:
   `https://github.com/fadyadel2010/Shopyxi_Deploy_Vps/pull/new/ai/product-generation-production-fix-20261118`
