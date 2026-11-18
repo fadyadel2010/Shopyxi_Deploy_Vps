@@ -96,6 +96,25 @@ the API rollout.
 4. Run a real generation from `https://admin.shopyxi.com/products/new/edit`.
 5. Confirm the generated draft populates the form and no product is saved.
 
+## Redis runtime ACL
+
+The mounted `redis-ha-auth` ACL for `shopixy-api-runtime` did not allow the
+`ai:ratelimit:*` or `ai:usage:*` key namespaces. Redis therefore rejected the
+rate-limiter Lua script with `RedisServerException`; `AIRateLimiter.CheckAsync`
+failed closed and returned `429`. The ACL is updated with the two exact key
+patterns and the Redis pods are rolled one at a time so the ACL file is
+reloaded. The existing `ratelimit:*` namespace remains unchanged.
+
+## OpenRouter egress
+
+The API pod has no direct internet egress. Its `HTTPS_PROXY` points at the
+allowlisted `shopixy-r2-egress` CONNECT proxy, which previously accepted only
+the exact R2 host. That caused `HttpRequestException` on the OpenRouter call.
+`proxy.cjs` now accepts an ordered allowlist: the existing R2 host plus the
+exact host `openrouter.ai` (port 443 only), still with public-IPv4 validation
+and no wildcard or redirect following. The proxy ConfigMap is patched and the
+proxy deployment is restarted; the API deployment does not need a rebuild.
+
 ## Frontend `reportAllChanges` exception
 
 `reportAllChanges` is not present in the application source or in the deployed
