@@ -145,6 +145,33 @@ describe('AiProductGeneratorModal generation lock (Wave 3)', () => {
         expect(screen.queryByRole('alert')).not.toBeInTheDocument()
     })
 
+    it('handles the production-normalized opaque 503 without an uncaught exception', async () => {
+        // Production deliberately replaces every 5xx body with this shape.
+        // The modal must surface it, keep the form usable, and never apply a draft.
+        const onApply = vi.fn()
+        apiPostMock.mockRejectedValueOnce({
+            response: {
+                status: 503,
+                data: {
+                    code: 'INTERNAL_ERROR',
+                    message: 'An unexpected error occurred.',
+                    traceId: '7c3b4c5d-0000-4000-8000-000000000000'
+                }
+            }
+        })
+        const { container } = renderOpen({ onApply })
+        fillIdea(container)
+
+        clickGenerate()
+
+        const alert = await screen.findByRole('alert')
+        expect(alert).toHaveTextContent('An unexpected error occurred.')
+        expect(container.querySelector('textarea')).not.toBeDisabled()
+        expect(screen.getByRole('button', { name: 'Generate Product' })).not.toBeDisabled()
+        expect(screen.queryByRole('button', { name: 'Apply to Product Form' })).not.toBeInTheDocument()
+        expect(onApply).not.toHaveBeenCalled()
+    })
+
     it('ignores a stale response that arrives after the modal was closed', async () => {
         let resolvePost!: (value: unknown) => void
         apiPostMock.mockImplementation(() => new Promise((resolve) => { resolvePost = resolve }))

@@ -207,6 +207,27 @@ public sealed class ShopixyAiReliabilityTests
         Assert.True(options.FreeModelsOnly); Assert.Equal(8192, options.MaxTokens); Assert.Equal(90, options.TimeoutSeconds);
     }
 
+    [Fact]
+    public async Task Product_ProductionConfigMapShapeDisabledFailsClosedBeforeProvider()
+    {
+        // Exact effective shape observed in production before remediation:
+        // the mounted appsettings.json contained only CommerceAI:Enabled=false.
+        var options = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?> {
+            ["CommerceAI:Enabled"] = "false"
+        }).Build().GetSection(CommerceAIOptions.SectionName).Get<CommerceAIOptions>()!;
+        Assert.False(options.Enabled);
+        Assert.True(string.IsNullOrEmpty(options.ApiKey));
+        Assert.Equal("openrouter/free", options.Model);
+
+        var calls = 0;
+        var handler = new Phase7ExecutionTests.Handler((_, _) => { calls++; return Task.FromResult(Completion(Product())); });
+        var ex = await Assert.ThrowsAsync<AdminProductGenerationException>(() =>
+            Generator(handler, options).GenerateProductAsync(Guid.NewGuid(), new() { ProductIdea = "phone" }));
+        Assert.Equal(503, ex.StatusCode);
+        Assert.Equal("AI is disabled", ex.ErrorCode);
+        Assert.Equal(0, calls);
+    }
+
     [Theory]
     [InlineData("Tell me about this phone", true, true, false)]
     [InlineData("Don't buy this phone", true, true, false)]
