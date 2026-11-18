@@ -1,0 +1,30 @@
+{
+  "capturedAtUtc": "2026-11-18T18:21:45Z",
+  "symptomReported": "Cannot read properties of undefined (reading 'startTime')",
+  "reportedOrigin": "reportAllChanges",
+  "applicationSourceSearch": {
+    "command": "grep -rn 'reportAllChanges' PointOfSale.Web/src PointOfSale.Web/index.html",
+    "matches": 0,
+    "deployedBundleSearch": {
+      "asset": "/assets/index-BiaZNAT9.js",
+      "matches": 0
+    }
+  },
+  "externalSource": {
+    "url": "https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092",
+    "injectedBy": "Cloudflare Web Analytics automatic beacon injection",
+    "matches": {
+      "reportAllChanges": true,
+      "startTime": true
+    },
+    "failureShape": "The beacon's web-vitals build dereferences a missing navigation/TTFB entry as undefined.startTime."
+  },
+  "productionCsp": {
+    "scriptSrc": "default-src 'self'; script-src 'self' 'unsafe-inline' https://js.stripe.com https://accounts.google.com https://connect.facebook.net; ...",
+    "cloudflareBeaconBlocked": true,
+    "browserConsoleBeforeFix": "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/...' violates the following Content Security Policy directive ... The action has been blocked."
+  },
+  "classification": "Third-party Cloudflare Web Analytics beacon, not application code. The admin CSP already blocks it; no application state or API contract is involved.",
+  "regressionGuard": "PointOfSale.Web/src/architecture-tests/aiProductGenerationBoundary.test.ts asserts the admin CSP never allows cloudflareinsights and that application diagnostics never introduce reportAllChanges/startTime.",
+  "residualRisk": "If Cloudflare Web Analytics automatic injection remains enabled for the admin hostname, a browser that bypasses CSP could still execute the third-party bug. The durable external mitigation is to disable automatic Web Analytics injection for admin.shopyxi.com in Cloudflare."
+}

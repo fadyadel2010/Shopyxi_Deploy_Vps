@@ -1,0 +1,69 @@
+{
+  "capturedAtUtc": "2026-11-18T19:01:00Z",
+  "sequence": "The configuration fix enabled the feature, but the first real provider attempts exposed two production dependency controls that had never been exercised by this workflow.",
+  "redisRuntimeAcl": {
+    "secret": "shopixy-cache/redis-ha-auth",
+    "aclFileKey": "redis-users.acl",
+    "redisUser": "shopixy-api-runtime",
+    "observedErrorCategory": "RedisServerException",
+    "apiLogTimestampUtc": "2026-11-18T18:56:26.4004Z",
+    "apiStatus": 429,
+    "apiBody": {
+      "code": "RATE_LIMITED",
+      "message": "Too many requests. Please try again later.",
+      "traceId": "e0f90a75-8810-49dd-81c9-89d852a574df"
+    },
+    "aclDryRunBeforeFix": {
+      "command": "ACL DRYRUN shopixy-api-runtime EVAL <script> 4 ai:ratelimit:<tenant>:minute ai:ratelimit:<tenant>:hour ai:ratelimit:<tenant>:day ai:ratelimit:<tenant>:month",
+      "result": "User shopixy-api-runtime has no permissions to access the 'ai:ratelimit:<tenant>:minute' key",
+      "control": {
+        "command": "ACL DRYRUN shopixy-api-runtime EVAL <script> 1 ratelimit:probe",
+        "result": "OK"
+      }
+    },
+    "missingAclNamespaces": [
+      "ai:ratelimit:*",
+      "ai:usage:*"
+    ],
+    "fix": "Added the two exact key patterns to the shopixy-api-runtime ACL and rolled the Redis StatefulSets one at a time so the ACL file was reloaded.",
+    "aclDryRunAfterFix": {
+      "keys": ["ai:ratelimit:x:minute", "ai:usage:y"],
+      "result": "OK on both Redis nodes",
+      "replication": "redis-a master, redis-b slave, master_link_status=up"
+    }
+  },
+  "openRouterEgress": {
+    "apiHttpsProxy": "http://shopixy-r2-egress.shopixy-app.svc.cluster.local:3128",
+    "proxyBeforeFix": {
+      "configMap": "shopixy-app/shopixy-r2-egress-v1",
+      "allowedConnectTargets": [
+        "<32-hex>.r2.cloudflarestorage.com:443"
+      ],
+      "openrouterAllowed": false
+    },
+    "observedErrorCategory": "HttpRequestException",
+    "apiLogTimestampUtc": "2026-11-18T19:00:51.7922Z",
+    "apiStatus": 502,
+    "browserBody": "Cloudflare 502 origin_bad_gateway from the admin edge; the origin API had returned 502 after the proxy rejected the provider connection.",
+    "fix": {
+      "configMap": "shopixy-app/shopixy-r2-egress-v2",
+      "allowedConnectTargets": [
+        "<32-hex>.r2.cloudflarestorage.com:443",
+        "openrouter.ai:443"
+      ],
+      "exactHostOnly": true,
+      "port": 443,
+      "publicIPv4Validation": true,
+      "wildcards": false
+    },
+    "postFixProbeFromApiPod": {
+      "CONNECT openrouter.ai:443": "HTTP/1.1 200 Connection Established",
+      "CONNECT example.com:443": "HTTP/1.1 403 Forbidden"
+    }
+  },
+  "rollbackSnapshots": {
+    "commerceAI": "/var/lib/shopixy/ai-product-generation-20261118T185542Z",
+    "redisAcl": "/var/lib/shopixy/ai-redis-acl-20261118T185907Z",
+    "egress": "/var/lib/shopixy/ai-egress-20261118T190407Z"
+  }
+}

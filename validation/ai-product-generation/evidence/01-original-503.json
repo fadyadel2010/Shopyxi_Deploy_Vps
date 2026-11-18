@@ -1,0 +1,61 @@
+{
+  "capturedAtUtc": "2026-11-18T18:25:34Z",
+  "surface": "https://admin.shopyxi.com/products/new/edit",
+  "action": "Create Product with AI -> Generate Product",
+  "request": {
+    "method": "POST",
+    "path": "/api/admin/ai/products/generate",
+    "payload": {
+      "productIdea": "Wireless RGB gaming mouse",
+      "language": "English",
+      "country": "",
+      "tone": "marketing",
+      "featureCount": 5,
+      "faqCount": 3
+    }
+  },
+  "response": {
+    "status": 503,
+    "body": {
+      "code": "INTERNAL_ERROR",
+      "message": "An unexpected error occurred.",
+      "traceId": "6b545bc2-8504-427b-9c22-e85161ed2483"
+    }
+  },
+  "apiLogCorrelation": {
+    "timestampUtc": "2026-11-18T18:25:34.6798Z",
+    "statusCode": 503,
+    "latencyMs": 4.1942,
+    "observation": "The request failed before any outbound provider HTTP call."
+  },
+  "effectiveProductionConfigurationBeforeFix": {
+    "configMap": "shopixy-api-json",
+    "configMapSettingsKey": "appsettings.json",
+    "commerceAI": {
+      "Enabled": false
+    },
+    "environmentVariables": {
+      "CommerceAI__Enabled": "absent",
+      "CommerceAI__ApiKey": "absent",
+      "CommerceAI__Provider": "absent",
+      "CommerceAI__Model": "absent",
+      "CommerceAI__Endpoint": "absent"
+    },
+    "secretReference": {
+      "name": "shopixy-api-commerceai-v1",
+      "exists": false
+    },
+    "compiledDefaults": {
+      "Provider": "openrouter",
+      "Model": "openrouter/free",
+      "Endpoint": "https://openrouter.ai/api/v1/chat/completions",
+      "ApiKey": "empty"
+    }
+  },
+  "sourceOf503": "PointOfSale.API.Services.AI.Admin.AdminProductGeneratorService pre-flight guard: CommerceAI.Enabled is false. The production MVC 5xx normalizer replaced the specific code/message with INTERNAL_ERROR while preserving HTTP 503.",
+  "browserConsoleErrors": [],
+  "notes": [
+    "No OpenRouter network request was attempted for this failed call.",
+    "The 503 body is intentionally opaque in Production; the status is the API 503, not Cloudflare or Traefik."
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "capturedAtUtc": "2026-11-18T21:15:00Z",
+  "kubernetes": {
+    "apiDeployment": {
+      "name": "shopixy-app/shopixy-api",
+      "image": "localhost/shopixy/api@sha256:75f49cb501bae5f3add2677367300bcdbb70a9799a257041fd7d38b01d084e04",
+      "imageRebuilt": false,
+      "imagePushed": false,
+      "readyReplicas": 1,
+      "availableReplicas": 1,
+      "updatedReplicas": 1,
+      "pod": "shopixy-api-688565c876-cwfpc",
+      "containersReady": "2/2",
+      "restartCounts": [0, 0]
+    },
+    "webDeployment": {
+      "image": "localhost/shopixy/web@sha256:21f8562eaee261db6be807e480427eb826adde886c989020146d86a49c4f373d",
+      "restartedForThisFix": false
+    },
+    "commerceAIConfigMapAfterFix": {
+      "name": "shopixy-app/shopixy-api-json",
+      "settingsKey": "appsettings.json",
+      "CommerceAI": {
+        "Enabled": true,
+        "Provider": "openrouter",
+        "Model": "openrouter/free",
+        "FreeModelsOnly": true,
+        "Endpoint": "https://openrouter.ai/api/v1/chat/completions",
+        "TimeoutSeconds": 90,
+        "MaxTokens": 8192,
+        "Temperature": 0.3
+      }
+    },
+    "commerceAISecret": {
+      "name": "shopixy-app/shopixy-api-commerceai-v1",
+      "key": "api-key",
+      "valuePresent": true,
+      "valuePrinted": false,
+      "boundAs": "CommerceAI__ApiKey via secretKeyRef on the api container"
+    },
+    "redis": {
+      "nodes": {
+        "shopixy-redis-a-0": "master, ready 2/2, restarts 0",
+        "shopixy-redis-b-0": "slave of a, master_link_status=up, ready 2/2, restarts 0"
+      },
+      "aclSecret": "shopixy-cache/redis-ha-auth",
+      "aclPatternsAdded": ["~ai:ratelimit:*", "~ai:usage:*"],
+      "aclAppliedWithoutPrintingCredentials": true
+    },
+    "egressProxy": {
+      "deployment": "shopixy-app/shopixy-r2-egress",
+      "pod": "shopixy-r2-egress-84c9f7c89d-xl4wc",
+      "configMap": "shopixy-app/shopixy-r2-egress-v2",
+      "allowedConnectTargets": ["<32-hex>.r2.cloudflarestorage.com:443", "openrouter.ai:443"],
+      "health": "ready 1/1, restarts 0",
+      "unrelatedWorkloadsRestarted": false
+    },
+    "rollback": {
+      "script": "/root/rollback.sh",
+      "latestSnapshot": "/var/lib/shopixy/ai-product-generation-20261118T185542Z",
+      "redisAclSnapshot": "/var/lib/shopixy/ai-redis-acl-20261118T185907Z",
+      "egressSnapshot": "/var/lib/shopixy/ai-egress-20261118T190407Z",
+      "previousEgressConfigMapRetained": "shopixy-app/shopixy-r2-egress-v1"
+    }
+  },
+  "tests": {
+    "backend": {
+      "command": "dotnet test PointOfSale.Tests/PointOfSale.Tests.csproj --filter FullyQualifiedName~ShopixyAiReliabilityTests",
+      "result": "48 passed, 0 failed",
+      "newRegression": "Product_ProductionConfigMapShapeDisabledFailsClosedBeforeProvider"
+    },
+    "frontend": {
+      "command": "npx vitest run src/components/AiProductGeneratorModal.test.tsx",
+      "result": "12 passed, 0 failed",
+      "newRegression": "handles the production-normalized opaque 503 without an uncaught exception"
+    },
+    "frontendBoundary": {
+      "command": "npx vitest run src/architecture-tests/aiProductGenerationBoundary.test.ts",
+      "result": "3 passed, 0 failed"
+    },
+    "egressProxyUnit": {
+      "command": "node --test deploy/ai-product-generation/proxy.test.cjs",
+      "result": "4 passed, 0 failed"
+    }
+  },
+  "manualProductCreationRegression": {
+    "surface": "https://admin.shopyxi.com/products/new/edit (fresh tab)",
+    "simpleProductFormLoaded": true,
+    "variantProductToggle": "PASS",
+    "variantSectionRendered": true,
+    "switchedBackToSimple": true,
+    "consoleErrors": [],
+    "productCreated": false
+  }
+}

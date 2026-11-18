@@ -1,0 +1,85 @@
+{
+  "capturedAtUtc": "2026-11-18T19:05:53Z",
+  "surface": "https://admin.shopyxi.com/products/new/edit",
+  "provider": "openrouter",
+  "model": "openrouter/free",
+  "request": {
+    "method": "POST",
+    "path": "/api/admin/ai/products/generate",
+    "payload": {
+      "productIdea": "Wireless RGB gaming mouse",
+      "language": "English",
+      "country": "",
+      "tone": "marketing",
+      "featureCount": 5,
+      "faqCount": 3
+    }
+  },
+  "timeline": [
+    {
+      "timestampUtc": "2026-11-18T19:05:20.9369Z",
+      "event": "API outbound HttpClient request started"
+    },
+    {
+      "timestampUtc": "2026-11-18T19:05:23.9811Z",
+      "event": "OpenRouter HTTP response 200"
+    },
+    {
+      "timestampUtc": "2026-11-18T19:05:53.9339Z",
+      "event": "API request completed with HTTP 200, latency 33007.569 ms"
+    }
+  ],
+  "response": {
+    "status": 200,
+    "generatedDraft": {
+      "name": "Wireless RGB Gaming Mouse",
+      "shortDescription": "A wireless RGB gaming mouse for cable-free, immersive play.",
+      "slug": "wireless-rgb-gaming-mouse",
+      "brand": "",
+      "manufacturer": "",
+      "tags": [
+        "wireless gaming mouse",
+        "rgb gaming mouse",
+        "gaming mouse",
+        "rgb mouse",
+        "wireless rgb mouse",
+        "gaming gear"
+      ],
+      "metaTitle": "Wireless RGB Gaming Mouse | Wireless & RGB Gaming Mouse",
+      "metaDescription": "Shop the Wireless RGB Gaming Mouse featuring wireless connectivity and RGB gaming lighting. This marketing draft requires merchant verification for final specifications.",
+      "metaKeywords": [
+        "wireless rgb gaming mouse",
+        "rgb gaming mouse",
+        "wireless gaming mouse",
+        "gaming mouse",
+        "rgb mouse",
+        "gaming gear"
+      ],
+      "featuresCount": 5,
+      "faqCount": 3
+    }
+  },
+  "browserAcceptance": {
+    "modalLoadingState": "PASS",
+    "previewRendered": "PASS",
+    "applyToForm": "PASS",
+    "formFieldsPopulated": {
+      "name": "Wireless RGB Gaming Mouse",
+      "description": "A wireless RGB gaming mouse for cable-free, immersive play. Bring vibrant RGB gaming to your setup...",
+      "tags": "wireless gaming mouse, rgb gaming mouse, gaming mouse, rgb mouse, wireless rgb mouse, gaming gear",
+      "slug": "wireless-rgb-gaming-mouse",
+      "metaTitle": "Wireless RGB Gaming Mouse | Wireless & RGB Gaming Mouse",
+      "metaKeywords": "wireless rgb gaming mouse, rgb gaming mouse, wireless gaming mouse, gaming mouse, rgb mouse, gaming gear",
+      "metaDescription": "Shop the Wireless RGB Gaming Mouse featuring wireless connectivity and RGB gaming lighting. This marketing draft requires merchant verification for final specifications."
+    },
+    "consoleErrors": [],
+    "modalClosedAfterApply": true,
+    "formResponsive": true
+  },
+  "businessSafety": {
+    "productSaved": false,
+    "productPublished": false,
+    "saveRequestIssued": false,
+    "note": "The product form was populated and left unsaved. No product POST/PUT or publish action was performed."
+  }
+}
