@@ -8,6 +8,7 @@ using PointOfSale.Infrastructure.Analytics;
 using PointOfSale.Infrastructure.Analytics.Funnels;
 using PointOfSale.Infrastructure.Data;
 using PointOfSale.Infrastructure.MongoDB.Documents;
+using PointOfSale.Core.Financial;
 
 namespace PointOfSale.API.Services.Analytics;
 
@@ -58,9 +59,9 @@ public class StorefrontAnalyticsDashboardService : IStorefrontAnalyticsDashboard
             cancellationToken);
         var topProducts = await GetTopSellingProductsAsync(
             tenantId,
-            commerce.NetRevenueByOrder,
+            commerce.PurchaseOrderIds,
             cancellationToken);
-        var abandonedSummary = await GetAbandonedCheckoutSummaryAsync(tenantId, startUtc, endUtc, cancellationToken);
+        var abandonedSummary = await GetAbandonedCheckoutSummaryAsync(tenantId, startUtc, endUtc, commerce.CurrencyCode, cancellationToken);
         var eventSummary = await eventSummaryTask;
         eventSummary.EventCounts[nameof(AnalyticsEventType.PurchaseCompleted)] = commerce.PurchaseCount;
 
@@ -69,8 +70,13 @@ public class StorefrontAnalyticsDashboardService : IStorefrontAnalyticsDashboard
             Visits = eventSummary.Visits,
             Orders = commerce.PurchaseCount,
             Revenue = RoundMoney(commerce.NetRevenue),
+            RecognizedRevenue = RoundMoney(commerce.RecognizedRevenue),
+            RevenueAdjustments = RoundMoney(commerce.Adjustments),
+            CurrencyCode = commerce.CurrencyCode,
+            WindowStartUtc = startUtc,
+            WindowEndUtc = endUtc,
             AverageOrderValue = commerce.PurchaseCount > 0
-                ? RoundMoney(commerce.NetRevenue / commerce.PurchaseCount)
+                ? RoundMoney(commerce.RecognizedRevenue / commerce.PurchaseCount)
                 : 0m,
             AddToCart = eventSummary.GetCount(nameof(AnalyticsEventType.AddToCart)),
             CheckoutStarted = eventSummary.GetCount(nameof(AnalyticsEventType.BeginCheckout)),
@@ -165,13 +171,10 @@ public class StorefrontAnalyticsDashboardService : IStorefrontAnalyticsDashboard
 
     private async Task<List<StorefrontTopSellingProductDto>> GetTopSellingProductsAsync(
         Guid tenantId,
-        IReadOnlyDictionary<Guid, decimal> netRevenueByOrder,
+        IReadOnlyList<Guid> recognizedOrderIds,
         CancellationToken cancellationToken)
     {
-        var financiallyRecognizedOrderIds = netRevenueByOrder
-            .Where(entry => entry.Value > 0m)
-            .Select(entry => entry.Key)
-            .ToArray();
+        var financiallyRecognizedOrderIds = recognizedOrderIds.ToArray();
 
         if (financiallyRecognizedOrderIds.Length == 0)
         {
@@ -180,7 +183,8 @@ public class StorefrontAnalyticsDashboardService : IStorefrontAnalyticsDashboard
 
         return await _dbContext.OrderItems
             .AsNoTracking()
-            .Where(i =>
+            .IgnoreQueryFilters()
+            .Where(i => !i.IsDeleted &&
                 i.Order.TenantId == tenantId &&
                 financiallyRecognizedOrderIds.Contains(i.OrderId))
             .GroupBy(i => new { i.ProductId, i.ProductName })
@@ -199,16 +203,22 @@ public class StorefrontAnalyticsDashboardService : IStorefrontAnalyticsDashboard
         Guid tenantId,
         DateTime startUtc,
         DateTime endUtc,
+        string currencyCode,
         CancellationToken cancellationToken)
     {
-        var summary = await _dbContext.CheckoutSessions
+        var query = _dbContext.CheckoutSessions
             .AsNoTracking()
             .Where(s =>
                 s.TenantId == tenantId &&
                 s.Status == CheckoutSessionStatus.Abandoned &&
                 s.AbandonedAtUtc.HasValue &&
                 s.AbandonedAtUtc.Value >= startUtc &&
-                s.AbandonedAtUtc.Value < endUtc)
+                s.AbandonedAtUtc.Value < endUtc);
+        var currencies = await query.Where(s => s.CartTotal.HasValue).Select(s => s.Currency)
+            .Distinct().ToListAsync(cancellationToken);
+        foreach (var currency in currencies)
+            FinancialCurrencyGuard.RequireExpectedCurrency(currency, currencyCode, "checkout.currency", "abandoned-cart-estimate");
+        var summary = await query
             .GroupBy(_ => 1)
             .Select(g => new StorefrontAbandonedCheckoutSummary
             {

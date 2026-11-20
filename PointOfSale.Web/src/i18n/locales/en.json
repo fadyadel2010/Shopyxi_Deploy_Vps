@@ -1,4 +1,22 @@
 {
+  "shell": {
+    "skipToContent": "Skip to main content"
+  },
+  "applications": {
+    "trigger": "Applications",
+    "menuLabel": "Applications",
+    "unavailable": "No applications are available with your current access."
+  },
+  "emailVerification": {
+    "title": "Verify your email",
+    "message": "to publish your online store.",
+    "sent": "Verification email sent!",
+    "tooManyRequests": "Too many requests. Please try again later.",
+    "failed": "Failed to send email. Please try again.",
+    "resend": "Resend email",
+    "sending": "Sending...",
+    "dismiss": "Dismiss"
+  },
   "affiliatePublishingReadiness": {
     "title": "Affiliate promotion readiness",
     "ready": "Ready for Affiliate promotion",
@@ -125,6 +143,7 @@
     }
   },
   "analytics": {
+    "dataUnavailable": "Analytics data is unavailable. Please retry.",
     "conversionFunnels": "Conversion Funnels",
     "campaignCosts": "Campaign Costs",
     "marketingRoi": "Marketing ROI"
@@ -1086,7 +1105,9 @@
     "returns": "Sales Returns",
     "representatives": "Sales Reps",
     "repReports": "Rep Reports",
-    "customers": "Customers"
+    "customers": "Customers",
+    "next": "Next",
+    "previous": "Previous"
   },
   "inventory": {
     "products": "Products",
@@ -1201,7 +1222,10 @@
     "cardInstrumentRequired": "Select a supplier card funding instrument for the Card amount.",
     "failedToLoadCardInstruments": "Failed to load supplier card funding instruments.",
     "cardBalance": "Card Balance",
-    "fundingSource": "Funding Source"
+    "fundingSource": "Funding Source",
+    "creditDueDateRequired": "A due date is required for credit purchases.",
+    "unitConversionTitle": "{{unitName}} — conversion factor {{conversionFactor}}",
+    "unknownProduct": "Unknown product"
   },
   "supplierCards": {
     "title": "Supplier Card Funding",
@@ -1462,7 +1486,12 @@
     "mixed": "Mixed",
     "cashAmountRequired": "Cash Amount *",
     "cardAmount": "Card Amount:",
-    "optionalNotes": "Optional notes..."
+    "optionalNotes": "Optional notes...",
+    "balanceTransferSubtitle": "Move funds between your accounts and cashboxes",
+    "destinationType": "Destination Type",
+    "selectDestination": "Select Account/Cashbox",
+    "selectSource": "Select Account/Cashbox",
+    "sourceType": "Source Type"
   },
   "abandonedCheckouts": {
     "title": "Abandoned Checkouts",
@@ -1665,7 +1694,24 @@
     "leave": "Leave",
     "stay": "Stay",
     "remove": "Remove",
-    "saved": "Saved successfully"
+    "saved": "Saved successfully",
+    "restoringSession": "Restoring session...",
+    "validatingVendorAuthority": "Validating vendor authority",
+    "created": "Created",
+    "currentBalance": "Current Balance",
+    "dates": "Dates",
+    "discard": "Discard",
+    "dismissNotification": "Dismiss notification",
+    "helpLoadFailed": "Failed to load help article.",
+    "notApplicable": "N/A",
+    "product": "Product",
+    "saveChanges": "Save Changes",
+    "showLess": "Show Less",
+    "showMore": "Show More",
+    "sku": "SKU",
+    "testing": "Testing...",
+    "unauthorized": "You are not authorized to perform this action.",
+    "unsavedChanges": "Unsaved changes"
   },
   "paymentMethods": {
     "title": "Payment Methods",
@@ -1828,6 +1874,97 @@
     }
   },
   "dashboard": {
+    "phase42": {
+      "scope": "Operational overview · each section keeps its own source and period",
+      "overview": "POS overview",
+      "todaySales": "Today's posted POS sales",
+      "todayBasis": "Account 4010 · UTC calendar day · posted/reversed journals",
+      "saleJournals": "Distinct invoices today",
+      "journalsBasis": "Distinct SalesInvoice identities recognized on today's UTC accounting date; reposts counted once",
+      "lowStockPositions": "Low-stock positions",
+      "stockBasis": "Current variant × warehouse positions · available quantity",
+      "inventoryBasis": "Owned stock: on-hand at current variant cost plus dispatched transit at dispatch cost. Includes damaged and reserved stock; not a GL valuation.",
+      "incompleteValuation": "Inventory value is incomplete: an in-transit cost is missing. No total is confirmed.",
+      "restricted": "Financial summaries require financial access. Operational quantities remain available.",
+      "unauthorized": "Access is no longer authorized. Previously loaded values have been removed.",
+      "currencyUnconfirmed": "Tenant currency is not confirmed. Monetary figures are unavailable, not zero.",
+      "currencyStale": "Currency settings are last-known-good; the latest settings refresh failed.",
+      "change": "Backend change vs yesterday",
+      "changeCaution": "Percentage change is unavailable when yesterday's signed sales are zero or negative.",
+      "calendarBasis": "Account 4010 · UTC accounting dates through today (week starts Sunday). Refunds and corrections remain in their recorded periods.",
+      "ledgerBasis": "Posted POS sales · account 4010 · UTC bins",
+      "trendPeriod": "Trend period only",
+      "dayTrendBasis": "Daily bins · through today (UTC)",
+      "yearTrendBasis": "12 monthly bins · current month through today only",
+      "lineBasis": "Invoice-line amounts · one-calendar-month lookback through today (UTC). Not equivalent to ledger sales (tax, discounts and returns differ).",
+      "paymentBasis": "Payment-row amounts by payment date · one-calendar-month lookback through today (UTC). Not sales recognition or cash balance.",
+      "stockListBasis": "Up to 8 current variant × active warehouse positions · available quantity after reservations · configured threshold; zero alerts at zero only.",
+      "availableStock": "Available stock",
+      "noLowStock": "No low-stock positions returned.",
+      "recentBasis": "Latest 8 noncancelled invoices · direct invoice totals · local display time",
+      "walkInCustomer": "Walk-in customer",
+      "customerUnavailable": "Customer name unavailable",
+      "uncategorized": "Uncategorized",
+      "financialSummary": "Financial summaries",
+      "allTimeSales": "All-time posted POS sales",
+      "allTimeBasis": "Account 4010 · accounting history through today · posted/reversed journals",
+      "customerNet": "Customer net balance",
+      "customerBasis": "Customer party-ledger net: debit minus credit. Negative means net customer credit. Not overdue debt or a reconciled GL 1410 balance.",
+      "supplierNet": "Supplier net balance",
+      "supplierBasis": "Supplier party-ledger net: credit minus debit. Negative means net supplier debit. Not overdue debt or a reconciled GL 2010 balance.",
+      "name": "Name",
+      "paymentLabels": { "Cash": "Cash", "Card": "Card", "BankTransfer": "Bank transfer", "Mixed": "Mixed", "Credit": "Credit" },
+      "failed": "This source could not be loaded. Other sections are independent.",
+      "malformed": "This source returned unusable data. No business result is confirmed.",
+      "stale": "Stale data · last successful fetch: {{time}} (not a server as-of time)",
+      "unavailable": "Unavailable — not a confirmed zero",
+      "empty": "No records returned for this source and period.",
+      "trendAccessible": "POS sales trend, oldest to newest. Exact signed amounts and dates are in View values.",
+      "viewValues": "View dates and exact amounts",
+      "storefront": {
+        "range": "Storefront summary period",
+        "ranges": { "today": "Today", "7d": "7 days", "30d": "30 days", "this_month": "This month" },
+        "summaryBasis": "UTC accounting period · SQL financial truth; behavioral events are asynchronously ingested with unknown lag. Separate from five-minute activity.",
+        "visits": "Visits",
+        "visitsBasis": "Distinct sessions from PageView analytics events",
+        "orders": "Recognized orders",
+        "ordersBasis": "Distinct orders credited to 4020 in this accounting period, including subsequently fully refunded orders",
+        "revenue": "Posted Storefront revenue",
+        "revenueBasis": "4020 order movements in this UTC accounting period, including refund-only and reversal adjustments; CommerceHub commission excluded",
+        "conversion": "Orders / visits",
+        "conversionBasis": "Backend ratio · recognized orders / unique event sessions; not a matched cohort",
+        "addToCart": "Add to cart",
+        "cartBasis": "AddToCart event count · not unique carts",
+        "checkoutStarted": "Checkout started",
+        "checkoutBasis": "BeginCheckout analytics-event count",
+        "abandonedCheckouts": "Abandoned checkout sessions",
+        "abandonedBasis": "Sessions marked abandoned in this period · cart value is not recognized lost revenue",
+        "cartValue": "Abandoned cart value",
+        "averageOrderValue": "Average recognized order value",
+        "averageBasis": "Gross recognized 4020 credits / distinct recognized orders; refunds are separate adjustments",
+        "productsBasis": "Top 5 by item quantity for recognized orders, including fully refunded orders · not refund-adjusted units",
+        "productsTitle": "Top Storefront products",
+        "units": "Item quantity",
+        "activityCounts": "Activity counts by source",
+        "funnelBasis": "Raw analytics-event counts plus SQL recognized purchases · not a cohort conversion cascade",
+        "count": "Count",
+        "steps": { "pageView": "Page views", "viewProduct": "Product views", "addToCart": "Add-to-cart events", "beginCheckout": "Checkout-start events", "purchaseCompleted": "Recognized purchases (SQL)" },
+        "liveTitle": "Recent Storefront activity",
+        "liveBasis": "Polled five-minute observations, not instantaneous activity · 10-second refresh · behavioral ingestion lag unknown",
+        "liveVisitors": "Visiting sessions",
+        "liveVisitorsBasis": "Distinct sessions with PageView events",
+        "activeCarts": "Cart-intent sessions",
+        "activeCartsBasis": "Sessions with AddToCart events · not actual cart contents",
+        "checkoutInProgress": "Checkout-intent sessions",
+        "checkoutInProgressBasis": "BeginCheckout without a purchase event in this window",
+        "recentOrders": "Recent recognized orders",
+        "recentOrdersBasis": "All distinct orders recognized by SQL posting activity in the five-minute window; only the activity list is capped",
+        "recentActivity": "Latest cart, checkout and purchase events",
+        "orderCompleted": "Order completed",
+        "sessionActivity": "Storefront session activity",
+        "noActivity": "No recent events returned in the five-minute window."
+      }
+    },
     "title": "Dashboard",
     "todaySales": "Today's Sales",
     "totalRevenue": "Total Revenue",
@@ -1894,9 +2031,31 @@
     "username": "Username",
     "usernameOrEmail": "Username or email",
     "password": "Password",
-    "signIn": "Sign In",
-    "welcomeBack": "Welcome Back",
-    "enterCredentials": "Enter your username or email and password."
+    "signIn": "Sign in",
+    "signingIn": "Signing in...",
+    "welcomeBack": "Welcome back",
+    "subheading": "Sign in to your workspace",
+    "enterCredentials": "Enter your username or email and password.",
+    "enterUsername": "Enter your username or email.",
+    "enterPassword": "Enter your password.",
+    "genericError": "Sign-in failed. Please try again.",
+    "invalidCredentials": "Invalid username or password.",
+    "accountDisabled": "This account is disabled.",
+    "sessionChanged": "Your session changed. Please sign in again.",
+    "tooManyAttempts": "Too many sign-in attempts. Wait a moment and try again.",
+    "connectionError": "Could not connect. Check your connection and try again.",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "noAccount": "Don't have an account?",
+    "createStore": "Create your store",
+    "secureConnection": "Secure connection",
+    "brandName": "SHOPYXI",
+    "productQualifier": "POS",
+    "tagline": "Your store.\nOne workspace.",
+    "brandDescription": "Manage sales, inventory and reporting from one place.",
+    "brandProofSales": "Unified sales",
+    "brandProofInventory": "Inventory control",
+    "brandProofReporting": "Operational reporting"
   },
   "storefront": {
     "design": "Design",
@@ -2142,7 +2301,8 @@
         "delete": "Delete",
         "deletePage": "Delete page",
         "deleteConfirmTitle": "Delete page?",
-        "deleteConfirmDescription": "Delete “{{title}}” from this page workspace?"
+        "deleteConfirmDescription": "Delete “{{title}}” from this page workspace?",
+        "savedReadbackFailed": "The change was saved, but the page list could not be reloaded. Retry loading; do not repeat the mutation."
       },
       "navigationEditor": {
         "title": "Navigation",
@@ -2348,7 +2508,16 @@
           "text": "Text",
           "image": "Image",
           "faq": "FAQ"
-        }
+        },
+        "arabicComplete": "Arabic complete",
+        "arabicIncomplete": "Arabic must include both title and content, or be removed.",
+        "arabicMissing": "Arabic not supplied",
+        "arabicOptional": "Arabic (optional)",
+        "complete": "English complete",
+        "englishRequired": "English (required)",
+        "incomplete": "English incomplete",
+        "languages": "Content languages",
+        "removeArabic": "Remove Arabic"
       }
     },
     "domains": {
@@ -2575,7 +2744,129 @@
         "provisionNext": "Provision a certificate from SSL Management.",
         "verificationNext": "Complete DNS verification before requesting a certificate.",
         "open": "Open SSL Management"
-      }
+      },
+      "actionError": "Action failed",
+      "actions": "Actions",
+      "activityDesc": "Recent events across all domains.",
+      "activityError": "Unable to load activity",
+      "addDomain": "Add Domain",
+      "addDomainDesc": "Add a new custom domain to your storefront.",
+      "addRedirect": "Add Redirect",
+      "archive": "Archive",
+      "archiveDomain": "Archive Domain",
+      "archiveDomainDesc": "Are you sure you want to archive {{host}}? Archived domains are inactive but can be restored.",
+      "canonical": "Canonical",
+      "canonicalHelp": "Set canonical policy for your domain.",
+      "canonicalUrl": "Canonical URL",
+      "concurrencyConflict": "Concurrent Modification",
+      "concurrencyConflictDesc": "This domain was modified by another user. Please refresh and try again.",
+      "createDomain": "Create Domain",
+      "createError": "An unexpected error occurred while creating the domain.",
+      "createValidationError": "The domain could not be created. Please check your input and try again.",
+      "dateRange": "Date Range",
+      "delete": "Delete",
+      "deleteDomain": "Delete Domain",
+      "deleteDomainDesc": "Are you sure you want to delete {{host}}? This is a soft delete — the domain record is retained for audit purposes. It can be restored within 90 days.",
+      "dnsHelp": "Add this record to your DNS provider. Verification will be checked automatically.",
+      "dnsVerification": "DNS Verification",
+      "domainList": "Domain List",
+      "domainListDesc": "All domains for your tenant.",
+      "domainNotFound": "Domain not found",
+      "domainNotFoundDesc": "The requested domain could not be found.",
+      "domainsActivity": "Activity",
+      "domainType": "Domain Type",
+      "draft": "Draft",
+      "duplicateHostname": "This hostname is already registered to your account or another tenant.",
+      "expiringSoon": "expiring in 30 days",
+      "failed": "Failed",
+      "filter": "Filter",
+      "filterByAction": "Filter by action",
+      "filterByActor": "Filter by actor",
+      "history": "History",
+      "historyError": "Unable to load history.",
+      "historyInfo": "Domain audit history from DomainAuditEntry — append-only log of all lifecycle transitions.",
+      "historyNavigate": "Domain audit history — navigate to /history for the full log.",
+      "hostname": "Hostname",
+      "hostnameHelp": "Enter the domain name you own. It must be valid and not already registered to this tenant.",
+      "hostnameLabel": "Hostname",
+      "hostnamePlaceholder": "e.g. shop.example.com",
+      "httpHelp": "Serve this value from the verification URL. Verification will be checked automatically.",
+      "infrastructureError": "Verification service unavailable",
+      "jobsFailed": "Failed",
+      "jobsRunning": "Running",
+      "jobsSucceeded": "Succeeded",
+      "lifecycleState": "Lifecycle State",
+      "loadError": "Unable to load domain data",
+      "loadErrorDesc": "Please try again.",
+      "manageRedirects": "Manage Redirects",
+      "noActivity": "No recent activity",
+      "noActivityDesc": "No domain events have been recorded yet.",
+      "noContent": "No content available.",
+      "noDomains": "No domains yet",
+      "noDomainsDesc": "No domains to display yet.",
+      "noHistory": "No history entries",
+      "noHistoryDesc": "No audit events have been recorded for this domain.",
+      "noPrimaryDomain": "No primary domain configured",
+      "noRecentDomains": "No recent domains",
+      "noRecentDomainsDesc": "Add a domain to see it listed here.",
+      "noRedirects": "No redirects configured",
+      "noRedirectsDesc": "No redirect rules have been set up for this domain.",
+      "notConfigured": "Not configured",
+      "noToken": "No verification token",
+      "notVerified": "Not Verified",
+      "onDomain": "on {{domain}}",
+      "page": "Page {{current}} of {{total}}",
+      "pending": "Pending",
+      "pendingDesc": "Verification is in progress. Add the DNS record below and we will check automatically.",
+      "pendingVerification": "Pending Verification",
+      "primary": "Primary",
+      "primaryDomain": "Primary Domain",
+      "promote": "Promote",
+      "promotePrimary": "Promote to Primary",
+      "promotePrimaryDesc": "Are you sure you want to make {{host}} the primary domain? This will atomically demote the current primary domain. Exactly one primary domain is guaranteed per tenant.",
+      "quickActions": "Quick Actions",
+      "recentActivity": "Recent Activity",
+      "recentDomains": "Recent Domains",
+      "recordName": "Name",
+      "recordType": "Type",
+      "recordValue": "Value",
+      "redirects": "Redirects",
+      "redirectsError": "Unable to load redirects",
+      "redirectsNavigate": "Redirects — navigate to /redirects for full details.",
+      "redirectSources": "Redirect Sources",
+      "redirectSourcesDesc": "Domains redirecting to this Primary domain will appear here.",
+      "redirectTarget": "Redirect Target",
+      "redirectType": "Redirect Type",
+      "refreshToken": "Refresh Token",
+      "restore": "Restore",
+      "restoreDomain": "Restore Domain",
+      "restoreDomainDesc": "Are you sure you want to restore {{host}}? The domain will be returned to Draft state.",
+      "retryVerification": "Retry Verification",
+      "reviewTitle": "Review Your Settings",
+      "rowActions": "Row actions for {{hostname}}",
+      "searchPlaceholder": "Search by hostname",
+      "showingResults": "Showing {{first}}-{{last}} of {{total}}",
+      "sortBy": "Sort by {{field}}",
+      "sslHelp": "Select the SSL provider for your domain certificate.",
+      "startVerification": "Start Verification",
+      "startVerificationDesc": "Start DNS verification for {{host}}?",
+      "status": "Status",
+      "timestampFormat": "{{date}} {{time}}",
+      "totalDomains": "Total Domains",
+      "type": "Type",
+      "unauthorized": "Authentication required",
+      "unauthorizedDesc": "Please sign in to manage domains.",
+      "verificationFailed": "Verification not complete",
+      "verificationHelp": "Choose how you want to verify domain ownership.",
+      "verificationInstructions": "Verification Instructions",
+      "verificationMethod": "Verification Method",
+      "verificationNavigate": "DNS verification — navigate to /verification for full details.",
+      "verificationStatus": "Verification Status",
+      "verificationUrl": "URL",
+      "verified": "Verified",
+      "verifiedDesc": "Your domain ownership has been verified.",
+      "verifyNow": "Verify Now",
+      "viewAll": "View All Domains"
     },
     "shipping": {
       "free": "FREE",
@@ -2625,10 +2916,52 @@
     "operationsMarketing": "Marketing",
     "operationsMarketingAttribution": "Marketing Attribution",
     "operationsAnalytics": "Analytics",
-    "operationsSettings": "Settings"
+    "operationsSettings": "Settings",
+    "unsavedNavigationConfirm": "You have unsaved changes. Are you sure you want to exit?"
   },
   "storefrontAnalytics": {
-    "title": "Storefront Analytics"
+    "title": "Storefront Analytics",
+    "subtitle": "A dedicated storefront dashboard built from existing analytics, order, and checkout data.",
+    "ranges": {
+      "today": "Today",
+      "7d": "7D",
+      "30d": "30D",
+      "this_month": "This Month"
+    },
+    "visits": "Visits",
+    "uniqueSessions": "Unique sessions from storefront page views",
+    "orders": "Orders",
+    "storefrontOrders": "Storefront-origin orders only",
+    "revenue": "Revenue",
+    "grossRevenue": "Signed 4020 accounting-period movements, including refunds and reversals; excludes platform commission",
+    "revenueBreakdown": "Recognized credits: {{recognized}} · Refund/reversal adjustments: {{adjustments}}",
+    "conversionRate": "Conversion Rate",
+    "visitsToOrders": "Orders divided by unique visits",
+    "addToCart": "Add To Cart",
+    "cartIntent": "Storefront intent before checkout",
+    "checkoutStarted": "Checkout Started",
+    "checkoutIntent": "BeginCheckout analytics events",
+    "abandonedOrders": "Abandoned Orders",
+    "abandonedRevenue": "Lost revenue",
+    "averageOrderValue": "Average Order Value",
+    "revenuePerOrder": "Revenue divided by storefront orders",
+    "topSellingProducts": "Top Selling Products",
+    "topSellingProductsSubtitle": "Top 5 storefront products ranked by quantity sold.",
+    "noTopProducts": "No storefront product sales found for this range.",
+    "unitsSold": "Units sold",
+    "funnelOverview": "Funnel Overview",
+    "funnelOverviewSubtitle": "Simplified purchase funnel using the existing analytics funnel steps.",
+    "pageView": "Page View",
+    "viewProduct": "View Product",
+    "beginCheckout": "Begin Checkout",
+    "purchaseCompleted": "Purchase Completed",
+    "unavailableTitle": "Storefront analytics unavailable",
+    "unavailableMessage": "We could not load storefront analytics. No figures are shown, and this is not a zero result.",
+    "accessDenied": "You do not have permission to view storefront analytics.",
+    "accessDeniedMessage": "The request was refused. No analytics figures are shown, and this is not an empty result.",
+    "malformed": "Storefront analytics data was unusable",
+    "malformedMessage": "The analytics response was unusable, so no figures are shown. This is not a zero result.",
+    "staleResult": "Showing the last successful result for this range."
   },
   "variants": {
     "productVariants": "Product Variants",
@@ -2856,7 +3189,10 @@
     "failedToTransfer": "Failed to transfer stock",
     "variantNotFound": "Selected variant not found",
     "searchPlaceholder": "Search by variant name, SKU...",
-    "selectProduct": "Select Product"
+    "selectProduct": "Select Product",
+    "adjustVariantHelp": "Adjust stock for this variant in the selected warehouse.",
+    "transferVariantHelp": "Move stock for this variant between warehouses.",
+    "variantBadge": "Variant"
   },
   "openingBalance": {
     "warehouseStockTitle": "Inventory Admission - Warehouses",
@@ -3516,7 +3852,8 @@
     "carrier": "Carrier",
     "trackingUrl": "Tracking URL Template",
     "shipping": "Shipping",
-    "created": "Shipping method created successfully"
+    "created": "Shipping method created successfully",
+    "serviceLevel": "Service Level"
   },
   "shippingAdministration": {
     "native": {
@@ -3785,7 +4122,8 @@
         "suspend": "Suspend",
         "disable": "Disable",
         "retire": "Retire"
-      }
+      },
+      "state": "Account state"
     },
     "methods": {
       "carrierLoadFailed": "Failed to load supported carriers.",
@@ -3895,7 +4233,10 @@
     "schedule": "Schedule",
     "every30min": "Every 30 minutes",
     "jobId": "Job ID",
-    "trackingSyncDescription": "Automatically polls carrier APIs to update shipment statuses for all active shipments."
+    "trackingSyncDescription": "Automatically polls carrier APIs to update shipment statuses for all active shipments.",
+    "alwaysAvailable": "Always Available",
+    "learnMore": "Learn More",
+    "validateLocally": "Validate"
   },
   "carrierConfig": {
     "title": "Configure {{carrier}}",
@@ -3930,7 +4271,38 @@
     "extraConfig": "Additional Configuration",
     "extraConfigHint": "Carrier-specific settings like pickup address, zone codes, etc.",
     "testConnection": "Test Connection",
-    "testing": "Testing..."
+    "testing": "Testing...",
+    "blocked": "Blocked / provider unavailable",
+    "configureWebhookSecret": "Configure webhook signing secret",
+    "connected": "Connected",
+    "credentialsSaved": "Credentials saved",
+    "howItWorks": "How It Works",
+    "localOnlyValidation": "This provider validates credential presence locally; no remote API connectivity test is performed.",
+    "manualBenefit1": "No API credentials required",
+    "manualBenefit2": "Update tracking manually in admin panel",
+    "manualBenefit3": "Works for any delivery method",
+    "manualBenefit4": "Always available - no configuration needed",
+    "manualDesc": "Handle shipping yourself without a carrier API. Perfect for local delivery, pickup orders, or custom shipping arrangements.",
+    "manualReady": "Ready to Use",
+    "manualReadyDesc": "Manual Fulfillment is always available. Link it to a shipping method to start using.",
+    "manualTitle": "Manual Fulfillment",
+    "noCredentialsRequired": "No credentials are required for this carrier.",
+    "notProductionReady": "This carrier is unavailable for production activation",
+    "readyForCheckout": "Ready for checkout",
+    "rotateWebhookSecret": "Enter a new value to rotate the configured secret",
+    "step1Desc": "Selects a shipping method linked to Manual Fulfillment",
+    "step1Title": "Customer places order",
+    "step2Desc": "Appears in your admin shipments list",
+    "step2Title": "Shipment created as Pending",
+    "step3Desc": "Ship via your own method, local courier, or customer pickup",
+    "step3Title": "You handle delivery",
+    "step4Desc": "Mark as shipped, delivered, etc. in the admin panel",
+    "step4Title": "Update status manually",
+    "toggleWebhookSecretVisibility": "Toggle webhook secret visibility",
+    "validateLocally": "Validate Locally",
+    "webhookSecret": "Webhook signing secret",
+    "webhookSecretConfigured": "A signing secret is configured. It is never returned by the API.",
+    "webhookSecretRequired": "Required before signed webhook events can be trusted."
   },
   "commerceAi": {
     "title": "Commerce AI Experience",
@@ -4124,7 +4496,8 @@
       },
       "messages": {
         "activated": "Kill switch activated - all messaging halted",
-        "deactivated": "Kill switch deactivated. Services restored."
+        "deactivated": "Kill switch deactivated. Services restored.",
+        "statusFetchFailed": "Failed to fetch kill switch status"
       },
       "systemStatus": "System Status",
       "messagingHalted": "MESSAGING HALTED",
@@ -4316,7 +4689,23 @@
       "unitedKingdom": "United Kingdom",
       "germany": "Germany",
       "france": "France"
-    }
+    },
+    "currencyCode": "Currency",
+    "customCurrency": "Custom Currency",
+    "defaultCompanyName": "Your Company Name",
+    "defaultReceiptFooter": "Thank you for your purchase",
+    "defaultReceiptHeader": "Welcome to our store",
+    "defaultTaxRateHelp": "Used only when a product has no tax rate. Product tax rates always take precedence.",
+    "logoAlt": "Company logo",
+    "logoRecommendedSize": "Recommended: square image.",
+    "noLogo": "No logo",
+    "receiptFooterPlaceholder": "e.g. Thank you for your visit",
+    "receiptHeaderPlaceholder": "e.g. Welcome to our store",
+    "receiptPreview": "Receipt Preview",
+    "removeLogo": "Remove logo",
+    "sampleItemOne": "Sample item 1",
+    "sampleItemTwo": "Sample item 2",
+    "unknownCurrencyWarning": "Currency {{code}} is not in the standard catalog but will be preserved."
   },
   "databaseReset": {
     "title": "Database Reset",
@@ -4388,7 +4777,8 @@
     "exportPDF": "Export PDF",
     "exportExcel": "Export Excel",
     "from": "From",
-    "to": "To"
+    "to": "To",
+    "avgInvoice": "Avg Invoice"
   },
   "salesByCategory": {
     "title": "Sales by Category Report",
@@ -4551,7 +4941,9 @@
     "emptyStateDesc": "Select a date and click Generate Report to see accounts receivable aging",
     "errorGenerating": "Failed to generate aging report",
     "noDataToExport": "No data available to export",
-    "exportSuccess": "Report exported successfully"
+    "exportSuccess": "Report exported successfully",
+    "email": "Email",
+    "phone": "Phone"
   },
   "apAging": {
     "title": "Accounts Payable Aging",
@@ -4577,7 +4969,9 @@
     "emptyStateDesc": "Select a date and click Generate Report to see accounts payable aging",
     "errorGenerating": "Failed to generate aging report",
     "noDataToExport": "No data available to export",
-    "exportSuccess": "Report exported successfully"
+    "exportSuccess": "Report exported successfully",
+    "email": "Email",
+    "phone": "Phone"
   },
   "salesReturnReport": {
     "title": "Sales Return Report",
@@ -4605,7 +4999,8 @@
     "reason": "Reason",
     "generate": "Generate Report",
     "exportPDF": "Export PDF",
-    "exportExcel": "Export Excel"
+    "exportExcel": "Export Excel",
+    "date": "Date"
   },
   "purchaseReturnReport": {
     "title": "Purchase Return Report",
@@ -4677,7 +5072,9 @@
     "unitPrice": "Unit Price",
     "subtotal": "Subtotal",
     "startPrompt": "Generate Purchase Register Report",
-    "startPromptDesc": "Select filters and date range to view purchase invoices"
+    "startPromptDesc": "Select filters and date range to view purchase invoices",
+    "gross": "Gross Amount",
+    "net": "Net Amount"
   },
   "reports": {
     "badge": {
@@ -4757,7 +5154,8 @@
     "contribution": "Contribution",
     "costTrendChart": "Cost Trend Over Time",
     "generate": "Generate Report",
-    "startPrompt": "Select filters and generate report to analyze purchase costs"
+    "startPrompt": "Select filters and generate report to analyze purchase costs",
+    "invoiceCount": "Invoice Count"
   },
   "pos": {
     "title": "Point of Sale",
@@ -4841,7 +5239,15 @@
     "failedToLoadSale": "Failed to load sale.",
     "syncingCart": "Syncing cart...",
     "cartSyncFailed": "The POS cart could not be synchronized. Please try again.",
-    "paymentRecoveryRejected": "An unresolved payment could not be safely restored. Review sales history before starting another payment."
+    "paymentRecoveryRejected": "An unresolved payment could not be safely restored. Review sales history before starting another payment.",
+    "cartChangedInAnotherTab": "The POS cart changed in another tab. Review the cart before continuing.",
+    "cartItemCount_zero": "No items",
+    "cartItemCount_two": "Two items",
+    "cartItemCount_few": "{{count}} items",
+    "cartItemCount_many": "{{count}} items",
+    "keepThisCart": "Keep this cart",
+    "saleHoldFailed": "Failed to hold sale. Please try again.",
+    "syncOtherTabCart": "Sync other tab"
   },
   "receipt": {
     "saleComplete": "✓ Sale Complete!",
@@ -4864,7 +5270,13 @@
     "change": "Change",
     "thankYou": "Thank you for your business!",
     "keepReceipt": "Please keep this receipt for your records",
-    "close": "Close"
+    "close": "Close",
+    "notes": "Notes",
+    "originalInvoice": "Original invoice",
+    "print": "Print receipt",
+    "printError": "Could not open the print dialog. Use the print button to try again.",
+    "printing": "Printing...",
+    "reason": "Reason"
   },
   "auditLog": {
     "title": "Audit Logs",
@@ -4921,7 +5333,16 @@
     "changes": "Changes",
     "field": "Field",
     "oldValue": "Old Value",
-    "newValue": "New Value"
+    "newValue": "New Value",
+    "accessDenied": "Access Denied",
+    "accessDeniedMessage": "You do not have permission to view the audit log.",
+    "invalidJson": "Invalid JSON",
+    "searchPlaceholder": "Search audit logs...",
+    "showingPage": "Showing page {{page}} of {{total}} ({{count}} entries)",
+    "source": "Source",
+    "system": "System",
+    "userAgent": "User Agent",
+    "web": "Web"
   },
   "customerSelectModal": {
     "title": "Select Customer",
@@ -5033,7 +5454,10 @@
       "receiptUnavailable": "Sale completed but the receipt could not be loaded.",
       "recoveredUnknownOutcome": "A previous payment has an unknown outcome. Review sales history, then confirm to retry the exact same request.",
       "unknownOutcomeBeforeRetry": "Payment outcome is unknown. Check sales history, then confirm to retry the exact same request. Do not start another payment.",
-      "recoveryPersistenceFailed": "Payment was not submitted because safe retry recovery could not be stored. Check browser storage and try again."
+      "recoveryPersistenceFailed": "Payment was not submitted because safe retry recovery could not be stored. Check browser storage and try again.",
+      "cartSyncFailed": "The active POS cart could not be prepared for payment.",
+      "requestTimedOutBeforeRetry": "Payment request timed out. Check sales history before trying again.",
+      "stockRevalidationFailed": "Current stock could not be verified. Check stock and try again."
     }
   },
   "salesHistory": {
@@ -5056,6 +5480,10 @@
     },
     "walkInCustomer": "Walk-in Customer",
     "noSalesFound": "No sales found",
+    "unavailableTitle": "Sales history unavailable",
+    "unavailableMessage": "We could not load sales for this selection. This is not an empty result.",
+    "accessDenied": "You do not have permission to view this sales history.",
+    "accessDeniedMessage": "The request was refused. No sales data is shown, and this is not an empty result.",
     "failedToLoad": "Failed to load sales history",
     "page": "Page",
     "of": "of",
@@ -5752,7 +6180,9 @@
     "productsCount": "{{count}} products",
     "expandAll": "Expand All",
     "collapseAll": "Collapse All",
-    "subCategoriesCount": "{{count}} subcategories"
+    "subCategoriesCount": "{{count}} subcategories",
+    "syncFailed": "Failed to sync categories",
+    "syncSuccess": "Synced {{count}} categories to the storefront."
   },
   "customers": {
     "title": "Customers",
@@ -6129,7 +6559,9 @@
     "notesLabel": "Notes",
     "notesRequiredInline": "Notes are required when there is a difference.",
     "openingNotesPlaceholder": "Add opening notes...",
-    "closingNotesPlaceholder": "Add closing notes..."
+    "closingNotesPlaceholder": "Add closing notes...",
+    "balancedTransferPolicy": "Cashbox funding must come from an existing Cashbox or Bank through a balanced Treasury transfer. Direct cash creation and destruction are not available.",
+    "manageFundsViaTreasury": "Transfer Existing Treasury Cash"
   },
   "manualWalletSettlement": {
     "title": "Manual Wallet Settlement",
@@ -6497,8 +6929,7 @@
       "BankDeposit": "Bank deposit",
       "Reversal": "Reversal",
       "Other": "Other source"
-    },
-    "currentClassification": "Current"
+    }
   },
   "visaStatement": {
     "title": "Visa Account Statement",
@@ -6815,7 +7246,8 @@
   "CommerceHubPayments": {
     "unavailable": {
       "title": "CommerceHub payments are unavailable",
-      "description": "The vendor repayment screen could not be loaded right now."
+      "description": "The vendor repayment screen could not be loaded right now.",
+      "loading": "Refreshing payment authority"
     },
     "actions": {
       "retry": "Retry",
@@ -6958,7 +7390,14 @@
       "processing": "Processing",
       "failed": "Failed"
     },
-    "notProcessedYet": "Not processed yet"
+    "notProcessedYet": "Not processed yet",
+    "actions": {
+      "retry": "Retry"
+    },
+    "unavailable": {
+      "loading": "Refreshing earnings authority",
+      "title": "Earnings authority unavailable"
+    }
   },
   "SmartOffersPage": {
     "hero": {
@@ -7224,13 +7663,20 @@
       "approveError": "Failed to approve payment",
       "rejectionReasonRequired": "Please enter a rejection reason",
       "rejectSuccess": "Payment rejected",
-      "rejectError": "Failed to reject payment"
+      "rejectError": "Failed to reject payment",
+      "approveTimeout": "Approval request timed out. Refresh the pending list before trying again.",
+      "configurationRequired": "Configuration required.",
+      "failedToLoad": "Failed to load pending payments.",
+      "rejectionReasonTooLong": "Rejection reason must be 500 characters or fewer.",
+      "rejectionReasonTooShort": "Rejection reason must be at least 3 characters.",
+      "rejectTimeout": "Rejection request timed out. Refresh the pending list before trying again."
     },
     "actions": {
       "viewOrderDetails": "View Order Details",
       "approve": "Approve",
       "reject": "Reject"
-    }
+    },
+    "rejectionReasonLabel": "Rejection Reason"
   },
   "SmartOfferEditor": {
     "badge": "E-commerce",
@@ -8795,6 +9241,10 @@
     "emptyDescription": "Create products with variants to publish them to CommerceHub.",
     "variantCount": "{{formattedCount}} variants",
     "variantCount_one": "{{formattedCount}} variant",
+    "variantCount_zero": "{{formattedCount}} variants",
+    "variantCount_two": "{{formattedCount}} variants",
+    "variantCount_few": "{{formattedCount}} variants",
+    "variantCount_many": "{{formattedCount}} variants",
     "variantCount_other": "{{formattedCount}} variants",
     "publishedBadge": "Published",
     "messages": {
@@ -9080,6 +9530,10 @@
       "ratingRequired": "Please select a rating from 1 to 5.",
       "ratingOption": "{{count}} stars",
       "ratingOption_one": "{{count}} star",
+      "ratingOption_zero": "{{count}} stars",
+      "ratingOption_two": "{{count}} stars",
+      "ratingOption_few": "{{count}} stars",
+      "ratingOption_many": "{{count}} stars",
       "ratingOption_other": "{{count}} stars",
       "marketingEvidenceTitle": "Campaign evidence",
       "endDateValidation": "End date must be after the start date.",
@@ -9222,6 +9676,14 @@
   },
   "tenantRegistration": {
     "title": "Create your store",
+    "formDescription": "Enter your business details to create your store.",
+    "admission": {
+      "loading": "Checking store registration",
+      "loadingDescription": "Please wait while we check whether new stores can be created.",
+      "closedTitle": "New store creation is temporarily unavailable",
+      "unavailableTitle": "Store registration could not be checked",
+      "existingStore": "If you already have a store, you can sign in as usual."
+    },
     "subtitle": "Start selling online in minutes.",
     "signInPrompt": "Already have an account?",
     "signIn": "Sign in",
@@ -9259,6 +9721,7 @@
       "addressTaken": "This address is already taken",
       "addressCheckUnavailable": "Unable to check availability",
       "checkingAvailability": "Checking availability...",
+      "checkingEmail": "Checking email...",
       "yourStore": "Your store",
       "trySuggestions": "Try one of these:"
     },
@@ -9269,6 +9732,7 @@
       "createStore": "Create your store"
     },
     "messages": {
+      "reviewDetails": "Please review your details",
       "genericError": "Something went wrong. Please try again."
     },
     "legal": {
@@ -9424,7 +9888,9 @@
         "GREATER_THAN_OR_EQUAL": "is greater than or equal to",
         "LESS_THAN": "is less than",
         "LESS_THAN_OR_EQUAL": "is less than or equal to"
-      }
+      },
+      "addCondition": "Add condition",
+      "deleteCondition": "Delete condition"
     },
     "validation": {
       "title": "Fix these issues before saving:",
@@ -9449,7 +9915,8 @@
       "ruleSourceRequired": "Select a source field for every condition.",
       "ruleComparisonRequired": "Enter a comparison value for every non-empty condition.",
       "ruleSelfReference": "A field cannot depend on itself."
-    }
+    },
+    "thisField": "this field"
   },
   "treasuryCapitalization": {
     "title": "Treasury Initial Capitalization",
@@ -9724,5 +10191,31 @@
       "invalidToken": "This link is invalid or has already been used.",
       "generic": "The operation could not be completed."
     }
+  },
+  "balanceTransfer": {
+    "loadError": "Failed to load accounts. Please refresh the page."
+  },
+  "storefrontLive": {
+    "activeCarts": "Active Carts",
+    "activity": {
+      "addToCart": "Added to cart",
+      "beginCheckout": "Checkout started",
+      "orderCompleted": "Order completed"
+    },
+    "checkoutInProgress": "Checkout In Progress",
+    "generalActivity": "Storefront session activity",
+    "liveVisitors": "Live Visitors",
+    "malformed": "Live monitoring data was unusable",
+    "malformedMessage": "The live monitoring response was unusable, so no counters are shown. This is not a zero result.",
+    "noRecentActivity": "No recent storefront activity in the live window.",
+    "polling": "Updates every 10 seconds",
+    "recentActivity": "Recent Activity",
+    "recentActivitySubtitle": "Latest storefront checkout and cart events.",
+    "recentOrders": "Orders in Last 5 Minutes",
+    "stale": "Showing the last successful result from an earlier refresh.",
+    "subtitle": "Polled activity observed in the last 5 minutes. Behavioral ingestion lag is unknown; orders come from SQL posting activity.",
+    "title": "Live Store Monitoring",
+    "unavailableMessage": "We could not load live store monitoring. No counters are shown, and this is not a zero result.",
+    "unavailableTitle": "Live store monitoring unavailable"
   }
 }

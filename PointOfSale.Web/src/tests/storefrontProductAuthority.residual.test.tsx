@@ -6,19 +6,19 @@ import { ProductDetailsPage, useVariantSelector } from './fixtures/storefrontPro
 const probes = vi.hoisted(() => ({ identifier: 'first', read: vi.fn(), resolve: vi.fn(), section: vi.fn(), view: vi.fn() }))
 vi.mock('../../../PointOfSale.Storefront/node_modules/react', async () => vi.importActual('react'))
 vi.mock('../../../PointOfSale.Storefront/node_modules/react-router-dom', () => ({ useParams: () => ({ slug: probes.identifier }) }))
-vi.mock('@/components/layout', () => ({ Layout: ({ children }: { children: React.ReactNode }) => <main>{children}</main> }))
-vi.mock('@/components/common', () => ({ ProductDetailSkeleton: () => <p>Loading backend product</p> }))
-vi.mock('@/components/sections/SectionRenderer', () => ({ SectionRenderer: ({ sectionProps }: { sectionProps: { product: ProductReadDto } }) => {
+vi.mock('@storefront/components/layout', () => ({ Layout: ({ children }: { children: React.ReactNode }) => <main>{children}</main> }))
+vi.mock('@storefront/components/common', () => ({ ProductDetailSkeleton: () => <p>Loading backend product</p> }))
+vi.mock('@storefront/components/sections/SectionRenderer', () => ({ SectionRenderer: ({ sectionProps }: { sectionProps: { product: ProductReadDto } }) => {
     probes.section(sectionProps.product)
     return <h1>{sectionProps.product.name}</h1>
 } }))
-vi.mock('@/services/api', () => ({ fetchProductByIdentifier: probes.read, fetchCategories: () => Promise.resolve([]) }))
-vi.mock('@/services/api/storefrontApi', () => ({ resolveProductVariant: probes.resolve }))
-vi.mock('@/analytics', () => ({ useAnalytics: () => ({ productView: probes.view }) }))
-vi.mock('@/i18n', () => ({ useLocalizedContent: () => ({ t: (key: string) => key }) }))
-vi.mock('@/store', () => ({ useStoreConfigStore: () => ({}), selectConfig: vi.fn() }))
-vi.mock('@/utils', () => ({ resolveProductImage: () => null }))
-vi.mock('@/storefront/products/ProductTemplateResolver', () => ({ resolveProductTemplate: () => ({ templateId: 'default', sections: [{ id: 'hero', type: 'product-hero', order: 0, enabled: true }] }) }))
+vi.mock('@storefront/services/api', () => ({ fetchProductByIdentifier: probes.read, fetchCategories: () => Promise.resolve([]) }))
+vi.mock('@storefront/services/api/storefrontApi', () => ({ resolveProductVariant: probes.resolve }))
+vi.mock('@storefront/analytics', () => ({ useAnalytics: () => ({ productView: probes.view }) }))
+vi.mock('@storefront/i18n', () => ({ useLocalizedContent: () => ({ t: (key: string) => key }) }))
+vi.mock('@storefront/store', () => ({ useStoreConfigStore: () => ({}), selectConfig: vi.fn() }))
+vi.mock('@storefront/utils', () => ({ resolveProductImage: () => null }))
+vi.mock('@storefront/storefront/products/ProductTemplateResolver', () => ({ resolveProductTemplate: () => ({ templateId: 'default', sections: [{ id: 'hero', type: 'product-hero', order: 0, enabled: true }] }) }))
 
 function deferred<T>() {
     let resolve!: (value: T) => void

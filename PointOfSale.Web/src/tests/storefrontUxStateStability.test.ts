@@ -105,7 +105,7 @@ describe('storefront UX consistency and state stability', () => {
         const setCustomerId = vi.fn()
         const emitAuthStateDegraded = vi.fn()
 
-        vi.doMock('@/auth/api/authApi', () => ({
+        vi.doMock('@storefront/auth/api/authApi', () => ({
             getMe,
             normalizeAuthError,
             refreshToken: vi.fn(),
@@ -117,18 +117,18 @@ describe('storefront UX consistency and state stability', () => {
             getProviders: vi.fn(),
         }))
 
-        vi.doMock('@/bootstrap', () => ({
+        vi.doMock('@storefront/bootstrap', () => ({
             clearSession,
             setCustomerId,
         }))
 
-        vi.doMock('@/features/auth/authTelemetry', () => ({
+        vi.doMock('@storefront/features/auth/authTelemetry', () => ({
             emitAuthStateDegraded,
             emitAuthDegradedRecovery: vi.fn(),
             emitCheckoutStateLeakPrevented: vi.fn(),
         }))
 
-        const { useAuthStore } = await import('@/auth/store/authStore')
+        const { useAuthStore } = await import('@storefront/auth/store/authStore')
 
         useAuthStore.setState({
             status: 'authenticated',
@@ -162,7 +162,7 @@ describe('storefront UX consistency and state stability', () => {
         }
         const emitCheckoutSelectionInvalidated = vi.fn()
 
-        vi.doMock('@/services/api', () => ({
+        vi.doMock('@storefront/services/api', () => ({
             httpClient,
             normalizeError: vi.fn(() => ({ message: 'Request failed', isNetworkError: false })),
             isRetryableError: vi.fn(() => false),
@@ -179,7 +179,7 @@ describe('storefront UX consistency and state stability', () => {
             applyOrderDraft: vi.fn(),
         }))
 
-        vi.doMock('@/auth/store/authStore', () => {
+        vi.doMock('@storefront/auth/store/authStore', () => {
             const authState = { status: 'authenticated' }
             return {
                 useAuthStore: {
@@ -190,20 +190,20 @@ describe('storefront UX consistency and state stability', () => {
             }
         })
 
-        vi.doMock('@/features/checkout/activeCheckoutOrderContext', () => ({
+        vi.doMock('@storefront/features/checkout/activeCheckoutOrderContext', () => ({
             persistActiveCheckoutOrderContext: vi.fn(),
         }))
 
-        vi.doMock('@/features/checkout/checkoutSelectionTelemetry', () => ({
+        vi.doMock('@storefront/features/checkout/checkoutSelectionTelemetry', () => ({
             emitCheckoutSelectionInvalidated,
         }))
 
-        vi.doMock('@/features/cart/cartTelemetry', () => ({
+        vi.doMock('@storefront/features/cart/cartTelemetry', () => ({
             emitCartStateMismatchDetected: vi.fn(),
         }))
 
-        const { useCheckoutStore } = await import('@/store/checkoutStore')
-        const { useCartStore } = await import('@/store/cartStore')
+        const { useCheckoutStore } = await import('@storefront/store/checkoutStore')
+        const { useCartStore } = await import('@storefront/store/cartStore')
 
         useCartStore.setState({
             cart: {
@@ -325,7 +325,7 @@ describe('storefront UX consistency and state stability', () => {
         const updateCartItemByVariant = vi.fn(() => pendingUpdate.promise)
         const emitCartStateMismatchDetected = vi.fn()
 
-        vi.doMock('@/services/api', () => ({
+        vi.doMock('@storefront/services/api', () => ({
             fetchCart: vi.fn(),
             addCartItem: vi.fn(),
             updateCartItem: vi.fn(),
@@ -338,11 +338,11 @@ describe('storefront UX consistency and state stability', () => {
             applyOrderDraft: vi.fn(),
         }))
 
-        vi.doMock('@/features/cart/cartTelemetry', () => ({
+        vi.doMock('@storefront/features/cart/cartTelemetry', () => ({
             emitCartStateMismatchDetected,
         }))
 
-        const { useCartStore } = await import('@/store/cartStore')
+        const { useCartStore } = await import('@storefront/store/cartStore')
 
         const currentCart = {
             cartId: 'cart-1',

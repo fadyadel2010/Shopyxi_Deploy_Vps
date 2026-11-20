@@ -15,6 +15,7 @@
  */
 
 import { useState } from 'react'
+import * as Dropdown from '@radix-ui/react-dropdown-menu'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
@@ -38,7 +39,7 @@ const DATE_PERIODS = [
 
 export default function AttributionModelsPage() {
     const { t, i18n } = useTranslation()
-    const isRTL = i18n.language === 'ar'
+    const isRTL = i18n.dir() === 'rtl'
     const navigate = useNavigate()
 
     const [period, setPeriod] = useState('last_7_days')
@@ -47,6 +48,7 @@ export default function AttributionModelsPage() {
     const { data, loading, error, refetch } = useAttributionModels(period)
 
     const currentPeriod = DATE_PERIODS.find(p => p.value === period)
+    const periodLabel = value => t(`attribution.periods.${({ last_7_days: 'last7Days', last_30_days: 'last30Days', this_month: 'thisMonth', last_month: 'lastMonth' })[value] || value}`)
 
     return (
         <div className="max-w-7xl mx-auto">
@@ -85,50 +87,43 @@ export default function AttributionModelsPage() {
 
             {/* Date Range Selector */}
             <div className="flex items-center gap-3 mb-6">
-                <div className="relative">
-                    <button
-                        onClick={() => setShowPeriodDropdown(!showPeriodDropdown)}
+                <Dropdown.Root dir={isRTL ? 'rtl' : 'ltr'} open={showPeriodDropdown} onOpenChange={setShowPeriodDropdown}>
+                    <Dropdown.Trigger asChild><button type="button"
                         className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                     >
                         <Calendar size={16} className="text-gray-400" />
                         <span className="text-sm font-medium text-gray-700">
-                            {currentPeriod?.label}
+                            {periodLabel(period)}
                         </span>
                         <ChevronDown size={16} className="text-gray-400" />
-                    </button>
+                    </button></Dropdown.Trigger>
 
                     {showPeriodDropdown && (
-                        <>
-                            <div
-                                className="fixed inset-0 z-0"
-                                onClick={() => setShowPeriodDropdown(false)}
-                            />
-                            <div className="absolute top-full mt-1 left-0 bg-white border border-gray-200 rounded-lg shadow-lg z-10 w-48">
+                        <Dropdown.Portal><Dropdown.Content align="start" sideOffset={4} className="bg-white border border-gray-200 rounded-lg shadow-lg z-50 w-48">
                                 {DATE_PERIODS.map(p => (
-                                    <button
+                                    <Dropdown.Item
                                         key={p.value}
-                                        onClick={() => {
+                                        onSelect={() => {
                                             setPeriod(p.value)
                                             setShowPeriodDropdown(false)
                                         }}
-                                        className={`w-full px-4 py-2.5 text-left text-sm hover:bg-gray-50 first:rounded-t-lg last:rounded-b-lg ${period === p.value ? 'bg-indigo-50 text-indigo-600' : 'text-gray-700'}`}
+                                        className={`w-full px-4 py-2.5 text-start text-sm data-[highlighted]:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-500 first:rounded-t-lg last:rounded-b-lg ${period === p.value ? 'bg-indigo-50 text-indigo-600' : 'text-gray-700'}`}
                                     >
-                                        {p.label}
-                                    </button>
+                                        {periodLabel(p.value)}
+                                    </Dropdown.Item>
                                 ))}
-                            </div>
-                        </>
+                        </Dropdown.Content></Dropdown.Portal>
                     )}
-                </div>
+                </Dropdown.Root>
 
                 <span className="text-sm text-gray-500">
-                    {t('attribution.periodLabel', 'Comparing data for')}: {currentPeriod?.label}
+                    {t('attribution.periodLabel', 'Comparing data for')}: {periodLabel(period)}
                 </span>
             </div>
 
             {/* Error State */}
             {error && (
-                <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
+                <div role="alert" className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
                     <p className="text-red-600 text-sm">{error}</p>
                 </div>
             )}

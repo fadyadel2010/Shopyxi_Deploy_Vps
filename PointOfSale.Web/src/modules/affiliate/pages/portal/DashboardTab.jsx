@@ -5,6 +5,23 @@ import SyntheticQaNotice from './SyntheticQaNotice'
 import { useLanguage } from '../../i18n/LanguageContext'
 import { PortalPanel, PortalEmpty, SettlementProgress, OrderActivity } from './PortalUi'
 
+const finite = value => typeof value === 'number' && Number.isFinite(value)
+const count = value => finite(value) && value >= 0
+const currency = value => typeof value === 'string' && /^[A-Z]{3}$/.test(value)
+const validDashboard = value => value && count(value.totalOrders) && Array.isArray(value.earningsByCurrency)
+    && value.earningsByCurrency.every(row => row && currency(row.currency)
+        && ['totalEarned', 'totalApproved', 'totalPaid', 'totalReversed', 'netEarnings'].every(key => finite(row[key])))
+const validAnalytics = value => value && count(value.totalClicks) && count(value.totalOrders)
+    && (value.totalClicks === 0 || finite(value.conversionRate))
+const validTrend = value => Array.isArray(value) && value.every(row => row
+    && typeof row.date === 'string' && Number.isFinite(Date.parse(row.date)) && count(row.clicks) && count(row.orders))
+const validBalance = value => value && currency(value.currency)
+    && finite(value.availableForWithdrawal) && finite(value.totalPendingRequests)
+const validOrders = value => value && Array.isArray(value.orders) && value.orders.every(row => row
+    && typeof row.orderNumber === 'string' && currency(row.currency) && finite(row.totalCommission))
+const validateResult = (result, valid) => result.status === 'fulfilled' && !valid(result.value)
+    ? { status: 'rejected', reason: new TypeError('Malformed dashboard response') } : result
+
 export default function DashboardTab({ formatCurrency }) {
     const { t, formatNumber, formatDate } = useLanguage()
     const [state, setState] = useState({ loading: true })
@@ -14,7 +31,13 @@ export default function DashboardTab({ formatCurrency }) {
         setState({ loading: true })
         Promise.allSettled([affiliateApi.getDashboard(), affiliateApi.getAnalyticsSummary(), affiliateApi.getAnalyticsTrend(), affiliateApi.getPayouts(1, 1), affiliateApi.getOrders(1, 5)])
             .then(([dashboard, analytics, trend, balance, orders]) => {
-                if (active) setState({ loading: false, dashboard, analytics, trend, balance, orders })
+                if (active) setState({ loading: false,
+                    dashboard: validateResult(dashboard, validDashboard),
+                    analytics: validateResult(analytics, validAnalytics),
+                    trend: validateResult(trend, validTrend),
+                    balance: validateResult(balance, validBalance),
+                    orders: validateResult(orders, validOrders),
+                })
             })
         return () => { active = false }
     }, [reload])
@@ -42,7 +65,7 @@ export default function DashboardTab({ formatCurrency }) {
         <PortalPanel title={t('ux.analytics')}>
             <p className="text-xs text-gray-500 dark:text-gray-400">{t('ux.analyticsNote')}</p>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">{[
-                [t('ux.commissionOrders'), formatNumber(data.totalOrders || 0)],
+                [t('ux.commissionOrders'), formatNumber(data.totalOrders)],
                 [t('ux.clicks'), analytics ? formatNumber(analytics.totalClicks) : '—'],
                 [t('ux.trackedOrders'), analytics ? formatNumber(analytics.totalOrders) : '—'],
                 [t('ux.conversion'), analytics?.totalClicks > 0 ? formatNumber(analytics.conversionRate / 100, { style: 'percent', maximumFractionDigits: 2 }) : '—'],

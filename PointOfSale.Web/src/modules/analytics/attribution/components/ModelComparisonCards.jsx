@@ -84,7 +84,8 @@ export default function ModelComparisonCards({ data, loading }) {
                 const colors = colorClasses[model.color]
                 const modelData = model.data
                 const topSources = modelData?.topSources || []
-                const maxRevenue = Math.max(...topSources.map(s => s.revenue || 0), 1)
+                const maxRevenue = Math.max(...topSources.map(s => Math.abs(s.revenue)), 1)
+                const signedAxis = topSources.some(source => source.revenue < 0)
 
                 return (
                     <div
@@ -139,7 +140,7 @@ export default function ModelComparisonCards({ data, loading }) {
                             ) : (
                                 <div className="space-y-2">
                                     {topSources.map((source, idx) => {
-                                        const barWidth = ((source.revenue || 0) / maxRevenue) * 100
+                                        const barWidth = Math.abs(source.revenue) / maxRevenue * (signedAxis ? 50 : 100)
 
                                         return (
                                             <div key={idx} className="flex items-center gap-3">
@@ -158,10 +159,11 @@ export default function ModelComparisonCards({ data, loading }) {
                                                             {formatCurrency(source.revenue)}
                                                         </span>
                                                     </div>
-                                                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                                                    <div dir="ltr" aria-hidden="true" className="relative h-2 bg-gray-100 rounded-full overflow-hidden">
+                                                        {signedAxis && <span className="absolute h-full border-l border-gray-400" style={{ left: '50%' }} />}
                                                         <div
-                                                            className={`h-full rounded-full ${colors.bar}`}
-                                                            style={{ width: `${barWidth}%` }}
+                                                            className={`absolute h-full rounded-full ${colors.bar}`}
+                                                            style={{ left: `${signedAxis ? source.revenue < 0 ? 50 - barWidth : 50 : 0}%`, width: `${barWidth}%` }}
                                                         />
                                                     </div>
                                                 </div>

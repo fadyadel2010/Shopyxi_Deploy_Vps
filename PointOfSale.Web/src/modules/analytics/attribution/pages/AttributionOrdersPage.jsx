@@ -19,6 +19,7 @@
  */
 
 import { useState } from 'react'
+import * as Dropdown from '@radix-ui/react-dropdown-menu'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
@@ -49,7 +50,7 @@ const ATTRIBUTION_MODELS = [
 export default function AttributionOrdersPage() {
     const { t, i18n } = useTranslation()
     const { formatCurrency } = useSettings()
-    const isRTL = i18n.language === 'ar'
+    const isRTL = i18n.dir() === 'rtl'
     const navigate = useNavigate()
 
     const [model, setModel] = useState('LastTouch')
@@ -111,45 +112,37 @@ export default function AttributionOrdersPage() {
             {/* Filters Row */}
             <div className="flex flex-wrap items-center gap-3 mb-6">
                 {/* Model Selector */}
-                <div className="relative">
-                    <button
-                        onClick={() => {
-                            setShowModelDropdown(!showModelDropdown)
-                            setShowPeriodDropdown(false)
-                        }}
+                <Dropdown.Root dir={isRTL ? 'rtl' : 'ltr'} open={showModelDropdown} onOpenChange={setShowModelDropdown}>
+                    <Dropdown.Trigger asChild><button type="button"
                         className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                     >
                         <span className="text-sm font-medium text-gray-700">
                             {t(currentModel?.labelKey)}
                         </span>
                         <ChevronDown size={16} className="text-gray-400" />
-                    </button>
+                    </button></Dropdown.Trigger>
 
                     {showModelDropdown && (
-                        <div className="absolute top-full mt-1 start-0 bg-white border border-gray-200 rounded-lg shadow-lg z-10 w-40">
+                        <Dropdown.Portal><Dropdown.Content align="start" sideOffset={4} className="bg-white border border-gray-200 rounded-lg shadow-lg z-50 w-40">
                             {ATTRIBUTION_MODELS.map(m => (
-                                <button
+                                <Dropdown.Item
                                     key={m.value}
-                                    onClick={() => {
+                                    onSelect={() => {
                                         setModel(m.value)
                                         setShowModelDropdown(false)
                                     }}
-                                    className={`w-full px-4 py-2.5 text-start text-sm hover:bg-gray-50 first:rounded-t-lg last:rounded-b-lg ${model === m.value ? 'bg-indigo-50 text-indigo-600' : 'text-gray-700'}`}
+                                    className={`w-full px-4 py-2.5 text-start text-sm data-[highlighted]:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-500 first:rounded-t-lg last:rounded-b-lg ${model === m.value ? 'bg-indigo-50 text-indigo-600' : 'text-gray-700'}`}
                                 >
                                     {t(m.labelKey)}
-                                </button>
+                                </Dropdown.Item>
                             ))}
-                        </div>
+                        </Dropdown.Content></Dropdown.Portal>
                     )}
-                </div>
+                </Dropdown.Root>
 
                 {/* Period Selector */}
-                <div className="relative">
-                    <button
-                        onClick={() => {
-                            setShowPeriodDropdown(!showPeriodDropdown)
-                            setShowModelDropdown(false)
-                        }}
+                <Dropdown.Root dir={isRTL ? 'rtl' : 'ltr'} open={showPeriodDropdown} onOpenChange={setShowPeriodDropdown}>
+                    <Dropdown.Trigger asChild><button type="button"
                         className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                     >
                         <Calendar size={16} className="text-gray-400" />
@@ -157,46 +150,35 @@ export default function AttributionOrdersPage() {
                             {t(currentPeriod?.labelKey)}
                         </span>
                         <ChevronDown size={16} className="text-gray-400" />
-                    </button>
+                    </button></Dropdown.Trigger>
 
                     {showPeriodDropdown && (
-                        <div className="absolute top-full mt-1 start-0 bg-white border border-gray-200 rounded-lg shadow-lg z-10 w-48">
+                        <Dropdown.Portal><Dropdown.Content align="start" sideOffset={4} className="bg-white border border-gray-200 rounded-lg shadow-lg z-50 w-48">
                             {DATE_PERIODS.map(p => (
-                                <button
+                                <Dropdown.Item
                                     key={p.value}
-                                    onClick={() => {
+                                    onSelect={() => {
                                         setPeriod(p.value)
                                         setShowPeriodDropdown(false)
                                     }}
-                                    className={`w-full px-4 py-2.5 text-start text-sm hover:bg-gray-50 first:rounded-t-lg last:rounded-b-lg ${period === p.value ? 'bg-indigo-50 text-indigo-600' : 'text-gray-700'}`}
+                                    className={`w-full px-4 py-2.5 text-start text-sm data-[highlighted]:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-500 first:rounded-t-lg last:rounded-b-lg ${period === p.value ? 'bg-indigo-50 text-indigo-600' : 'text-gray-700'}`}
                                 >
                                     {t(p.labelKey)}
-                                </button>
+                                </Dropdown.Item>
                             ))}
-                        </div>
+                        </Dropdown.Content></Dropdown.Portal>
                     )}
-                </div>
+                </Dropdown.Root>
 
                 {/* Count Badge */}
                 <div className="ms-auto text-sm text-gray-500">
-                    {t('attribution.ordersFound', { count: data?.totalCount || 0 })}
+                    {data ? t('attribution.ordersFound', { count: data.totalCount }) : '—'}
                 </div>
             </div>
 
-            {/* Click outside to close dropdowns */}
-            {(showModelDropdown || showPeriodDropdown) && (
-                <div
-                    className="fixed inset-0 z-0"
-                    onClick={() => {
-                        setShowModelDropdown(false)
-                        setShowPeriodDropdown(false)
-                    }}
-                />
-            )}
-
             {/* Error State */}
             {error && (
-                <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
+                <div role="alert" className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
                     <p className="text-red-600 text-sm">{error}</p>
                 </div>
             )}
@@ -220,7 +202,7 @@ export default function AttributionOrdersPage() {
             )}
 
             {/* Orders Table */}
-            {!loading && orders.length > 0 && (
+            {!loading && data && orders.length > 0 && (
                 <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="w-full">
@@ -297,7 +279,7 @@ export default function AttributionOrdersPage() {
             )}
 
             {/* Empty State */}
-            {!loading && orders.length === 0 && !error && (
+            {!loading && data && orders.length === 0 && !error && (
                 <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
                     <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <FileText className="text-gray-400" size={28} />

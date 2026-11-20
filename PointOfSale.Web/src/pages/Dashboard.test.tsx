@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import Dashboard from './Dashboard'
 import { useAuthStore } from '../store/authStore'
@@ -8,7 +8,7 @@ vi.mock('../components/PosDashboardContent', () => ({
     default: () => <div>POS dashboard content</div>,
 }))
 vi.mock('./StorefrontAnalyticsDashboard', () => ({
-    default: () => <div>Storefront analytics content</div>,
+    default: ({ presentation }: { presentation: string }) => <div data-testid="storefront" data-presentation={presentation}>Storefront analytics content</div>,
 }))
 vi.mock('../hooks/useRTL', () => ({
     useRTL: () => ({ isRTL: false, dir: 'ltr' }),
@@ -77,5 +77,23 @@ describe('Dashboard permission gating', () => {
         expect(screen.getByText('Storefront analytics content')).toBeInTheDocument()
         expect(screen.getByText('dashboard.tabs.storefront')).toBeInTheDocument()
         expect(screen.getByText('dashboard.tabs.pos')).toBeInTheDocument()
+        expect(screen.getByRole('tab', { name: 'dashboard.tabs.storefront' })).toHaveAttribute('aria-selected', 'true')
+        expect(screen.getByTestId('storefront')).toHaveAttribute('data-presentation', 'dashboard')
+        fireEvent.mouseDown(screen.getByRole('tab', { name: 'dashboard.tabs.pos' }), { button: 0, ctrlKey: false })
+        fireEvent.click(screen.getByRole('tab', { name: 'dashboard.tabs.pos' }))
+        expect(screen.getByRole('tab', { name: 'dashboard.tabs.pos' })).toHaveAttribute('aria-selected', 'true')
+        expect(screen.queryByText('Storefront analytics content')).not.toBeInTheDocument()
+        expect(window.localStorage.getItem('admin.dashboard.activeTab')).toBe('pos')
+        expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
+    })
+
+    it('does not render disallowed Storefront content during permission loss', () => {
+        window.localStorage.setItem('admin.dashboard.activeTab', 'storefront')
+        useAuthStore.setState({ user: ownerUser, isAuthenticated: true })
+        const { rerender } = render(<MemoryRouter><Dashboard /></MemoryRouter>)
+        useAuthStore.setState({ user: cashierUser })
+        rerender(<MemoryRouter><Dashboard /></MemoryRouter>)
+        expect(screen.queryByText('Storefront analytics content')).not.toBeInTheDocument()
+        expect(screen.getByText('POS dashboard content')).toBeInTheDocument()
     })
 })

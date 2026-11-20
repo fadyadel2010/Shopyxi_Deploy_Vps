@@ -1,4 +1,12 @@
 {
+    "gallery": {
+        "title": "معرض وسائط {{product}}",
+        "itemCount": "العنصر {{current}} من {{total}}",
+        "videoUnavailable": "معاينة الفيديو غير متاحة",
+        "previous": "الوسائط السابقة",
+        "next": "الوسائط التالية",
+        "view": "عرض {{label}}"
+    },
     "landing": {
         "referralBanner": "أنت تتصفح عبر إحالة شريك",
         "activeJourneyReferralBanner": "تحتفظ سلتك النشطة بإحالة الشريك الأصلية",
@@ -10,11 +18,13 @@
     },
     "common": {
         "loading": "جاري التحميل...",
+        "processing": "جارٍ المعالجة...",
         "error": "خطأ",
         "retry": "إعادة المحاولة",
         "cancel": "إلغاء",
         "save": "حفظ",
         "delete": "حذف",
+        "remove": "إزالة",
         "edit": "تعديل",
         "close": "إغلاق",
         "search": "بحث",
@@ -34,7 +44,12 @@
         "yes": "نعم",
         "no": "لا",
         "notAvailable": "غير متوفر",
-        "dismiss": "إغلاق"
+        "dismiss": "إغلاق",
+        "store": "المتجر",
+        "backToStore": "العودة إلى المتجر",
+        "confirm": "تأكيد",
+        "continue": "متابعة",
+        "sending": "جارٍ الإرسال..."
     },
     "header": {
         "menu": "القائمة",
@@ -79,7 +94,8 @@
         "unavailable": "خدمة البحث غير متوفرة",
         "minChars": "أدخل حرفين على الأقل",
         "results": "{count} نتيجة",
-        "pressEnter": "اضغط Enter للبحث"
+        "pressEnter": "اضغط Enter للبحث",
+        "suggestions": "اقتراحات البحث"
     },
     "cart": {
         "retrySync": "تحديث السلة",
@@ -363,6 +379,9 @@
                 "removalFailed": "فشل حذف إثبات التحويل. يرجى إعادة المحاولة."
             }
         },
+        "paymentError": "خطأ في إعدادات الدفع",
+        "contactSupport": "يرجى التواصل مع الدعم إذا استمرت هذه المشكلة.",
+        "manualWalletUnavailable": "خيارات المحفظة اليدوية غير متاحة. يرجى اختيار طريقة دفع أخرى أو المحاولة لاحقاً.",
         "paymobPayment": "الدفع عبر باي موب",
         "paymobDescription": "ادفع بأمان عبر باي موب",
         "orderNumber": "الطلب",
@@ -669,6 +688,7 @@
             "paymentMethod": "الدفع",
             "total": "الإجمالي",
             "standard": "توصيل عادي",
+            "cancellationReason": "سبب الإلغاء",
             "status": {
                 "pending": "قيد الانتظار",
                 "confirmed": "تم التأكيد",
@@ -699,7 +719,10 @@
             "confirmPassword": "تأكيد كلمة المرور",
             "passwordChanged": "تم تغيير كلمة المرور بنجاح. تم تسجيل خروجك من جميع الأجهزة.",
             "passwordChangeFailed": "فشل في تغيير كلمة المرور",
-            "passwordRequirements": "يجب أن تكون كلمة المرور 8 أحرف على الأقل مع حرف كبير وحرف صغير ورقم واحد"
+            "passwordRequirements": "يجب أن تكون كلمة المرور 8 أحرف على الأقل مع حرف كبير وحرف صغير ورقم واحد",
+            "passwordChangeWarning": "تغيير كلمة المرور سيسجل خروجك من جميع الأجهزة. ستحتاج إلى تسجيل الدخول مرة أخرى على كل أجهزتك.",
+            "socialLoginOnly": "هذا الحساب يستخدم تسجيل الدخول عبر {provider}.",
+            "socialLoginInfo": "يستخدم حسابك {provider} للمصادقة. تتم إدارة كلمة المرور بواسطة مزود تسجيل الدخول الاجتماعي."
         },
         "sessions": {
             "title": "الجلسات",
@@ -709,7 +732,11 @@
             "revokeAll": "إنهاء جميع الجلسات الأخرى",
             "revokedSuccess": "تم إنهاء الجلسة بنجاح",
             "revokedAllSuccess": "تم تسجيل الخروج من {count} جهاز(أجهزة)",
-            "noOtherSessions": "لا توجد جلسات نشطة أخرى"
+            "noOtherSessions": "لا توجد جلسات نشطة أخرى",
+            "revokeCurrentWarning": "إنهاء جلستك الحالية سيسجل خروجك فوراً. هل تريد المتابعة؟",
+            "revokeAllConfirm": "إنهاء جميع الجلسات الأخرى؟",
+            "revokeAllWarning": "سيؤدي هذا إلى تسجيل خروجك من جميع الأجهزة الأخرى. ستبقى جلستك الحالية نشطة.",
+            "unknownDevice": "جهاز غير معروف"
         },
         "status": {
             "active": "نشط",
@@ -861,7 +888,9 @@
             "googleNotLoaded": "تسجيل الدخول بـ Google غير متاح. يرجى المحاولة لاحقاً.",
             "googleFailed": "فشل تسجيل الدخول بـ Google. يرجى المحاولة مرة أخرى.",
             "facebookNotLoaded": "تسجيل الدخول بـ Facebook غير متاح. يرجى المحاولة لاحقاً.",
-            "facebookFailed": "فشل تسجيل الدخول بـ Facebook. يرجى المحاولة مرة أخرى."
+            "facebookFailed": "فشل تسجيل الدخول بـ Facebook. يرجى المحاولة مرة أخرى.",
+            "googleNotConfigured": "تسجيل الدخول عبر Google غير مُعد. يرجى التواصل مع الدعم.",
+            "facebookNotConfigured": "تسجيل الدخول عبر فيسبوك غير مُعد. يرجى التواصل مع الدعم."
         },
         "errors": {
             "INVALID_LOGIN_STATE": "انتهت صلاحية محاولة الدخول أو لم تتطابق مع هذا المتصفح. ابدأ من جديد.",
@@ -895,10 +924,13 @@
             "NETWORK_ERROR": "خطأ في الشبكة. يرجى التحقق من اتصالك.",
             "UNKNOWN_ERROR": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
             "retryAfter": "يرجى المحاولة مرة أخرى خلال {seconds} ثانية.",
-            "securityAlert": "لأمانك، يرجى تسجيل الدخول مرة أخرى."
+            "securityAlert": "لأمانك، يرجى تسجيل الدخول مرة أخرى.",
+            "passwordMismatch": "كلمتا المرور غير متطابقتين"
         },
         "guard": {
-            "checking": "جارِ التحقق من المصادقة..."
+            "checking": "جارِ التحقق من المصادقة...",
+            "degradedTitle": "نقوم بالتحقق من جلستك",
+            "degradedMessage": "تبقى الإجراءات الحساسة متوقفة حتى نتمكن من تأكيد حسابك بأمان."
         },
         "reconnecting": "إعادة الاتصال...",
         "loading": "جارٍ التحميل..."
@@ -946,7 +978,14 @@
         "onSaleOnly": "عروض فقط",
         "clearAll": "مسح الكل",
         "apply": "تطبيق",
-        "removeFilter": "إزالة الفلتر"
+        "removeFilter": "إزالة الفلتر",
+        "noResults": "لا توجد منتجات",
+        "tryDifferent": "جرّب تعديل الفلاتر أو مسحها."
+    },
+    "affiliate": {
+        "modeActive": "متجر التسويق بالعمولة - مجموعة منسقة",
+        "modeTooltip": "أنت تتصفح مجموعة منسقة من منتجات التسويق بالعمولة",
+        "storeBadge": "متجر التسويق بالعمولة"
     },
     "sort": {
         "sortBy": "ترتيب حسب",
@@ -971,6 +1010,7 @@
         "open": "فتح المحادثة",
         "close": "إغلاق",
         "minimize": "تصغير",
+        "minimized": "تحدث معنا",
         "clear": "مسح المحادثة",
         "status": {
             "online": "متصل",

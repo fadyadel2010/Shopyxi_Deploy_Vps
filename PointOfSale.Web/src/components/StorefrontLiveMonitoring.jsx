@@ -1,8 +1,14 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CreditCard, Eye, Package, RefreshCw, ShoppingCart } from 'lucide-react'
-import { getRequestErrorMessage, useLatestRequestGuard } from '../hooks/useLatestRequestGuard'
+import { useLatestRequestGuard } from '../hooks/useLatestRequestGuard'
 import storefrontAnalyticsApi from '../services/storefrontAnalyticsApi'
+import { Button, Card } from '../design-system/primitives'
+import { useRTL } from '../hooks/useRTL'
+import { formatDateTime, formatNumber } from '../utils/dateFormat'
+import { isNumber, useDashboardActorScope, useDashboardSource } from './dashboard/usePosDashboardData'
+import DashboardDataState from './dashboard/DashboardDataState'
+import DashboardMetric from './dashboard/DashboardMetric'
 
 const POLL_INTERVAL_MS = 10000
 
@@ -29,16 +35,14 @@ function LiveMetricCard({ label, value, icon: Icon, color }) {
     )
 }
 
-function formatRelativeTime(occurredAtUtc) {
+function formatRelativeTime(occurredAtUtc, locale) {
     const seconds = Math.max(0, Math.floor((Date.now() - new Date(occurredAtUtc).getTime()) / 1000))
-
-    if (seconds < 60) return `${seconds}s ago`
-
+    const formatter = new Intl.RelativeTimeFormat(locale, { numeric: 'always', style: 'short' })
+    if (seconds < 60) return formatter.format(-seconds, 'second')
     const minutes = Math.floor(seconds / 60)
-    if (minutes < 60) return `${minutes}m ago`
-
+    if (minutes < 60) return formatter.format(-minutes, 'minute')
     const hours = Math.floor(minutes / 60)
-    return `${hours}h ago`
+    return formatter.format(-hours, 'hour')
 }
 
 function getActivityLabel(activity, t) {
@@ -54,10 +58,23 @@ function getActivityLabel(activity, t) {
     }
 }
 
-export default function StorefrontLiveMonitoring() {
+export default function StorefrontLiveMonitoring({ presentation } = {}) {
+    const actor = useDashboardActorScope()
+    return presentation === 'dashboard' ? <RootStorefrontLiveMonitoring /> : <DefaultStorefrontLiveMonitoring key={actor} />
+}
+
+const validLivePayload = value => value && ['liveVisitors', 'activeCarts', 'checkoutInProgress', 'recentOrders'].every(key => isNumber(value[key]))
+    && Array.isArray(value.recentActivity)
+    && value.recentActivity.every(row => row && typeof row.type === 'string' && typeof row.occurredAtUtc === 'string' && Number.isFinite(Date.parse(row.occurredAtUtc)))
+
+function DefaultStorefrontLiveMonitoring() {
     const { t } = useTranslation()
+    const { locale } = useRTL()
     const [data, setData] = useState(null)
     const [loading, setLoading] = useState(true)
+    // Only a validated successful response may replace the counters; a failed or
+    // malformed response is never presented as a healthy grid of zeros.
+    const [errorKind, setErrorKind] = useState(null)
     const [error, setError] = useState(null)
     const { beginRequest, isLatestRequest } = useLatestRequestGuard()
 
@@ -69,10 +86,16 @@ export default function StorefrontLiveMonitoring() {
                 setLoading(true)
             }
 
+            setErrorKind(null)
             setError(null)
             const response = await storefrontAnalyticsApi.getStorefrontLiveMonitoring()
 
             if (!isLatestRequest(requestId)) {
+                return
+            }
+
+            if (!validLivePayload(response)) {
+                setErrorKind('malformed')
                 return
             }
 
@@ -82,8 +105,12 @@ export default function StorefrontLiveMonitoring() {
                 return
             }
 
-            console.error('[Storefront Live] Failed to fetch live monitoring:', err)
-            setError(getRequestErrorMessage(err, 'Failed to load live store monitoring'))
+            const status = err?.response?.status
+            if (status === 401 || status === 403) setData(null)
+            console.error('[Storefront Live] Failed to fetch live monitoring:', { status })
+            // Server messages may contain technical details; only localized copy is shown.
+            setError(null)
+            setErrorKind('failed')
         } finally {
             if (isLatestRequest(requestId)) {
                 setLoading(false)
@@ -102,6 +129,9 @@ export default function StorefrontLiveMonitoring() {
             window.clearInterval(intervalId)
         }
     }, [fetchLiveMonitoring])
+
+    const hasData = data !== null
+    const malformed = errorKind === 'malformed'
 
     return (
         <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
@@ -125,34 +155,63 @@ export default function StorefrontLiveMonitoring() {
                 </button>
             </div>
 
-            {error ? (
-                <div className="mb-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-                    {error}
+            {errorKind && hasData ? (
+                <div className="mb-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700" role="status">
+                    <p className="font-medium">{malformed
+                        ? t('storefrontLive.malformed', 'Live monitoring data was unusable')
+                        : t('storefrontLive.unavailableTitle', 'Live store monitoring unavailable')}</p>
+                    <p className="mt-1">{t('storefrontLive.stale', 'Showing the last successful result from an earlier refresh.')}</p>
                 </div>
             ) : null}
 
+            {!hasData ? (
+                <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center text-sm text-red-700" role="status">
+                    {errorKind ? (
+                        <>
+                            <p className="text-lg font-semibold">{malformed
+                                ? t('storefrontLive.malformed', 'Live monitoring data was unusable')
+                                : t('storefrontLive.unavailableTitle', 'Live store monitoring unavailable')}</p>
+                            <p className="mt-2">{malformed
+                                ? t('storefrontLive.malformedMessage', 'The live monitoring response was unusable, so no counters are shown. This is not a zero result.')
+                                : t('storefrontLive.unavailableMessage', 'We could not load live store monitoring. No counters are shown, and this is not a zero result.')}</p>
+                            {error && !malformed ? <p className="mt-2 text-xs">{error}</p> : null}
+                            <button
+                                type="button"
+                                onClick={() => fetchLiveMonitoring()}
+                                disabled={loading}
+                                className="mt-4 rounded-lg border border-red-300 bg-white px-4 py-2 font-medium text-red-700 disabled:opacity-60"
+                            >
+                                {t('common.retry', 'Retry')}
+                            </button>
+                        </>
+                    ) : (
+                        <p className="text-gray-600">{t('common.loading', 'Loading...')}</p>
+                    )}
+                </div>
+            ) : (
+                <>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
                 <LiveMetricCard
                     label={t('storefrontLive.liveVisitors', 'Live Visitors')}
-                    value={(data?.liveVisitors || 0).toLocaleString()}
+                    value={data.liveVisitors.toLocaleString()}
                     icon={Eye}
                     color="cyan"
                 />
                 <LiveMetricCard
                     label={t('storefrontLive.activeCarts', 'Active Carts')}
-                    value={(data?.activeCarts || 0).toLocaleString()}
+                    value={data.activeCarts.toLocaleString()}
                     icon={ShoppingCart}
                     color="amber"
                 />
                 <LiveMetricCard
                     label={t('storefrontLive.checkoutInProgress', 'Checkout In Progress')}
-                    value={(data?.checkoutInProgress || 0).toLocaleString()}
+                    value={data.checkoutInProgress.toLocaleString()}
                     icon={CreditCard}
                     color="indigo"
                 />
                 <LiveMetricCard
                     label={t('storefrontLive.recentOrders', 'Orders in Last 5 Minutes')}
-                    value={(data?.recentOrders || 0).toLocaleString()}
+                    value={data.recentOrders.toLocaleString()}
                     icon={Package}
                     color="emerald"
                 />
@@ -173,7 +232,7 @@ export default function StorefrontLiveMonitoring() {
                     </div>
                 </div>
 
-                {!data?.recentActivity?.length ? (
+                {!data.recentActivity.length ? (
                     <div className="rounded-xl border border-dashed border-gray-200 bg-white px-4 py-8 text-center text-sm text-gray-500">
                         {t('storefrontLive.noRecentActivity', 'No recent storefront activity in the live window.')}
                     </div>
@@ -193,13 +252,48 @@ export default function StorefrontLiveMonitoring() {
                                     </p>
                                 </div>
                                 <div className="whitespace-nowrap text-xs font-medium text-gray-400">
-                                    {formatRelativeTime(activity.occurredAtUtc)}
+                                    {formatRelativeTime(activity.occurredAtUtc, locale)}
                                 </div>
                             </div>
                         ))}
                     </div>
                 )}
             </div>
+                </>
+            )}
         </section>
+    )
+}
+
+const validRootLive = validLivePayload
+const loadRootLive = () => storefrontAnalyticsApi.getStorefrontLiveMonitoring()
+
+function RootStorefrontLiveMonitoring() {
+    const { t } = useTranslation()
+    const { locale } = useRTL()
+    const actor = useDashboardActorScope()
+    const source = useDashboardSource({ scope: actor, load: loadRootLive, valid: validRootLive, interval: POLL_INTERVAL_MS })
+    const copy = key => t(`dashboard.phase42.storefront.${key}`)
+    const activityLabels = { AddToCart: 'addToCart', BeginCheckout: 'checkoutStarted', OrderCompleted: 'orderCompleted' }
+    return (
+        <Card as="section" className="pos-dashboard__live">
+            <div className="pos-dashboard__section-heading">
+                <div><h3>{copy('liveTitle')}</h3><p className="pos-dashboard__caption">{copy('liveBasis')}</p></div>
+                <Button variant="secondary" disabled={source.pending} onClick={source.retry}>{t('common.refresh')}</Button>
+            </div>
+            <DashboardDataState source={source}>
+                <div className="pos-dashboard__kpis">
+                    {['liveVisitors', 'activeCarts', 'checkoutInProgress', 'recentOrders'].map(key => <DashboardMetric key={key} label={copy(key)} value={source.data ? formatNumber(source.data[key], locale) : undefined} caption={copy(`${key}Basis`)} />)}
+                </div>
+                <h4>{copy('recentActivity')}</h4>
+                {source.data?.recentActivity.length ? <ul className="pos-dashboard__activity">
+                    {source.data.recentActivity.map((activity, index) => <li key={index}>
+                        <strong>{activityLabels[activity.type] ? copy(activityLabels[activity.type]) : <bdi>{activity.type}</bdi>}</strong>
+                        <p><bdi>{activity.product || activity.orderNumber || copy('sessionActivity')}</bdi></p>
+                        <time dateTime={activity.occurredAtUtc}><bdi>{formatDateTime(activity.occurredAtUtc, locale)}</bdi></time>
+                    </li>)}
+                </ul> : <p className="pos-dashboard__empty">{copy('noActivity')}</p>}
+            </DashboardDataState>
+        </Card>
     )
 }

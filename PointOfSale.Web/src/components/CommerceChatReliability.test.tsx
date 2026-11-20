@@ -6,8 +6,8 @@ const state = vi.hoisted(() => ({
     enabled: true, config: { version: 1 }, customerId: 'customer-A', post: vi.fn(),
     i18n: { language: 'en' },
 }))
-vi.mock('@/i18n', () => ({ useTranslation: () => ({ t: (key: string) => key, language: state.i18n.language }) }))
-vi.mock('@/store', () => ({
+vi.mock('@storefront/i18n', () => ({ useTranslation: () => ({ t: (key: string) => key, language: state.i18n.language }) }))
+vi.mock('@storefront/store', () => ({
     useStoreConfigStore: (selector: (s: unknown) => unknown) => selector({ config: state.config }),
     selectCommerceAiEnabled: () => state.enabled,
     selectCommerceAiWidgetStyle: () => 'minimal',
@@ -15,10 +15,10 @@ vi.mock('@/store', () => ({
     selectCommerceAiAutoGreetingEnabled: () => false,
     selectCommerceAiAutoGreetingMessage: () => '',
 }))
-vi.mock('@/auth/store/authStore', () => ({ useAuthStore: (selector: (s: unknown) => unknown) => selector({ customer: { id: state.customerId } }) }))
-vi.mock('@/bootstrap/tenantScopedStorage', () => ({ tryGetTenantScopedStorageKey: (key: string) => `tenant-A:${key}` }))
-vi.mock('@/bootstrap/sessionManager', () => ({ getSessionId: () => 'cart-session' }))
-vi.mock('@/services/api/httpClient', () => ({ httpClient: { post: (...args: unknown[]) => state.post(...args) } }))
+vi.mock('@storefront/auth/store/authStore', () => ({ useAuthStore: (selector: (s: unknown) => unknown) => selector({ customer: { id: state.customerId } }) }))
+vi.mock('@storefront/bootstrap/tenantScopedStorage', () => ({ tryGetTenantScopedStorageKey: (key: string) => `tenant-A:${key}` }))
+vi.mock('@storefront/bootstrap/sessionManager', () => ({ getSessionId: () => 'cart-session' }))
+vi.mock('@storefront/services/api/httpClient', () => ({ httpClient: { post: (...args: unknown[]) => state.post(...args) } }))
 vi.mock('../../../PointOfSale.Storefront/src/components/chat/OrderDraftPreview', () => ({ default: () => <div>Trusted purchase preview</div> }))
 
 beforeEach(() => {

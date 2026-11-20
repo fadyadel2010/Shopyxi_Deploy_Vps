@@ -1,13 +1,45 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { Bell } from 'lucide-react'
 import { useRTL } from '../hooks/useRTL'
 import api from '../services/api'
 import { useAuthStore } from '../store/authStore'
 import { getScopedStorageKey, safeReadJson, safeWriteJson } from '../utils/storageScope'
 import { isServiceMarketplaceWorkflowActor } from '../marketplace/authority'
+import { Badge, Button, IconButton } from '../design-system/primitives'
 
 const SEEN_REQUESTS_KEY_PREFIX = 'marketplace_seen_request_ids'
+const PANEL_WIDTH = 320
+const PANEL_MAX_HEIGHT = 288
+const PANEL_GUTTER = 8
+const PANEL_MIN_VISIBLE_HEIGHT = 96
+
+export function computeNotificationPanelPosition({
+    triggerRect,
+    panelWidth = PANEL_WIDTH,
+    viewportWidth,
+    viewportHeight,
+    isRTL,
+    gutter = PANEL_GUTTER,
+    maxPanelHeight = PANEL_MAX_HEIGHT,
+}) {
+    const width = Math.max(0, Math.min(panelWidth, viewportWidth - gutter * 2))
+    const alignedLeft = isRTL ? triggerRect.left : triggerRect.right - width
+    const maxLeft = Math.max(gutter, viewportWidth - width - gutter)
+    const left = Math.min(Math.max(alignedLeft, gutter), maxLeft)
+    const top = Math.max(gutter, Math.min(triggerRect.bottom + gutter, viewportHeight - gutter - PANEL_MIN_VISIBLE_HEIGHT))
+    const maxHeight = Math.max(
+        PANEL_MIN_VISIBLE_HEIGHT,
+        Math.min(maxPanelHeight, viewportHeight - top - gutter),
+    )
+    return {
+        left: Math.round(left),
+        top: Math.round(top),
+        width: Math.round(width),
+        maxHeight: Math.round(maxHeight),
+    }
+}
 
 function getSeenRequestsStorageKey() {
     return getScopedStorageKey(SEEN_REQUESTS_KEY_PREFIX, 'seen')
@@ -49,6 +81,7 @@ export default function MarketplaceNotificationBell() {
     const [unseenCount, setUnseenCount] = useState(0)
     const [showDropdown, setShowDropdown] = useState(false)
     const [unseenRequests, setUnseenRequests] = useState([])
+    const [panelPosition, setPanelPosition] = useState(null)
     const dropdownRef = useRef(null)
     const bellRef = useRef(null)
     const allPendingIdsRef = useRef([])
@@ -113,6 +146,51 @@ export default function MarketplaceNotificationBell() {
         return () => document.removeEventListener('mousedown', handleClickOutside)
     }, [])
 
+    useEffect(() => {
+        if (!showDropdown) {
+            return undefined
+        }
+
+        const handleKeydown = (event) => {
+            if (event.key !== 'Escape') {
+                return
+            }
+            setShowDropdown(false)
+            bellRef.current?.focus()
+        }
+
+        document.addEventListener('keydown', handleKeydown)
+        return () => document.removeEventListener('keydown', handleKeydown)
+    }, [showDropdown])
+
+    useLayoutEffect(() => {
+        if (!showDropdown || unseenCount === 0) {
+            setPanelPosition(null)
+            return undefined
+        }
+
+        const updatePosition = () => {
+            const trigger = bellRef.current
+            if (!trigger) {
+                return
+            }
+            setPanelPosition(computeNotificationPanelPosition({
+                triggerRect: trigger.getBoundingClientRect(),
+                viewportWidth: window.innerWidth,
+                viewportHeight: window.innerHeight,
+                isRTL,
+            }))
+        }
+
+        updatePosition()
+        window.addEventListener('resize', updatePosition)
+        window.addEventListener('scroll', updatePosition, true)
+        return () => {
+            window.removeEventListener('resize', updatePosition)
+            window.removeEventListener('scroll', updatePosition, true)
+        }
+    }, [showDropdown, unseenCount, isRTL])
+
     const markAllAsSeen = useCallback(() => {
         if (allPendingIdsRef.current.length > 0) {
             markRequestsAsSeen(allPendingIdsRef.current)
@@ -170,105 +248,82 @@ export default function MarketplaceNotificationBell() {
         return null
     }
 
-    return (
-        <div className="relative" dir={dir}>
-            <button
-                ref={bellRef}
-                onClick={handleBellClick}
-                className="relative rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
-                title={unseenCount > 0
-                    ? t('servicesMarketplace.notifications.newRequestsTitle', { count: unseenCount })
-                    : t('servicesMarketplace.notifications.marketplaceRequests')}
-                type="button"
-            >
-                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                    />
-                </svg>
+    const triggerLabel = unseenCount > 0
+        ? t('servicesMarketplace.notifications.newRequestsTitle', { count: unseenCount })
+        : t('servicesMarketplace.notifications.marketplaceRequests')
 
-                {unseenCount > 0 ? (
-                    <span className={`absolute -top-0.5 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1.5 text-xs font-bold text-white shadow-sm animate-pulse ${isRTL ? '-left-0.5' : '-right-0.5'}`}>
-                        {unseenCount > 9 ? '9+' : unseenCount}
-                    </span>
-                ) : null}
-            </button>
+    return (
+        <div className="pos-notifications" dir={dir}>
+            <IconButton
+                ref={bellRef}
+                type="button"
+                className="pos-notifications__trigger"
+                label={triggerLabel}
+                title={triggerLabel}
+                onClick={handleBellClick}
+                aria-expanded={unseenCount > 0 ? showDropdown : undefined}
+                aria-controls={unseenCount > 0 ? 'pos-marketplace-notifications' : undefined}
+                icon={(
+                    <>
+                        <Bell size={20} />
+                        {unseenCount > 0 ? (
+                            <span className="pos-notifications__count" aria-hidden="true">
+                                {unseenCount > 9 ? '9+' : unseenCount}
+                            </span>
+                        ) : null}
+                    </>
+                )}
+            />
 
             {showDropdown && unseenCount > 0 ? (
                 <div
                     ref={dropdownRef}
-                    className={`absolute z-50 mt-2 w-80 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-2xl ${isRTL ? 'left-0' : 'right-0'}`}
-                    style={{ animation: 'fadeInDown 0.2s ease-out' }}
+                    id="pos-marketplace-notifications"
+                    role="region"
+                    aria-label={t('servicesMarketplace.incoming.title')}
+                    className="pos-notifications__panel"
+                    style={panelPosition ? {
+                        left: panelPosition.left,
+                        top: panelPosition.top,
+                        width: panelPosition.width,
+                        maxHeight: panelPosition.maxHeight,
+                    } : undefined}
                 >
-                    <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-3 text-white">
-                        <div className="flex items-center justify-between gap-3">
-                            <span className="font-semibold text-sm">{t('servicesMarketplace.incoming.title')}</span>
-                            <span className="rounded-full bg-white/20 px-2.5 py-1 text-xs font-bold text-white">
-                                {t('servicesMarketplace.notifications.newCount', { count: unseenCount })}
-                            </span>
-                        </div>
+                    <div className="pos-notifications__heading">
+                        <h2 className="pos-notifications__title">{t('servicesMarketplace.incoming.title')}</h2>
+                        <Badge variant="brand" size="sm">
+                            {t('servicesMarketplace.notifications.newCount', { count: unseenCount })}
+                        </Badge>
                     </div>
 
-                    <div className="max-h-72 divide-y divide-gray-100 overflow-y-auto">
+                    <ul className="pos-notifications__list">
                         {unseenRequests.map((request) => (
-                            <button
-                                key={request.requestId}
-                                onClick={handleRequestClick}
-                                className="group w-full px-4 py-3 text-start transition-colors hover:bg-indigo-50"
-                                type="button"
-                            >
-                                <div className="flex items-start gap-3">
-                                    <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-orange-500 text-sm font-semibold text-white shadow-sm">
-                                        {request.serviceTitle?.trim()?.charAt(0)?.toUpperCase() || 'S'}
-                                    </div>
-                                    <div className="min-w-0 flex-1">
-                                        <p className="truncate text-sm font-medium text-gray-900 transition-colors group-hover:text-indigo-700">
-                                            {request.serviceTitle || t('servicesMarketplace.requestCard.serviceRequest')}
-                                        </p>
-                                        <div className="mt-0.5 flex items-center gap-2">
-                                            <span className="inline-flex items-center rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold text-amber-800">
-                                                {t('servicesMarketplace.status.pending')}
-                                            </span>
-                                            <span className="text-xs text-gray-400">
-                                                {getTimeAgo(request.createdAt)}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <svg className={`mt-1 h-4 w-4 flex-shrink-0 text-gray-300 transition-colors group-hover:text-indigo-500 ${isRTL ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </div>
-                            </button>
+                            <li key={request.requestId}>
+                                <button
+                                    onClick={handleRequestClick}
+                                    className="pos-notifications__item pos-notifications__item--unread"
+                                    type="button"
+                                >
+                                    <p className="pos-notifications__message">
+                                        {request.serviceTitle || t('servicesMarketplace.requestCard.serviceRequest')}
+                                    </p>
+                                    <p className="pos-notifications__meta">
+                                        {t('servicesMarketplace.status.pending')}
+                                        {' · '}
+                                        {getTimeAgo(request.createdAt)}
+                                    </p>
+                                </button>
+                            </li>
                         ))}
-                    </div>
+                    </ul>
 
-                    <div className="border-t border-gray-100 bg-gray-50 px-4 py-2.5">
-                        <button
-                            onClick={handleViewAll}
-                            className="w-full py-1 text-center text-sm font-semibold text-indigo-600 transition-colors hover:text-indigo-800"
-                            type="button"
-                        >
+                    <div className="pos-notifications__footer">
+                        <Button variant="ghost" size="sm" onClick={handleViewAll}>
                             {t('servicesMarketplace.notifications.viewAll')}
-                        </button>
+                        </Button>
                     </div>
                 </div>
             ) : null}
-
-            <style>{`
-                @keyframes fadeInDown {
-                    from {
-                        opacity: 0;
-                        transform: translateY(-8px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
-            `}</style>
         </div>
     )
 }

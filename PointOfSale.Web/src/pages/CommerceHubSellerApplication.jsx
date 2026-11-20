@@ -32,7 +32,7 @@ const toForm = (source = {}) => ({
 export default function CommerceHubSellerApplication() {
     const { t } = useTranslation()
     const { isRTL, formatDateTime } = useFormatting()
-    const { showSuccess, showError } = useToast()
+    const { showSuccess, showError } = useToast({ surface: 'commercehub' })
     const updateUser = useAuthStore((state) => state.updateUser)
     const navigate = useNavigate()
     const [status, setStatus] = useState(null)

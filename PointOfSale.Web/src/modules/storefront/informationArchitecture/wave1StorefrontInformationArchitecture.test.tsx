@@ -488,7 +488,7 @@ describe('Wave 1 — Storefront Information Architecture Migration', () => {
         it('renders canonical sub-group buttons after expanding the Storefront section', async () => {
             useAuthStore.setState({ user: ownerUser, isAuthenticated: true, hasHydrated: true })
             render(
-                <MemoryRouter initialEntries={['/']}>
+                <MemoryRouter initialEntries={['/storefront']}>
                     <Sidebar isOpen onClose={() => {}} />
                 </MemoryRouter>,
             )
@@ -506,7 +506,7 @@ describe('Wave 1 — Storefront Information Architecture Migration', () => {
         it('clicking an Operations sub-group toggles child visibility', async () => {
             useAuthStore.setState({ user: ownerUser, isAuthenticated: true, hasHydrated: true })
             render(
-                <MemoryRouter initialEntries={['/']}>
+                <MemoryRouter initialEntries={['/storefront']}>
                     <Sidebar isOpen onClose={() => {}} />
                 </MemoryRouter>,
             )
@@ -539,7 +539,7 @@ describe('Wave 1 — Storefront Information Architecture Migration', () => {
         it('persists expanded state to localStorage under the operations state key', async () => {
             useAuthStore.setState({ user: ownerUser, isAuthenticated: true, hasHydrated: true })
             render(
-                <MemoryRouter initialEntries={['/']}>
+                <MemoryRouter initialEntries={['/storefront']}>
                     <Sidebar isOpen onClose={() => {}} />
                 </MemoryRouter>,
             )

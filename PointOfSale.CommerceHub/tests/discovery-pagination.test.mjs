@@ -23,7 +23,21 @@ await module.link(async (name) => {
 await module.evaluate();
 const options = module.namespace.infiniteSearchResultsQueryOptions({ fetchQuery: (query) => query.queryFn({}) }, { q: "authority", sort: "price_asc" }, 10);
 
-test("actual frontend consumer keeps requesting pages until the authoritative total is loaded", async () => {
+/*
+ * Owner decision X-1b: this case can only pass against an authentic backend
+ * page receipt, so it is skipped unless live execution is explicitly opted
+ * into. The assertion below is unchanged and still runs, and still fails when
+ * the receipt is missing, under SHOPYXI_LIVE_BACKEND=1.
+ */
+const liveBackendEnabled = process.env.SHOPYXI_LIVE_BACKEND === "1";
+const liveBackendSkipReason =
+  "requires an authentic PostgreSQL/Mongo backend page receipt; set SHOPYXI_LIVE_BACKEND=1 (with APP17B_BACKEND_PAGE_RECEIPT) to run";
+
+if (!liveBackendEnabled) {
+  console.log(`SKIP: ${liveBackendSkipReason}`);
+}
+
+test("actual frontend consumer keeps requesting pages until the authoritative total is loaded", { skip: liveBackendEnabled ? false : liveBackendSkipReason }, async () => {
   assert.ok(process.env.APP17B_BACKEND_PAGE_RECEIPT, "Real PostgreSQL/Mongo backend page receipt is required");
   const pages = JSON.parse(await readFile(process.env.APP17B_BACKEND_PAGE_RECEIPT, "utf8"));
   assert.deepEqual(pages.map((page) => page.items.length), [10, 10, 10, 1, 0]);

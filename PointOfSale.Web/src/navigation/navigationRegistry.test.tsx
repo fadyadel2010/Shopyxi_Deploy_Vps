@@ -107,7 +107,10 @@ describe('actual Admin route/menu navigation inventory', () => {
         const minimal = createRoutesFromChildren(<Route path="/" handle={{ application: 'pos' }}><Route index element={<p>Home</p>} /></Route>)
         expect(buildNavigationRegistry(minimal, navigationOwner, i18n).map(entry => entry.to.pathname)).toEqual(['/'])
         const blocked = buildNavigationRegistry(routes, { ...navigationOwner, navigationCapabilities: [] }, i18n)
-        expect(blocked.some(entry => entry.application === 'commercehub')).toBe(false)
+        // Seller application is intentionally permission-only; disabled vendor
+        // capabilities must hide admitted-vendor surfaces, not seller onboarding.
+        expect(blocked.filter(entry => entry.application === 'commercehub').map(entry => entry.to.pathname))
+            .toEqual(['/commercehub/seller-application'])
     })
 
     it('resolves only registered static visits and declared selectors without retaining arbitrary sensitive queries', () => {

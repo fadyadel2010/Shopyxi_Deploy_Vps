@@ -4,7 +4,7 @@ import {
     resolveBackendPaymentScreen,
     resolvePaymobPollingErrorOutcome,
     resolveStripeClientOutcome,
-} from '@/features/checkout/paymentFlow';
+} from '@storefront/features/checkout/paymentFlow';
 
 describe('payment flow resolution', () => {
     it('keeps Stripe processing states in pending until backend confirmation arrives', () => {

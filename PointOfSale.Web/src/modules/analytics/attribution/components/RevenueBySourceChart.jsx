@@ -57,7 +57,8 @@ export default function RevenueBySourceChart({ data, loading }) {
         )
     }
 
-    const sources = data?.revenueBySource || []
+    if (!data) return null
+    const sources = data.revenueBySource
 
     if (sources.length === 0) {
         return (
@@ -78,7 +79,8 @@ export default function RevenueBySourceChart({ data, loading }) {
     }
 
     // Find the max revenue for scaling bars
-    const maxRevenue = Math.max(...sources.map(s => s.revenue || 0), 1)
+    const maxRevenue = Math.max(...sources.map(s => Math.abs(s.revenue)), 1)
+    const signedAxis = sources.some(source => source.revenue < 0)
 
     return (
         <div className="bg-white rounded-xl border border-gray-200 p-6">
@@ -88,7 +90,7 @@ export default function RevenueBySourceChart({ data, loading }) {
 
             <div className="space-y-4">
                 {sources.map((source, idx) => {
-                    const barWidth = ((source.revenue || 0) / maxRevenue) * 100
+                    const barWidth = Math.abs(source.revenue) / maxRevenue * (signedAxis ? 50 : 100)
                     const color = getSourceColor(source.source)
 
                     return (
@@ -118,17 +120,19 @@ export default function RevenueBySourceChart({ data, loading }) {
                             </div>
 
                             {/* Bar */}
-                            <div className="w-full h-6 bg-gray-100 rounded-lg overflow-hidden">
+                            <div dir="ltr" aria-hidden="true" className="relative w-full h-6 bg-gray-100 rounded-lg overflow-hidden">
+                                {signedAxis && <span className="absolute h-full border-l border-gray-400" style={{ left: '50%' }} />}
                                 <div
-                                    className="h-full rounded-lg transition-all duration-500 flex items-center justify-end pr-2"
+                                    className="absolute h-full rounded-lg transition-all duration-500 flex items-center justify-end"
                                     style={{
-                                        width: `${Math.max(barWidth, 2)}%`,
+                                        left: `${signedAxis ? source.revenue < 0 ? 50 - barWidth : 50 : 0}%`,
+                                        width: `${barWidth}%`,
                                         backgroundColor: color
                                     }}
                                 >
                                     {barWidth > 15 && (
                                         <span className="text-xs text-white font-medium">
-                                            {source.orders} orders
+                                            {source.orders} {t('attribution.orders')}
                                         </span>
                                     )}
                                 </div>

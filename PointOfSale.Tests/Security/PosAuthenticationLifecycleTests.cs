@@ -1,14 +1,24 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Security.Claims;
+using System.Text;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 using Moq;
 using PointOfSale.API.Controllers;
 using PointOfSale.API.DTOs.CommerceHub;
+using PointOfSale.API.Middleware;
 using PointOfSale.API.Models;
 using PointOfSale.API.Security;
 using PointOfSale.API.Services.Audit;
@@ -25,6 +35,133 @@ namespace PointOfSale.Tests.Security;
 
 public sealed class PosAuthenticationLifecycleTests
 {
+    [Fact]
+    public async Task PosLogin_CookieSessionAndCsrf_WorkTogetherInIsolatedHttpPipeline()
+    {
+        var tenantId = Guid.NewGuid();
+        var password = Guid.NewGuid().ToString("N");
+        var jwt = new JwtSettings
+        {
+            Secret = Convert.ToHexString(System.Security.Cryptography.RandomNumberGenerator.GetBytes(48)),
+            Issuer = "PosLoginIsolatedHttp",
+            Audience = "PosLoginIsolatedHttp",
+            AccessTokenExpirationMinutes = 15,
+            RefreshTokenExpirationDays = 7
+        };
+        await using var context = Context(tenantId);
+        var user = User(tenantId);
+        user.PasswordHash = new PasswordHasher<User>().HashPassword(user, password);
+        context.AddRange(Tenant(tenantId), user);
+        await context.SaveChangesAsync();
+
+        // TestServer and EF InMemory only. Do not run the application entry
+        // point, load deployment settings or bind a network listener.
+        var builder = WebApplication.CreateSlimBuilder(new WebApplicationOptions { EnvironmentName = "Test" });
+        builder.Configuration.Sources.Clear();
+        builder.WebHost.UseTestServer();
+        await using var app = builder.Build();
+        app.UseMiddleware<CookieCsrfProtectionMiddleware>();
+
+        async Task<bool> UseCookieSession(HttpContext http)
+        {
+            if (!http.Request.Cookies.TryGetValue(AuthCookieConfiguration.PosAccessTokenCookieName, out var token))
+                return false;
+            var principal = new JwtSecurityTokenHandler().ValidateToken(token, new TokenValidationParameters
+            {
+                ValidIssuer = jwt.Issuer,
+                ValidAudience = jwt.Audience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Secret)),
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateIssuerSigningKey = true,
+                ValidateLifetime = true,
+            }, out _);
+            if (!(await new PosSessionAuthority(context).ValidateAccessTokenAsync(principal, http.RequestAborted)).Authorized)
+                return false;
+            http.User = principal;
+            return true;
+        }
+
+        async Task WriteResponse(HttpContext http, ActionResult<AuthResponse> result)
+        {
+            http.Response.StatusCode = result.Result is StatusCodeResult status ? status.StatusCode
+                : (result.Result as ObjectResult)?.StatusCode ?? StatusCodes.Status500InternalServerError;
+            if (result.Result is ObjectResult { Value: { } data })
+                await http.Response.WriteAsJsonAsync(data);
+        }
+
+        AuthController ControllerFor(HttpContext http)
+        {
+            var controller = Controller(context, tenantId, jwtSettings: jwt);
+            controller.ControllerContext = new ControllerContext { HttpContext = http };
+            return controller;
+        }
+
+        app.MapPost("/api/auth/login", async (HttpContext http) =>
+        {
+            var request = await http.Request.ReadFromJsonAsync<LoginRequest>();
+            if (request is null) { http.Response.StatusCode = 400; return; }
+            await WriteResponse(http, await ControllerFor(http).Login(request, http.RequestAborted));
+        });
+        app.MapGet("/api/auth/session", async (HttpContext http) =>
+        {
+            if (!await UseCookieSession(http)) { http.Response.StatusCode = 401; return; }
+            await WriteResponse(http, await ControllerFor(http).GetSession(http.RequestAborted));
+        });
+        // Deliberately side-effect free outside this test. Verifies execution
+        // reaches an authorized unsafe handler only with the proper CSRF header.
+        var mutations = 0;
+        app.MapPut("/api/pos-test/mutation", async (HttpContext http) =>
+        {
+            if (!await UseCookieSession(http)) { http.Response.StatusCode = 401; return; }
+            mutations++;
+            http.Response.StatusCode = 204;
+        });
+
+        await app.StartAsync();
+        using var client = app.GetTestClient();
+        client.BaseAddress = new Uri("https://localhost");
+        using var anonymous = await client.GetAsync("/api/auth/session");
+        Assert.Equal(HttpStatusCode.Unauthorized, anonymous.StatusCode);
+
+        using var login = await client.PostAsJsonAsync("/api/auth/login", new LoginRequest(user.Username, password));
+        Assert.Equal(HttpStatusCode.OK, login.StatusCode);
+        Assert.True(login.Headers.TryGetValues("Set-Cookie", out var headers));
+        var cookies = headers!.Select(value => SetCookieHeaderValue.Parse(value)).ToArray();
+        var access = cookies.Single(cookie => cookie.Name == AuthCookieConfiguration.PosAccessTokenCookieName);
+        var refresh = cookies.Single(cookie => cookie.Name == AuthCookieConfiguration.PosRefreshTokenCookieName);
+        var csrf = cookies.Single(cookie => cookie.Name == AuthCookieConfiguration.CsrfCookieName);
+        foreach (var cookie in new[] { access, refresh, csrf })
+        {
+            Assert.True(cookie.Secure);
+            Assert.Equal(Microsoft.Net.Http.Headers.SameSiteMode.Strict, cookie.SameSite);
+            Assert.True(cookie.Path == "/");
+            Assert.False(cookie.Domain.HasValue);
+        }
+        Assert.True(access.HttpOnly && refresh.HttpOnly);
+        Assert.False(csrf.HttpOnly);
+        var loginBody = await login.Content.ReadAsStringAsync();
+        Assert.False(loginBody.Contains(access.Value.ToString(), StringComparison.Ordinal));
+        Assert.False(loginBody.Contains(refresh.Value.ToString(), StringComparison.Ordinal));
+        Assert.False(loginBody.Contains(csrf.Value.ToString(), StringComparison.Ordinal));
+
+        async Task<HttpStatusCode> Send(HttpMethod method, string path, string? csrfHeader = null)
+        {
+            using var request = new HttpRequestMessage(method, path);
+            request.Headers.Add("Cookie", $"{access.Name}={access.Value}; {csrf.Name}={csrf.Value}");
+            if (csrfHeader is not null) request.Headers.Add(AuthCookieConfiguration.CsrfHeaderName, csrfHeader);
+            using var response = await client.SendAsync(request);
+            return response.StatusCode;
+        }
+
+        Assert.Equal(HttpStatusCode.OK, await Send(HttpMethod.Get, "/api/auth/session"));
+        Assert.Equal(HttpStatusCode.Forbidden, await Send(HttpMethod.Put, "/api/pos-test/mutation"));
+        Assert.Equal(HttpStatusCode.Forbidden, await Send(HttpMethod.Put, "/api/pos-test/mutation", "not-the-issued-value"));
+        Assert.Equal(0, mutations);
+        Assert.Equal(HttpStatusCode.NoContent, await Send(HttpMethod.Put, "/api/pos-test/mutation", csrf.Value.ToString()));
+        Assert.Equal(1, mutations);
+    }
+
     [Fact]
     public async Task Login_AcceptsNormalizedEmailIdentifier()
     {
@@ -313,13 +450,14 @@ public sealed class PosAuthenticationLifecycleTests
     private static AuthController Controller(
         ApplicationDbContext context,
         Guid tenantId,
-        ICommerceHubVendorDebtService? vendorDebtService = null)
+        ICommerceHubVendorDebtService? vendorDebtService = null,
+        JwtSettings? jwtSettings = null)
     {
         var tenantContext = new TenantContext();
         tenantContext.SetTenantId(tenantId);
         var controller = new AuthController(
             context,
-            Options.Create(new JwtSettings
+            Options.Create(jwtSettings ?? new JwtSettings
             {
                 Secret = "pos-session-certification-test-secret-key-12345678",
                 Issuer = "PointOfSale.Tests",

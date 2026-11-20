@@ -296,6 +296,7 @@ public class AdminCampaignCostController : ControllerBase
             Model = model.ToString(),
             TotalCost = roiBySource.Sum(r => r.TotalCost),
             TotalRevenue = roiBySource.Sum(r => r.TotalRevenue),
+            RecognizedRevenue = roiBySource.Sum(r => r.RecognizedRevenue),
             TotalOrders = roiBySource.Sum(r => r.TotalOrders),
             TotalProfit = roiBySource.Sum(r => r.Profit),
             OverallRoi = CalculateOverallRoi(roiBySource),
@@ -305,6 +306,7 @@ public class AdminCampaignCostController : ControllerBase
                 Medium = r.Medium,
                 Cost = r.TotalCost,
                 Revenue = r.TotalRevenue,
+                RecognizedRevenue = r.RecognizedRevenue,
                 Orders = r.TotalOrders,
                 Profit = r.Profit,
                 RoiPercentage = r.RoiPercentage,
@@ -342,6 +344,7 @@ public class AdminCampaignCostController : ControllerBase
             Model = model.ToString(),
             TotalCost = roiResults.Sum(r => r.Cost),
             TotalRevenue = roiResults.Sum(r => r.Revenue),
+            RecognizedRevenue = roiResults.Sum(r => r.RecognizedRevenue),
             TotalOrders = roiResults.Sum(r => r.Orders),
             TotalProfit = roiResults.Sum(r => r.Profit),
             OverallRoi = roiResults.Sum(r => r.Cost) > 0
@@ -355,6 +358,7 @@ public class AdminCampaignCostController : ControllerBase
                 Campaign = r.Campaign,
                 Cost = r.Cost,
                 Revenue = r.Revenue,
+                RecognizedRevenue = r.RecognizedRevenue,
                 Orders = r.Orders,
                 Profit = r.Profit,
                 RoiPercentage = r.RoiPercentage,
@@ -473,12 +477,15 @@ public class CreateCampaignCostDto
 
 public class RoiSummaryResponse
 {
+    public string FinancialBasis => "journal-date-utc-period-movement";
     public string Period { get; set; } = string.Empty;
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public string Model { get; set; } = string.Empty;
     public decimal TotalCost { get; set; }
     public decimal TotalRevenue { get; set; }
+    public decimal RecognizedRevenue { get; set; }
+    public decimal RevenueAdjustments => TotalRevenue - RecognizedRevenue;
     public int TotalOrders { get; set; }
     public decimal TotalProfit { get; set; }
     public decimal? OverallRoi { get; set; }
@@ -487,10 +494,13 @@ public class RoiSummaryResponse
 
 public class SourceRoiDto
 {
+    public string FinancialBasis => "journal-date-utc-period-movement";
     public string Source { get; set; } = string.Empty;
     public string Medium { get; set; } = string.Empty;
     public decimal Cost { get; set; }
     public decimal Revenue { get; set; }
+    public decimal RecognizedRevenue { get; set; }
+    public decimal RevenueAdjustments => Revenue - RecognizedRevenue;
     public int Orders { get; set; }
     public decimal Profit { get; set; }
     public decimal? RoiPercentage { get; set; }
@@ -500,12 +510,15 @@ public class SourceRoiDto
 
 public class CampaignCostRoiResponse
 {
+    public string FinancialBasis => "journal-date-utc-period-movement";
     public string Period { get; set; } = string.Empty;
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public string Model { get; set; } = string.Empty;
     public decimal TotalCost { get; set; }
     public decimal TotalRevenue { get; set; }
+    public decimal RecognizedRevenue { get; set; }
+    public decimal RevenueAdjustments => TotalRevenue - RecognizedRevenue;
     public int TotalOrders { get; set; }
     public decimal TotalProfit { get; set; }
     public decimal? OverallRoi { get; set; }
@@ -515,11 +528,14 @@ public class CampaignCostRoiResponse
 
 public class CampaignRoiResultDto
 {
+    public string FinancialBasis => "journal-date-utc-period-movement";
     public string Source { get; set; } = string.Empty;
     public string Medium { get; set; } = string.Empty;
     public string Campaign { get; set; } = string.Empty;
     public decimal Cost { get; set; }
     public decimal Revenue { get; set; }
+    public decimal RecognizedRevenue { get; set; }
+    public decimal RevenueAdjustments => Revenue - RecognizedRevenue;
     public int Orders { get; set; }
     public decimal Profit { get; set; }
     public decimal? RoiPercentage { get; set; }

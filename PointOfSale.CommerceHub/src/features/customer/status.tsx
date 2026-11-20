@@ -83,13 +83,13 @@ const renderBadge = (label: ReactNode, className: string) => (
   </Badge>
 );
 
-export const OrderStatusBadge = ({ status }: { status: OrderStatus }) => renderBadge(status, orderStatusClasses[status]);
+export const OrderStatusBadge = ({ status, label = status }: { status: OrderStatus; label?: string }) => renderBadge(label, orderStatusClasses[status]);
 
 export const PaymentStatusBadge = ({ status }: { status: PaymentStatus }) =>
   renderBadge(status.replace(/([a-z])([A-Z])/g, "$1 $2"), paymentStatusClasses[status]);
 
-export const ItemStatusBadge = ({ status }: { status: CustomerOrderItemStatus }) =>
-  renderBadge(status, itemStatusClasses[status]);
+export const ItemStatusBadge = ({ status, label = status }: { status: CustomerOrderItemStatus; label?: string }) =>
+  renderBadge(label, itemStatusClasses[status]);
 
 export const RefundStatusBadge = ({ status }: { status: CustomerRefundStatus }) =>
   renderBadge(formatRefundStatusLabel(status), refundStatusClasses[status]);

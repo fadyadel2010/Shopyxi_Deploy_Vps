@@ -73,6 +73,13 @@ public class OrderAttribution
     /// </summary>
     public decimal OrderValue { get; set; }
 
+    // Read-time SQL enrichment only; the Mongo document mapper does not persist
+    // these period fields or treat projection currency/value as financial truth.
+    public bool? IsPeriodRecognition { get; set; }
+    public decimal? PeriodRecognizedRevenue { get; set; }
+    public string FinancialBasis => IsPeriodRecognition.HasValue
+        ? "journal-date-utc-period-movement" : "journal-date-lifetime-as-of";
+
     /// <summary>
     /// Currency code for the order value.
     /// </summary>

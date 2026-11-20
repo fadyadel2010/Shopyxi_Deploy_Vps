@@ -4,20 +4,20 @@ const { httpGet } = vi.hoisted(() => ({
     httpGet: vi.fn(),
 }));
 
-vi.mock('@/services/api/httpClient', () => ({
+vi.mock('@storefront/services/api/httpClient', () => ({
     httpClient: {
         get: httpGet,
     },
 }));
 
 import { resolvePendingCheckoutAction } from '../../../PointOfSale.Storefront/src/features/checkout/paymentFlow';
-import { paymentStatusApi } from '@/services/api/paymentStatusApi';
+import { paymentStatusApi } from '@storefront/services/api/paymentStatusApi';
 import {
     clearActiveCheckoutOrderContext,
     persistActiveCheckoutOrderContext,
     readActiveCheckoutOrderContext,
     readCheckoutTokenForOrder,
-} from '@/features/checkout/activeCheckoutOrderContext';
+} from '@storefront/features/checkout/activeCheckoutOrderContext';
 
 describe('storefront payment flow hardening', () => {
     const baseStatus = {

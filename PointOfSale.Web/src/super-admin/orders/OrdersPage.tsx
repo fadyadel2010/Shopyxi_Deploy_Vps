@@ -19,6 +19,7 @@ import {
     saInput,
 } from '../ui/SuperAdminUI'
 import OrderDetailsDrawer from './OrderDetailsDrawer'
+import { getOrdersQueryError, isOrdersSnapshotFresh } from './ordersQueryContract'
 import OrdersFilters from './OrdersFilters'
 import OrdersTable from './OrdersTable'
 import {
@@ -100,11 +101,8 @@ function buildFilters(searchParams: URLSearchParams): SuperAdminOrdersFilters {
     }
 }
 
-function getErrorMessage(error: unknown, fallback: string): string {
-    if (error instanceof Error && error.message) {
-        return error.message
-    }
-
+function getErrorMessage(_error: unknown, fallback: string): string {
+    // Provider/database messages are not localized customer-safe presentation.
     return fallback
 }
 
@@ -113,7 +111,24 @@ export default function OrdersPage() {
     const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null)
     const [isExporting, setIsExporting] = useState(false)
     const [exportError, setExportError] = useState<string | null>(null)
+    const [exportSuccess, setExportSuccess] = useState(false)
+    const [now, setNow] = useState(Date.now)
+    const [tabActive, setTabActive] = useState(() => !document.hidden && navigator.onLine)
+    useEffect(() => {
+        const update = () => { setNow(Date.now()); setTabActive(!document.hidden && navigator.onLine) }
+        const timer = window.setInterval(update, 5_000)
+        document.addEventListener('visibilitychange', update)
+        window.addEventListener('online', update)
+        window.addEventListener('offline', update)
+        return () => {
+            window.clearInterval(timer)
+            document.removeEventListener('visibilitychange', update)
+            window.removeEventListener('online', update)
+            window.removeEventListener('offline', update)
+        }
+    }, [])
     const filters = useMemo(() => buildFilters(searchParams), [searchParams])
+    const invalidQuery = getOrdersQueryError(searchParams)
     const [searchInput, setSearchInput] = useState(filters.search ?? '')
     const debouncedSearch = useDebounce(searchInput, 400)
     const { tr, formatNumber, formatCurrency, formatDateTime } = useSuperAdminLocale()
@@ -161,13 +176,17 @@ export default function OrdersPage() {
     const ordersQuery = useQuery({
         queryKey: ['super-admin', 'orders', filters],
         queryFn: () => getSuperAdminOrders(filters),
+        enabled: !invalidQuery,
         staleTime: 30_000,
+        refetchInterval: 30_000,
+        refetchIntervalInBackground: false,
         refetchOnWindowFocus: true,
     })
 
     const statsQuery = useQuery({
         queryKey: ['super-admin', 'orders', 'stats', filters.tenantId || 'all'],
         queryFn: () => getSuperAdminOrderStats(filters.tenantId || undefined),
+        enabled: !invalidQuery,
         staleTime: 15_000,
         refetchInterval: 30_000,
         refetchIntervalInBackground: false,
@@ -187,10 +206,10 @@ export default function OrdersPage() {
     })
 
     const orders = useMemo(
-        () => (ordersQuery.isFetching || ordersQuery.isError ? [] : (ordersQuery.data?.orders ?? [])),
-        [ordersQuery.isFetching, ordersQuery.isError, ordersQuery.data?.orders],
+        () => (ordersQuery.isError ? [] : (ordersQuery.data?.orders ?? [])),
+        [ordersQuery.isError, ordersQuery.data?.orders],
     )
-    const meta = ordersQuery.data?.meta
+    const meta = !ordersQuery.isError && !invalidQuery ? ordersQuery.data?.meta : undefined
     const totalCount = meta?.totalCount ?? 0
     const totalPages = meta?.totalPages ?? 0
     const currentPageFailedPayments = orders.filter((order) => isFailedPaymentStatus(order.paymentStatus)).length
@@ -205,9 +224,18 @@ export default function OrdersPage() {
         filters.toDate,
     ].filter(Boolean).length
 
-    const stats = statsQuery.data
+    const stats = !statsQuery.isError && !invalidQuery ? statsQuery.data : undefined
     const showIssueAlert =
         (stats?.failedPayments ?? 0) > 0 || (stats?.pendingOrders ?? 0) >= PENDING_ALERT_THRESHOLD
+    const monitoringState = ordersQuery.isError || statsQuery.isError || invalidQuery
+        ? 'error'
+        : !tabActive
+          ? 'paused'
+        : ordersQuery.isFetching || statsQuery.isFetching
+          ? 'refreshing'
+          : isOrdersSnapshotFresh(meta?.asOfUtc, now) && isOrdersSnapshotFresh(stats?.asOfUtc, now)
+            ? 'healthy'
+            : 'stale'
 
     const issueAlertMessage = useMemo(() => {
         if (!stats) {
@@ -219,10 +247,8 @@ export default function OrdersPage() {
         if (stats.failedPayments > 0) {
             parts.push(
                 tr(
-                    `${formatNumber(stats.failedPayments)} failed payment${
-                        stats.failedPayments === 1 ? '' : 's'
-                    } require attention`,
-                    `${formatNumber(stats.failedPayments)} عملية دفع فاشلة تحتاج إلى مراجعة`,
+                    `${formatNumber(stats.failedPayments)} orders with failed payments require attention`,
+                    `${formatNumber(stats.failedPayments)} طلب بدفع فاشل يحتاج إلى مراجعة`,
                 ),
             )
         }
@@ -242,6 +268,7 @@ export default function OrdersPage() {
     function handleResetFilters() {
         setSearchInput('')
         setExportError(null)
+        setExportSuccess(false)
         setSearchParams({
             page: String(DEFAULT_PAGE),
             pageSize: String(DEFAULT_PAGE_SIZE),
@@ -255,6 +282,7 @@ export default function OrdersPage() {
         value: string,
     ) {
         setExportError(null)
+        setExportSuccess(false)
         updateParams({
             [key]: value || null,
             page: String(DEFAULT_PAGE),
@@ -286,6 +314,12 @@ export default function OrdersPage() {
     }
 
     useEffect(() => {
+        if (!ordersQuery.isSuccess || ordersQuery.isFetching || invalidQuery) return
+        const lastPage = Math.max(1, totalPages)
+        if (filters.page > lastPage) updateParams({ page: String(lastPage) })
+    }, [ordersQuery.isSuccess, ordersQuery.isFetching, invalidQuery, totalPages, filters.page, updateParams])
+
+    useEffect(() => {
         if (!selectedOrderId || ordersQuery.isFetching) {
             return
         }
@@ -296,17 +330,19 @@ export default function OrdersPage() {
     }, [orders, ordersQuery.isFetching, selectedOrderId])
 
     async function refreshAll() {
+        if (invalidQuery) return
         await Promise.all([
-            ordersQuery.refetch(),
-            statsQuery.refetch(),
-            tenantsQuery.refetch(),
-            selectedOrderId ? detailsQuery.refetch() : Promise.resolve(),
+            ordersQuery.refetch({ cancelRefetch: false }),
+            statsQuery.refetch({ cancelRefetch: false }),
+            tenantsQuery.refetch({ cancelRefetch: false }),
+            selectedOrderId ? detailsQuery.refetch({ cancelRefetch: false }) : Promise.resolve(),
         ])
     }
 
     async function handleExport() {
         setIsExporting(true)
         setExportError(null)
+        setExportSuccess(false)
 
         try {
             const blob = await downloadSuperAdminOrdersCsv(filters)
@@ -318,8 +354,11 @@ export default function OrdersPage() {
             link.click()
             link.remove()
             window.URL.revokeObjectURL(downloadUrl)
+            setExportSuccess(true)
         } catch (error) {
-            setExportError(
+            setExportError((error as { status?: number })?.status === 422
+                ? tr('Export exceeds 10,000 orders. Narrow the filters and try again.', 'يتجاوز التصدير ١٠٬٠٠٠ طلب. ضيّق المرشحات وحاول مرة أخرى.')
+                :
                 getErrorMessage(
                     error,
                     tr(
@@ -435,7 +474,7 @@ export default function OrdersPage() {
                             <button
                                 type="button"
                                 className={saButton.primary}
-                                disabled={ordersQuery.isFetching || statsQuery.isFetching}
+                                disabled={invalidQuery || ordersQuery.isFetching || statsQuery.isFetching}
                                 onClick={() => refreshAll()}
                             >
                                 <RefreshCw
@@ -450,7 +489,7 @@ export default function OrdersPage() {
                             <button
                                 type="button"
                                 className={saButton.secondary}
-                                disabled={isExporting}
+                                disabled={isExporting || invalidQuery || searchInput !== (filters.search ?? '')}
                                 onClick={() => handleExport()}
                             >
                                 <Download className={`h-4 w-4 ${isExporting ? 'animate-bounce' : ''}`} />
@@ -459,9 +498,23 @@ export default function OrdersPage() {
                         </>
                     }
                     aside={
-                        <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-800">
+                        <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${
+                            monitoringState === 'healthy'
+                                ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
+                                : monitoringState === 'error'
+                                  ? 'border-rose-200 bg-rose-50 text-rose-800'
+                                  : 'border-amber-200 bg-amber-50 text-amber-800'
+                        }`}>
                             <Activity className="h-3.5 w-3.5" />
-                            {tr('Live monitoring', 'متابعة مباشرة')}
+                            {monitoringState === 'healthy'
+                                ? tr('Auto-refresh active · 30s', 'التحديث التلقائي نشط · 30 ث')
+                                : monitoringState === 'error'
+                                  ? tr('Auto-refresh interrupted', 'انقطع التحديث التلقائي')
+                                  : monitoringState === 'paused'
+                                    ? tr('Auto-refresh paused', 'التحديث التلقائي متوقف مؤقتًا')
+                                  : monitoringState === 'refreshing'
+                                    ? tr('Refreshing snapshot', 'جارٍ تحديث اللقطة')
+                                    : tr('Awaiting fresh snapshot', 'بانتظار لقطة حديثة')}
                         </span>
                     }
                 />
@@ -469,41 +522,48 @@ export default function OrdersPage() {
                 <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                     <KpiCard
                         label={tr('Total orders today', 'إجمالي طلبات اليوم')}
-                        value={formatNumber(stats?.totalOrdersToday ?? 0)}
+                        value={stats ? formatNumber(stats.totalOrdersToday) : '—'}
                         hint={tr('UTC day window', 'نافذة يوم UTC')}
                         tone="slate"
                         isLoading={statsQuery.isLoading && !stats}
                     />
                     <KpiCard
                         label={tr('Pending orders', 'طلبات معلّقة')}
-                        value={formatNumber(stats?.pendingOrders ?? 0)}
-                        hint={tr('Current pending backlog', 'التراكم المعلّق الحالي')}
+                        value={stats ? formatNumber(stats.pendingOrders) : '—'}
+                        hint={tr('Parent status Pending · all time', 'حالة الطلب الرئيسي معلّق · كل الفترات')}
                         tone="amber"
                         isLoading={statsQuery.isLoading && !stats}
                     />
                     <KpiCard
-                        label={tr('Failed payments', 'مدفوعات فاشلة')}
-                        value={formatNumber(stats?.failedPayments ?? 0)}
-                        hint={tr('Requires payment follow-up', 'تتطلب متابعة الدفع')}
+                        label={tr('Orders with failed payments', 'طلبات بدفع فاشل')}
+                        value={stats ? formatNumber(stats.failedPayments) : '—'}
+                        hint={tr('Current failed order state · all time', 'حالة فشل الدفع الحالية للطلب · كل الفترات')}
                         tone="rose"
                         isLoading={statsQuery.isLoading && !stats}
                     />
                     <KpiCard
-                        label={tr('Revenue today', 'إيراد اليوم')}
-                        value={formatCurrency(stats?.revenueToday ?? 0, stats?.currency ?? 'EGP')}
-                        hint={tr('UTC day window', 'نافذة يوم UTC')}
+                        label={tr('Captured sales today', 'مبيعات محصّلة اليوم')}
+                        value={stats ? formatCurrency(stats.capturedSalesToday, stats.currency) : '—'}
+                        hint={tr('Gross collected order value · UTC', 'إجمالي قيمة الطلبات المحصّلة · UTC')}
                         tone="emerald"
                         isLoading={statsQuery.isLoading && !stats}
                     />
                 </div>
 
+                <p className="text-xs text-slate-500">
+                    {tr(
+                        'Summary cards use the selected store only; search, status, payment and dates filter the table/export. Captured sales use sub-order collection time in UTC, include shipping, and are gross before refunds—not platform revenue or commission. Store filtering selects full parent orders containing that store.',
+                        'تعتمد بطاقات الملخص على المتجر المحدد فقط؛ البحث والحالة والدفع والتواريخ ترشح الجدول والتصدير. المبيعات المحصّلة حسب وقت تحصيل الطلب الفرعي بتوقيت UTC، وتشمل الشحن وقبل خصم الاسترداد، وليست إيراد المنصة أو عمولتها. يعرض مرشح المتجر الطلبات الرئيسية كاملة التي تتضمن المتجر.',
+                    )}
+                </p>
+
                 <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                     <div className="rounded-xl border border-slate-200 bg-white px-3.5 py-3 shadow-sm">
                         <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
-                            {tr('API timestamp', 'وقت واجهة البرمجة')}
+                            {tr('Orders snapshot as of', 'لقطة الطلبات حتى')}
                         </p>
                         <p className="mt-1 text-sm font-semibold text-slate-900" dir="auto">
-                            {formatDateTime(meta?.timestamp, tr('Awaiting sync', 'بانتظار المزامنة'))}
+                            {formatDateTime(meta?.asOfUtc, tr('Awaiting sync', 'بانتظار المزامنة'))}
                         </p>
                     </div>
                     <div className="rounded-xl border border-slate-200 bg-white px-3.5 py-3 shadow-sm">
@@ -527,7 +587,7 @@ export default function OrdersPage() {
                             {tr('Matching orders', 'طلبات مطابقة')}
                         </p>
                         <p className="mt-1 text-sm font-semibold text-slate-900" dir="auto">
-                            {formatNumber(totalCount)}
+                            {meta ? formatNumber(totalCount) : '—'}
                         </p>
                     </div>
                 </div>
@@ -540,11 +600,17 @@ export default function OrdersPage() {
                     </InlineNotice>
                 ) : null}
 
+                {invalidQuery ? (
+                    <InlineNotice tone="rose" title={tr('Invalid order filters', 'مرشحات الطلبات غير صالحة')}>
+                        {tr('Check the URL values and date range, or reset filters. No invalid query was sent.', 'تحقق من قيم الرابط والفترة الزمنية أو أعد ضبط المرشحات. لم يُرسل استعلام غير صالح.')}
+                        <button type="button" className={saButton.secondary} onClick={handleResetFilters}>{tr('Reset filters', 'إعادة ضبط المرشحات')}</button>
+                    </InlineNotice>
+                ) : null}
                 {statsQuery.isError ? (
                     <InlineNotice tone="amber" title={tr('Summary temporarily unavailable', 'الملخص غير متاح مؤقتًا')}>
                         {tr(
-                            'Operational summary cards are temporarily unavailable. The detailed orders table is still live.',
-                            'بطاقات الملخص التشغيلي غير متاحة مؤقتًا. جدول الطلبات التفصيلي ما زال مباشرًا.',
+                            'Summary cards are unavailable. Retry refresh; unavailable values are not financial zeros.',
+                            'بطاقات الملخص غير متاحة. أعد محاولة التحديث؛ القيم غير المتاحة ليست أصفارًا مالية.',
                         )}
                     </InlineNotice>
                 ) : null}
@@ -552,6 +618,11 @@ export default function OrdersPage() {
                 {exportError ? (
                     <InlineNotice tone="rose" title={tr('Export failed', 'فشل التصدير')}>
                         {exportError}
+                    </InlineNotice>
+                ) : null}
+                {exportSuccess ? (
+                    <InlineNotice tone="emerald" title={tr('CSV downloaded', 'تم تنزيل CSV')}>
+                        {tr('Export includes the entire active filtered population (not only this page), up to 10,000 orders.', 'يشمل التصدير كل الطلبات المطابقة للمرشحات الحالية (وليس هذه الصفحة فقط)، بحد أقصى ١٠٬٠٠٠ طلب.')}
                     </InlineNotice>
                 ) : null}
 
@@ -582,15 +653,16 @@ export default function OrdersPage() {
                 {tenantsQuery.isError ? (
                     <InlineNotice tone="amber" title={tr('Tenant lookup unavailable', 'بحث المتاجر غير متاح')}>
                         {tr(
-                            'Tenant lookup is temporarily unavailable, so the tenant filter falls back to "All tenants" until the next successful refresh.',
-                            'بحث المتاجر غير متاح مؤقتًا، لذا يعود مرشح المتجر إلى "كل المتاجر" حتى التحديث الناجح التالي.',
+                            'Store lookup is temporarily unavailable. Any selected store filter remains applied; refresh to restore its label.',
+                            'قائمة المتاجر غير متاحة مؤقتًا. يبقى مرشح المتجر المحدد مطبقًا؛ حدّث لاستعادة اسمه.',
                         )}
                     </InlineNotice>
                 ) : null}
 
                 <OrdersTable
-                    orders={orders}
-                    isLoading={ordersQuery.isLoading || ordersQuery.isFetching}
+                    orders={invalidQuery ? [] : orders}
+                    isUnavailable={ordersQuery.isError || invalidQuery}
+                    isLoading={ordersQuery.isLoading}
                     isFetching={ordersQuery.isFetching}
                     selectedOrderId={selectedOrderId}
                     sortBy={filters.sortBy}
@@ -609,10 +681,17 @@ export default function OrdersPage() {
                                 {tr('Pagination', 'ترقيم الصفحات')}
                             </p>
                             <p className="mt-0.5 text-sm leading-6 text-slate-700" dir="auto">
-                                {tr(
-                                    `Page ${filters.page} of ${totalPages || 1} with ${formatNumber(totalCount)} matching orders. This page includes ${formatNumber(currentPageFailedPayments)} failed payment issues, ${formatNumber(currentPagePendingOrders)} pending orders, and ${formatNumber(currentPageMultiVendorOrders)} multi-vendor orders.`,
-                                    `صفحة ${filters.page} من ${totalPages || 1} مع ${formatNumber(totalCount)} طلبًا مطابقًا. تتضمن هذه الصفحة ${formatNumber(currentPageFailedPayments)} مشكلة دفع فاشل، و${formatNumber(currentPagePendingOrders)} طلبًا معلّقًا، و${formatNumber(currentPageMultiVendorOrders)} طلبًا متعدد البائعين.`,
-                                )}
+                                {!meta
+                                    ? tr('Pagination unavailable until a valid orders response is received.', 'ترقيم الصفحات غير متاح حتى استلام استجابة طلبات صالحة.')
+                                    : totalCount === 0
+                                    ? tr(
+                                          'No matching orders. Page controls are disabled.',
+                                          'لا توجد طلبات مطابقة. أزرار الصفحات معطّلة.',
+                                      )
+                                    : tr(
+                                          `Page ${filters.page} of ${totalPages} with ${formatNumber(totalCount)} matching orders. This page includes ${formatNumber(currentPageFailedPayments)} failed payment issues, ${formatNumber(currentPagePendingOrders)} pending orders, and ${formatNumber(currentPageMultiVendorOrders)} multi-vendor orders.`,
+                                          `صفحة ${filters.page} من ${totalPages} مع ${formatNumber(totalCount)} طلبًا مطابقًا. تتضمن هذه الصفحة ${formatNumber(currentPageFailedPayments)} مشكلة دفع فاشل، و${formatNumber(currentPagePendingOrders)} طلبًا معلّقًا، و${formatNumber(currentPageMultiVendorOrders)} طلبًا متعدد البائعين.`,
+                                      )}
                             </p>
                         </div>
                     </div>
@@ -638,7 +717,7 @@ export default function OrdersPage() {
                             <button
                                 type="button"
                                 className={saButton.secondary}
-                                disabled={filters.page <= 1}
+                                disabled={!totalCount || filters.page <= 1 || ordersQuery.isFetching}
                                 onClick={() => handlePageChange(filters.page - 1)}
                             >
                                 {tr('Previous', 'السابق')}
@@ -646,7 +725,7 @@ export default function OrdersPage() {
                             <button
                                 type="button"
                                 className={saButton.primary}
-                                disabled={!totalPages || filters.page >= totalPages}
+                                disabled={!totalPages || filters.page >= totalPages || ordersQuery.isFetching}
                                 onClick={() => handlePageChange(filters.page + 1)}
                             >
                                 {tr('Next', 'التالي')}

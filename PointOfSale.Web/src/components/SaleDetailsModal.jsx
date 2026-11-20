@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import * as Dialog from '@radix-ui/react-dialog'
 import { useTranslation } from 'react-i18next'
 import { useSettings } from '../contexts/SettingsContext'
 import ReceiptModal from './ReceiptModal'
@@ -7,21 +8,31 @@ import api from '../services/api'
 import { getInvoiceStatus } from './invoiceAuthoring'
 
 export default function SaleDetailsModal({ sale, onClose, onReturnProcessed }) {
-    const { t } = useTranslation()
+    const { t, i18n } = useTranslation()
     const { formatCurrency } = useSettings()
     const [showReceipt, setShowReceipt] = useState(false)
     const [showReturn, setShowReturn] = useState(false)
     const [receiptData, setReceiptData] = useState(null)
+    const [receiptError, setReceiptError] = useState('')
+    const [receiptPending, setReceiptPending] = useState(false)
+    const receiptLockRef = useRef(false)
     const status = getInvoiceStatus(sale.status)
 
     const handleReprintReceipt = async () => {
+        if (receiptLockRef.current) return
+        receiptLockRef.current = true
+        setReceiptPending(true)
+        setReceiptError('')
         try {
             const response = await api.get(`/sales/receipt/${sale.id}`)
             setReceiptData({ receipt: response.data })
             setShowReceipt(true)
         } catch (error) {
             console.error('Error fetching receipt:', error)
-            alert(t('saleDetailsModal.failedToLoadReceipt'))
+            setReceiptError(t('saleDetailsModal.failedToLoadReceipt'))
+        } finally {
+            receiptLockRef.current = false
+            setReceiptPending(false)
         }
     }
 
@@ -38,19 +49,25 @@ export default function SaleDetailsModal({ sale, onClose, onReturnProcessed }) {
     const total = sale.totalAmount || 0
 
     return (
+        <Dialog.Root open onOpenChange={(open) => { if (!open && !receiptLockRef.current && !showReceipt && !showReturn) onClose() }}>
+        <Dialog.Portal>
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] flex flex-col">
+            <Dialog.Content dir={i18n.dir()} aria-busy={receiptPending || undefined}
+                onEscapeKeyDown={event => { if (receiptLockRef.current || showReceipt || showReturn) event.preventDefault() }}
+                onPointerDownOutside={event => event.preventDefault()}
+                className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] flex flex-col">
                 {/* Header */}
                 <div className="p-6 border-b border-gray-200 flex justify-between items-center">
                     <div>
-                        <h2 className="text-xl font-bold text-gray-900">{t('saleDetailsModal.title')}</h2>
-                        <p className="text-sm text-gray-500">{sale.invoiceNumber}</p>
+                        <Dialog.Title asChild><h2 className="text-xl font-bold text-gray-900">{t('saleDetailsModal.title')}</h2></Dialog.Title>
+                        <Dialog.Description asChild><p className="text-sm text-gray-500">{sale.invoiceNumber}</p></Dialog.Description>
                     </div>
-                    <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-2xl">×</button>
+                    <button type="button" disabled={receiptPending} aria-label={t('common.close')} onClick={onClose} className="text-gray-400 hover:text-gray-600 text-2xl">×</button>
                 </div>
 
                 {/* Content */}
                 <div className="p-6 overflow-y-auto flex-1">
+                    {receiptError && <p role="alert" className="mb-4 text-red-700">{receiptError}</p>}
                     {/* Info Grid */}
                     <div className="grid grid-cols-2 gap-6 mb-6">
                         <div>
@@ -130,6 +147,7 @@ export default function SaleDetailsModal({ sale, onClose, onReturnProcessed }) {
                 <div className="p-6 border-t border-gray-200 bg-gray-50 rounded-b-lg flex justify-between">
                     <button
                         onClick={handleReprintReceipt}
+                        disabled={receiptPending}
                         className="btn-secondary flex items-center gap-2"
                     >
                         {t('saleDetailsModal.reprintReceipt')}
@@ -144,8 +162,6 @@ export default function SaleDetailsModal({ sale, onClose, onReturnProcessed }) {
                         </button>
                     )}
                 </div>
-            </div>
-
             {/* Nested Modals */}
             {showReceipt && receiptData && (
                 <ReceiptModal
@@ -161,6 +177,8 @@ export default function SaleDetailsModal({ sale, onClose, onReturnProcessed }) {
                     onSuccess={handleReturnSuccess}
                 />
             )}
+            </Dialog.Content>
         </div>
+        </Dialog.Portal></Dialog.Root>
     )
 }

@@ -144,7 +144,7 @@ describe('Wave 0 — Storefront Constitutional Alignment', () => {
             })
 
             render(
-                <MemoryRouter initialEntries={['/']}>
+                <MemoryRouter initialEntries={['/storefront']}>
                     <Sidebar isOpen onClose={() => {}} />
                 </MemoryRouter>
             )

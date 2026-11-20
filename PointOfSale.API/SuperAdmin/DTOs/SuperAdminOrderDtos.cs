@@ -35,6 +35,7 @@ public sealed class SuperAdminOrdersListQuery
     public const int MinPageSize = 1;
     public const int DefaultPageSize = 20;
     public const int MaxPageSize = 100;
+    public const int MaxSearchLength = 100;
 
     public int Page { get; init; } = DefaultPage;
     public int PageSize { get; init; } = DefaultPageSize;
@@ -52,7 +53,7 @@ public sealed class SuperAdminOrdersListQuery
 
     public string? Validate()
     {
-        if (Page < MinPage)
+        if (Page < MinPage || (long)(Page - 1) * PageSize > int.MaxValue)
         {
             return $"Page must be at least {MinPage}.";
         }
@@ -65,6 +66,28 @@ public sealed class SuperAdminOrdersListQuery
         if (FromDate.HasValue && ToDate.HasValue && FromDate.Value.Date > ToDate.Value.Date)
         {
             return "FromDate cannot be after ToDate.";
+        }
+
+        if (NormalizedSearch is { Length: > MaxSearchLength })
+        {
+            return $"Search cannot exceed {MaxSearchLength} characters.";
+        }
+
+        if (Status.HasValue && !Enum.IsDefined(Status.Value) ||
+            PaymentStatus.HasValue && !Enum.IsDefined(PaymentStatus.Value) ||
+            !Enum.IsDefined(SortBy) || !Enum.IsDefined(SortDirection))
+        {
+            return "Unknown status, payment filter, or sort value.";
+        }
+
+        if (ToDate?.Date == DateTime.MaxValue.Date)
+        {
+            return "ToDate must be before 9999-12-31.";
+        }
+
+        if (TenantId == Guid.Empty)
+        {
+            return "TenantId must not be empty.";
         }
 
         return null;
@@ -138,6 +161,10 @@ public sealed class SuperAdminOrderDetailsDto
         Array.Empty<SuperAdminOrderSubOrderDetailsDto>();
     public IReadOnlyList<SuperAdminOrderItemDto> OrderItems { get; init; } =
         Array.Empty<SuperAdminOrderItemDto>();
+    public IReadOnlyList<SuperAdminOrderStatusHistoryDto> StatusHistory { get; init; } =
+        Array.Empty<SuperAdminOrderStatusHistoryDto>();
+    public IReadOnlyList<SuperAdminOrderRefundDetailsDto> Refunds { get; init; } =
+        Array.Empty<SuperAdminOrderRefundDetailsDto>();
 }
 
 public sealed class SuperAdminOrderPaymentDetailsDto
@@ -155,6 +182,22 @@ public sealed class SuperAdminOrderPaymentDetailsDto
     public DateTime CreatedAt { get; init; }
     public DateTime? ProcessedAtUtc { get; init; }
     public DateTime? PaidAtUtc { get; init; }
+    public IReadOnlyList<SuperAdminOrderPaymentAttemptDto> Attempts { get; init; } =
+        Array.Empty<SuperAdminOrderPaymentAttemptDto>();
+}
+
+public sealed class SuperAdminOrderPaymentAttemptDto
+{
+    public Guid AttemptId { get; init; }
+    public int AttemptNumber { get; init; }
+    public PaymentProvider Provider { get; init; }
+    public CommerceHubPaymentRecordStatus Status { get; init; }
+    public string ProviderReference { get; init; } = string.Empty;
+    public string? ProviderIntentId { get; init; }
+    public string? ProviderTransactionId { get; init; }
+    public string? FailureReason { get; init; }
+    public DateTime CreatedAt { get; init; }
+    public DateTime? CompletedAtUtc { get; init; }
 }
 
 public sealed class SuperAdminOrderSubOrderDetailsDto
@@ -217,7 +260,7 @@ public sealed class SuperAdminOrdersStatsDto
     public long TotalOrdersToday { get; init; }
     public long PendingOrders { get; init; }
     public long FailedPayments { get; init; }
-    public decimal RevenueToday { get; init; }
+    public decimal CapturedSalesToday { get; init; }
 }
 
 public sealed class SuperAdminPagedResult<T>
@@ -227,4 +270,44 @@ public sealed class SuperAdminPagedResult<T>
     public int PageSize { get; init; }
     public int TotalCount { get; init; }
     public int TotalPages { get; init; }
+    public DateTime AsOfUtc { get; init; }
+}
+
+public sealed class SuperAdminOrdersCsvExport
+{
+    public string Content { get; init; } = string.Empty;
+    public int RowCount { get; init; }
+}
+
+public sealed class SuperAdminOrderStatusHistoryDto
+{
+    public Guid HistoryId { get; init; }
+    public Guid SubOrderId { get; init; }
+    public OrderStatus PreviousStatus { get; init; }
+    public OrderStatus NewStatus { get; init; }
+    public string? Reason { get; init; }
+    public string? CorrelationId { get; init; }
+    public DateTime ChangedAtUtc { get; init; }
+}
+
+public sealed class SuperAdminOrderRefundDetailsDto
+{
+    public Guid RefundId { get; init; }
+    public Guid SubOrderId { get; init; }
+    public Guid? RefundRequestId { get; init; }
+    public Guid? OrderItemId { get; init; }
+    public int? Quantity { get; init; }
+    public decimal Amount { get; init; }
+    public decimal CommissionReversalAmount { get; init; }
+    public decimal PromoDiscountReversalAmount { get; init; }
+    public decimal VendorEarningReversalAmount { get; init; }
+    public string Currency { get; init; } = "EGP";
+    public CommerceHubRefundStatus Status { get; init; }
+    public string Reason { get; init; } = string.Empty;
+    public string? FailureReason { get; init; }
+    public bool IsFullRefund { get; init; }
+    public bool IsPostPayoutAdjustment { get; init; }
+    public DateTime CreatedAt { get; init; }
+    public DateTime? ProcessingStartedAtUtc { get; init; }
+    public DateTime? ProcessedAtUtc { get; init; }
 }

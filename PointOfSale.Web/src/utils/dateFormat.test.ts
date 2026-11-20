@@ -5,19 +5,26 @@ import {
     formatDateInputValue,
     formatSignedCurrency,
     parseDateInput,
+    UNAVAILABLE_CURRENCY_VALUE,
 } from './dateFormat'
 
 describe('dateFormat currency helpers', () => {
-    it('throws for unsupported currencies instead of silently relabeling them as EGP', () => {
-        expect(() => formatCurrency(10, 'JOD', 'en-US')).toThrow('Unsupported currency "JOD"')
+    it('never relabels an unsupported two-decimal-unsafe currency as EGP', () => {
+        const result = formatCurrency(10, 'JOD', 'en-US')
+
+        expect(result).toBe(UNAVAILABLE_CURRENCY_VALUE)
+        expect(result).not.toMatch(/EGP|E£|\$|\u00A3|\u20AC/)
     })
 
-    it('throws for unknown currencies across compact currency formatting too', () => {
-        expect(() => formatCompactCurrency(10, 'INVALID', 'en-US')).toThrow('Unknown currency "INVALID"')
+    it('never relabels an unknown currency as EGP across compact currency formatting too', () => {
+        const result = formatCompactCurrency(10, 'INVALID', 'en-US')
+
+        expect(result).toBe(UNAVAILABLE_CURRENCY_VALUE)
+        expect(result).not.toMatch(/EGP|E£|\$|\u00A3|\u20AC/)
     })
 
-    it('still uses the default currency when no currency is provided', () => {
-        expect(formatCurrency(10, undefined, 'en-US')).toContain('10.00')
+    it('requires currency evidence rather than inventing a default when omitted', () => {
+        expect(formatCurrency(10, undefined, 'en-US')).toBe(UNAVAILABLE_CURRENCY_VALUE)
     })
 
     it('delegates signed currency rendering to Intl so bidi sign placement stays locale-aware', () => {

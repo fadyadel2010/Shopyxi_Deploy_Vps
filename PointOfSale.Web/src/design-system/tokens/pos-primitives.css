@@ -1,0 +1,169 @@
+/*
+ * SHOPYXI POS design system - primitive tokens.
+ *
+ * Scope: [data-product="pos"] only. This file must never declare tokens on
+ * :root, html, body, or bare element selectors.
+ *
+ * Primitive tokens hold raw values with no product meaning. Consume them
+ * through pos-semantic.css or pos-components.css; do not use them directly
+ * in page code.
+ */
+
+[data-product="pos"] {
+  /*
+   * Brand blue ramp.
+   * 600 is the approved SHOPYXI primary (#356AE6). 700 is the documented
+   * action hover and 800 the pressed state.
+   */
+  --pos-blue-50: #eff4fe;
+  --pos-blue-100: #dce7fd;
+  --pos-blue-200: #bfd3fb;
+  --pos-blue-300: #98baf6;
+  --pos-blue-400: #6190f0;
+  --pos-blue-500: #4079ea;
+  --pos-blue-600: #356ae6;
+  --pos-blue-700: #2a56c4;
+  --pos-blue-800: #2347a1;
+  --pos-blue-900: #1d3a7e;
+
+  /*
+   * Enterprise neutral ramp.
+   * 900 is the approved Ink Navy (#111827). 50 is the approved workspace
+   * background (#F7F8FA). The remaining steps follow the existing gray
+   * utility family to keep future migration visually continuous.
+   */
+  --pos-neutral-0: #ffffff;
+  --pos-neutral-50: #f7f8fa;
+  --pos-neutral-100: #f3f4f6;
+  --pos-neutral-200: #e5e7eb;
+  --pos-neutral-300: #d1d5db;
+  --pos-neutral-400: #9ca3af;
+  --pos-neutral-500: #6b7280;
+  --pos-neutral-600: #4b5563;
+  --pos-neutral-700: #374151;
+  --pos-neutral-800: #1f2937;
+  --pos-neutral-900: #111827;
+
+  /* Channel form of --pos-neutral-900, reserved for alpha composition. */
+  --pos-ink-rgb: 17 24 39;
+
+  /* Success status ramp. */
+  --pos-green-50: #ecfdf5;
+  --pos-green-200: #a7f3d0;
+  --pos-green-700: #047857;
+  --pos-green-800: #065f46;
+
+  /* Warning status ramp. */
+  --pos-amber-50: #fffbeb;
+  --pos-amber-200: #fde68a;
+  --pos-amber-700: #b45309;
+  --pos-amber-800: #92400e;
+
+  /* Danger status ramp. */
+  --pos-red-50: #fef2f2;
+  --pos-red-200: #fecaca;
+  --pos-red-700: #b91c1c;
+  --pos-red-800: #991b1b;
+  --pos-red-900: #7f1d1d;
+
+  /* Information status reuses the brand blue ramp. See pos-semantic.css. */
+
+  /*
+   * Typography references.
+   * Cairo is the only currently loaded product family. Inter and
+   * IBM Plex Sans Arabic are pending font-asset approval and must not be
+   * referenced here until approved WOFF2 assets are self-hosted.
+   */
+  --pos-font-family-latin: "Cairo", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --pos-font-family-arabic: "Cairo", "Segoe UI", Tahoma, Arial, sans-serif;
+  --pos-font-family-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+  --pos-font-size-12: 0.75rem;
+  --pos-font-size-13: 0.8125rem;
+  --pos-font-size-14: 0.875rem;
+  --pos-font-size-16: 1rem;
+  --pos-font-size-18: 1.125rem;
+  --pos-font-size-24: 1.5rem;
+  --pos-font-size-32: 2rem;
+
+  --pos-line-height-16: 1rem;
+  --pos-line-height-18: 1.125rem;
+  --pos-line-height-20: 1.25rem;
+  --pos-line-height-22: 1.375rem;
+  --pos-line-height-28: 1.75rem;
+  --pos-line-height-32: 2rem;
+  --pos-line-height-40: 2.5rem;
+
+  --pos-font-weight-regular: 400;
+  --pos-font-weight-medium: 500;
+  --pos-font-weight-semibold: 600;
+  --pos-font-weight-bold: 700;
+
+  --pos-letter-spacing-tight: -0.01em;
+  --pos-letter-spacing-normal: 0;
+
+  --pos-font-feature-tabular: "tnum" 1, "lnum" 1;
+  --pos-font-variant-tabular: tabular-nums;
+
+  /* 4 px spacing scale. */
+  --pos-space-1: 0.25rem;
+  --pos-space-2: 0.5rem;
+  --pos-space-3: 0.75rem;
+  --pos-space-4: 1rem;
+  --pos-space-5: 1.25rem;
+  --pos-space-6: 1.5rem;
+  --pos-space-8: 2rem;
+  --pos-space-10: 2.5rem;
+  --pos-space-12: 3rem;
+  --pos-space-16: 4rem;
+
+  /* Radius roles. */
+  --pos-radius-xs: 0.25rem;
+  --pos-radius-control: 0.375rem;
+  --pos-radius-card: 0.625rem;
+  --pos-radius-modal: 0.875rem;
+  --pos-radius-pill: 9999px;
+
+  /* Border widths. */
+  --pos-border-width: 1px;
+  --pos-border-width-strong: 2px;
+
+  /* Elevation tiers. */
+  --pos-shadow-xs: 0 1px 2px rgb(var(--pos-ink-rgb) / 0.05);
+  --pos-shadow-sm: 0 1px 3px rgb(var(--pos-ink-rgb) / 0.08), 0 1px 2px rgb(var(--pos-ink-rgb) / 0.04);
+  --pos-shadow-md: 0 4px 12px rgb(var(--pos-ink-rgb) / 0.1);
+  --pos-shadow-lg: 0 12px 32px rgb(var(--pos-ink-rgb) / 0.14);
+
+  /* Focus geometry. Colors live in pos-semantic.css. */
+  --pos-focus-ring-width: 2px;
+  --pos-focus-ring-offset: 2px;
+
+  /*
+   * Stacking scale. Raw values belong in this layer; component tokens map them.
+   * Contract: tooltip > toast = dialog (DOM order inside the overlay host) >
+   * legacy in-shell layers. Legacy ConfirmModal (60), command palette
+   * (70/71), and authoring dialogs (100) keep their existing values.
+   */
+  --pos-z-scale-dialog: 50;
+  --pos-z-scale-toast: 50;
+  --pos-z-scale-tooltip: 65;
+
+  /* Motion references. */
+  --pos-duration-fast: 120ms;
+  --pos-duration-base: 180ms;
+  --pos-duration-slow: 240ms;
+  --pos-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --pos-ease-enter: cubic-bezier(0, 0, 0.2, 1);
+  --pos-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+
+  /* Overlay alpha for modal and drawer scrims. */
+  --pos-opacity-overlay: 0.48;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-product="pos"] {
+    --pos-duration-fast: 0ms;
+    --pos-duration-base: 0ms;
+    --pos-duration-slow: 0ms;
+  }
+}

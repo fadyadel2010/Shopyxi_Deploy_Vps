@@ -8,7 +8,7 @@ import RoiSummaryCards from './attribution/components/RoiSummaryCards'
 import { useRoiByCampaign } from './attribution/hooks/useCampaignCost'
 
 const api = vi.hoisted(() => ({ get: vi.fn(), post: vi.fn(), put: vi.fn(), delete: vi.fn() }))
-const t = (key: string, fallback?: string) => fallback || key
+const t = (key: string, fallback?: string | { defaultValue?: string }) => typeof fallback === 'string' ? fallback : fallback?.defaultValue || key
 vi.mock('../../services/api', () => ({ default: api }))
 vi.mock('react-i18next', () => ({ useTranslation: () => ({ t, i18n: { language: 'en' } }) }))
 vi.mock('../../contexts/SettingsContext', () => ({ useSettings: () => ({ formatCurrency: (n: number) => `${n} EGP` }) }))
@@ -93,16 +93,18 @@ it('ROI cards render server-supplied ROI and CPA, including zero, without a new 
 
 it('ROI filters reject an older request and a later failure clears previously displayed numbers', async () => {
     let old: ((value: unknown) => void) | undefined
-    api.get.mockImplementationOnce(() => new Promise(resolve => { old = resolve })).mockResolvedValue({ data: { totalCost: 20 } })
+    const current = { totalCost: 20, totalRevenue: -10, totalProfit: -30, totalOrders: 0, overallRoi: -150, campaigns: [] }
+    api.get.mockImplementationOnce(() => new Promise(resolve => { old = resolve })).mockResolvedValue({ data: current })
     const hook = renderHook(({ period }) => useRoiByCampaign('LastTouch', period), { initialProps: { period: 'today' } })
     hook.rerender({ period: 'last_month' })
-    await waitFor(() => expect(hook.result.current.data).toEqual({ totalCost: 20 }))
+    await waitFor(() => expect(hook.result.current.data).toEqual(current))
     await act(async () => { old?.({ data: { totalCost: 999 } }) })
-    expect(hook.result.current.data).toEqual({ totalCost: 20 })
+    expect(hook.result.current.data).toEqual(current)
     api.get.mockRejectedValue(new Error('ROI unavailable'))
     await act(async () => { await hook.result.current.refetch() })
     expect(hook.result.current.data).toBeNull()
-    expect(hook.result.current.error).toBe('ROI unavailable')
+    expect(hook.result.current.error).toBeTruthy()
+    expect(hook.result.current.error).not.toBe('ROI unavailable')
 })
 
 it('an omitted nullable mixed-currency total is unavailable, not a fabricated zero amount', async () => {

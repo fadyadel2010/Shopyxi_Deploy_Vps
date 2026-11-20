@@ -1,9 +1,11 @@
 import { describe, expect, it, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import '../design-system/test/radixJsdomPolyfills'
+import api from '../services/api'
 import SaleDetailsModal from './SaleDetailsModal'
 import { getInvoiceStatus } from './invoiceAuthoring'
 
-vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }))
+vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key, i18n: { dir: () => 'ltr' } }) }))
 vi.mock('../contexts/SettingsContext', () => ({ useSettings: () => ({ formatCurrency: (value: number) => value.toFixed(2) }) }))
 vi.mock('./ReceiptModal', () => ({ default: () => null }))
 vi.mock('./ReturnModal', () => ({ default: () => null }))
@@ -17,6 +19,19 @@ const sale = {
 }
 
 describe('sale details response contract', () => {
+    it('names the dialog and retains a localized receipt failure without duplicate requests', async () => {
+        let fail!: (error: unknown) => void
+        vi.mocked(api.get).mockReturnValue(new Promise((_resolve, reject) => { fail = reject }))
+        render(<SaleDetailsModal sale={sale} onClose={vi.fn()} onReturnProcessed={vi.fn()} />)
+        expect(screen.getByRole('dialog')).toHaveAccessibleName('saleDetailsModal.title')
+        const print = screen.getByRole('button', { name: 'saleDetailsModal.reprintReceipt' })
+        act(() => { fireEvent.click(print); fireEvent.click(print) })
+        expect(api.get).toHaveBeenCalledTimes(1)
+        await act(async () => { fail(new Error('private diagnostic')) })
+        expect(await screen.findByRole('alert')).toHaveTextContent('saleDetailsModal.failedToLoadReceipt')
+        await waitFor(() => expect(print).toBeEnabled())
+        expect(screen.queryByText('private diagnostic')).toBeNull()
+    })
     it.each(['FullyReturned', 4])('renders original product and server-returned status %s without offering another return', status => {
         render(<SaleDetailsModal sale={{ ...sale, status }} onClose={vi.fn()} onReturnProcessed={vi.fn()} />)
         expect(screen.getByText('Original invoice product')).toBeInTheDocument()

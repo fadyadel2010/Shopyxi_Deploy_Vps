@@ -53,7 +53,9 @@ public sealed class PosFinancialReportingAuthorityCertificationTests
         Assert.Contains("BuildPostedRevenueQuery", dashboard, StringComparison.Ordinal);
         Assert.Contains("PartyType.Customer", dashboard, StringComparison.Ordinal);
         Assert.Contains("PartyType.Supplier", dashboard, StringComparison.Ordinal);
-        Assert.Contains("stock.Variant.CostPrice", dashboard, StringComparison.Ordinal);
+        Assert.Contains("InventoryReportingReader.ReadValuationAsync", dashboard, StringComparison.Ordinal);
+        var inventory = ReadRepoFile("PointOfSale.Infrastructure/Inventory/InventoryReportingReader.cs");
+        Assert.Contains("s.Variant.CostPrice", inventory, StringComparison.Ordinal);
         Assert.Contains("return factory(cancellationToken);", dashboard, StringComparison.Ordinal);
         Assert.DoesNotContain("supplier.Balance", dashboard, StringComparison.Ordinal);
         Assert.DoesNotContain("customer.Balance", dashboard, StringComparison.Ordinal);
@@ -78,9 +80,10 @@ public sealed class PosFinancialReportingAuthorityCertificationTests
         var valuationEnd = reports.IndexOf("#region Daily Close", valuationStart, StringComparison.Ordinal);
         var valuationSource = reports[valuationStart..valuationEnd];
 
-        Assert.Contains("_context.ProductVariantStocks", valuationSource, StringComparison.Ordinal);
+        Assert.Contains("InventoryReportingReader.EligiblePositions", valuationSource, StringComparison.Ordinal);
+        Assert.Contains("InventoryReportingReader.ReadValuationAsync", valuationSource, StringComparison.Ordinal);
         Assert.Contains("stock.Variant.CostPrice", valuationSource, StringComparison.Ordinal);
-        Assert.Contains("stock.Warehouse.IsActive", valuationSource, StringComparison.Ordinal);
+        Assert.Contains("s.Warehouse.IsActive", ReadRepoFile("PointOfSale.Infrastructure/Inventory/InventoryReportingReader.cs"), StringComparison.Ordinal);
         Assert.Contains("stock.Quantity - stock.ReservedQuantity", valuationSource, StringComparison.Ordinal);
         Assert.DoesNotContain("PurchasePrice", valuationSource, StringComparison.Ordinal);
         Assert.DoesNotContain("SalePrice", valuationSource, StringComparison.Ordinal);

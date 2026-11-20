@@ -6,7 +6,6 @@
  */
 
 import { useNavigate } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
 import {
     ArrowRight,
     FileText,
@@ -22,6 +21,8 @@ import WishlistAnalyticsCard from '../components/WishlistAnalyticsCard'
 import { hasCommerceHubVendorNavigationCapability } from '../auth/posVendorSessionAuthority'
 import { canManageStorefrontSettings } from '../auth/storefrontAdminAuthority'
 import { useAuthStore } from '../store/authStore'
+import { useRTL } from '../hooks/useRTL'
+import { useDashboardActorScope } from '../components/dashboard/usePosDashboardData'
 
 const PAGE_CARDS = [
     {
@@ -45,8 +46,8 @@ const PAGE_CARDS = [
 ]
 
 export default function StorefrontDashboard() {
-    const { i18n } = useTranslation()
-    const isRTL = i18n.language === 'ar'
+    const { isRTL } = useRTL()
+    const actor = useDashboardActorScope()
     const navigate = useNavigate()
     const user = useAuthStore((state) => state.user)
     const canViewAnalytics = hasCommerceHubVendorNavigationCapability(user, 'commercehub.analytics.view')
@@ -67,12 +68,12 @@ export default function StorefrontDashboard() {
 
             <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div className="h-full">
-                    <StorefrontStatusCard />
+                    <StorefrontStatusCard key={actor} />
                 </div>
 
                 {canViewAnalytics ? (
                     <div className="h-full">
-                        <WishlistAnalyticsCard />
+                        <WishlistAnalyticsCard key={actor} />
                     </div>
                 ) : null}
             </div>

@@ -27,8 +27,27 @@ import {
 } from '../../services/treasuryAccountCatalog'
 import { useRTL } from '../../hooks/useRTL'
 import { formatDate, formatTime } from '../../utils/dateFormat'
+import { useDashboardActorScope } from '../../components/dashboard/usePosDashboardData'
+
+const finite = value => typeof value === 'number' && Number.isFinite(value)
+const validDashboard = value => value && [
+    'revenue', 'cogs', 'grossProfit', 'expenses', 'netProfit',
+    'totalAssets', 'totalLiabilities', 'totalEquity',
+].every(key => finite(value[key]))
+    && ['grossProfitMargin', 'netProfitMargin', 'currentRatio'].every(key => value[key] === null || finite(value[key]))
+    && typeof value.balanceSheetBalanced === 'boolean'
+const validCatalog = value => Array.isArray(value) && value.every(row => row
+    && typeof row.accountType === 'string' && finite(row.currentBalance))
+const validClearing = value => value && Array.isArray(value.lines) && value.lines.every(row => row
+    && finite(row.pendingAmount) && finite(row.ageDays))
+const validTrial = value => value && typeof value.isBalanced === 'boolean' && finite(value.variance)
 
 export default function TreasuryDashboard() {
+    const actor = useDashboardActorScope()
+    return <TreasuryDashboardContent key={actor} />
+}
+
+function TreasuryDashboardContent() {
     const { t } = useTranslation()
     const navigate = useNavigate()
     const { showError } = useToast()
@@ -45,10 +64,14 @@ export default function TreasuryDashboard() {
     const [, setProfitLoss] = useState(null)
     const [clearingAging, setClearingAging] = useState(null)
     const [trialBalance, setTrialBalance] = useState(null)
+    const [reportError, setReportError] = useState(false)
+    const [loadedRange, setLoadedRange] = useState(null)
+    const [lastSuccess, setLastSuccess] = useState(null)
     const activeRequestControllerRef = useRef(null)
 
     // Date range
     const [dateRange, setDateRange] = useState(() => finApi.getDefaultDateRange())
+    const rangeKey = JSON.stringify(dateRange)
 
     // Load all data in parallel
     const loadData = useCallback(async (silent = false, signal) => {
@@ -61,7 +84,8 @@ export default function TreasuryDashboard() {
             // Parallel API calls for performance.
             // Cash authority comes only from the Treasury catalog accountType.
             const results = await Promise.allSettled([
-                finApi.getDashboard(from, to, !silent, { signal }),
+                // The legacy client cache is range-only, not actor-scoped.
+                finApi.getDashboard(from, to, true, { signal }),
                 treasuryApi.getTreasuryAccounts({ signal }),
                 finApi.getBalanceSheet(to, { signal }),
                 finApi.getProfitAndLoss(from, to, { signal }),
@@ -76,19 +100,26 @@ export default function TreasuryDashboard() {
 
             const [dashboardResult, catalogResult, bsResult, plResult, clearingResult, tbResult] = results
 
-            if (catalogResult.status === 'fulfilled') {
-                setTreasuryCatalog(Array.isArray(catalogResult.value) ? catalogResult.value : [])
+            const catalogOk = catalogResult.status === 'fulfilled' && validCatalog(catalogResult.value)
+            const dashboardOk = dashboardResult.status === 'fulfilled' && validDashboard(dashboardResult.value)
+            const clearingOk = clearingResult.status === 'fulfilled' && validClearing(clearingResult.value)
+            const trialOk = tbResult.status === 'fulfilled' && validTrial(tbResult.value)
+            if (catalogOk) {
+                setTreasuryCatalog(catalogResult.value)
                 setCatalogError('')
             } else {
                 setTreasuryCatalog([])
                 setCatalogError(t('treasury.catalogLoadFailed', 'The Treasury catalog could not be loaded. Balances are hidden until you retry.'))
             }
 
-            if (dashboardResult.status === 'fulfilled') setDashboard(dashboardResult.value)
+            setDashboard(dashboardOk ? dashboardResult.value : null)
+            setReportError(!dashboardOk)
             if (bsResult.status === 'fulfilled') setBalanceSheet(bsResult.value)
             if (plResult.status === 'fulfilled') setProfitLoss(plResult.value)
-            if (clearingResult.status === 'fulfilled') setClearingAging(clearingResult.value)
-            if (tbResult.status === 'fulfilled') setTrialBalance(tbResult.value)
+            setClearingAging(clearingOk ? clearingResult.value : null)
+            setTrialBalance(trialOk ? tbResult.value : null)
+            setLoadedRange(rangeKey)
+            setLastSuccess(dashboardOk && catalogOk && clearingOk && trialOk ? new Date() : null)
 
             const reportFailure = [dashboardResult, bsResult, plResult, clearingResult, tbResult]
                 .find(result => result.status === 'rejected')
@@ -111,7 +142,7 @@ export default function TreasuryDashboard() {
                 setRefreshing(false)
             }
         }
-    }, [dateRange, showError, t])
+    }, [dateRange, rangeKey, showError, t])
 
     const runLoadData = useCallback((silent = false, skipIfBusy = false) => {
         // Skip if already loading and skipIfBusy is true (for auto-refresh)
@@ -174,7 +205,7 @@ export default function TreasuryDashboard() {
         setDateRange({ from, to })
     }
 
-    if (loading) {
+    if (loading || loadedRange !== rangeKey) {
         return (
             <div className="flex items-center justify-center h-96">
                 <div className="text-center">
@@ -184,6 +215,21 @@ export default function TreasuryDashboard() {
             </div>
         )
     }
+
+    const unavailable = () => (
+        <div role="status" className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-800">
+            <p>{t('treasury.loadError', 'Failed to load financial data')}</p>
+            <button type="button" onClick={() => runLoadData(true)} disabled={refreshing} className="btn-secondary mt-3">
+                {t('treasury.retry', 'Retry')}
+            </button>
+        </div>
+    )
+    if (reportError || !dashboard) return (
+        <section dir={dir} className="space-y-4">
+            <h1 className="text-3xl font-bold">{t('treasury.financeTitle', 'Treasury & Finance')}</h1>
+            {unavailable()}
+        </section>
+    )
 
     return (
         <div dir={dir} className="space-y-6">
@@ -261,7 +307,7 @@ export default function TreasuryDashboard() {
                     <p className={`mt-1 break-words text-xl font-bold sm:text-2xl ${(dashboard?.netProfit || 0) >= 0 ? 'text-green-900' : 'text-red-900'}`}>
                         {formatCurrency(dashboard?.netProfit || 0)}
                     </p>
-                    {dashboard?.netProfitMargin !== undefined && (
+                    {finite(dashboard.netProfitMargin) && (
                         <p className="text-xs text-gray-500 mt-1">
                             {dashboard.netProfitMargin?.toFixed(1)}% {t('treasury.margin', 'margin')}
                         </p>
@@ -306,7 +352,9 @@ export default function TreasuryDashboard() {
                 </div>
 
                 {/* Current Ratio */}
-                <div className={`card bg-gradient-to-br ${(dashboard?.currentRatio || 0) >= 1.5
+                <div className={`card bg-gradient-to-br ${dashboard.currentRatio == null
+                    ? 'from-gray-50 to-gray-100 border-gray-200'
+                    : (dashboard?.currentRatio || 0) >= 1.5
                     ? 'from-teal-50 to-teal-100 border-teal-200'
                     : (dashboard?.currentRatio || 0) >= 1
                         ? 'from-yellow-50 to-yellow-100 border-yellow-200'
@@ -315,16 +363,16 @@ export default function TreasuryDashboard() {
                         📊 {t('treasury.currentRatio', 'Current Ratio')}
                     </p>
                     <p className="text-2xl font-bold text-gray-900 mt-1">
-                        {(dashboard?.currentRatio || 0).toFixed(2)}
+                        {finite(dashboard.currentRatio) ? dashboard.currentRatio.toFixed(2) : t('common.unavailable', 'Unavailable')}
                     </p>
-                    <p className="text-xs text-gray-500 mt-1" role="status">
+                    {finite(dashboard.currentRatio) ? <p className="text-xs text-gray-500 mt-1" role="status">
                         <span aria-hidden="true">{(dashboard?.currentRatio || 0) >= 1.5 ? '✅' : (dashboard?.currentRatio || 0) >= 1 ? '⚠️' : '❌'} </span>
                         {(dashboard?.currentRatio || 0) >= 1.5
                             ? t('treasury.healthy', 'Healthy')
                             : (dashboard?.currentRatio || 0) >= 1
                                 ? t('treasury.watch', 'Watch')
                                 : t('treasury.risk', 'Risk')}
-                    </p>
+                    </p> : null}
                 </div>
             </div>
 
@@ -391,8 +439,8 @@ export default function TreasuryDashboard() {
                                 <span className="text-gray-600">{t('treasury.revenue', 'Revenue')}</span>
                                 <span className="font-semibold text-blue-600">{formatCurrency(dashboard?.revenue || 0)}</span>
                             </div>
-                            <div className="w-full bg-gray-200 rounded-full h-3" role="progressbar" aria-label={t('treasury.revenue', 'Revenue')} aria-valuenow={100} aria-valuemin={0} aria-valuemax={100}>
-                                <div className="bg-blue-500 h-3 rounded-full" style={{ width: '100%' }}></div>
+                            <div className="w-full bg-gray-200 rounded-full h-3" role="progressbar" aria-label={t('treasury.revenue', 'Revenue')} aria-valuenow={dashboard.revenue === 0 ? 0 : 100} aria-valuemin={0} aria-valuemax={100}>
+                                <div className="bg-blue-500 h-3 rounded-full" style={{ width: dashboard.revenue === 0 ? '0%' : '100%' }}></div>
                             </div>
                         </div>
 
@@ -417,7 +465,7 @@ export default function TreasuryDashboard() {
                                 <span className="font-bold text-green-800">{formatCurrency(dashboard?.grossProfit || 0)}</span>
                             </div>
                             <p className="text-xs text-green-600 mt-1">
-                                {dashboard?.grossProfitMargin?.toFixed(1) || 0}% {t('treasury.margin', 'margin')}
+                                {finite(dashboard.grossProfitMargin) ? `${dashboard.grossProfitMargin.toFixed(1)}%` : t('common.unavailable', 'Unavailable')} {t('treasury.margin', 'margin')}
                             </p>
                         </div>
 
@@ -446,7 +494,7 @@ export default function TreasuryDashboard() {
                                 </span>
                             </div>
                             <p className={`text-xs mt-1 ${(dashboard?.netProfit || 0) >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
-                                {dashboard?.netProfitMargin?.toFixed(1) || 0}% {t('treasury.margin', 'margin')}
+                                {finite(dashboard.netProfitMargin) ? `${dashboard.netProfitMargin.toFixed(1)}%` : t('common.unavailable', 'Unavailable')} {t('treasury.margin', 'margin')}
                             </p>
                         </div>
                     </div>
@@ -471,7 +519,7 @@ export default function TreasuryDashboard() {
                         </button>
                     </div>
 
-                    {clearingAging?.lines?.length > 0 ? (
+                    {!clearingAging ? unavailable() : clearingAging.lines.length > 0 ? (
                         <div className="overflow-x-auto">
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gray-50">
@@ -543,7 +591,7 @@ export default function TreasuryDashboard() {
                     </h3>
 
                     <div className="flex flex-col items-center justify-center py-6">
-                        {trialBalance?.isBalanced ? (
+                        {!trialBalance ? unavailable() : trialBalance.isBalanced ? (
                             <>
                                 <div className="w-24 h-24 rounded-full bg-green-100 flex items-center justify-center mb-4">
                                     <span className="text-5xl">✅</span>
@@ -712,8 +760,7 @@ export default function TreasuryDashboard() {
             <div className="text-center py-6 text-sm text-gray-500 border-t">
                 <p>
                     📊 {t('treasury.ledgerSourced', 'All data sourced from immutable ledger')} •
-                    🔒 {t('treasury.fullyReconciled', 'Fully reconciled')} •
-                    ⏱️ {t('treasury.lastUpdated', 'Last updated')}: {formatTime(new Date(), locale)}
+                    ⏱️ {t('treasury.lastUpdated', 'Last updated')}: {lastSuccess ? formatTime(lastSuccess, locale) : t('common.unavailable', 'Unavailable')}
                 </p>
             </div>
         </div>

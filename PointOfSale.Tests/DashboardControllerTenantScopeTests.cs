@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging.Abstractions;
 using PointOfSale.API.Controllers;
@@ -64,7 +62,7 @@ public sealed class DashboardControllerTenantScopeTests
                 CreatedAt = DateTime.UtcNow
             });
 
-        await dbContext.SaveChangesAsync();
+        await dbContext.SeedReadSnapshotAsync();
 
         var controller = CreateController(dbContext, tenantId);
 
@@ -92,6 +90,7 @@ public sealed class DashboardControllerTenantScopeTests
         var foreignInvoiceId = Guid.NewGuid();
 
         await using var dbContext = CreateUnscopedDbContext();
+        dbContext.Tenants.Add(new Tenant { Id = tenantId, Name = "Synthetic tenant", Slug = "fixture", Currency = "EGP" });
         dbContext.Categories.AddRange(
             new Category
             {
@@ -205,7 +204,7 @@ public sealed class DashboardControllerTenantScopeTests
                 CreatedAt = DateTime.UtcNow
             });
 
-        await dbContext.SaveChangesAsync();
+        await dbContext.SeedReadSnapshotAsync();
 
         var controller = CreateController(dbContext, tenantId);
 
@@ -220,10 +219,8 @@ public sealed class DashboardControllerTenantScopeTests
         Assert.Equal(100m, product.TotalRevenue);
     }
 
-    private static ApplicationDbContext CreateUnscopedDbContext() =>
-        new QueryFilterDisabledApplicationDbContext(new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(Guid.NewGuid().ToString("N"))
-            .Options);
+    private static DashboardReadQueryFixture CreateUnscopedDbContext() =>
+        DashboardReadQueryFixture.Create();
 
     private static DashboardController CreateController(ApplicationDbContext dbContext, Guid tenantId) =>
         new(
@@ -232,17 +229,4 @@ public sealed class DashboardControllerTenantScopeTests
             new MemoryCache(new MemoryCacheOptions()),
             NullLogger<DashboardController>.Instance);
 
-    private sealed class QueryFilterDisabledApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : ApplicationDbContext(options)
-    {
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-            {
-                entityType.SetQueryFilter(null);
-            }
-        }
-    }
 }

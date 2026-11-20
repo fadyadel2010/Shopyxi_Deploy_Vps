@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import * as Dialog from '@radix-ui/react-dialog'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import {
     ArrowUpRight,
@@ -233,7 +234,7 @@ function NavigationLink({
     item: NavigationItem
     onNavigate?: () => void
 }) {
-    const { t } = useSuperAdminLocale()
+    const { t, tr } = useSuperAdminLocale()
     const Icon = item.icon
     const label = t(`superAdmin.navigation.${item.labelKey}`, `superAdmin.navigation.${item.labelKey}`)
     const description = t(`superAdmin.navigation.${item.descriptionKey}`, `superAdmin.navigation.${item.descriptionKey}`)
@@ -241,7 +242,7 @@ function NavigationLink({
     if (item.disabled || !item.to) {
         return (
             <div
-                title="Available in a later phase"
+                title={tr('Available in a later phase', 'متاح في مرحلة لاحقة')}
                 className="flex items-center gap-2.5 rounded-lg border border-white/5 bg-white/[0.02] px-2.5 py-2 text-slate-500"
             >
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/[0.04]">
@@ -249,7 +250,7 @@ function NavigationLink({
                 </span>
                 <span className="min-w-0 flex-1 truncate text-sm font-medium">{label}</span>
                 <span className="rounded-full border border-amber-400/20 bg-amber-400/10 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-amber-200/80">
-                    Soon
+                    {tr('Soon', 'قريبًا')}
                 </span>
             </div>
         )
@@ -356,6 +357,15 @@ export default function SuperAdminLayout() {
         setIsSidebarOpen(false)
     }, [location.pathname])
 
+    useEffect(() => {
+        if (!isSidebarOpen) return
+        const desktop = window.matchMedia('(min-width: 1280px)')
+        const closeOnDesktop = () => { if (desktop.matches) setIsSidebarOpen(false) }
+        closeOnDesktop()
+        desktop.addEventListener('change', closeOnDesktop)
+        return () => desktop.removeEventListener('change', closeOnDesktop)
+    }, [isSidebarOpen])
+
     const pageLabel = useMemo(() => {
         const match = pageLabels.find((entry) => location.pathname.startsWith(entry.match))
         return t(`superAdmin.navigation.${match?.key ?? 'dashboard'}`, `superAdmin.navigation.${match?.key ?? 'dashboard'}`)
@@ -376,6 +386,7 @@ export default function SuperAdminLayout() {
     }
 
     return (
+        <Dialog.Root open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
         <div dir={isArabic ? 'rtl' : 'ltr'} className="min-h-screen bg-slate-100">
             <div className="relative flex min-h-screen">
                 <aside className="hidden w-72 shrink-0 border-e border-white/10 bg-slate-950 xl:block">
@@ -386,14 +397,15 @@ export default function SuperAdminLayout() {
 
                 {isSidebarOpen ? (
                     <div className="fixed inset-0 z-40 xl:hidden">
-                        <button
-                            type="button"
-                            aria-label={tr('Close sidebar', 'إغلاق القائمة')}
+                        <Dialog.Overlay
                             className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm"
                             onClick={() => setIsSidebarOpen(false)}
                         />
+                        <Dialog.Content asChild aria-describedby={undefined}>
                         <aside className="absolute inset-y-0 start-0 h-full w-[86%] max-w-xs border-e border-white/10 bg-slate-950 shadow-2xl">
+                            <Dialog.Title className="sr-only">{tr('Open sidebar', 'فتح القائمة')}</Dialog.Title>
                             <div className="flex items-center justify-end px-3 pt-3">
+                                <Dialog.Close asChild>
                                 <button
                                     type="button"
                                     aria-label={tr('Close sidebar', 'إغلاق القائمة')}
@@ -402,9 +414,11 @@ export default function SuperAdminLayout() {
                                 >
                                     <X className="h-4 w-4" />
                                 </button>
+                                </Dialog.Close>
                             </div>
                             <SidebarContent user={user} onNavigate={() => setIsSidebarOpen(false)} />
                         </aside>
+                        </Dialog.Content>
                     </div>
                 ) : null}
 
@@ -412,14 +426,15 @@ export default function SuperAdminLayout() {
                     <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
                         <div className="mx-auto flex max-w-[1500px] items-center justify-between gap-3 px-3 py-2.5 sm:px-5 lg:px-6">
                             <div className="flex min-w-0 items-center gap-2.5">
+                                <Dialog.Trigger asChild>
                                 <button
                                     type="button"
                                     aria-label={tr('Open sidebar', 'فتح القائمة')}
                                     className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm xl:hidden"
-                                    onClick={() => setIsSidebarOpen(true)}
                                 >
                                     <Menu className="h-4 w-4" />
                                 </button>
+                                </Dialog.Trigger>
 
                                 <div className="min-w-0">
                                     <p className="truncate text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
@@ -470,5 +485,6 @@ export default function SuperAdminLayout() {
                 </div>
             </div>
         </div>
+        </Dialog.Root>
     )
 }

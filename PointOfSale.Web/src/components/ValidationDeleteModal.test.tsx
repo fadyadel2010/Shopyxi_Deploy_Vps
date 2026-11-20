@@ -143,7 +143,7 @@ describe('ValidationDeleteModal product lifecycle contract', () => {
         const props = renderProductDelete()
         await screen.findByRole('button', { name: 'common.delete' })
 
-        fireEvent.keyDown(window, { key: 'Escape' })
+        fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Escape' })
         expect(props.onClose).toHaveBeenCalledTimes(1)
         expect(apiDeleteMock).not.toHaveBeenCalled()
     })

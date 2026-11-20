@@ -1,5 +1,7 @@
-import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import ConfirmModal from '../../components/ConfirmModal'
+import { usePosSurface } from '../../design-system/overlays/posOverlayContext'
+import { useTranslation } from 'react-i18next'
 
 const defaultConfirmDialog = {
     confirm: async () => false,
@@ -21,6 +23,7 @@ const defaultConfirmDialog = {
 const ConfirmDialogContext = createContext(defaultConfirmDialog)
 
 export function ConfirmDialogProvider({ children, value }) {
+    const { t } = useTranslation()
     const [dialog, setDialog] = useState(null)
     const [promptValue, setPromptValue] = useState('')
     // While an awaited confirmed action (see confirmAction below) is running,
@@ -32,6 +35,14 @@ export function ConfirmDialogProvider({ children, value }) {
     // a second confirm click in the same tick can never re-run the action,
     // independent of any visual disabled state.
     const runningActionDialogRef = useRef(null)
+    const promptInputRef = useRef(null)
+
+    useEffect(() => () => {
+        const pending = pendingSettleRef.current
+        pendingSettleRef.current = null
+        runningActionDialogRef.current = null
+        pending?.resolve(pending.dialog.type === 'prompt' ? null : false)
+    }, [])
 
     // A settlement may close only the dialog instance that created it. This
     // prevents a late async action from resolving a newer replacement dialog.
@@ -66,11 +77,11 @@ export function ConfirmDialogProvider({ children, value }) {
     }), [])
 
     const confirm = useCallback((options = {}) => (
-        openDialog({ type: 'confirm', options })
+        openDialog({ type: 'confirm', options, surface: options.surface })
     ), [openDialog])
 
     const prompt = useCallback((options = {}) => (
-        openDialog({ type: 'prompt', options }, options.defaultValue ?? '')
+        openDialog({ type: 'prompt', options, surface: options.surface }, options.defaultValue ?? '')
     ), [openDialog])
 
     // Legacy behavior (default): close the dialog as soon as the user decides,
@@ -85,7 +96,11 @@ export function ConfirmDialogProvider({ children, value }) {
     // for clicks landing in the same tick.
     const confirmAction = useCallback(async ({ onConfirm, awaitAction, ...options } = {}) => {
         if (awaitAction) {
-            return openDialog({ type: 'action', options: { ...options, onConfirm } })
+            return openDialog({
+                type: 'action',
+                options: { ...options, onConfirm },
+                surface: options.surface,
+            })
         }
 
         const confirmed = await confirm(options)
@@ -177,6 +192,7 @@ export function ConfirmDialogProvider({ children, value }) {
     }, [dialog, promptValue, resolveDialog, runConfirmedAction])
 
     const handleCancel = useCallback(() => {
+        if (runningActionDialogRef.current === dialog) return
         resolveDialog(dialog?.type === 'prompt' ? null : false, dialog)
     }, [dialog, resolveDialog])
 
@@ -187,9 +203,10 @@ export function ConfirmDialogProvider({ children, value }) {
             {children}
             {!value && dialog ? (
                 <ConfirmModal
-                    title={dialogOptions.title || dialogOptions.confirmLabel || 'Confirm action'}
+                    surface={dialog.surface}
+                    title={dialogOptions.title || dialogOptions.confirmLabel || t('common.confirm', { defaultValue: 'Confirm' })}
                     description={dialogOptions.description}
-                    confirmLabel={dialogOptions.confirmLabel || 'Confirm'}
+                    confirmLabel={dialogOptions.confirmLabel || t('common.confirm', { defaultValue: 'Confirm' })}
                     cancelLabel={dialogOptions.cancelLabel}
                     variant={dialogOptions.variant}
                     confirmTone={dialogOptions.confirmTone}
@@ -201,13 +218,16 @@ export function ConfirmDialogProvider({ children, value }) {
                     loading={dialog.type === 'action' && actionPending}
                     onConfirm={handleConfirm}
                     onCancel={handleCancel}
+                    initialFocusRef={dialog.type === 'prompt' ? promptInputRef : undefined}
                 >
                     {dialog.type === 'prompt' ? (
                         <label className="block text-sm font-medium text-gray-700">
-                            <span>{dialogOptions.inputLabel || dialogOptions.label || 'Response'}</span>
+                            <span>{dialogOptions.inputLabel || dialogOptions.label || t('common.notes', { defaultValue: 'Notes' })}</span>
                             <input
-                                autoFocus
-                                className="mt-2 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                ref={promptInputRef}
+                                className={dialog.surface === 'pos'
+                                    ? 'pos-confirm-input mt-2 w-full border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
+                                    : 'mt-2 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500'}
                                 maxLength={dialogOptions.maxLength}
                                 onChange={(event) => setPromptValue(event.target.value)}
                                 placeholder={dialogOptions.placeholder}
@@ -223,5 +243,20 @@ export function ConfirmDialogProvider({ children, value }) {
 }
 
 export function useConfirmDialog() {
-    return useContext(ConfirmDialogContext)
+    const context = useContext(ConfirmDialogContext)
+    const surface = usePosSurface()
+
+    return useMemo(() => {
+        if (surface !== 'pos') {
+            return context
+        }
+
+        return {
+            confirm: (options = {}) => context.confirm({ ...options, surface }),
+            prompt: (options = {}) => context.prompt({ ...options, surface }),
+            confirmAction: ({ onConfirm, awaitAction, ...options } = {}) => (
+                context.confirmAction({ ...options, surface, onConfirm, awaitAction })
+            ),
+        }
+    }, [context, surface])
 }

@@ -9,6 +9,7 @@ using PointOfSale.Core.Entities;
 using PointOfSale.Core.Tenancy;
 using PointOfSale.Infrastructure.Configuration;
 using PointOfSale.Infrastructure.Data;
+using PointOfSale.Infrastructure.Data.Seeding;
 using PointOfSale.Infrastructure.Operations;
 
 namespace PointOfSale.Tests.Security;
@@ -22,18 +23,21 @@ public sealed class ProductionStartupSafetyPolicyTests
         services.AddHostedService<PointOfSale.API.SuperAdmin.Services.SuperAdminRootSeeder>();
         services.AddHostedService<PointOfSale.API.Services.MarketplaceCms.MarketplaceCmsPageSeeder>();
         services.AddHostedService<PointOfSale.Infrastructure.Accounting.ChartOfAccountsStartupSeeder>();
+        services.AddAffiliateTaxonomyBootstrap();
         services.AddHostedService<PointOfSale.Infrastructure.Elasticsearch.ElasticsearchIndexInitializer>();
         services.AddHostedService<PointOfSale.Infrastructure.Elasticsearch.Services.CommerceHubElasticsearchIndexInitializer>();
         services.AddHostedService<PointOfSale.API.Jobs.HangfireInitializationHostedService>();
         services.AddHostedService<PointOfSale.API.Services.CommerceHub.CommerceHubDailyFinancialAggregateRefreshService>();
         var factoryCalled = false;
         services.AddHostedService<BusinessWorker>(_ => { factoryCalled = true; return new(); });
-        Assert.Equal(6, ProductionStartupSafetyPolicy.Apply(services, Environment("Production"), new(false)));
+        Assert.Equal(7, ProductionStartupSafetyPolicy.Apply(services, Environment("Production"), new(false)));
         Assert.False(factoryCalled);
         var hosted = services.Where(d => d.ServiceType == typeof(IHostedService)).ToArray();
         Assert.Equal(typeof(PointOfSale.API.Services.Health.PrivateInternalSchemaValidationHostedService), hosted[0].ImplementationType);
         Assert.Equal(typeof(PointOfSale.Infrastructure.Elasticsearch.PrivateInternalSearchValidationHostedService), hosted[1].ImplementationType);
         Assert.Contains(hosted, d => d.ImplementationType == typeof(PointOfSale.API.Jobs.HangfireInitializationHostedService));
+        Assert.DoesNotContain(hosted, d => d.ImplementationType == typeof(PointOfSale.Infrastructure.Data.Seeding.AffiliateTaxonomyStartupInitializer));
+        Assert.Contains(services, d => d.ServiceType == typeof(PointOfSale.Infrastructure.Data.Seeding.AffiliateTaxonomySeeder));
         Assert.DoesNotContain(hosted, d => d.ImplementationType == typeof(PointOfSale.API.Services.CommerceHub.CommerceHubDailyFinancialAggregateRefreshService));
         Assert.Contains(hosted, d => d.ImplementationFactory != null);
         using var provider = services.BuildServiceProvider();
@@ -63,6 +67,7 @@ public sealed class ProductionStartupSafetyPolicyTests
     {
         IServiceCollection services = new ServiceCollection();
         services.AddHostedService<PointOfSale.API.SuperAdmin.Services.SuperAdminRootSeeder>();
+        services.AddAffiliateTaxonomyBootstrap();
         services.AddHostedService<PointOfSale.API.Services.CommerceHub.CommerceHubDailyFinancialAggregateRefreshService>();
         var before = services.ToArray();
         Assert.Equal(0, ProductionStartupSafetyPolicy.Apply(services, Environment(environment), new(privateOnly)));

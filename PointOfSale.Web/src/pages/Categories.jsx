@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import * as Dialog from '@radix-ui/react-dialog'
 import { useTranslation } from 'react-i18next'
 import api from '../services/api'
 import { useConfirmDialog } from '../common/confirm/ConfirmDialogProvider'
@@ -7,8 +8,8 @@ import { useHasPermission } from '../hooks/usePosSessionPermission'
 
 export default function Categories() {
     const { t } = useTranslation()
-    const { isRTL, dir } = useRTL()
-    const { confirm } = useConfirmDialog()
+    const { dir } = useRTL()
+    const { confirmAction } = useConfirmDialog()
     const canManageCatalog = useHasPermission('catalog.manage')
     const canDeleteCatalog = useHasPermission('catalog.delete')
     const canPublishCatalog = useHasPermission('catalog.publish')
@@ -20,6 +21,10 @@ export default function Categories() {
     const [expandedCategories, setExpandedCategories] = useState({})
     const [syncing, setSyncing] = useState(false)
     const [syncMessage, setSyncMessage] = useState('')
+    const [saving, setSaving] = useState(false)
+    const [formError, setFormError] = useState('')
+    const savingRef = useRef(false)
+    const editorOpenerRef = useRef(null)
     const [formData, setFormData] = useState({
         name: '',
         description: '',
@@ -73,6 +78,10 @@ export default function Categories() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        if (savingRef.current) return
+        savingRef.current = true
+        setSaving(true)
+        setFormError('')
         try {
             if (editingCategory) {
                 await api.put(`/categories/${editingCategory.id}`, formData)
@@ -83,7 +92,10 @@ export default function Categories() {
             resetForm()
             fetchCategories()
         } catch (err) {
-            setError(err.response?.data?.message || t('categories.failedToSave'))
+            setFormError(t('categories.failedToSave'))
+        } finally {
+            savingRef.current = false
+            setSaving(false)
         }
     }
 
@@ -98,18 +110,18 @@ export default function Categories() {
     }
 
     const handleDelete = async (id) => {
-        const confirmed = await confirm({
-            confirmLabel: t('common.delete'),
-            description: t('categories.deleteConfirm'),
-            title: t('common.warning'),
-            variant: 'danger',
-        })
-
-        if (!confirmed) return
-
         try {
-            await api.delete(`/categories/${id}`)
-            fetchCategories()
+            await confirmAction({
+                confirmLabel: t('common.delete'),
+                description: t('categories.deleteConfirm'),
+                title: t('common.warning'),
+                variant: 'danger',
+                awaitAction: true,
+                onConfirm: async () => {
+                    await api.delete(`/categories/${id}`)
+                    await fetchCategories()
+                },
+            })
         } catch (err) {
             setError(err.response?.data?.message || t('categories.failedToDelete'))
         }
@@ -118,6 +130,7 @@ export default function Categories() {
     const resetForm = () => {
         setFormData({ name: '', description: '', parentCategoryId: null })
         setEditingCategory(null)
+        setFormError('')
     }
 
     const toggleCategory = (categoryId) => {
@@ -142,8 +155,8 @@ export default function Categories() {
     }
 
     const hasExpandableCategories = categories.some((category) => category.children && category.children.length > 0)
-    const expandCollapseSpacingClass = isRTL ? 'ml-2' : 'mr-2'
-    const nestedCategoryClass = isRTL ? 'mr-6 border-r-2 border-primary-200' : 'ml-6 border-l-2 border-primary-200'
+    const expandCollapseSpacingClass = 'me-2'
+    const nestedCategoryClass = 'ms-6 border-s-2 border-primary-200'
 
     const renderCategory = (category, level = 0) => {
         const hasChildren = category.children && category.children.length > 0
@@ -159,6 +172,10 @@ export default function Categories() {
                     <div className="flex items-center gap-3">
                         {level === 0 && hasChildren ? (
                             <button
+                                type="button"
+                                aria-expanded={Boolean(isExpanded)}
+                                aria-controls={`category-children-${category.id}`}
+                                aria-label={`${isExpanded ? t('categories.collapseAll') : t('categories.expandAll')} — ${category.name}`}
                                 onClick={() => toggleCategory(category.id)}
                                 className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-100 text-primary-700 transition-colors hover:bg-primary-200"
                                 title={isExpanded ? t('categories.collapseAll') : t('categories.expandAll')}
@@ -222,9 +239,9 @@ export default function Categories() {
                     )}
                 </div>
 
-                {hasChildren && isExpanded && (
-                    <div className="animate-fadeIn">
-                        {category.children.map((child) => renderCategory(child, level + 1))}
+                {hasChildren && (
+                    <div id={`category-children-${category.id}`} hidden={!isExpanded} className="animate-fadeIn">
+                        {isExpanded ? category.children.map((child) => renderCategory(child, level + 1)) : null}
                     </div>
                 )}
             </div>
@@ -281,13 +298,13 @@ export default function Categories() {
             </div>
 
             {syncMessage && (
-                <div className="mb-4 flex items-center gap-2 rounded border border-emerald-400 bg-emerald-100 p-3 text-emerald-700">
+                <div role="status" className="mb-4 flex items-center gap-2 rounded border border-emerald-400 bg-emerald-100 p-3 text-emerald-700">
                     {syncMessage}
                 </div>
             )}
 
             {error && (
-                <div className="mb-4 rounded border border-red-400 bg-red-100 p-3 text-red-700">
+                <div role="alert" className="mb-4 rounded border border-red-400 bg-red-100 p-3 text-red-700">
                     {error}
                 </div>
             )}
@@ -305,13 +322,25 @@ export default function Categories() {
             </div>
 
             {canManageCatalog && showModal && (
+                <Dialog.Root open onOpenChange={(open) => {
+                    if (!open && !savingRef.current) { setShowModal(false); resetForm() }
+                }}>
+                <Dialog.Portal>
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="mx-4 w-full max-w-md rounded-lg bg-white shadow-xl" role="dialog" aria-modal="true" aria-labelledby="category-dialog-heading">
+                    <Dialog.Content dir={dir} aria-describedby={undefined} aria-busy={saving || undefined}
+                        onEscapeKeyDown={(event) => {
+                            if (savingRef.current || formData.name || formData.description) event.preventDefault()
+                        }}
+                        onPointerDownOutside={(event) => event.preventDefault()}
+                        onOpenAutoFocus={() => { editorOpenerRef.current = document.activeElement }}
+                        onCloseAutoFocus={(event) => { event.preventDefault(); editorOpenerRef.current?.focus() }}
+                        className="mx-4 w-full max-w-md rounded-lg bg-white shadow-xl">
                         <div className="p-6">
-                            <h3 id="category-dialog-heading" className="mb-4 text-xl font-bold">
+                            <Dialog.Title asChild><h3 className="mb-4 text-xl font-bold">
                                 {editingCategory ? t('categories.editCategory') : t('categories.addCategory')}
-                            </h3>
-                            <form onSubmit={handleSubmit}>
+                            </h3></Dialog.Title>
+                            <form onSubmit={handleSubmit} aria-describedby={formError ? 'category-form-error' : undefined}>
+                                {formError ? <p id="category-form-error" role="alert">{formError}</p> : null}
                                 <div className="mb-4">
                                     <label className="label" htmlFor="category-name">{t('categories.nameRequired')}</label>
                                     <input
@@ -321,6 +350,7 @@ export default function Categories() {
                                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                         className="input"
                                         required
+                                        disabled={saving}
                                     />
                                 </div>
                                 <div className="mb-4">
@@ -331,6 +361,7 @@ export default function Categories() {
                                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                         className="input"
                                         rows="3"
+                                        disabled={saving}
                                     />
                                 </div>
                                 {!editingCategory && formData.parentCategoryId && (
@@ -341,6 +372,7 @@ export default function Categories() {
                                 <div className="flex gap-3">
                                     <button
                                         type="button"
+                                        disabled={saving}
                                         onClick={() => {
                                             setShowModal(false)
                                             resetForm()
@@ -349,14 +381,16 @@ export default function Categories() {
                                     >
                                         {t('common.cancel')}
                                     </button>
-                                    <button type="submit" className="btn-primary flex-1">
+                                    <button type="submit" disabled={saving} className="btn-primary flex-1">
                                         {editingCategory ? t('categories.update') : t('categories.create')}
                                     </button>
                                 </div>
                             </form>
                         </div>
-                    </div>
+                    </Dialog.Content>
                 </div>
+                </Dialog.Portal>
+                </Dialog.Root>
             )}
         </div>
     )

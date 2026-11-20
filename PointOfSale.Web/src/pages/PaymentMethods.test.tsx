@@ -25,7 +25,9 @@ vi.mock('../services/api', () => ({
 
 vi.mock('react-i18next', () => ({
     useTranslation: () => ({
-        t: (_key: string, fallback?: string, values?: Record<string, string>) => {
+        t: (_key: string, fallbackOrOptions?: string | Record<string, string>, values?: Record<string, string>) => {
+            const fallback = typeof fallbackOrOptions === 'string' ? fallbackOrOptions : fallbackOrOptions?.defaultValue
+            values = values ?? (typeof fallbackOrOptions === 'object' ? fallbackOrOptions : undefined)
             const translations: Record<string, string> = {
                 'paymentMethods.fields.apiKey': 'API Key',
                 'paymentMethods.fields.publicKey': 'Public Key',
@@ -66,6 +68,7 @@ const authenticatedUser = {
     firstName: 'POS',
     lastName: 'Owner',
     role: 'Owner',
+    emailVerified: true,
     effectivePermissions: ['storefront.payments.manage'],
     navigationCapabilities: [],
     vendorLifecycleAuthority: {

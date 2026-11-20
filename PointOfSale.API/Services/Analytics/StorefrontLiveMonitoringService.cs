@@ -45,10 +45,14 @@ public class StorefrontLiveMonitoringService : IStorefrontLiveMonitoringService
         Guid tenantId,
         CancellationToken cancellationToken = default)
     {
-        var windowStartUtc = DateTime.UtcNow.AddMinutes(-5);
+        // BSON timestamps have millisecond precision. Use that same exact
+        // half-open boundary for SQL activity and the returned window metadata.
+        var now = DateTime.UtcNow;
+        var windowEndUtc = new DateTime(now.Ticks - now.Ticks % TimeSpan.TicksPerMillisecond, DateTimeKind.Utc);
+        var windowStartUtc = windowEndUtc.AddMinutes(-5);
 
-        var liveSummaryTask = GetLiveSummaryAsync(tenantId, windowStartUtc, cancellationToken);
-        var recentOrdersTask = GetRecentOrdersAsync(tenantId, windowStartUtc, cancellationToken);
+        var liveSummaryTask = GetLiveSummaryAsync(tenantId, windowStartUtc, windowEndUtc, cancellationToken);
+        var recentOrdersTask = GetRecentOrdersAsync(tenantId, windowStartUtc, windowEndUtc, cancellationToken);
 
         await Task.WhenAll(liveSummaryTask, recentOrdersTask);
 
@@ -61,13 +65,17 @@ public class StorefrontLiveMonitoringService : IStorefrontLiveMonitoringService
             ActiveCarts = liveSummary.ActiveCarts,
             CheckoutInProgress = liveSummary.CheckoutInProgress,
             RecentOrders = recentOrders.Count,
-            RecentActivity = BuildRecentActivity(liveSummary.RecentEvents, recentOrders)
+            RecentActivity = BuildRecentActivity(liveSummary.RecentEvents, recentOrders.Items),
+            GeneratedAtUtc = windowEndUtc,
+            WindowStartUtc = windowStartUtc,
+            WindowEndUtc = windowEndUtc
         };
     }
 
     private async Task<StorefrontLiveSummary> GetLiveSummaryAsync(
         Guid tenantId,
         DateTime windowStartUtc,
+        DateTime windowEndUtc,
         CancellationToken cancellationToken)
     {
         var match = new BsonDocument("$match", new BsonDocument
@@ -77,7 +85,8 @@ public class StorefrontLiveMonitoringService : IStorefrontLiveMonitoringService
                 "OccurredAtUtc",
                 new BsonDocument
                 {
-                    { "$gte", windowStartUtc }
+                    { "$gte", windowStartUtc },
+                    { "$lt", windowEndUtc }
                 }
             },
             { "EventType", new BsonDocument("$in", new BsonArray(LiveEventTypes)) },
@@ -207,9 +216,9 @@ public class StorefrontLiveMonitoringService : IStorefrontLiveMonitoringService
             }
         });
 
-        var result = await _analyticsEvents
-            .Aggregate<BsonDocument>(new[] { match, recentEventsFacet })
-            .SingleOrDefaultAsync(cancellationToken);
+        using var cursor = await _analyticsEvents.AggregateAsync<BsonDocument>(
+            new[] { match, recentEventsFacet }, cancellationToken: cancellationToken);
+        var result = await cursor.SingleOrDefaultAsync(cancellationToken);
 
         var summary = new StorefrontLiveSummary();
         if (result == null)
@@ -246,36 +255,36 @@ public class StorefrontLiveMonitoringService : IStorefrontLiveMonitoringService
         return summary;
     }
 
-    private async Task<List<RecentOrderInfo>> GetRecentOrdersAsync(
+    private async Task<RecentOrderWindow> GetRecentOrdersAsync(
         Guid tenantId,
         DateTime windowStartUtc,
+        DateTime windowEndUtc,
         CancellationToken cancellationToken)
     {
-        var snapshot = await _authorityReader.GetCommerceSnapshotAsync(
+        var activity = await _authorityReader.GetRecognizedOrderActivityAsync(
             tenantId,
             windowStartUtc,
-            DateTime.UtcNow,
+            windowEndUtc,
             cancellationToken);
-        var orderIds = snapshot.PurchaseOrderIds.ToArray();
+        var orderIds = activity.Keys.ToArray();
         if (orderIds.Length == 0)
         {
-            return [];
+            return new(0, []);
         }
 
-        return await _dbContext.Orders
+        var orders = await _dbContext.Orders.IgnoreQueryFilters()
             .AsNoTracking()
             .Where(o =>
                 o.TenantId == tenantId &&
                 orderIds.Contains(o.Id))
-            .OrderByDescending(o => o.PaidAt)
             .Select(o => new RecentOrderInfo
             {
                 OrderId = o.Id,
                 OrderNumber = o.OrderNumber,
-                CreatedAtUtc = o.PaidAt ?? o.FinancialPostedAtUtc ?? o.CreatedAt
             })
-            .Take(10)
             .ToListAsync(cancellationToken);
+        foreach (var order in orders) order.CreatedAtUtc = activity[order.OrderId];
+        return new(orders.Count, orders.OrderByDescending(x => x.CreatedAtUtc).ThenBy(x => x.OrderId).Take(10).ToList());
     }
 
     private static List<StorefrontLiveActivityDto> BuildRecentActivity(
@@ -285,6 +294,7 @@ public class StorefrontLiveMonitoringService : IStorefrontLiveMonitoringService
         var orderLookup = recentOrders.ToDictionary(o => o.OrderId, o => o.OrderNumber);
 
         var activities = recentEvents
+            .Where(evt => evt.EventType != nameof(AnalyticsEventType.PurchaseCompleted))
             .Select(evt => new StorefrontLiveActivityDto
             {
                 Type = evt.EventType == nameof(AnalyticsEventType.PurchaseCompleted)
@@ -296,6 +306,10 @@ public class StorefrontLiveMonitoringService : IStorefrontLiveMonitoringService
                     : null,
                 OccurredAtUtc = evt.OccurredAtUtc
             })
+            .Concat(recentOrders.Select(order => new StorefrontLiveActivityDto
+            {
+                Type = "OrderCompleted", OrderNumber = order.OrderNumber, OccurredAtUtc = order.CreatedAtUtc
+            }))
             .OrderByDescending(x => x.OccurredAtUtc)
             .Take(10)
             .ToList();
@@ -325,4 +339,5 @@ public class StorefrontLiveMonitoringService : IStorefrontLiveMonitoringService
         public string OrderNumber { get; set; } = string.Empty;
         public DateTime CreatedAtUtc { get; set; }
     }
+    private sealed record RecentOrderWindow(int Count, List<RecentOrderInfo> Items);
 }

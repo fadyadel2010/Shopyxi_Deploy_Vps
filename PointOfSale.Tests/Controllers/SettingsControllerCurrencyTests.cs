@@ -216,6 +216,19 @@ public sealed class SettingsControllerCurrencyTests : IDisposable
     }
 
     [Fact]
+    public async Task GetSettings_UsesTenantCurrency_NotAValidTaxCurrencyOverrideOrCustomSymbol()
+    {
+        _dbContext.SystemSettings.AddRange(
+            new SystemSetting { TenantId = _tenantId, Key = "Tax.CurrencyCode", Value = "USD" },
+            new SystemSetting { TenantId = _tenantId, Key = "Tax.CurrencySymbol", Value = "UNVERIFIED" });
+        await _dbContext.SaveChangesAsync();
+        var result = await _controller.GetSettings();
+        var dto = Assert.IsType<SettingsDto>(Assert.IsType<OkObjectResult>(result.Result).Value);
+        Assert.Equal("EGP", dto.CurrencyCode);
+        Assert.Equal("E£", dto.CurrencySymbol);
+    }
+
+    [Fact]
     public async Task GetSettings_ReadsOnlyCurrentTenantScopedRows()
     {
         _dbContext.SystemSettings.AddRange(

@@ -31,7 +31,7 @@ const owner = {
     },
 }
 
-const renderSidebar = (route = '/') => render(<MemoryRouter initialEntries={[route]}><Sidebar isOpen onClose={() => {}} /></MemoryRouter>)
+const renderSidebar = (route = '/storefront') => render(<MemoryRouter initialEntries={[route]}><Sidebar isOpen onClose={() => {}} /></MemoryRouter>)
 const branch = (key: string) => {
     const button = document.querySelector(`button[aria-controls="sidebar-submenu-${key}"]`)
     if (!button) throw new Error(`Missing sidebar branch: ${key}`)
@@ -60,7 +60,7 @@ describe('first-login sidebar navigation hydration', () => {
     it('discovers both authorized links on the initial session bootstrap without visiting either route or requesting its data', async () => {
         let resolveSession!: (value: { data: { user: typeof owner } }) => void
         apiMock.get.mockReturnValue(new Promise(resolve => { resolveSession = resolve }))
-        render(<MemoryRouter initialEntries={['/']}><AuthBootstrap /><Sidebar isOpen onClose={() => {}} /></MemoryRouter>)
+        render(<MemoryRouter initialEntries={['/storefront']}><AuthBootstrap /><Sidebar isOpen onClose={() => {}} /></MemoryRouter>)
         expect(document.querySelector('aside a[href="/ecommerce/payment-methods"]')).toBeNull()
         await act(async () => resolveSession({ data: { user: owner } }))
         assertDiscoverable('/ecommerce/payment-methods')

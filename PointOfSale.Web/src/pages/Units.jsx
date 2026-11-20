@@ -1,22 +1,36 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Plus, Sprout } from 'lucide-react'
 import api from '../services/api'
 import { useConfirmDialog } from '../common/confirm/ConfirmDialogProvider'
 import { useToast } from '../components/Toast'
-import { useTranslation } from 'react-i18next'
 import { useRTL } from '../hooks/useRTL'
 import { useHasPermission } from '../hooks/usePosSessionPermission'
+import {
+    Badge,
+    Button,
+    Card,
+    Dialog,
+    Field,
+    Input,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '../design-system/primitives'
+import './Units.css'
+
+const UNIT_FORM_ID = 'pos-unit-form'
 
 export default function Units() {
     const { t } = useTranslation()
-    const { isRTL, dir } = useRTL()
+    const { dir } = useRTL()
     const { confirm } = useConfirmDialog()
     const { showSuccess, showError } = useToast()
     const canManageCatalog = useHasPermission('catalog.manage')
     const canDeleteCatalog = useHasPermission('catalog.delete')
-    const tableTextAlignClass = isRTL ? 'text-right' : 'text-left'
-    const actionAlignClass = isRTL ? 'text-left' : 'text-right'
-    const actionSpacingClass = isRTL ? 'ml-4' : 'mr-4'
-    const checkboxLabelSpacingClass = isRTL ? 'mr-2' : 'ml-2'
     const [units, setUnits] = useState([])
     const [loading, setLoading] = useState(true)
     const [showModal, setShowModal] = useState(false)
@@ -27,6 +41,8 @@ export default function Units() {
         description: '',
         isActive: true
     })
+    const dialogOpenerRef = useRef(null)
+    const nameInputRef = useRef(null)
 
     const fetchUnits = useCallback(async () => {
         try {
@@ -45,7 +61,8 @@ export default function Units() {
         fetchUnits()
     }, [fetchUnits])
 
-    const handleAdd = () => {
+    const handleAdd = (event) => {
+        dialogOpenerRef.current = event?.currentTarget ?? null
         setEditingUnit(null)
         setFormData({
             name: '',
@@ -56,7 +73,8 @@ export default function Units() {
         setShowModal(true)
     }
 
-    const handleEdit = (unit) => {
+    const handleEdit = (unit, event) => {
+        dialogOpenerRef.current = event?.currentTarget ?? null
         setEditingUnit(unit)
         setFormData({
             name: unit.name,
@@ -127,209 +145,163 @@ export default function Units() {
         }
     }
 
+    const handleCloseModal = () => {
+        setShowModal(false)
+        setEditingUnit(null)
+        setFormData({
+            name: '',
+            symbol: '',
+            description: '',
+            isActive: true
+        })
+    }
+
     return (
-        <div dir={dir} className="h-full flex flex-col">
-            {/* Header */}
-            <div className="flex justify-between items-center mb-6">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-800">{t('units.title')}</h1>
-                    <p className="text-sm text-gray-600 mt-1">{t('units.subtitle')}</p>
+        <div dir={dir} className="pos-units">
+            <header className="pos-units__header">
+                <div className="pos-units__heading">
+                    <h1 className="pos-units__title">{t('units.title')}</h1>
+                    <p className="pos-units__subtitle">{t('units.subtitle')}</p>
                 </div>
                 {canManageCatalog && (
-                <div className="flex gap-3">
-                    <button
-                        onClick={handleSeedDefaults}
-                        className="btn-secondary"
-                    >
-                        🌱 {t('units.seedDefaults')}
-                    </button>
-                    <button
-                        onClick={handleAdd}
-                        className="btn-primary"
-                    >
-                        + {t('units.addUnit')}
-                    </button>
-                </div>
-                )}
-            </div>
-
-            {/* Units Table */}
-            <div className="card flex-1 overflow-hidden flex flex-col">
-                {loading ? (
-                    <div className="flex-1 flex items-center justify-center">
-                        <p className="text-gray-500">{t('common.loading')}</p>
+                    <div className="pos-units__actions">
+                        <Button
+                            variant="secondary"
+                            leadingIcon={<Sprout size={16} />}
+                            onClick={handleSeedDefaults}
+                        >
+                            {t('units.seedDefaults')}
+                        </Button>
+                        <Button leadingIcon={<Plus size={16} />} onClick={handleAdd}>
+                            {t('units.addUnit')}
+                        </Button>
                     </div>
-                ) : units.length === 0 ? (
-                    <div className="flex-1 flex items-center justify-center">
-                        <div className="text-center">
-                            <p className="text-gray-500 mb-4">{t('units.noUnits')}</p>
-                            {canManageCatalog && (
-                                <button onClick={handleAdd} className="btn-primary">
-                                    + {t('units.addFirstUnit')}
-                                </button>
+                )}
+            </header>
+
+            {loading ? (
+                <Card padding="lg" className="pos-units__state" role="status">
+                    <p className="pos-units__state-text">{t('common.loading')}</p>
+                </Card>
+            ) : units.length === 0 ? (
+                <Card padding="lg" className="pos-units__state">
+                    <p className="pos-units__state-text">{t('units.noUnits')}</p>
+                    {canManageCatalog && (
+                        <Button onClick={handleAdd}>{t('units.addFirstUnit')}</Button>
+                    )}
+                </Card>
+            ) : (
+                <Table aria-label={t('units.title')}>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>{t('units.name')}</TableHead>
+                            <TableHead>{t('units.symbol')}</TableHead>
+                            <TableHead>{t('units.description')}</TableHead>
+                            <TableHead>{t('common.status')}</TableHead>
+                            <TableHead className="pos-units__actions-column">{t('common.actions')}</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {units.map((unit) => (
+                            <TableRow key={unit.id}>
+                                <TableCell className="pos-units__name">{unit.name}</TableCell>
+                                <TableCell className="pos-units__symbol">{unit.symbol}</TableCell>
+                                <TableCell className="pos-units__description">
+                                    {unit.description || '—'}
+                                </TableCell>
+                                <TableCell>
+                                    <Badge variant={unit.isActive ? 'success' : 'danger'} dot>
+                                        {unit.isActive ? t('common.active') : t('common.inactive')}
+                                    </Badge>
+                                </TableCell>
+                                <TableCell className="pos-units__actions-column">
+                                    <div className="pos-units__row-actions">
+                                        {canManageCatalog && (
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={(event) => handleEdit(unit, event)}
+                                            >
+                                                {t('common.edit')}
+                                            </Button>
+                                        )}
+                                        {canDeleteCatalog && (
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="pos-units__danger-action"
+                                                onClick={() => handleDelete(unit.id)}
+                                            >
+                                                {t('common.delete')}
+                                            </Button>
+                                        )}
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            )}
+
+            {canManageCatalog && (
+                <Dialog
+                    open={showModal}
+                    onOpenChange={(open) => {
+                        if (!open) handleCloseModal()
+                    }}
+                    title={editingUnit ? t('units.editUnit') : t('units.addNewUnit')}
+                    closeLabel={t('common.close')}
+                    initialFocusRef={nameInputRef}
+                    restoreFocusRef={dialogOpenerRef}
+                    footer={(
+                        <>
+                            <Button variant="secondary" onClick={handleCloseModal}>
+                                {t('common.cancel')}
+                            </Button>
+                            <Button type="submit" form={UNIT_FORM_ID}>
+                                {editingUnit ? t('common.update') : t('common.create')}
+                            </Button>
+                        </>
+                    )}
+                >
+                    <form id={UNIT_FORM_ID} className="pos-units__form" onSubmit={handleSubmit}>
+                        <Input
+                            ref={nameInputRef}
+                            label={t('units.name')}
+                            value={formData.name}
+                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                            placeholder={t('units.namePlaceholder')}
+                            required
+                        />
+                        <Input
+                            label={t('units.symbol')}
+                            value={formData.symbol}
+                            onChange={(e) => setFormData({ ...formData, symbol: e.target.value })}
+                            placeholder={t('units.symbolPlaceholder')}
+                            required
+                        />
+                        <Field id="pos-unit-description" label={t('units.description')}>
+                            {({ id }) => (
+                                <textarea
+                                    id={id}
+                                    className="pos-input pos-units__textarea"
+                                    rows={3}
+                                    value={formData.description}
+                                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                    placeholder={t('units.descriptionPlaceholder')}
+                                />
                             )}
-                        </div>
-                    </div>
-                ) : (
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-50">
-                                <tr>
-                                    <th className={`px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider ${tableTextAlignClass}`}>
-                                        {t('units.name')}
-                                    </th>
-                                    <th className={`px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider ${tableTextAlignClass}`}>
-                                        {t('units.symbol')}
-                                    </th>
-                                    <th className={`px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider ${tableTextAlignClass}`}>
-                                        {t('units.description')}
-                                    </th>
-                                    <th className={`px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider ${tableTextAlignClass}`}>
-                                        {t('common.status')}
-                                    </th>
-                                    <th className={`px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider ${actionAlignClass}`}>
-                                        {t('common.actions')}
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                                {units.map((unit) => (
-                                    <tr key={unit.id} className="hover:bg-gray-50">
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm font-medium text-gray-900">
-                                                {unit.name}
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm text-gray-900">
-                                                {unit.symbol}
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <div className="text-sm text-gray-500">
-                                                {unit.description || t('common.notApplicable')}
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${unit.isActive
-                                                    ? 'bg-green-100 text-green-800'
-                                                    : 'bg-red-100 text-red-800'
-                                                }`}>
-                                                {unit.isActive ? t('common.active') : t('common.inactive')}
-                                            </span>
-                                        </td>
-                                        <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium ${actionAlignClass}`}>
-                                            {canManageCatalog && (
-                                                <button
-                                                    onClick={() => handleEdit(unit)}
-                                                    className={`text-primary-600 hover:text-primary-900 ${actionSpacingClass}`}
-                                                >
-                                                    {t('common.edit')}
-                                                </button>
-                                            )}
-                                            {canDeleteCatalog && (
-                                                <button
-                                                    onClick={() => handleDelete(unit.id)}
-                                                    className="text-red-600 hover:text-red-900"
-                                                >
-                                                    {t('common.delete')}
-                                                </button>
-                                            )}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
-            </div>
-
-            {/* Add/Edit Modal */}
-            {canManageCatalog && showModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
-                        <div className="p-6">
-                            <div className="flex justify-between items-center mb-6">
-                                <h3 className="text-xl font-bold">
-                                    {editingUnit ? t('units.editUnit') : t('units.addNewUnit')}
-                                </h3>
-                                <button
-                                    onClick={() => setShowModal(false)}
-                                    className="text-gray-400 hover:text-gray-600"
-                                >
-                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-
-                            <form onSubmit={handleSubmit} className="space-y-4">
-                                <div>
-                                    <label className="label">{t('units.name')} *</label>
-                                    <input
-                                        type="text"
-                                        value={formData.name}
-                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                        className="input w-full"
-                                        required
-                                        placeholder={t('units.namePlaceholder')}
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="label">{t('units.symbol')} *</label>
-                                    <input
-                                        type="text"
-                                        value={formData.symbol}
-                                        onChange={(e) => setFormData({ ...formData, symbol: e.target.value })}
-                                        className="input w-full"
-                                        required
-                                        placeholder={t('units.symbolPlaceholder')}
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="label">{t('units.description')}</label>
-                                    <textarea
-                                        value={formData.description}
-                                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                        className="input w-full"
-                                        rows="3"
-                                        placeholder={t('units.descriptionPlaceholder')}
-                                    />
-                                </div>
-
-                                <div className="flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        checked={formData.isActive}
-                                        onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                                        className="rounded"
-                                    />
-                                    <label className={`${checkboxLabelSpacingClass} text-sm text-gray-700`}>
-                                        {t('units.isActive')}
-                                    </label>
-                                </div>
-
-                                <div className="flex gap-3 pt-4">
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowModal(false)}
-                                        className="btn-secondary flex-1"
-                                    >
-                                        {t('common.cancel')}
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        className="btn-primary flex-1"
-                                    >
-                                        {editingUnit ? t('common.update') : t('common.create')}
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+                        </Field>
+                        <label className="pos-units__checkbox">
+                            <input
+                                type="checkbox"
+                                checked={formData.isActive}
+                                onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
+                            />
+                            <span>{t('units.isActive')}</span>
+                        </label>
+                    </form>
+                </Dialog>
             )}
         </div>
     )

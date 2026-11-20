@@ -178,12 +178,14 @@ startupStage = "services";
 builder.Services.AddScoped<ApiRequestNormalizationFilter>();
 builder.Services.AddScoped<ApiErrorResponseNormalizationFilter>();
 builder.Services.AddScoped<PreventEntityExposureFilter>();
+builder.Services.AddScoped<FinancialCostResponseFilter>();
 builder.Services.AddScoped<WebhookContentTypeValidationFilter>();
 
 builder.Services.AddControllers(options =>
     {
         options.Filters.AddService<ApiRequestNormalizationFilter>();
         options.Filters.AddService<PreventEntityExposureFilter>();
+        options.Filters.AddService<FinancialCostResponseFilter>(order: 1000);
         options.Filters.AddService<ApiErrorResponseNormalizationFilter>();
         options.Conventions.Add(new PosPermissionApplicationModelConvention());
     })

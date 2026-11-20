@@ -2,17 +2,52 @@ import React, { createContext, useCallback, useContext, useEffect, useRef, useSt
 import api from '../services/api'
 import i18n from '../i18n/config'
 import { useAuthStore } from '../store/authStore'
-import { getLocaleForLanguage, formatCurrency as formatCurrencyValue } from '../utils/dateFormat'
-import { normalizeCurrencyCode } from '../utils/financialMath'
+import {
+    getLocaleForLanguage,
+    formatCurrency as formatCurrencyValue,
+    UNAVAILABLE_CURRENCY_VALUE,
+} from '../utils/dateFormat'
+import { assertTwoDecimalCurrency, normalizeCurrencyCode } from '../utils/financialMath'
 
 const SettingsContext = createContext()
-const DEFAULT_CURRENCY_CODE = 'EGP'
 const DEFAULT_PRINT_FORMAT = 'receipt'
 const FALLBACK_CURRENCY_SYMBOLS = {
     EGP: 'E\u00A3',
     USD: '$',
     EUR: '\u20AC',
     GBP: '\u00A3',
+}
+
+/**
+ * Settings load provenance.
+ *
+ * `ready` is the only state that is evidence of the active tenant's own settings.
+ * A failed read is `error` with a safe classification, never a confirmed default.
+ */
+export const SETTINGS_STATUS = {
+    IDLE: 'idle',
+    LOADING: 'loading',
+    READY: 'ready',
+    ERROR: 'error',
+}
+
+/** Safe failure classification. Never carries server text, tokens or credentials. */
+export const SETTINGS_ERROR = {
+    UNAUTHORIZED: 'unauthorized',
+    FAILED: 'failed',
+    MALFORMED: 'malformed',
+}
+
+/**
+ * Currency provenance of the settings held in context:
+ * - `confirmed`  — this scope's own successful response.
+ * - `stale`      — this scope's last-known-good response, after a later refresh failed.
+ * - `unconfirmed`— no successful response for this scope yet (idle/loading/failed).
+ */
+export const SETTINGS_PROVENANCE = {
+    CONFIRMED: 'confirmed',
+    STALE: 'stale',
+    UNCONFIRMED: 'unconfirmed',
 }
 
 const getStoredPrintFormat = () => (
@@ -22,7 +57,8 @@ const getStoredPrintFormat = () => (
 )
 
 const getCurrencySymbolFromCode = (currencyCode) => {
-    const normalizedCode = normalizeCurrencyCode(currencyCode) || DEFAULT_CURRENCY_CODE
+    const normalizedCode = normalizeCurrencyCode(currencyCode)
+    if (!normalizedCode) return ''
 
     try {
         const currencyPart = new Intl.NumberFormat('en-US', {
@@ -44,8 +80,8 @@ const getCurrencySymbolFromCode = (currencyCode) => {
 }
 
 const createDefaultSettings = () => ({
-    currencyCode: DEFAULT_CURRENCY_CODE,
-    currencySymbol: getCurrencySymbolFromCode(DEFAULT_CURRENCY_CODE),
+    currencyCode: '',
+    currencySymbol: '',
     enableTax: true,
     taxRate: 0,
     companyName: '',
@@ -61,11 +97,10 @@ const createDefaultSettings = () => ({
 })
 
 const normalizeSettingsPayload = (incomingSettings = {}, previousSettings = createDefaultSettings()) => {
-    const previousCurrencyCode = normalizeCurrencyCode(previousSettings.currencyCode) || DEFAULT_CURRENCY_CODE
+    const previousCurrencyCode = normalizeCurrencyCode(previousSettings.currencyCode)
     const previousCurrencySymbol = previousSettings.currencySymbol || getCurrencySymbolFromCode(previousCurrencyCode)
-    const nextCurrencyCode = normalizeCurrencyCode(
-        incomingSettings.currencyCode || incomingSettings.currencySymbol || previousCurrencyCode,
-    ) || DEFAULT_CURRENCY_CODE
+    const nextCurrencyCode = Object.hasOwn(incomingSettings, 'currencyCode')
+        ? normalizeCurrencyCode(incomingSettings.currencyCode) : previousCurrencyCode
     const hasIncomingCurrencySymbol = typeof incomingSettings.currencySymbol === 'string'
         && incomingSettings.currencySymbol.trim().length > 0
     const hasIncomingCurrencyCode = typeof incomingSettings.currencyCode === 'string'
@@ -81,18 +116,35 @@ const normalizeSettingsPayload = (incomingSettings = {}, previousSettings = crea
         ...previousSettings,
         ...incomingSettings,
         currencyCode: nextCurrencyCode,
-        currencySymbol: nextCurrencySymbol,
+        currencySymbol: nextCurrencyCode ? nextCurrencySymbol : '',
         printFormat: incomingSettings.printFormat || previousSettings.printFormat || getStoredPrintFormat(),
     }
 }
 
+// A settings response is usable only as a plain JSON object.
+const isSettingsPayload = (payload) => Boolean(payload) && typeof payload === 'object' && !Array.isArray(payload)
+
+// Only a response that names a currency can be evidence of the tenant currency.
+const hasCurrencyEvidence = (payload) => {
+    // A display glyph is not a currency identity. Reject unknown/unsupported codes.
+    if (typeof payload.currencyCode !== 'string' || !/^[a-z]{3}$/i.test(payload.currencyCode.trim())) return false
+    try { assertTwoDecimalCurrency(payload.currencyCode); return true } catch { return false }
+}
+
 export function SettingsProvider({ children }) {
     const [settings, setSettings] = useState(() => createDefaultSettings())
-    const [loading, setLoading] = useState(true)
+    const [status, setStatus] = useState(SETTINGS_STATUS.IDLE)
+    const [error, setError] = useState(null)
+    // The scope whose own successful response produced the current settings,
+    // and the scope whose own response named the tenant currency.
+    const [loadedScope, setLoadedScope] = useState(null)
+    const [currencyScope, setCurrencyScope] = useState(null)
+    const [currencyFresh, setCurrencyFresh] = useState(false)
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
     const hasHydrated = useAuthStore((state) => state.hasHydrated)
     const tenantId = useAuthStore((state) => state.user?.tenantId)
-    const scope = isAuthenticated ? tenantId || 'authenticated' : null
+    const actor = useAuthStore((state) => state.user)
+    const scope = isAuthenticated ? JSON.stringify([tenantId, actor]) : null
     const scopeRef = useRef(scope)
     scopeRef.current = scope
     const requestRef = useRef(0)
@@ -100,44 +152,85 @@ export function SettingsProvider({ children }) {
     const fetchSettings = useCallback(async () => {
         const requestId = ++requestRef.current
         const requestedScope = scope
-        try {
-            if (!isAuthenticated || requestedScope !== scopeRef.current) {
-                setLoading(false)
-                return false
-            }
 
+        if (!isAuthenticated || requestedScope !== scopeRef.current) {
+            if (requestedScope === scopeRef.current) {
+                setStatus(SETTINGS_STATUS.IDLE)
+                setError(null)
+            }
+            return false
+        }
+
+        setStatus((current) => (current === SETTINGS_STATUS.READY ? current : SETTINGS_STATUS.LOADING))
+
+        const isCurrentRequest = () => requestId === requestRef.current && requestedScope === scopeRef.current
+
+        try {
             const response = await api.get('/settings', {
                 headers: {
                     'Cache-Control': 'no-store',
                     Pragma: 'no-cache',
                 },
             })
-            if (requestId !== requestRef.current || requestedScope !== scopeRef.current) return false
-            if (response.data) {
-                setSettings((prev) => normalizeSettingsPayload(response.data, prev))
-                return true
+            if (!isCurrentRequest()) return false
+
+            const payload = response?.data
+
+            if (!isSettingsPayload(payload)) {
+                setError(SETTINGS_ERROR.MALFORMED)
+                setStatus(SETTINGS_STATUS.ERROR)
+                return false
             }
-            return false
-        } catch (error) {
-            // Permission-gated reads fail closed with 403; keep safe defaults
-            // silently instead of spamming the console for restricted roles.
-            if (requestId === requestRef.current && requestedScope === scopeRef.current && error?.response?.status !== 403) {
-                console.error('Error loading settings:', { status: error?.response?.status })
+
+            setSettings((prev) => normalizeSettingsPayload(payload, prev))
+            setLoadedScope(requestedScope)
+            setCurrencyFresh(hasCurrencyEvidence(payload))
+            if (hasCurrencyEvidence(payload)) {
+                setCurrencyScope(requestedScope)
+            } else if (Object.hasOwn(payload, 'currencyCode') || Object.hasOwn(payload, 'currencySymbol')) {
+                setCurrencyScope(null)
             }
+            setError(null)
+            setStatus(SETTINGS_STATUS.READY)
+            return true
+        } catch (requestError) {
+            if (!isCurrentRequest()) return false
+
+            const httpStatus = requestError?.response?.status
+            const errorKind = httpStatus === 401 || httpStatus === 403
+                ? SETTINGS_ERROR.UNAUTHORIZED
+                : SETTINGS_ERROR.FAILED
+            if (errorKind === SETTINGS_ERROR.UNAUTHORIZED) {
+                setSettings(createDefaultSettings())
+                setLoadedScope(null)
+                setCurrencyScope(null)
+            }
+
+            // Only the HTTP status classification is recorded; response bodies,
+            // headers, tokens and connection details are never surfaced.
+            if (errorKind !== SETTINGS_ERROR.UNAUTHORIZED) {
+                console.error('Error loading settings:', { status: httpStatus })
+            }
+
+            setError(errorKind)
+            setStatus(SETTINGS_STATUS.ERROR)
             return false
-        } finally {
-            if (requestId === requestRef.current && requestedScope === scopeRef.current) setLoading(false)
         }
     }, [isAuthenticated, scope])
 
     useEffect(() => {
         if (!hasHydrated) return
+        // A scope change invalidates both the payload and its provenance.
         setSettings(createDefaultSettings())
+        setLoadedScope(null)
+        setCurrencyScope(null)
+        setCurrencyFresh(false)
+        setError(null)
         if (isAuthenticated) {
-            setLoading(true)
+            setStatus(SETTINGS_STATUS.LOADING)
             void fetchSettings()
         } else {
-            setLoading(false)
+            setStatus(SETTINGS_STATUS.IDLE)
         }
         return () => { requestRef.current += 1 }
     }, [hasHydrated, isAuthenticated, fetchSettings])
@@ -168,9 +261,18 @@ export function SettingsProvider({ children }) {
             })
             if (requestedScope !== scopeRef.current) return false
             return await fetchSettings()
-        } catch (error) {
+        } catch (updateError) {
             if (requestedScope !== scopeRef.current) return false
-            setSettings(previousSettings)
+            if ([401, 403].includes(updateError?.response?.status)) {
+                setSettings(createDefaultSettings())
+                setLoadedScope(null)
+                setCurrencyScope(null)
+                setCurrencyFresh(false)
+                setError(SETTINGS_ERROR.UNAUTHORIZED)
+                setStatus(SETTINGS_STATUS.ERROR)
+            } else {
+                setSettings(previousSettings)
+            }
 
             if (typeof localStorage !== 'undefined') {
                 if (previousPrintFormat !== null) {
@@ -180,35 +282,67 @@ export function SettingsProvider({ children }) {
                 }
             }
 
-            console.error('Error updating settings:', { status: error?.response?.status })
+            console.error('Error updating settings:', { status: updateError?.response?.status })
             return false
         }
     }
 
     const updateLocalSettings = (key, value) => {
         setSettings((prev) => normalizeSettingsPayload({ [key]: value }, prev))
+        if (key === 'currencyCode' || key === 'currencySymbol') setCurrencyScope(null)
         if (key === 'printFormat') {
             localStorage.setItem('printFormat', value)
         }
     }
 
-    const formatCurrency = (amount, currency = settings.currencyCode || settings.currencySymbol) => {
+    // Only this scope's own successful response may confirm its settings/currency.
+    const withProvenance = (confirmedScope) => {
+        if (confirmedScope === null || confirmedScope !== scope) {
+            return SETTINGS_PROVENANCE.UNCONFIRMED
+        }
+
+        return status === SETTINGS_STATUS.READY && !error
+            ? SETTINGS_PROVENANCE.CONFIRMED
+            : SETTINGS_PROVENANCE.STALE
+    }
+    const provenance = withProvenance(loadedScope)
+    const currencyScopeProvenance = withProvenance(currencyScope)
+    const currencyProvenance = currencyScopeProvenance === SETTINGS_PROVENANCE.CONFIRMED && !currencyFresh
+        ? SETTINGS_PROVENANCE.STALE : currencyScopeProvenance
+    const currencyConfirmed = currencyProvenance !== SETTINGS_PROVENANCE.UNCONFIRMED
+
+    const formatCurrency = (...args) => {
+        const [amount, currency] = args
         if (amount === null || amount === undefined) {
             return ''
         }
 
         const language = i18n.resolvedLanguage || i18n.language
+        const locale = getLocaleForLanguage(language)
 
-        return formatCurrencyValue(
-            amount,
-            currency || settings.currencySymbol || settings.currencyCode || 'EGP',
-            getLocaleForLanguage(language),
-        )
+        // An explicitly supplied currency is the caller's own evidence.
+        if (args.length > 1) {
+            return formatCurrencyValue(amount, currency, locale)
+        }
+
+        // Without a confirmed (or last-known-good) settings read there is no tenant
+        // currency evidence, so no currency symbol may be invented for the amount.
+        if (!currencyConfirmed) {
+            return UNAVAILABLE_CURRENCY_VALUE
+        }
+
+        return formatCurrencyValue(amount, settings.currencyCode, locale)
     }
 
     const value = {
-        settings,
-        loading,
+        // Never expose a previous authority's settings in the render before effects.
+        settings: loadedScope === scope && scope !== null ? settings : createDefaultSettings(),
+        loading: status === SETTINGS_STATUS.LOADING,
+        status,
+        error,
+        provenance,
+        currencyProvenance,
+        currencyConfirmed,
         updateSettings,
         updateLocalSettings,
         formatCurrency,

@@ -86,6 +86,17 @@ describe('useDomainDashboard', () => {
         expect(result.current.error).toBe('Server error')
     })
 
+    it.each([null, {}, { totalDomains: 0 }, {
+        totalDomains: 1, sslExpiringSoon: 0, pendingVerification: 0, draftCount: 0,
+        primaryDomain: null, recentDomains: [null],
+    }])('UIUX: treats malformed summary %j as unavailable, not a successful portfolio', async data => {
+        mockGetDashboardSummary.mockResolvedValue(data)
+        const { result } = renderHook(() => useDomainDashboard())
+        await waitFor(() => expect(result.current.isError).toBe(true))
+        expect(result.current.isEmpty).toBe(false)
+        expect(result.current.isSuccess).toBe(false)
+    })
+
     it('returns unauthorized state on 401/403', async () => {
         mockGetDashboardSummary.mockRejectedValue({
             response: { status: 401, data: { message: 'Unauthorized' } },

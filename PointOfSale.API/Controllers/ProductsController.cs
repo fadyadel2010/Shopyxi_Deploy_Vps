@@ -202,9 +202,7 @@ public class ProductsController : ControllerBase
                         .Sum(stock => (decimal?)(stock.Quantity > stock.ReservedQuantity
                             ? stock.Quantity - stock.ReservedQuantity
                             : 0m)) ?? 0m) <=
-                    (product.LowStockThreshold > 0
-                        ? product.LowStockThreshold
-                        : product.MinimumStockLevel));
+                    product.LowStockThreshold);
             }
             else
             {
@@ -219,9 +217,7 @@ public class ProductsController : ControllerBase
                         .Sum(stock => (decimal?)(stock.Quantity > stock.ReservedQuantity
                             ? stock.Quantity - stock.ReservedQuantity
                             : 0m)) ?? 0m) >
-                    (product.LowStockThreshold > 0
-                        ? product.LowStockThreshold
-                        : product.MinimumStockLevel));
+                    product.LowStockThreshold);
             }
         }
 

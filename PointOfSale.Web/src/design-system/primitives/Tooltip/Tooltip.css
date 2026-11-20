@@ -1,0 +1,20 @@
+[data-product="pos"] .pos-tooltip {
+  z-index: var(--pos-tooltip-z);
+  max-width: 20rem;
+  padding-block: var(--pos-space-1);
+  padding-inline: var(--pos-space-2);
+  border-radius: var(--pos-tooltip-radius);
+  background-color: var(--pos-tooltip-bg);
+  box-shadow: var(--pos-tooltip-shadow);
+  color: var(--pos-tooltip-text);
+  font-family: var(--pos-font-family-ui);
+  font-size: var(--pos-font-size-12);
+  line-height: var(--pos-line-height-16);
+  font-weight: var(--pos-font-weight-medium);
+  text-align: start;
+  overflow-wrap: break-word;
+}
+
+[data-product="pos"] .pos-tooltip__arrow {
+  fill: var(--pos-tooltip-bg);
+}

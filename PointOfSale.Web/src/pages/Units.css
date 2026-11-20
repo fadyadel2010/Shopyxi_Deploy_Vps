@@ -1,0 +1,149 @@
+/*
+ * Units screen — POS design-system integration.
+ * Every selector is scoped to the POS product root and consumes existing
+ * semantic/component tokens only. No global selector or raw color is added.
+ */
+
+[data-product="pos"] .pos-units {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pos-space-6);
+}
+
+[data-product="pos"] .pos-units__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--pos-space-4);
+}
+
+[data-product="pos"] .pos-units__heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pos-space-1);
+  min-inline-size: 0;
+}
+
+[data-product="pos"] .pos-units__title {
+  margin: 0;
+  color: var(--pos-color-text-primary);
+  font-family: var(--pos-font-family-ui);
+  font-size: var(--pos-font-size-page-title);
+  line-height: var(--pos-line-height-page-title);
+  font-weight: var(--pos-font-weight-page-title);
+  letter-spacing: var(--pos-letter-spacing-page-title);
+}
+
+[data-product="pos"] .pos-units__subtitle {
+  margin: 0;
+  color: var(--pos-color-text-secondary);
+  font-family: var(--pos-font-family-ui);
+  font-size: var(--pos-font-size-body);
+  line-height: var(--pos-line-height-body);
+}
+
+[data-product="pos"] .pos-units__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pos-space-3);
+}
+
+[data-product="pos"] .pos-units__state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--pos-space-4);
+  text-align: center;
+}
+
+[data-product="pos"] .pos-units__state-text {
+  margin: 0;
+  color: var(--pos-color-text-secondary);
+  font-family: var(--pos-font-family-ui);
+  font-size: var(--pos-font-size-body);
+  line-height: var(--pos-line-height-body);
+}
+
+[data-product="pos"] .pos-units__name {
+  color: var(--pos-color-text-primary);
+  font-weight: var(--pos-font-weight-body-strong);
+  white-space: nowrap;
+}
+
+[data-product="pos"] .pos-units__symbol {
+  color: var(--pos-color-text-primary);
+  white-space: nowrap;
+}
+
+[data-product="pos"] .pos-units__description {
+  color: var(--pos-color-text-secondary);
+}
+
+[data-product="pos"] .pos-units__actions-column {
+  text-align: end;
+  white-space: nowrap;
+}
+
+[data-product="pos"] .pos-units__row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--pos-space-1);
+}
+
+[data-product="pos"] .pos-units__danger-action.pos-button--ghost {
+  color: var(--pos-color-action-danger);
+}
+
+[data-product="pos"] .pos-units__danger-action.pos-button--ghost:hover:not(:disabled) {
+  color: var(--pos-color-action-danger-hover);
+}
+
+[data-product="pos"] .pos-units__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pos-space-4);
+}
+
+[data-product="pos"] .pos-units__textarea {
+  min-block-size: 5rem;
+  resize: vertical;
+}
+
+[data-product="pos"] .pos-units__checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pos-space-2);
+  cursor: pointer;
+  color: var(--pos-color-text-primary);
+  font-family: var(--pos-font-family-ui);
+  font-size: var(--pos-font-size-body);
+  line-height: var(--pos-line-height-body);
+}
+
+[data-product="pos"] .pos-units__checkbox input {
+  inline-size: 1rem;
+  block-size: 1rem;
+  margin: 0;
+  accent-color: var(--pos-color-action-primary);
+}
+
+[data-product="pos"] .pos-units__checkbox input:focus-visible {
+  outline: var(--pos-focus-ring-width) solid var(--pos-color-focus-ring);
+  outline-offset: var(--pos-focus-ring-offset);
+}
+
+@media (max-width: 639px) {
+  [data-product="pos"] .pos-units__header {
+    align-items: stretch;
+  }
+
+  [data-product="pos"] .pos-units__actions {
+    inline-size: 100%;
+  }
+
+  [data-product="pos"] .pos-units__actions > .pos-button {
+    flex: 1 1 auto;
+  }
+}

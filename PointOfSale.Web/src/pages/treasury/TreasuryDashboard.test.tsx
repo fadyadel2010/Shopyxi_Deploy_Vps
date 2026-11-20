@@ -48,11 +48,13 @@ describe('TreasuryDashboard catalog classification', () => {
         donutProps.current = null
         const range = { from: new Date('2026-09-01'), to: new Date('2026-09-15') }
         finApiMock.getDefaultDateRange.mockReturnValue(range)
-        finApiMock.getDashboard.mockResolvedValue({ netProfit: 5, revenue: 100, cogs: 10, expenses: 5, pendingClearingAmount: 777 })
+        finApiMock.getDashboard.mockResolvedValue({ netProfit: 5, revenue: 100, cogs: 10, expenses: 5, pendingClearingAmount: 777,
+            grossProfit: 90, grossProfitMargin: 90, netProfitMargin: 5, currentRatio: null,
+            totalAssets: 0, totalLiabilities: 0, totalEquity: 0, balanceSheetBalanced: true })
         finApiMock.getBalanceSheet.mockResolvedValue({ assetLines: [] })
         finApiMock.getProfitAndLoss.mockResolvedValue({})
         finApiMock.getClearingAging.mockResolvedValue({ lines: [] })
-        finApiMock.getTrialBalance.mockResolvedValue({ isBalanced: true })
+        finApiMock.getTrialBalance.mockResolvedValue({ isBalanced: true, variance: 0 })
         treasuryApiMock.getTreasuryAccounts.mockResolvedValue([
             { accountCode: '9001', name: 'Harbor Vault', nameAr: '', currentBalance: 400, accountType: 'Cashbox' },
             { accountCode: '9002', name: 'Harbor Bank', nameAr: '', currentBalance: 490, accountType: 'Bank' },

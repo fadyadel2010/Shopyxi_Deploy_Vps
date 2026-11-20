@@ -262,33 +262,37 @@ public class ReportsController : ControllerBase, IActionFilter
             await using var transaction = await BeginConsistentReadTransactionAsync(cancellationToken);
 
             // Inventory reports read only the variant-level stock source of truth.
-            var trackedStockQuery = _context.ProductVariantStocks
-                .AsNoTracking()
-                .Where(stock => stock.Warehouse.IsActive && !stock.Warehouse.IsDeleted)
-                .Where(stock => stock.Variant.IsActive && !stock.Variant.IsDeleted)
-                .Where(stock => stock.Variant.Product.IsActive &&
-                                !stock.Variant.Product.IsDeleted &&
-                                stock.Variant.Product.TrackStock);
+            var tenantId = _tenantContext.RequiredTenantId;
+            var trackedStockQuery = PointOfSale.Infrastructure.Inventory.InventoryReportingReader.EligiblePositions(_context, tenantId);
+            var valuation = await PointOfSale.Infrastructure.Inventory.InventoryReportingReader.ReadValuationAsync(_context, tenantId, cancellationToken);
+
+            // Legacy report clients coalesce omitted/null totals to zero. Keep
+            // complete numeric responses compatible, but never send them a
+            // successful report whose owned/transit valuation is unavailable.
+            if (!valuation.IsComplete || valuation.InTransitValue is null || valuation.TotalOwnedValue is null)
+            {
+                return StatusCode(503, new
+                {
+                    code = "INVENTORY_VALUATION_UNAVAILABLE",
+                    message = "Inventory valuation is unavailable while dispatched transfer costs are incomplete."
+                });
+            }
 
             var warehouseValuations = await trackedStockQuery
-                .GroupBy(stock => stock.Warehouse.Name)
+                .GroupBy(stock => new { stock.WarehouseId, stock.Warehouse.Name })
                 .Select(g => new WarehouseValuationDto
                 {
-                    WarehouseName = g.Key,
+                    WarehouseId = g.Key.WarehouseId,
+                    WarehouseName = g.Key.Name,
                     ItemCount = g.Count(stock => stock.Quantity + stock.DamagedQuantity > 0),
                     TotalValue = g.Sum(stock => (stock.Quantity + stock.DamagedQuantity) * stock.Variant.CostPrice)
                 })
                 .OrderByDescending(warehouse => warehouse.TotalValue)
                 .ToListAsync(cancellationToken);
 
-            var totalValue = await trackedStockQuery
-                .SumAsync(stock => (stock.Quantity + stock.DamagedQuantity) * stock.Variant.CostPrice, cancellationToken);
-
-            var inTransitTransfers = _context.StockTransfers.AsNoTracking().Where(x => x.TenantId == _tenantContext.RequiredTenantId && x.Status == TransferStatus.Dispatched);
-            var inTransitLines = inTransitTransfers.SelectMany(x => x.Items.Where(i => !i.IsDeleted));
-            var inTransitValue = await inTransitLines.SumAsync(x => x.Quantity * (x.DispatchedUnitCost ?? 0), cancellationToken);
-            var inTransitQuantity = await inTransitLines.SumAsync(x => x.Quantity, cancellationToken);
-            var unvaluedLines = await inTransitLines.CountAsync(x => x.DispatchedUnitCost == null, cancellationToken);
+            var inTransitTransfers = _context.StockTransfers.AsNoTracking()
+                .Where(x => x.TenantId == tenantId && !x.IsDeleted && x.Status == TransferStatus.Dispatched);
+            var inTransitLines = PointOfSale.Infrastructure.Inventory.InventoryReportingReader.InTransitLines(_context, tenantId);
             var totalProducts = await trackedStockQuery
                 .Where(stock => stock.Quantity + stock.DamagedQuantity > 0)
                 .Select(stock => stock.Variant.ProductId)
@@ -297,46 +301,36 @@ public class ReportsController : ControllerBase, IActionFilter
                 .CountAsync(cancellationToken);
 
             // Reorder risk is based on available sellable stock, not reserved inventory.
-            var lowStockQuery = _context.ProductVariants
-                .AsNoTracking()
-                .Where(variant => variant.IsActive && !variant.IsDeleted)
-                .Where(variant => variant.Product.IsActive &&
-                                  !variant.Product.IsDeleted &&
-                                  variant.Product.TrackStock)
-                .Select(variant => new
-                {
-                    variant.Product.Name,
-                    Sku = variant.SKU ?? variant.Product.SKU ?? string.Empty,
-                    CurrentStock = variant.Stocks
-                        .Where(stock => stock.Warehouse.IsActive && !stock.Warehouse.IsDeleted)
-                        .Sum(stock => stock.Quantity - stock.ReservedQuantity),
-                    MinimumStock = variant.Product.MinimumStockLevel
-                })
-                .Where(variant => variant.CurrentStock <= variant.MinimumStock);
+            var lowStockQuery = PointOfSale.Infrastructure.Inventory.InventoryReportingReader
+                .LowStockPositions(_context, tenantId);
 
             var lowStockItemsCount = await lowStockQuery.CountAsync(cancellationToken);
 
             var lowStockItems = await lowStockQuery
-                .OrderBy(variant => variant.CurrentStock)
-                .ThenBy(variant => variant.Name)
+                .OrderBy(stock => stock.Quantity - stock.ReservedQuantity)
+                .ThenBy(stock => stock.Variant.Product.Name)
+                .ThenBy(stock => stock.Id)
                 .Take(MaxLowStockItems)
-                .Select(variant => new LowStockItemDto
+                .Select(stock => new LowStockItemDto
                 {
-                    ProductName = variant.Name,
-                    Sku = variant.Sku,
-                    CurrentStock = variant.CurrentStock,
-                    MinimumStock = variant.MinimumStock
+                    ProductName = stock.Variant.Product.Name,
+                    Sku = stock.Variant.SKU ?? stock.Variant.Product.SKU ?? string.Empty,
+                    WarehouseId = stock.WarehouseId,
+                    WarehouseName = stock.Warehouse.Name,
+                    CurrentStock = stock.Quantity - stock.ReservedQuantity,
+                    MinimumStock = stock.Variant.Product.LowStockThreshold
                 })
                 .ToListAsync(cancellationToken);
 
             var result = new InventoryValuationDto
             {
-                TotalInventoryValue = totalValue + inTransitValue,
-                WarehouseInventoryValue = totalValue,
-                InTransitValue = inTransitValue,
-                InTransitQuantity = inTransitQuantity,
+                TotalInventoryValue = valuation.TotalOwnedValue,
+                WarehouseInventoryValue = valuation.WarehouseValue,
+                InTransitValue = valuation.InTransitValue,
+                InTransitQuantity = valuation.InTransitQuantity,
                 InTransitTransferCount = await inTransitTransfers.CountAsync(cancellationToken),
-                UnvaluedInTransitLines = unvaluedLines,
+                UnvaluedInTransitLines = valuation.UnvaluedInTransitLines,
+                ValuationComplete = valuation.IsComplete,
                 TotalProductsInStock = totalProducts,
                 LowStockItemsCount = lowStockItemsCount,
                 WarehouseValuations = warehouseValuations,

@@ -1,4 +1,6 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { ConfirmDialogProvider } from '../../common/confirm/ConfirmDialogProvider'
+import i18n from '../../i18n/config'
 import { MemoryRouter } from 'react-router-dom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -47,16 +49,15 @@ function publishedResponse(version: number) {
 function renderPage() {
     return render(
         <MemoryRouter>
-            <MarketplaceCmsPagesPage />
+            <ConfirmDialogProvider><MarketplaceCmsPagesPage /></ConfirmDialogProvider>
         </MemoryRouter>,
     )
 }
 
 describe('MarketplaceCmsPagesPage version adoption', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
         vi.clearAllMocks()
-        vi.spyOn(window, 'alert').mockImplementation(() => undefined)
-        vi.spyOn(window, 'confirm').mockReturnValue(true)
+        await i18n.changeLanguage('en')
     })
 
     afterEach(() => {
@@ -71,8 +72,11 @@ describe('MarketplaceCmsPagesPage version adoption', () => {
 
         expect(await screen.findByText('Authority')).toBeInTheDocument()
         fireEvent.click(screen.getByTitle('Publish'))
+        fireEvent.click(within(await screen.findByRole('dialog')).getByRole('button', { name: 'Publish' }))
         await waitFor(() => expect(service.publishPage).toHaveBeenCalledWith(pageId, 3))
+        await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
         fireEvent.click(screen.getByTitle('Delete'))
+        fireEvent.click(within(await screen.findByRole('dialog')).getByRole('button', { name: 'Delete' }))
         await waitFor(() => expect(service.deletePage).toHaveBeenCalledWith(pageId, 3))
 
         expect(screen.queryByText('Authority')).not.toBeInTheDocument()
@@ -87,6 +91,28 @@ describe('MarketplaceCmsPagesPage version adoption', () => {
         fireEvent.click(screen.getByRole('button', { name: 'Refresh' }))
         await waitFor(() => expect(service.listPages).toHaveBeenCalledTimes(2))
         fireEvent.click(screen.getByTitle('Publish'))
+        fireEvent.click(within(await screen.findByRole('dialog')).getByRole('button', { name: 'Publish' }))
         await waitFor(() => expect(service.publishPage).toHaveBeenCalledWith(pageId, 2))
+    })
+
+    it('Cancel performs no writes and pending publish cannot be dismissed or submitted twice', async () => {
+        service.listPages.mockResolvedValue([listItem(3)])
+        let settle!: (value: unknown) => void
+        service.publishPage.mockReturnValue(new Promise(resolve => { settle = resolve }))
+        renderPage()
+        await screen.findByText('Authority')
+        fireEvent.click(screen.getByTitle('Delete'))
+        await act(async () => { fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Cancel' })) })
+        expect(service.deletePage).not.toHaveBeenCalled()
+        fireEvent.click(screen.getByTitle('Publish'))
+        const dialog = await screen.findByRole('dialog')
+        const publish = within(dialog).getByRole('button', { name: 'Publish' })
+        act(() => { fireEvent.click(publish); fireEvent.click(publish) })
+        expect(service.publishPage).toHaveBeenCalledTimes(1)
+        fireEvent.keyDown(window, { key: 'Escape' })
+        expect(dialog).toBeInTheDocument()
+        expect(within(dialog).getByRole('button', { name: 'Cancel' })).toBeDisabled()
+        await act(async () => { settle(publishedResponse(3)) })
+        await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
     })
 })

@@ -46,7 +46,7 @@ describe('Affiliate System sidebar', () => {
         first.unmount()
         open(path)
         expect(screen.getByRole('button', { name: 'Affiliate System' })).toHaveAttribute('aria-expanded', 'true')
-        expect(screen.getByRole('button', { name: 'Affiliate System' }).className).toContain('bg-white/15')
+        expect(screen.getByRole('button', { name: 'Affiliate System' }).className).toContain('pos-sidebar__item--context')
     })
 
     it('updates bilingual labels in place, navigates and preserves existing close behavior', async () => {

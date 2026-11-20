@@ -6,6 +6,11 @@ public class StorefrontLiveMonitoringResponse
     public long ActiveCarts { get; set; }
     public long CheckoutInProgress { get; set; }
     public long RecentOrders { get; set; }
+    public DateTime GeneratedAtUtc { get; set; }
+    public DateTime WindowStartUtc { get; set; }
+    public DateTime WindowEndUtc { get; set; }
+    public string OrderBasis => "sql-recognition-posting-activity";
+    public string BehavioralFreshness => "asynchronously-ingested-lag-unknown";
     public List<StorefrontLiveActivityDto> RecentActivity { get; set; } = new();
 }
 

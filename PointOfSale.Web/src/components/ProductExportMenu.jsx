@@ -13,7 +13,8 @@ import { EXPORT_SCOPE_CURRENT_VIEW, EXPORT_SCOPE_SELECTED } from '../utils/produ
 
 const ITEM_CLASS = [
     'flex w-full items-center justify-between gap-4 rounded-md px-3 py-2 text-sm text-gray-700',
-    'cursor-pointer select-none outline-none hover:bg-gray-100',
+    'cursor-pointer select-none outline-none hover:bg-gray-100 data-[highlighted]:bg-gray-100',
+    'focus-visible:outline focus-visible:outline-[length:var(--pos-focus-ring-width)] focus-visible:outline-[color:var(--pos-color-focus-ring)] focus-visible:outline-offset-[var(--pos-focus-ring-offset)]',
     'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
 ].join(' ')
 

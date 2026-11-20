@@ -50,6 +50,51 @@ const AffiliatePortal = () => {
     const [authError, setAuthError] = useState(false)
     const mountedRef = useRef(false)
     const restoreInFlightRef = useRef(null)
+    const mobileTriggerRef = useRef(null)
+    const mobilePanelRef = useRef(null)
+    const mobileCloseRef = useRef(null)
+
+    useEffect(() => {
+        if (!mobileSidebarOpen) return
+        const previousOverflow = document.body.style.overflow
+        document.body.style.overflow = 'hidden'
+        const panel = mobilePanelRef.current
+        mobileCloseRef.current?.focus()
+        const controls = () => Array.from(panel?.querySelectorAll('button:not(:disabled), a[href], [tabindex="0"]') || [])
+        const onKeyDown = event => {
+            if (event.key === 'Escape') {
+                event.preventDefault()
+                setMobileSidebarOpen(false)
+            } else if (event.key === 'Tab') {
+                const items = controls()
+                const first = items[0]
+                const last = items[items.length - 1]
+                if (event.shiftKey && (document.activeElement === first || !panel?.contains(document.activeElement))) {
+                    event.preventDefault()
+                    last?.focus()
+                } else if (!event.shiftKey && (document.activeElement === last || !panel?.contains(document.activeElement))) {
+                    event.preventDefault()
+                    first?.focus()
+                }
+            }
+        }
+        const onFocusIn = event => {
+            if (!panel?.contains(event.target)) mobileCloseRef.current?.focus()
+        }
+        const desktop = window.matchMedia?.('(min-width: 768px)')
+        const onDesktop = () => { if (desktop?.matches) setMobileSidebarOpen(false) }
+        onDesktop()
+        desktop?.addEventListener?.('change', onDesktop)
+        document.addEventListener('keydown', onKeyDown)
+        document.addEventListener('focusin', onFocusIn)
+        return () => {
+            document.body.style.overflow = previousOverflow
+            desktop?.removeEventListener?.('change', onDesktop)
+            document.removeEventListener('keydown', onKeyDown)
+            document.removeEventListener('focusin', onFocusIn)
+            mobileTriggerRef.current?.focus()
+        }
+    }, [mobileSidebarOpen])
 
     const restoreSession = useCallback(() => {
         if (restoreInFlightRef.current) return restoreInFlightRef.current
@@ -180,7 +225,7 @@ const AffiliatePortal = () => {
     return (
         <div dir={dir} className="affiliate-portal min-h-screen bg-gray-50 dark:bg-[#0B0F19] text-gray-800 dark:text-gray-200 flex" style={{ fontFamily: isRTL ? "'Noto Kufi Arabic', 'Inter', sans-serif" : "'Inter', -apple-system, system-ui, sans-serif" }}>
             {/* Desktop Sidebar */}
-            <aside className={`hidden md:flex flex-col border-e border-gray-200 dark:border-white/[0.06] bg-white dark:bg-[#0D1117] transition-all duration-300 ${sidebarOpen ? 'w-60' : 'w-[68px]'}`}>
+            <aside inert={mobileSidebarOpen ? '' : undefined} className={`hidden md:flex flex-col border-e border-gray-200 dark:border-white/[0.06] bg-white dark:bg-[#0D1117] transition-all duration-300 ${sidebarOpen ? 'w-60' : 'w-[68px]'}`}>
                 {/* Logo */}
                 <div className="h-16 flex items-center px-4 border-b border-gray-200 dark:border-white/[0.06]">
                     <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#6C63FF] to-[#8B5CF6] flex items-center justify-center flex-shrink-0 shadow-lg shadow-[#6C63FF]/15">
@@ -221,7 +266,8 @@ const AffiliatePortal = () => {
                 <div className="p-2 border-t border-gray-200 dark:border-white/[0.06] space-y-1">
                     <button
                         onClick={() => setSidebarOpen(!sidebarOpen)}
-                        aria-label={t('portal.collapse')}
+                        aria-label={t(sidebarOpen ? 'portal.collapse' : 'portal.expand')}
+                        aria-expanded={sidebarOpen}
                         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/[0.03] transition-all"
                     >
                         <ChevronLeft className={`w-[18px] h-[18px] transition-transform ${(!sidebarOpen !== isRTL) ? 'rotate-180' : ''}`} />
@@ -229,6 +275,7 @@ const AffiliatePortal = () => {
                     </button>
                     <button
                         onClick={handleLogout}
+                        aria-label={t('portal.logout')}
                         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-red-400/70 hover:text-red-400 hover:bg-red-500/5 transition-all"
                     >
                         <LogOut className="w-[18px] h-[18px]" />
@@ -242,6 +289,7 @@ const AffiliatePortal = () => {
                 {mobileSidebarOpen && (
                     <>
                         <motion.div
+                            aria-hidden="true"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
@@ -249,6 +297,11 @@ const AffiliatePortal = () => {
                             className="fixed inset-0 bg-gray-900/40 dark:bg-black/60 z-40 md:hidden"
                         />
                         <motion.aside
+                            ref={mobilePanelRef}
+                            role="dialog"
+                            aria-modal="true"
+                            aria-label={t('portal.title')}
+                            dir={dir}
                             initial={{ x: isRTL ? 260 : -260 }}
                             animate={{ x: 0 }}
                             exit={{ x: isRTL ? 260 : -260 }}
@@ -257,7 +310,7 @@ const AffiliatePortal = () => {
                         >
                             <div className="h-16 flex items-center justify-between px-4 border-b border-gray-200 dark:border-white/[0.06]">
                                 <span className="font-bold text-sm text-[#6C63FF]">{t('portal.title')}</span>
-                                <button onClick={() => setMobileSidebarOpen(false)} className="text-gray-500">
+                                <button ref={mobileCloseRef} aria-label={t('portal.closeNavigation')} onClick={() => setMobileSidebarOpen(false)} className="text-gray-500">
                                     <X className="w-5 h-5" />
                                 </button>
                             </div>
@@ -268,6 +321,7 @@ const AffiliatePortal = () => {
                                     return (
                                         <button
                                             key={tab.id}
+                                            aria-current={isActive ? 'page' : undefined}
                                             onClick={() => switchTab(tab.id)}
                                             className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${isActive ? 'bg-[#6C63FF]/10 text-[#6C63FF]' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
                                                 }`}
@@ -290,13 +344,16 @@ const AffiliatePortal = () => {
             </AnimatePresence>
 
             {/* Main Content */}
-            <div className="flex-1 flex flex-col min-w-0">
+            <div inert={mobileSidebarOpen ? '' : undefined} className="flex-1 flex flex-col min-w-0">
                 {/* Top Bar */}
                 <header className="h-16 flex items-center justify-between px-4 md:px-6 border-b border-gray-200 dark:border-white/[0.06] bg-white dark:bg-[#0D1117]/50 backdrop-blur-xl flex-shrink-0">
                     <div className="flex items-center gap-3">
                         <button
+                                ref={mobileTriggerRef}
                                 onClick={() => setMobileSidebarOpen(true)}
-                                aria-label={t('portal.title')}
+                                aria-label={t('portal.openNavigation')}
+                                aria-expanded={mobileSidebarOpen}
+                                aria-haspopup="dialog"
                             className="md:hidden text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
                         >
                             <Menu className="w-5 h-5" />
@@ -326,7 +383,7 @@ const AffiliatePortal = () => {
                                 <User className="w-4 h-4 text-[#6C63FF]" />
                             </div>
                             <span className="hidden sm:block text-sm text-gray-600 dark:text-gray-400 max-w-[120px] truncate">
-                                {profile?.displayName || profile?.email || 'Affiliate'}
+                                {profile?.displayName || profile?.email || t('portal.title')}
                             </span>
                         </div>
                     </div>

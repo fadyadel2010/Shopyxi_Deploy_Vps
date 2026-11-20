@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useConfirmDialog } from '../../common/confirm/ConfirmDialogProvider'
 import { useNavigate } from 'react-router-dom'
 import {
     AlertCircle,
@@ -37,6 +38,8 @@ const statusStyles = {
 
 export function MarketplaceCmsPagesPage() {
     const navigate = useNavigate()
+    const { confirmAction } = useConfirmDialog()
+    const operationRef = useRef(false)
     const { tr, formatDate, formatDateTime, formatNumber } = useSuperAdminLocale()
 
     const [pages, setPages] = useState([])
@@ -76,81 +79,86 @@ export function MarketplaceCmsPagesPage() {
         } catch (err) {
             console.error('Failed to load marketplace CMS pages', err)
             setPages([])
-            setError(err?.message || tr('Unable to load marketplace CMS pages.', 'تعذّر تحميل صفحات CMS الخاصة بالسوق.'))
+            setError(tr('Unable to load marketplace CMS pages.', 'تعذّر تحميل صفحات CMS الخاصة بالسوق.'))
         } finally {
             setIsLoading(false)
         }
     }
 
     async function handlePublish(page) {
-        const confirmed = window.confirm(
-            tr(
-                `Publish "${page.title}" to the marketplace domain now?`,
-                `هل تريد نشر "${page.title}" على نطاق السوق الآن؟`,
-            ),
-        )
-        if (!confirmed) {
-            return
-        }
-
-        setBusyPageId(page.id)
+        if (operationRef.current) return
+        operationRef.current = true
         setActionError('')
         setActionNotice('')
         try {
-            const published = await marketplaceCmsService.publishPage(page.id, page.draftVersion)
-            setPages((current) => current.map((item) => (
-                item.id === published.id ? adoptPageResponse(item, published) : item
-            )))
-            setActionNotice(
-                tr(
-                    `"${page.title}" is now live on the marketplace domain.`,
-                    `أصبحت "${page.title}" مباشرة الآن على نطاق السوق.`,
-                ),
-            )
+            await confirmAction({
+                title: tr('Publish page', 'نشر الصفحة'),
+                description: tr(`Publish "${page.title}" to the marketplace domain now?`, `هل تريد نشر "${page.title}" على نطاق السوق الآن؟`),
+                confirmLabel: tr('Publish', 'نشر'),
+                awaitAction: true,
+                onConfirm: async () => {
+                    setBusyPageId(page.id)
+                    const published = await marketplaceCmsService.publishPage(page.id, page.draftVersion)
+                    setPages((current) => current.map((item) => (
+                        item.id === published.id ? adoptPageResponse(item, published) : item
+                    )))
+                    setActionNotice(
+                        tr(
+                            `"${page.title}" is now live on the marketplace domain.`,
+                            `أصبحت "${page.title}" مباشرة الآن على نطاق السوق.`,
+                        ),
+                    )
+                },
+            })
         } catch (err) {
             console.error('Failed to publish marketplace CMS page', err)
             if (marketplaceCmsService.isConcurrencyConflict(err)) {
                 await loadPages()
             }
-            setActionError(err?.message || tr('Failed to publish marketplace page.', 'تعذّر نشر صفحة السوق.'))
+            setActionError(tr('Failed to publish marketplace page. Refresh before trying again.', 'تعذّر نشر صفحة السوق. حدّث الصفحة قبل إعادة المحاولة.'))
         } finally {
+            operationRef.current = false
             setBusyPageId(null)
         }
     }
 
     async function handleDelete(page) {
-        const confirmed = window.confirm(
-            tr(
-                `Delete "${page.title}" and all of its versions?`,
-                `هل تريد حذف "${page.title}" وكل إصداراتها؟`,
-            ),
-        )
-        if (!confirmed) {
-            return
-        }
-
-        setBusyPageId(page.id)
+        if (operationRef.current) return
+        operationRef.current = true
         setActionError('')
         setActionNotice('')
         try {
-            const deleted = await marketplaceCmsService.deletePage(
-                page.id,
-                marketplaceCmsService.getListItemVersion(page),
-            )
-            setPages((current) => current.filter((item) => item.id !== deleted.id))
-            setActionNotice(tr(`"${page.title}" was deleted.`, `تم حذف "${page.title}".`))
+            await confirmAction({
+                title: tr('Delete page', 'حذف الصفحة'),
+                description: tr(`Delete "${page.title}" and all of its versions?`, `هل تريد حذف "${page.title}" وكل إصداراتها؟`),
+                confirmLabel: tr('Delete', 'حذف'),
+                variant: 'danger',
+                awaitAction: true,
+                onConfirm: async () => {
+                    setBusyPageId(page.id)
+                    const deleted = await marketplaceCmsService.deletePage(
+                        page.id,
+                        marketplaceCmsService.getListItemVersion(page),
+                    )
+                    setPages((current) => current.filter((item) => item.id !== deleted.id))
+                    setActionNotice(tr(`"${page.title}" was deleted.`, `تم حذف "${page.title}".`))
+                },
+            })
         } catch (err) {
             console.error('Failed to delete marketplace CMS page', err)
             if (marketplaceCmsService.isConcurrencyConflict(err)) {
                 await loadPages()
             }
-            setActionError(err?.message || tr('Failed to delete marketplace page.', 'تعذّر حذف صفحة السوق.'))
+            setActionError(tr('Failed to delete marketplace page. Refresh before trying again.', 'تعذّر حذف صفحة السوق. حدّث الصفحة قبل إعادة المحاولة.'))
         } finally {
+            operationRef.current = false
             setBusyPageId(null)
         }
     }
 
     async function handlePreview(page) {
+        if (operationRef.current) return
+        operationRef.current = true
         setBusyPageId(page.id)
         setActionError('')
 
@@ -160,8 +168,9 @@ export function MarketplaceCmsPagesPage() {
             window.open(previewUrl, '_blank', 'noopener,noreferrer')
         } catch (err) {
             console.error('Failed to open marketplace CMS preview', err)
-            setActionError(err?.message || tr('Unable to create a secure preview link.', 'تعذّر إنشاء رابط معاينة آمن.'))
+            setActionError(tr('Unable to create a secure preview link.', 'تعذّر إنشاء رابط معاينة آمن.'))
         } finally {
+            operationRef.current = false
             setBusyPageId(null)
         }
     }
@@ -345,7 +354,7 @@ export function MarketplaceCmsPagesPage() {
 
             {actionError ? (
                 <InlineNotice tone="rose" title={tr('Action not completed', 'لم يكتمل الإجراء')}>
-                    <span dir="auto">{actionError}</span>
+                    <span dir="auto" role="alert">{actionError}</span>
                 </InlineNotice>
             ) : null}
 

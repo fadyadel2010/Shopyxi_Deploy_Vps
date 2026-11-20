@@ -1135,6 +1135,10 @@ public class CommerceHubPaymentService : ICommerceHubPaymentService
 
         if (callback.Pending)
         {
+            // Signature verification and payment resolution already succeeded.
+            // Pending callbacks persist provider evidence too; admit that write
+            // through the same boundary required for all other payment logs.
+            using var pendingEvidenceBoundary = CommerceHubBoundaryMutationScope.BeginPayment();
             _dbContext.CommerceHubPaymentLogs.Add(new CommerceHubPaymentLog
             {
                 Id = Guid.NewGuid(),
@@ -1190,6 +1194,7 @@ public class CommerceHubPaymentService : ICommerceHubPaymentService
 
         if (callback.AuthorizationOnly)
         {
+            using var authorizationEvidenceBoundary = CommerceHubBoundaryMutationScope.BeginPayment();
             _dbContext.CommerceHubPaymentLogs.Add(new CommerceHubPaymentLog
             {
                 Id = Guid.NewGuid(),

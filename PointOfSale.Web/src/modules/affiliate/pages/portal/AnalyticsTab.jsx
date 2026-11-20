@@ -10,7 +10,7 @@
  * All data from MongoDB daily projections via /api/affiliate/analytics/*
  * Fully bilingual (EN/AR) via useLanguage() i18n hook.
  */
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion } from 'framer-motion'
 import {
     Line, BarChart, Bar, AreaChart, Area,
@@ -22,6 +22,20 @@ import {
     Package, Store
 } from 'lucide-react'
 import { useLanguage } from '../../i18n/LanguageContext'
+import { useLatestRequestGuard } from '../../../../hooks/useLatestRequestGuard'
+
+const finite = value => typeof value === 'number' && Number.isFinite(value)
+const count = value => finite(value) && value >= 0
+const optionalCount = value => value == null || count(value)
+const validSummary = value => value && finite(value.totalEarnings)
+    && ['totalClicks', 'attributedOrders', 'clickRecords', 'convertedClicks'].every(key => optionalCount(value[key]))
+    && (value.conversionRate == null || finite(value.conversionRate))
+const validTrend = value => Array.isArray(value) && value.every(row => row
+    && typeof row.date === 'string' && Number.isFinite(Date.parse(row.date))
+    && optionalCount(row.clicks) && count(row.attributedOrders) && finite(row.earnings))
+const validRanked = (value, identity, label) => Array.isArray(value) && value.every(row => row
+    && typeof row[identity] === 'string' && typeof row[label] === 'string'
+    && finite(row.earnings) && count(row.orders))
 
 const fadeUp = {
     hidden: { opacity: 0, y: 20 },
@@ -99,7 +113,9 @@ const ChartTooltip = ({ active, payload, label }) => {
 
 export default function AnalyticsTab() {
     const { t, formatNumber, formatDate, formatMoney } = useLanguage()
-    const formatCurrencyValue = value => formatMoney(value, 'EGP')
+    // Analytics projections do not supply a currency. Never infer EGP from the
+    // platform's write policy or use an unrelated payout/tenant preference.
+    const formatCurrencyValue = (value, currency) => formatMoney(value, currency)
     const [range, setRange] = useState(30)
     const [summary, setSummary] = useState(null)
     const [trend, setTrend] = useState([])
@@ -107,10 +123,17 @@ export default function AnalyticsTab() {
     const [topStores, setTopStores] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
+    const [loadedRange, setLoadedRange] = useState(null)
+    const currentRange = useRef(range)
+    currentRange.current = range
+    const { beginRequest, isLatestRequest } = useLatestRequestGuard()
+    const waiting = loading || loadedRange !== range
 
     const ta = (key) => t(`portal.analyticsTab.${key}`)
 
     const loadData = useCallback(async (r) => {
+        const requestId = beginRequest()
+        const accepts = () => currentRange.current === r && isLatestRequest(requestId)
         setLoading(true)
         setError(null)
         try {
@@ -120,18 +143,32 @@ export default function AnalyticsTab() {
                 affiliateApi.getAnalyticsTopProducts(r, 10),
                 affiliateApi.getAnalyticsTopStores(r, 10),
             ])
+            if (!accepts()) return
+            if (!validSummary(s) || !validTrend(tr) || !validRanked(p, 'productId', 'name') || !validRanked(st, 'tenantId', 'storeName')) {
+                throw new TypeError('affiliate-analytics-malformed')
+            }
             setSummary(s)
             setTrend(tr)
             setTopProducts(p)
             setTopStores(st)
+            setLoadedRange(r)
         } catch {
+            if (!accepts()) return
+            setSummary(null)
+            setTrend([])
+            setTopProducts([])
+            setTopStores([])
             setError(true)
+            setLoadedRange(r)
         } finally {
-            setLoading(false)
+            if (accepts()) setLoading(false)
         }
-    }, [])
+    }, [beginRequest, isLatestRequest])
 
-    useEffect(() => { loadData(range) }, [range, loadData])
+    useEffect(() => {
+        void loadData(range)
+        return () => { beginRequest() }
+    }, [range, loadData, beginRequest])
     useEffect(() => {
         const refresh = () => { if (!document.hidden) loadData(range) }
         window.addEventListener('focus', refresh)
@@ -146,7 +183,7 @@ export default function AnalyticsTab() {
     const pluralize = (count, singularKey, pluralKey) =>
         `${formatNumber(count)} ${count === 1 ? ta(singularKey) : ta(pluralKey)}`
 
-    if (error) {
+    if (error && loadedRange === range) {
         return (
             <div className="text-center py-20">
                 <p role="alert" className="text-gray-500">⚠️ {ta('failedToLoad')}</p>
@@ -163,15 +200,17 @@ export default function AnalyticsTab() {
     return (
         <div className="space-y-6">
             {/* Header + Range Selector */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                     <h2 className="text-lg font-bold text-gray-900 dark:text-white">{ta('title')}</h2>
                     <p className="text-xs text-gray-500 mt-0.5">{ta('subtitle')}</p>
+                    <p className="text-xs text-gray-500" role="status">{t('ui.currencyUnavailable')}</p>
                 </div>
-                <div className="flex items-center gap-1 p-1 rounded-xl bg-white dark:bg-white/[0.03] border border-gray-200 dark:border-white/[0.06]">
+                <div role="group" aria-label={ta('title')} className="flex max-w-full flex-wrap items-center gap-1 p-1 rounded-xl bg-white dark:bg-white/[0.03] border border-gray-200 dark:border-white/[0.06]">
                     {RANGE_KEYS.map(r => (
                         <button
                             key={r.value}
+                            aria-pressed={range === r.value}
                             onClick={() => setRange(r.value)}
                             className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${range === r.value
                                     ? 'bg-[#6C63FF]/15 text-[#6C63FF] border border-[#6C63FF]/25'
@@ -185,7 +224,7 @@ export default function AnalyticsTab() {
             </div>
 
             {/* Loading */}
-            {loading ? (
+            {waiting ? (
                 <div className="space-y-6">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         {[...Array(4)].map((_, i) => <SkeletonCard key={i} />)}
@@ -212,7 +251,7 @@ export default function AnalyticsTab() {
                         />
                         <KPICard
                             label={ta('totalEarnings')}
-                            value={formatCurrencyValue(summary?.totalEarnings || 0)}
+                            value={formatCurrencyValue(summary?.totalEarnings, summary?.currency)}
                             icon={DollarSign}
                             color="#10B981"
                             index={2}
@@ -365,7 +404,7 @@ export default function AnalyticsTab() {
                                                 <p className="text-[10px] text-gray-500">{pluralize(p.orders, 'order', 'orderPlural')}</p>
                                             </div>
                                             <span className="text-sm font-semibold text-emerald-400">
-                                                {formatCurrencyValue(p.earnings)}
+                                                {formatCurrencyValue(p.earnings, p.currency)}
                                             </span>
                                         </div>
                                     ))}
@@ -389,8 +428,8 @@ export default function AnalyticsTab() {
                             {topStores.length > 0 ? (
                                 <div className="space-y-2">
                                     {topStores.map((s, i) => {
-                                        const maxEarnings = topStores[0]?.earnings || 1
-                                        const barWidth = Math.max(5, (s.earnings / maxEarnings) * 100)
+                                        const maxEarnings = Math.max(0, ...topStores.map(store => Math.abs(store.earnings)))
+                                        const barWidth = maxEarnings ? Math.min(100, Math.abs(s.earnings) / maxEarnings * 100) : 0
                                         return (
                                             <div
                                                 key={s.tenantId}
@@ -408,11 +447,11 @@ export default function AnalyticsTab() {
                                                     <div className="flex-1 min-w-0">
                                                         <p className="text-sm text-gray-900 dark:text-white truncate">{s.storeName}</p>
                                                         <p className="text-[10px] text-gray-500">
-                                                            {pluralize(s.orders, 'order', 'orderPlural')} · {pluralize(s.clicks || 0, 'click', 'clickPlural')}
+                                                            {pluralize(s.orders, 'order', 'orderPlural')} · {s.clicks == null ? ta('unavailable') : pluralize(s.clicks, 'click', 'clickPlural')}
                                                         </p>
                                                     </div>
                                                     <span className="text-sm font-semibold text-amber-400">
-                                                        {formatCurrencyValue(s.earnings)}
+                                                        {formatCurrencyValue(s.earnings, s.currency)}
                                                     </span>
                                                 </div>
                                             </div>

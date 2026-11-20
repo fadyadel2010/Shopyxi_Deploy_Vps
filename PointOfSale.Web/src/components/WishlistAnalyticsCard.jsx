@@ -5,17 +5,16 @@
  * Displays wishlist statistics and top products on the dashboard.
  */
 import { useState, useEffect, useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Heart, TrendingUp, Users, Package } from 'lucide-react'
 import api from '../services/api'
 import { useSettings } from '../contexts/SettingsContext'
 import { useAuthStore } from '../store/authStore'
 import { useLatestRequestGuard } from '../hooks/useLatestRequestGuard'
+import { useRTL } from '../hooks/useRTL'
 
 export default function WishlistAnalyticsCard() {
-    const { i18n } = useTranslation()
     const { formatCurrency } = useSettings()
-    const isRTL = i18n.language === 'ar'
+    const { isRTL } = useRTL()
     const tenantId = useAuthStore(state => state.user?.tenantId)
     const { beginRequest, isLatestRequest } = useLatestRequestGuard()
 
@@ -110,13 +109,13 @@ export default function WishlistAnalyticsCard() {
             : ''
 
         if (!currency) {
-            return 'Currency unavailable'
+            return isRTL ? 'العملة غير متاحة' : 'Currency unavailable'
         }
 
         try {
             return formatCurrency(product.price, currency)
         } catch {
-            return 'Currency unavailable'
+            return isRTL ? 'العملة غير متاحة' : 'Currency unavailable'
         }
     }
 

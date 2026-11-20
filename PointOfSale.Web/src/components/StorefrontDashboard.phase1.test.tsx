@@ -38,6 +38,19 @@ describe('Storefront dashboard truthful read and recovery states', () => {
         expect(mocks.get).toHaveBeenCalledTimes(2)
     })
 
+    it('opts into Dashboard status presentation without changing validated authority or actions', async () => {
+        mocks.config.mockResolvedValue({ ...user, storeName: 'Root Store', themeId: 'default', storefrontStatus: 'maintenance', rowVersion: '2' })
+        const { container } = render(<StorefrontStatusCard presentation="dashboard" />)
+        await screen.findByText('Root Store')
+        expect(container.querySelector('.pos-card')).not.toBeNull()
+        expect(container.querySelector('.bg-gradient-to-br')).toBeNull()
+        fireEvent.click(screen.getByRole('button', { name: 'Manage' }))
+        expect(mocks.navigate).toHaveBeenCalledWith('/storefront/status')
+        fireEvent.click(screen.getByRole('button', { name: 'Refresh status' }))
+        await screen.findByText('Root Store')
+        expect(mocks.config).toHaveBeenCalledTimes(2)
+    })
+
     it('reports analytics failure visibly and recovers from a retry', async () => {
         mocks.get.mockRejectedValueOnce({ response: { status: 503 } }).mockResolvedValueOnce({ data: emptyAnalytics })
         render(<WishlistAnalyticsCard />)

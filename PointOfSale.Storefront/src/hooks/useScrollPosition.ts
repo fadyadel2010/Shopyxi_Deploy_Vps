@@ -133,6 +133,11 @@ export function useBodyScrollLock(isLocked: boolean): void {
 
         // Get current scroll position
         const scrollY = window.scrollY;
+        const previous = {
+            position: document.body.style.position, top: document.body.style.top,
+            left: document.body.style.left, right: document.body.style.right,
+            overflow: document.body.style.overflow,
+        };
 
         // Lock body
         document.body.style.position = 'fixed';
@@ -143,11 +148,7 @@ export function useBodyScrollLock(isLocked: boolean): void {
 
         return () => {
             // Unlock body
-            document.body.style.position = '';
-            document.body.style.top = '';
-            document.body.style.left = '';
-            document.body.style.right = '';
-            document.body.style.overflow = '';
+            Object.assign(document.body.style, previous);
             // Restore scroll position
             window.scrollTo(0, scrollY);
         };
@@ -165,18 +166,24 @@ export function useFocusTrap(
         if (!isActive || !containerRef.current) return;
 
         const container = containerRef.current;
-        const focusableElements = container.querySelectorAll<HTMLElement>(
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-        const firstElement = focusableElements[0];
-        const lastElement = focusableElements[focusableElements.length - 1];
+        const getFocusable = () => Array.from(container.querySelectorAll<HTMLElement>(
+            'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), iframe, video[controls], [tabindex]:not([tabindex="-1"])'
+        )).filter(element => !element.closest('[hidden], [inert], [aria-hidden="true"]'));
 
         // Focus first element
         const previouslyFocused = document.activeElement as HTMLElement;
-        firstElement?.focus();
+        (getFocusable()[0] || container).focus();
 
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key !== 'Tab') return;
+            const focusableElements = getFocusable();
+            const firstElement = focusableElements[0];
+            const lastElement = focusableElements[focusableElements.length - 1];
+            if (!firstElement || !container.contains(document.activeElement) || document.activeElement === container) {
+                e.preventDefault();
+                (e.shiftKey ? lastElement || container : firstElement || container).focus();
+                return;
+            }
 
             if (e.shiftKey) {
                 // Shift + Tab

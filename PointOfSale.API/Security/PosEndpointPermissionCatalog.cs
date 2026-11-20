@@ -35,7 +35,12 @@ public static class PosEndpointPermissionCatalog
     private static readonly FrozenDictionary<string, Rule> Rules =
         new Dictionary<string, Rule>(StringComparer.Ordinal)
         {
-            ["Dashboard"] = R(PosPermissions.DashboardView),
+            ["Dashboard"] = R(PosPermissions.DashboardView, overrides: O(
+                ("GetSalesTrend", PosPermissions.FinanceView),
+                ("GetTopProducts", PosPermissions.FinanceView),
+                ("GetCategorySales", PosPermissions.FinanceView),
+                ("GetPaymentMethodBreakdown", PosPermissions.FinanceView),
+                ("GetRecentSales", PosPermissions.SalesView))),
             ["SyntheticQa"] = R(PosPermissions.StorefrontOrdersManage),
 
             ["Categories"] = CatalogRule(),
@@ -199,6 +204,8 @@ public static class PosEndpointPermissionCatalog
             ["Shipment"] = R(PosPermissions.ShippingView, PosPermissions.ShippingFulfill),
 
             ["AdminAffiliate"] = R(PosPermissions.AffiliatesManage),
+            ["AdminAffiliateConversionReconciliation"] = R(PosPermissions.AffiliatesManage),
+            ["AdminCommerceHubSellerApplications"] = R(PosPermissions.CatalogPublish),
             ["AdminAffiliateCategory"] = R(PosPermissions.AffiliatesManage),
             ["AdminAffiliateProducts"] = R(PosPermissions.AffiliatesManage),
             ["AdminAffiliateReadiness"] = R(PosPermissions.AffiliatesManage),

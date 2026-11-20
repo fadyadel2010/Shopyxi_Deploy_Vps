@@ -1,4 +1,22 @@
 {
+  "shell": {
+    "skipToContent": "تخطَّ إلى المحتوى الرئيسي"
+  },
+  "applications": {
+    "trigger": "التطبيقات",
+    "menuLabel": "التطبيقات",
+    "unavailable": "لا توجد تطبيقات متاحة بصلاحياتك الحالية."
+  },
+  "emailVerification": {
+    "title": "أكّد بريدك الإلكتروني",
+    "message": "لنشر متجرك الإلكتروني.",
+    "sent": "تم إرسال رسالة التحقق!",
+    "tooManyRequests": "طلبات كثيرة جدًا. حاول مرة أخرى لاحقًا.",
+    "failed": "تعذر إرسال الرسالة. حاول مرة أخرى.",
+    "resend": "إعادة إرسال الرسالة",
+    "sending": "جارٍ الإرسال...",
+    "dismiss": "إغلاق"
+  },
   "affiliatePublishingReadiness": {
     "title": "جاهزية الترويج بالعمولة",
     "ready": "جاهز للترويج بالعمولة",
@@ -125,6 +143,7 @@
     }
   },
   "analytics": {
+    "dataUnavailable": "بيانات التحليلات غير متاحة. يرجى إعادة المحاولة.",
     "conversionFunnels": "مسارات التحويل",
     "campaignCosts": "تكاليف الحملات",
     "marketingRoi": "العائد على الاستثمار التسويقي"
@@ -1086,7 +1105,9 @@
     "returns": "مرتجعات المبيعات",
     "representatives": "مندوبي المبيعات",
     "repReports": "تقارير المندوبين",
-    "customers": "العملاء"
+    "customers": "العملاء",
+    "next": "التالي",
+    "previous": "السابق"
   },
   "inventory": {
     "products": "المنتجات",
@@ -1201,7 +1222,10 @@
     "cardInstrumentRequired": "اختر أداة تمويل بطاقة المورد للمبلغ المدفوع بالبطاقة.",
     "failedToLoadCardInstruments": "تعذر تحميل أدوات تمويل بطاقات الموردين.",
     "cardBalance": "رصيد البطاقة",
-    "fundingSource": "مصدر التمويل"
+    "fundingSource": "مصدر التمويل",
+    "creditDueDateRequired": "تاريخ الاستحقاق مطلوب للمشتريات الآجلة.",
+    "unitConversionTitle": "{{unitName}} — معامل التحويل {{conversionFactor}}",
+    "unknownProduct": "منتج غير معروف"
   },
   "supplierCards": {
     "title": "تمويل بطاقات الموردين",
@@ -1462,7 +1486,12 @@
     "mixed": "مختلط",
     "cashAmountRequired": "المبلغ النقدي *",
     "cardAmount": "مبلغ البطاقة:",
-    "optionalNotes": "ملاحظات اختيارية..."
+    "optionalNotes": "ملاحظات اختيارية...",
+    "balanceTransferSubtitle": "حوّل الأموال بين حساباتك وخزائنك",
+    "destinationType": "نوع الوجهة",
+    "selectDestination": "اختر الحساب/الخزنة",
+    "selectSource": "اختر الحساب/الخزنة",
+    "sourceType": "نوع المصدر"
   },
   "abandonedCheckouts": {
     "title": "عمليات الدفع المتروكة",
@@ -1665,7 +1694,24 @@
     "leave": "مغادرة",
     "stay": "البقاء",
     "remove": "إزالة",
-    "saved": "تم الحفظ بنجاح"
+    "saved": "تم الحفظ بنجاح",
+    "restoringSession": "جارٍ استعادة الجلسة...",
+    "validatingVendorAuthority": "جارٍ التحقق من صلاحية البائع",
+    "created": "تاريخ الإنشاء",
+    "currentBalance": "الرصيد الحالي",
+    "dates": "التواريخ",
+    "discard": "تجاهل",
+    "dismissNotification": "إغلاق الإشعار",
+    "helpLoadFailed": "تعذر تحميل مقال المساعدة.",
+    "notApplicable": "لا ينطبق",
+    "product": "المنتج",
+    "saveChanges": "حفظ التغييرات",
+    "showLess": "عرض أقل",
+    "showMore": "عرض المزيد",
+    "sku": "SKU",
+    "testing": "جارٍ الاختبار...",
+    "unauthorized": "غير مصرح لك بتنفيذ هذا الإجراء.",
+    "unsavedChanges": "تغييرات غير محفوظة"
   },
   "paymentMethods": {
     "title": "طرق الدفع",
@@ -1828,6 +1874,97 @@
     }
   },
   "dashboard": {
+    "phase42": {
+      "scope": "نظرة تشغيلية عامة · لكل قسم مصدره وفترته الخاصة",
+      "overview": "نظرة عامة على نقطة البيع",
+      "todaySales": "مبيعات نقطة البيع المسجلة اليوم",
+      "todayBasis": "الحساب 4010 · اليوم بالتوقيت العالمي UTC · قيود مرحلة أو معكوسة",
+      "saleJournals": "الفواتير المميزة اليوم",
+      "journalsBasis": "هويات فواتير البيع المعترف بها بتاريخ اليوم المحاسبي بتوقيت UTC؛ إعادة الترحيل لا تكرر العدد",
+      "lowStockPositions": "مواقع المخزون المنخفض",
+      "stockBasis": "مواقع المتغير × المستودع الحالية · الكمية المتاحة",
+      "inventoryBasis": "المخزون المملوك: الموجود بتكلفة المتغير الحالية، مضافاً إليه المخزون المنقول بتكلفة الإرسال. يشمل التالف والمحجوز؛ ليس تقييماً بدفتر الأستاذ.",
+      "incompleteValuation": "تقييم المخزون غير مكتمل لغياب تكلفة مخزون قيد النقل. لا يوجد إجمالي مؤكد.",
+      "restricted": "الملخصات المالية تتطلب صلاحية مالية. تظل الكميات التشغيلية متاحة.",
+      "unauthorized": "لم يعد الوصول مصرحاً به. أُزيلت القيم المحملة سابقاً.",
+      "currencyUnconfirmed": "عملة المستأجر غير مؤكدة. المبالغ غير متاحة وليست صفراً.",
+      "currencyStale": "إعدادات العملة من آخر قراءة ناجحة؛ فشل تحديث الإعدادات الأخير.",
+      "change": "التغير عن أمس حسب الخادم",
+      "changeCaution": "نسبة التغير غير متاحة عندما تكون مبيعات أمس بإشارتها صفراً أو سالبة.",
+      "calendarBasis": "الحساب 4010 · التواريخ المحاسبية بتوقيت UTC حتى اليوم (الأسبوع يبدأ الأحد). تبقى المرتجعات والتصحيحات في فتراتها المسجلة.",
+      "ledgerBasis": "مبيعات نقطة البيع المسجلة · الحساب 4010 · فترات بتوقيت UTC",
+      "trendPeriod": "فترة الاتجاه فقط",
+      "dayTrendBasis": "فترات يومية · حتى اليوم بتوقيت UTC",
+      "yearTrendBasis": "12 فترة شهرية · الشهر الحالي حتى اليوم فقط",
+      "lineBasis": "مبالغ بنود الفواتير · منذ شهر تقويمي حتى اليوم بتوقيت UTC. لا تساوي مبيعات دفتر الأستاذ لاختلاف الضرائب والخصومات والمرتجعات.",
+      "paymentBasis": "مبالغ سجلات الدفع حسب تاريخ الدفع · منذ شهر تقويمي حتى اليوم بتوقيت UTC. ليست إيراداً مسجلاً أو رصيداً نقدياً.",
+      "stockListBasis": "حتى 8 مواقع متغير × مستودع نشط · الكمية المتاحة بعد المحجوز · الحد المضبوط؛ الحد صفر ينبه عند الصفر فقط.",
+      "availableStock": "المخزون المتاح",
+      "noLowStock": "لم يُرجع المصدر مواقع مخزون منخفض.",
+      "recentBasis": "أحدث 8 فواتير غير ملغاة · إجماليات الفواتير مباشرة · عرض الوقت محلياً",
+      "walkInCustomer": "زبون عادي",
+      "customerUnavailable": "اسم العميل غير متاح",
+      "uncategorized": "بدون تصنيف",
+      "financialSummary": "الملخصات المالية",
+      "allTimeSales": "مبيعات نقطة البيع المسجلة لكل الفترات",
+      "allTimeBasis": "الحساب 4010 · السجل المحاسبي حتى اليوم · قيود مرحلة أو معكوسة",
+      "customerNet": "صافي رصيد العملاء",
+      "customerBasis": "صافي دفتر العملاء: المدين ناقص الدائن. السالب يعني صافي ائتمان للعملاء. ليس ديناً متأخراً أو رصيداً مطابقاً لحساب الأستاذ 1410.",
+      "supplierNet": "صافي رصيد الموردين",
+      "supplierBasis": "صافي دفتر الموردين: الدائن ناقص المدين. السالب يعني صافي رصيد مدين للموردين. ليس ديناً متأخراً أو رصيداً مطابقاً لحساب الأستاذ 2010.",
+      "name": "الاسم",
+      "paymentLabels": { "Cash": "نقدي", "Card": "بطاقة", "BankTransfer": "تحويل بنكي", "Mixed": "مختلط", "Credit": "آجل" },
+      "failed": "تعذر تحميل هذا المصدر. الأقسام الأخرى مستقلة.",
+      "malformed": "أعاد هذا المصدر بيانات غير صالحة للاستخدام. لا توجد نتيجة أعمال مؤكدة.",
+      "stale": "بيانات قديمة · آخر جلب ناجح: {{time}} (ليس وقت تحديث بيانات الخادم)",
+      "unavailable": "غير متاح — وليس صفراً مؤكداً",
+      "empty": "لم يُرجع هذا المصدر سجلات لهذه الفترة.",
+      "trendAccessible": "اتجاه مبيعات نقطة البيع من الأقدم إلى الأحدث. التواريخ والمبالغ بإشاراتها متاحة في عرض القيم.",
+      "viewValues": "عرض التواريخ والمبالغ الدقيقة",
+      "storefront": {
+        "range": "فترة ملخص المتجر",
+        "ranges": { "today": "اليوم", "7d": "7 أيام", "30d": "30 يوماً", "this_month": "هذا الشهر" },
+        "summaryBasis": "فترة محاسبية بتوقيت UTC · المرجع المالي SQL؛ الأحداث السلوكية تصل بشكل غير متزامن بتأخر غير معلوم. مستقلة عن نشاط الخمس دقائق.",
+        "visits": "الزيارات",
+        "visitsBasis": "جلسات مميزة من أحداث مشاهدة صفحات المتجر",
+        "orders": "الطلبات المعترف بها مالياً",
+        "ordersBasis": "طلبات مميزة سُجلت دائنة بالحساب 4020 في هذه الفترة، بما فيها الطلبات المستردة بالكامل لاحقاً",
+        "revenue": "إيراد المتجر المسجل",
+        "revenueBasis": "حركات طلبات الحساب 4020 في الفترة المحاسبية بتوقيت UTC، بما فيها المرتجعات والقيود العكسية؛ دون عمولة كومرس هب",
+        "conversion": "الطلبات / الزيارات",
+        "conversionBasis": "نسبة الخادم · الطلبات المعترف بها / جلسات الأحداث المميزة؛ ليست مجموعة زوار متطابقة",
+        "addToCart": "الإضافة إلى السلة",
+        "cartBasis": "عدد أحداث الإضافة إلى السلة · وليس سلالاً مميزة",
+        "checkoutStarted": "بدء إتمام الشراء",
+        "checkoutBasis": "عدد أحداث بدء إتمام الشراء التحليلية",
+        "abandonedCheckouts": "جلسات إتمام الشراء المتروكة",
+        "abandonedBasis": "جلسات صُنفت متروكة خلال الفترة · قيمة السلال ليست إيراداً ضائعاً معترفاً به",
+        "cartValue": "قيمة السلال المتروكة",
+        "averageOrderValue": "متوسط قيمة الطلب المعترف به",
+        "averageBasis": "إجمالي المبالغ الدائنة المعترف بها بالحساب 4020 / الطلبات المميزة المعترف بها؛ المرتجعات تسويات منفصلة",
+        "productsBasis": "أعلى 5 حسب كمية بنود الطلبات المعترف بها، بما فيها المستردة بالكامل · الكميات غير معدلة بالمرتجعات",
+        "productsTitle": "المنتجات الأعلى في المتجر",
+        "units": "كمية البنود",
+        "activityCounts": "أعداد النشاط حسب المصدر",
+        "funnelBasis": "أعداد أحداث تحليلية خام مع مشتريات معترف بها من SQL · ليست سلسلة تحويل لمجموعة زوار واحدة",
+        "count": "العدد",
+        "steps": { "pageView": "مشاهدات الصفحات", "viewProduct": "مشاهدات المنتجات", "addToCart": "أحداث الإضافة للسلة", "beginCheckout": "أحداث بدء الشراء", "purchaseCompleted": "المشتريات المعترف بها (SQL)" },
+        "liveTitle": "نشاط المتجر الأخير",
+        "liveBasis": "مشاهدات آخر خمس دقائق عبر الاستعلام الدوري وليست لحظية · تحديث كل 10 ثوانٍ · تأخر وصول الأحداث السلوكية غير معلوم",
+        "liveVisitors": "جلسات الزيارة",
+        "liveVisitorsBasis": "جلسات مميزة بها أحداث مشاهدة صفحات",
+        "activeCarts": "جلسات نية الإضافة للسلة",
+        "activeCartsBasis": "جلسات بها أحداث إضافة للسلة · وليست محتويات السلال الفعلية",
+        "checkoutInProgress": "جلسات نية إتمام الشراء",
+        "checkoutInProgressBasis": "بدء إتمام الشراء دون حدث شراء في هذه النافذة",
+        "recentOrders": "الطلبات المعترف بها مؤخراً",
+        "recentOrdersBasis": "كل الطلبات المميزة المعترف بها حسب وقت الترحيل في SQL خلال الخمس دقائق؛ قائمة النشاط فقط محدودة",
+        "recentActivity": "أحدث أحداث السلة وإتمام الشراء والشراء",
+        "orderCompleted": "اكتمل الطلب",
+        "sessionActivity": "نشاط جلسة المتجر",
+        "noActivity": "لم تُرجع نافذة الخمس دقائق أحداثاً حديثة."
+      }
+    },
     "title": "لوحة التحكم",
     "todaySales": "مبيعات اليوم",
     "totalRevenue": "إجمالي الإيرادات",
@@ -1895,8 +2032,30 @@
     "usernameOrEmail": "اسم المستخدم أو البريد الإلكتروني",
     "password": "كلمة المرور",
     "signIn": "تسجيل الدخول",
-    "welcomeBack": "مرحباً بعودتك",
-    "enterCredentials": "أدخل اسم المستخدم أو البريد الإلكتروني وكلمة المرور."
+    "signingIn": "جارٍ تسجيل الدخول…",
+    "welcomeBack": "مرحبًا بعودتك",
+    "subheading": "سجّل الدخول إلى مساحة عملك.",
+    "enterCredentials": "أدخل اسم المستخدم أو البريد الإلكتروني وكلمة المرور.",
+    "enterUsername": "أدخل اسم المستخدم أو البريد الإلكتروني.",
+    "enterPassword": "أدخل كلمة المرور.",
+    "genericError": "تعذر تسجيل الدخول. حاول مرة أخرى.",
+    "invalidCredentials": "اسم المستخدم أو كلمة المرور غير صحيحة.",
+    "accountDisabled": "هذا الحساب معطّل.",
+    "sessionChanged": "تغيّرت جلستك. سجّل الدخول مرة أخرى.",
+    "tooManyAttempts": "محاولات تسجيل الدخول كثيرة جدًا. انتظر قليلًا ثم حاول مرة أخرى.",
+    "connectionError": "تعذّر الاتصال. تحقّق من اتصالك وحاول مرة أخرى.",
+    "showPassword": "إظهار كلمة المرور",
+    "hidePassword": "إخفاء كلمة المرور",
+    "noAccount": "ليس لديك حساب؟",
+    "createStore": "أنشئ متجرك",
+    "secureConnection": "اتصال آمن",
+    "brandName": "SHOPYXI",
+    "productQualifier": "POS",
+    "tagline": "متجرك، في مساحة عمل واحدة.",
+    "brandDescription": "أدر المبيعات والمخزون والتقارير من مكان واحد.",
+    "brandProofSales": "مبيعات موحدة",
+    "brandProofInventory": "إدارة المخزون",
+    "brandProofReporting": "تقارير تشغيلية"
   },
   "storefront": {
     "design": "التصميم",
@@ -2157,7 +2316,8 @@
         "delete": "حذف",
         "deletePage": "حذف الصفحة",
         "deleteConfirmTitle": "حذف الصفحة؟",
-        "deleteConfirmDescription": "هل تريد حذف «{{title}}» من مساحة عمل الصفحات؟"
+        "deleteConfirmDescription": "هل تريد حذف «{{title}}» من مساحة عمل الصفحات؟",
+        "savedReadbackFailed": "تم حفظ التغيير، لكن تعذر إعادة تحميل قائمة الصفحات. أعد التحميل؛ لا تكرر العملية."
       },
       "navigationEditor": {
         "title": "التنقل",
@@ -2363,7 +2523,16 @@
           "text": "نص",
           "image": "صورة",
           "faq": "أسئلة شائعة"
-        }
+        },
+        "arabicComplete": "المحتوى العربي مكتمل",
+        "arabicIncomplete": "يجب أن يتضمن المحتوى العربي العنوان والمحتوى معًا، أو يُحذف.",
+        "arabicMissing": "لم يُضف محتوى عربي",
+        "arabicOptional": "العربية (اختياري)",
+        "complete": "المحتوى الإنجليزي مكتمل",
+        "englishRequired": "الإنجليزية (إلزامي)",
+        "incomplete": "المحتوى الإنجليزي غير مكتمل",
+        "languages": "لغات المحتوى",
+        "removeArabic": "حذف المحتوى العربي"
       }
     },
     "domains": {
@@ -2590,7 +2759,129 @@
         "provisionNext": "أنشئ شهادة من إدارة SSL.",
         "verificationNext": "أكمل تحقق DNS قبل طلب شهادة.",
         "open": "فتح إدارة SSL"
-      }
+      },
+      "actionError": "فشل تنفيذ الإجراء",
+      "actions": "الإجراءات",
+      "activityDesc": "أحدث الأحداث عبر جميع النطاقات.",
+      "activityError": "تعذر تحميل النشاط",
+      "addDomain": "إضافة نطاق",
+      "addDomainDesc": "أضف نطاقًا مخصصًا جديدًا إلى واجهة متجرك.",
+      "addRedirect": "إضافة إعادة توجيه",
+      "archive": "أرشفة",
+      "archiveDomain": "أرشفة النطاق",
+      "archiveDomainDesc": "هل أنت متأكد من أرشفة {{host}}؟ تصبح النطاقات المؤرشفة غير نشطة، ويمكن استعادتها.",
+      "canonical": "الأساسي",
+      "canonicalHelp": "حدّد سياسة النطاق الأساسي لنطاقك.",
+      "canonicalUrl": "الرابط الأساسي",
+      "concurrencyConflict": "تعديل متزامن",
+      "concurrencyConflictDesc": "تم تعديل هذا النطاق بواسطة مستخدم آخر. يرجى التحديث والمحاولة مرة أخرى.",
+      "createDomain": "إنشاء نطاق",
+      "createError": "حدث خطأ غير متوقع أثناء إنشاء النطاق.",
+      "createValidationError": "تعذر إنشاء النطاق. يرجى مراجعة البيانات المدخلة والمحاولة مرة أخرى.",
+      "dateRange": "النطاق الزمني",
+      "delete": "حذف",
+      "deleteDomain": "حذف النطاق",
+      "deleteDomainDesc": "هل أنت متأكد من حذف {{host}}؟ هذا حذف منطقي — يُحتفظ بسجل النطاق لأغراض التدقيق، ويمكن استعادته خلال 90 يومًا.",
+      "dnsHelp": "أضف هذا السجل إلى مزوّد DNS الخاص بك. وسيتم التحقق تلقائيًا.",
+      "dnsVerification": "التحقق من DNS",
+      "domainList": "قائمة النطاقات",
+      "domainListDesc": "جميع نطاقات حسابك.",
+      "domainNotFound": "النطاق غير موجود",
+      "domainNotFoundDesc": "تعذر العثور على النطاق المطلوب.",
+      "domainsActivity": "النشاط",
+      "domainType": "نوع النطاق",
+      "draft": "مسودة",
+      "duplicateHostname": "اسم المضيف هذا مسجل بالفعل في حسابك أو في حساب آخر.",
+      "expiringSoon": "ينتهي خلال 30 يومًا",
+      "failed": "فشل",
+      "filter": "تصفية",
+      "filterByAction": "تصفية حسب الإجراء",
+      "filterByActor": "تصفية حسب المنفّذ",
+      "history": "السجل",
+      "historyError": "تعذر تحميل السجل.",
+      "historyInfo": "سجل تدقيق النطاقات من DomainAuditEntry — سجل إضافي فقط يضم جميع انتقالات دورة الحياة.",
+      "historyNavigate": "سجل تدقيق النطاق — انتقل إلى /history لعرض السجل الكامل.",
+      "hostname": "اسم المضيف",
+      "hostnameHelp": "أدخل اسم النطاق الذي تملكه. يجب أن يكون صالحًا وغير مسجل مسبقًا لهذا الحساب.",
+      "hostnameLabel": "اسم المضيف",
+      "hostnamePlaceholder": "مثال: shop.example.com",
+      "httpHelp": "قدّم هذه القيمة من رابط التحقق. وسيتم التحقق تلقائيًا.",
+      "infrastructureError": "خدمة التحقق غير متاحة",
+      "jobsFailed": "فشل",
+      "jobsRunning": "قيد التنفيذ",
+      "jobsSucceeded": "نجح",
+      "lifecycleState": "حالة دورة الحياة",
+      "loadError": "تعذر تحميل بيانات النطاق",
+      "loadErrorDesc": "يرجى المحاولة مرة أخرى.",
+      "manageRedirects": "إدارة إعادة التوجيه",
+      "noActivity": "لا يوجد نشاط حديث",
+      "noActivityDesc": "لم تُسجل أي أحداث للنطاق بعد.",
+      "noContent": "لا يوجد محتوى متاح.",
+      "noDomains": "لا توجد نطاقات بعد",
+      "noDomainsDesc": "لا توجد نطاقات للعرض بعد.",
+      "noHistory": "لا توجد سجلات في السجل",
+      "noHistoryDesc": "لم تُسجل أي أحداث تدقيق لهذا النطاق.",
+      "noPrimaryDomain": "لم يتم إعداد نطاق أساسي",
+      "noRecentDomains": "لا توجد نطاقات حديثة",
+      "noRecentDomainsDesc": "أضف نطاقًا ليظهر هنا.",
+      "noRedirects": "لم يتم إعداد إعادة توجيه",
+      "noRedirectsDesc": "لم تُعد أي قواعد إعادة توجيه لهذا النطاق.",
+      "notConfigured": "غير مُعدّ",
+      "noToken": "لا يوجد رمز تحقق",
+      "notVerified": "غير متحقق",
+      "onDomain": "على {{domain}}",
+      "page": "الصفحة {{current}} من {{total}}",
+      "pending": "قيد الانتظار",
+      "pendingDesc": "التحقق قيد التنفيذ. أضف سجل DNS أدناه وسنتحقق منه تلقائيًا.",
+      "pendingVerification": "بانتظار التحقق",
+      "primary": "أساسي",
+      "primaryDomain": "النطاق الأساسي",
+      "promote": "ترقية",
+      "promotePrimary": "ترقية إلى أساسي",
+      "promotePrimaryDesc": "هل أنت متأكد من جعل {{host}} النطاق الأساسي؟ ستُخفَّض مكانة النطاق الأساسي الحالي في العملية نفسها، ويضمن النظام نطاقًا أساسيًا واحدًا فقط لكل حساب.",
+      "quickActions": "إجراءات سريعة",
+      "recentActivity": "النشاط الحديث",
+      "recentDomains": "أحدث النطاقات",
+      "recordName": "الاسم",
+      "recordType": "النوع",
+      "recordValue": "القيمة",
+      "redirects": "إعادة التوجيه",
+      "redirectsError": "تعذر تحميل إعادة التوجيه",
+      "redirectsNavigate": "إعادة التوجيه — انتقل إلى /redirects للاطلاع على التفاصيل الكاملة.",
+      "redirectSources": "مصادر إعادة التوجيه",
+      "redirectSourcesDesc": "ستظهر هنا النطاقات التي تعيد التوجيه إلى هذا النطاق الأساسي.",
+      "redirectTarget": "هدف إعادة التوجيه",
+      "redirectType": "نوع إعادة التوجيه",
+      "refreshToken": "تحديث الرمز",
+      "restore": "استعادة",
+      "restoreDomain": "استعادة النطاق",
+      "restoreDomainDesc": "هل أنت متأكد من استعادة {{host}}؟ سيعود النطاق إلى حالة المسودة.",
+      "retryVerification": "إعادة محاولة التحقق",
+      "reviewTitle": "مراجعة إعداداتك",
+      "rowActions": "إجراءات صف {{hostname}}",
+      "searchPlaceholder": "ابحث باسم المضيف",
+      "showingResults": "عرض {{first}}-{{last}} من {{total}}",
+      "sortBy": "الترتيب حسب {{field}}",
+      "sslHelp": "اختر مزوّد SSL لشهادة نطاقك.",
+      "startVerification": "بدء التحقق",
+      "startVerificationDesc": "هل تريد بدء التحقق من DNS للنطاق {{host}}؟",
+      "status": "الحالة",
+      "timestampFormat": "{{date}} {{time}}",
+      "totalDomains": "إجمالي النطاقات",
+      "type": "النوع",
+      "unauthorized": "يلزم تسجيل الدخول",
+      "unauthorizedDesc": "يرجى تسجيل الدخول لإدارة النطاقات.",
+      "verificationFailed": "لم يكتمل التحقق",
+      "verificationHelp": "اختر طريقة التحقق من ملكية النطاق.",
+      "verificationInstructions": "تعليمات التحقق",
+      "verificationMethod": "طريقة التحقق",
+      "verificationNavigate": "التحقق من DNS — انتقل إلى /verification للاطلاع على التفاصيل الكاملة.",
+      "verificationStatus": "حالة التحقق",
+      "verificationUrl": "الرابط",
+      "verified": "متحقق",
+      "verifiedDesc": "تم التحقق من ملكية نطاقك.",
+      "verifyNow": "تحقق الآن",
+      "viewAll": "عرض جميع النطاقات"
     },
     "shipping": {
       "free": "مجاني",
@@ -2629,10 +2920,52 @@
       "final": "نهائي",
       "lastUpdate": "آخر تحديث",
       "destination": "الوجهة"
-    }
+    },
+    "unsavedNavigationConfirm": "لديك تغييرات غير محفوظة. هل أنت متأكد من الخروج؟"
   },
   "storefrontAnalytics": {
-    "title": "تحليلات المتجر الإلكتروني"
+    "title": "تحليلات المتجر الإلكتروني",
+    "subtitle": "لوحة مخصصة للمتجر الإلكتروني مبنية من بيانات التحليلات والطلبات وإتمام الشراء الحالية.",
+    "ranges": {
+      "today": "اليوم",
+      "7d": "٧ أيام",
+      "30d": "٣٠ يوماً",
+      "this_month": "هذا الشهر"
+    },
+    "visits": "الزيارات",
+    "uniqueSessions": "جلسات فريدة من مشاهدات صفحات المتجر",
+    "orders": "الطلبات",
+    "storefrontOrders": "طلبات المتجر الإلكتروني فقط",
+    "revenue": "الإيرادات",
+    "grossRevenue": "حركات الحساب 4020 للفترة المحاسبية بإشارتها، بما فيها المرتجعات والقيود العكسية؛ دون عمولة المنصة",
+    "revenueBreakdown": "المبالغ الدائنة المعترف بها: {{recognized}} · تسويات المرتجعات والقيود العكسية: {{adjustments}}",
+    "conversionRate": "معدل التحويل",
+    "visitsToOrders": "الطلبات مقسومة على الزيارات الفريدة",
+    "addToCart": "الإضافة إلى السلة",
+    "cartIntent": "نية الشراء في المتجر قبل إتمام الطلب",
+    "checkoutStarted": "بدء إتمام الشراء",
+    "checkoutIntent": "أحداث البدء في إتمام الشراء",
+    "abandonedOrders": "الطلبات المتروكة",
+    "abandonedRevenue": "الإيرادات المفقودة",
+    "averageOrderValue": "متوسط قيمة الطلب",
+    "revenuePerOrder": "الإيرادات مقسومة على طلبات المتجر",
+    "topSellingProducts": "المنتجات الأكثر مبيعاً",
+    "topSellingProductsSubtitle": "أفضل 5 منتجات في المتجر الإلكتروني مرتبة حسب الكمية المباعة.",
+    "noTopProducts": "لا توجد مبيعات منتجات في المتجر لهذا النطاق.",
+    "unitsSold": "الوحدات المباعة",
+    "funnelOverview": "نظرة عامة على مسار الشراء",
+    "funnelOverviewSubtitle": "مسار شراء مبسّط باستخدام خطوات التحليلات الحالية.",
+    "pageView": "مشاهدة الصفحة",
+    "viewProduct": "مشاهدة المنتج",
+    "beginCheckout": "البدء في إتمام الشراء",
+    "purchaseCompleted": "إتمام الشراء",
+    "unavailableTitle": "تحليلات المتجر الإلكتروني غير متاحة",
+    "unavailableMessage": "تعذر تحميل تحليلات المتجر الإلكتروني. لا يتم عرض أي أرقام، وهذه ليست نتيجة صفرية.",
+    "accessDenied": "ليس لديك صلاحية لعرض تحليلات المتجر الإلكتروني.",
+    "accessDeniedMessage": "تم رفض الطلب. لا يتم عرض أي أرقام تحليلات، وهذه ليست نتيجة فارغة.",
+    "malformed": "بيانات تحليلات المتجر الإلكتروني غير صالحة",
+    "malformedMessage": "كانت استجابة التحليلات غير صالحة، لذلك لا يتم عرض أي أرقام. هذه ليست نتيجة صفرية.",
+    "staleResult": "يتم عرض آخر نتيجة ناجحة لهذا النطاق."
   },
   "promotions": {
     "title": "العروض الترويجية",
@@ -3171,7 +3504,8 @@
       "aramex": "Aramex",
       "mylerz": "Mylerz",
       "dhl": "DHL Express"
-    }
+    },
+    "serviceLevel": "مستوى الخدمة"
   },
   "shippingAdministration": {
     "native": {
@@ -3440,7 +3774,8 @@
         "suspend": "تعليق",
         "disable": "تعطيل",
         "retire": "إيقاف نهائي"
-      }
+      },
+      "state": "حالة الحساب"
     },
     "methods": {
       "carrierLoadFailed": "فشل تحميل شركات الشحن المدعومة.",
@@ -3550,7 +3885,10 @@
     "schedule": "الجدول",
     "every30min": "كل 30 دقيقة",
     "jobId": "معرف المهمة",
-    "trackingSyncDescription": "يستعلم تلقائياً من واجهات شركات الشحن لتحديث حالات الشحنات النشطة."
+    "trackingSyncDescription": "يستعلم تلقائياً من واجهات شركات الشحن لتحديث حالات الشحنات النشطة.",
+    "alwaysAvailable": "متاح دائمًا",
+    "learnMore": "معرفة المزيد",
+    "validateLocally": "تحقق"
   },
   "carrierConfig": {
     "title": "إعداد {{carrier}}",
@@ -3585,7 +3923,38 @@
     "extraConfig": "إعدادات إضافية",
     "extraConfigHint": "إعدادات خاصة بالشركة مثل عنوان الاستلام، رموز المناطق، إلخ.",
     "testConnection": "اختبار الاتصال",
-    "testing": "جاري الاختبار..."
+    "testing": "جاري الاختبار...",
+    "blocked": "محظور / المزوّد غير متاح",
+    "configureWebhookSecret": "إعداد مفتاح توقيع الـ webhook",
+    "connected": "متصل",
+    "credentialsSaved": "تم حفظ بيانات الاعتماد",
+    "howItWorks": "كيف يعمل",
+    "localOnlyValidation": "يتحقق هذا المزوّد من وجود بيانات الاعتماد محليًا؛ ولا يتم إجراء اختبار اتصال بـ API خارجي.",
+    "manualBenefit1": "لا يلزم إدخال بيانات اعتماد API",
+    "manualBenefit2": "تحديث التتبع يدويًا من لوحة الإدارة",
+    "manualBenefit3": "يعمل مع أي طريقة توصيل",
+    "manualBenefit4": "متاح دائمًا - لا يلزم أي إعداد",
+    "manualDesc": "أدر الشحن بنفسك دون API لشركة شحن. مناسب للتوصيل المحلي وطلبات الاستلام من المتجر وترتيبات الشحن المخصصة.",
+    "manualReady": "جاهز للاستخدام",
+    "manualReadyDesc": "الشحن اليدوي متاح دائمًا. اربطه بطريقة شحن لبدء استخدامه.",
+    "manualTitle": "الشحن اليدوي",
+    "noCredentialsRequired": "لا يلزم إدخال بيانات اعتماد لشركة الشحن هذه.",
+    "notProductionReady": "شركة الشحن هذه غير متاحة للتفعيل في بيئة الإنتاج",
+    "readyForCheckout": "جاهز للدفع",
+    "rotateWebhookSecret": "أدخل قيمة جديدة لتدوير المفتاح المُعدّ",
+    "step1Desc": "يختار طريقة شحن مرتبطة بالشحن اليدوي",
+    "step1Title": "العميل ينشئ الطلب",
+    "step2Desc": "تظهر في قائمة الشحنات في لوحة الإدارة",
+    "step2Title": "تُنشأ الشحنة بحالة قيد الانتظار",
+    "step3Desc": "اشحن بطريقتك الخاصة أو عبر مندوب محلي أو باستلام العميل",
+    "step3Title": "أنت تتولى التوصيل",
+    "step4Desc": "حدّد الحالة كمشحونة أو مُسلَّمة وغيرها من لوحة الإدارة",
+    "step4Title": "تحديث الحالة يدويًا",
+    "toggleWebhookSecretVisibility": "إظهار أو إخفاء مفتاح الـ webhook",
+    "validateLocally": "تحقق محليًا",
+    "webhookSecret": "مفتاح توقيع الـ webhook",
+    "webhookSecretConfigured": "تم إعداد مفتاح التوقيع، ولا يعيده API مطلقًا.",
+    "webhookSecretRequired": "مطلوب قبل الوثوق بأحداث الـ webhook الموقعة."
   },
   "commerceAi": {
     "title": "مساعد الذكاء الاصطناعي التجاري",
@@ -3689,7 +4058,23 @@
       "unitedKingdom": "المملكة المتحدة",
       "germany": "ألمانيا",
       "france": "فرنسا"
-    }
+    },
+    "currencyCode": "العملة",
+    "customCurrency": "عملة مخصصة",
+    "defaultCompanyName": "اسم شركتك",
+    "defaultReceiptFooter": "شكرًا لشرائك من متجرنا",
+    "defaultReceiptHeader": "مرحبًا بكم في متجرنا",
+    "defaultTaxRateHelp": "تُستخدم فقط عندما لا يكون للمنتج نسبة ضريبة. نسبة ضريبة المنتج لها الأولوية دائمًا.",
+    "logoAlt": "شعار الشركة",
+    "logoRecommendedSize": "المستحسن: صورة مربعة.",
+    "noLogo": "لا يوجد شعار",
+    "receiptFooterPlaceholder": "مثال: شكرًا لزيارتكم",
+    "receiptHeaderPlaceholder": "مثال: مرحبًا بكم في متجرنا",
+    "receiptPreview": "معاينة الفاتورة",
+    "removeLogo": "إزالة الشعار",
+    "sampleItemOne": "صنف تجريبي 1",
+    "sampleItemTwo": "صنف تجريبي 2",
+    "unknownCurrencyWarning": "العملة {{code}} غير مدرجة في القائمة القياسية، وسيتم الاحتفاظ بها."
   },
   "databaseReset": {
     "title": "إعادة ضبط قاعدة البيانات",
@@ -3735,7 +4120,8 @@
     "exportPDF": "تصدير PDF",
     "exportExcel": "تصدير Excel",
     "from": "من",
-    "to": "إلى"
+    "to": "إلى",
+    "avgInvoice": "متوسط الفاتورة"
   },
   "salesByCategory": {
     "title": "تقرير المبيعات حسب التصنيف",
@@ -3898,7 +4284,9 @@
     "emptyStateDesc": "اختر تاريخاً واضغط على إنشاء التقرير لعرض أعمار الذمم المدينة",
     "errorGenerating": "فشل إنشاء تقرير الأعمار",
     "noDataToExport": "لا توجد بيانات متاحة للتصدير",
-    "exportSuccess": "تم تصدير التقرير بنجاح"
+    "exportSuccess": "تم تصدير التقرير بنجاح",
+    "email": "البريد الإلكتروني",
+    "phone": "الهاتف"
   },
   "apAging": {
     "title": "تقرير أعمار الذمم الدائنة",
@@ -3924,7 +4312,9 @@
     "emptyStateDesc": "اختر تاريخاً واضغط على إنشاء التقرير لعرض أعمار الذمم الدائنة",
     "errorGenerating": "فشل إنشاء تقرير الأعمار",
     "noDataToExport": "لا توجد بيانات متاحة للتصدير",
-    "exportSuccess": "تم تصدير التقرير بنجاح"
+    "exportSuccess": "تم تصدير التقرير بنجاح",
+    "email": "البريد الإلكتروني",
+    "phone": "الهاتف"
   },
   "salesReturnReport": {
     "title": "تقرير مرتجعات المبيعات",
@@ -3952,7 +4342,8 @@
     "reason": "السبب",
     "generate": "إنشاء التقرير",
     "exportPDF": "تصدير PDF",
-    "exportExcel": "تصدير Excel"
+    "exportExcel": "تصدير Excel",
+    "date": "التاريخ"
   },
   "purchaseReturnReport": {
     "title": "تقرير مرتجعات المشتريات",
@@ -4024,7 +4415,9 @@
     "unitPrice": "سعر الوحدة",
     "subtotal": "المجموع الفرعي",
     "startPrompt": "إنشاء سجل المشتريات",
-    "startPromptDesc": "اختر الفلاتر والتاريخ لعرض فواتير الشراء"
+    "startPromptDesc": "اختر الفلاتر والتاريخ لعرض فواتير الشراء",
+    "gross": "المبلغ الإجمالي",
+    "net": "المبلغ الصافي"
   },
   "reports": {
     "badge": {
@@ -4104,7 +4497,8 @@
     "contribution": "المساهمة",
     "costTrendChart": "اتجاه التكلفة عبر الزمن",
     "generate": "إنشاء التقرير",
-    "startPrompt": "اختر الفلاتر وأنشئ التقرير لتحليل تكاليف الشراء"
+    "startPrompt": "اختر الفلاتر وأنشئ التقرير لتحليل تكاليف الشراء",
+    "invoiceCount": "عدد الفواتير"
   },
   "pos": {
     "title": "نقطة البيع",
@@ -4188,7 +4582,15 @@
     "failedToLoadSale": "فشل تحميل عملية البيع.",
     "syncingCart": "جاري مزامنة السلة...",
     "cartSyncFailed": "تعذرت مزامنة سلة نقطة البيع. يرجى المحاولة مرة أخرى.",
-    "paymentRecoveryRejected": "تعذر استعادة عملية دفع غير محسومة بأمان. راجع سجل المبيعات قبل بدء عملية دفع أخرى."
+    "paymentRecoveryRejected": "تعذر استعادة عملية دفع غير محسومة بأمان. راجع سجل المبيعات قبل بدء عملية دفع أخرى.",
+    "cartChangedInAnotherTab": "تغيّرت سلة نقطة البيع في علامة تبويب أخرى. راجع السلة قبل المتابعة.",
+    "cartItemCount_zero": "لا توجد أصناف",
+    "cartItemCount_two": "صنفان",
+    "cartItemCount_few": "{{count}} أصناف",
+    "cartItemCount_many": "{{count}} صنفًا",
+    "keepThisCart": "الإبقاء على هذه السلة",
+    "saleHoldFailed": "تعذر تعليق البيع. يرجى المحاولة مرة أخرى.",
+    "syncOtherTabCart": "مزامنة علامة التبويب الأخرى"
   },
   "receipt": {
     "saleComplete": "✓ تم البيع بنجاح!",
@@ -4211,7 +4613,13 @@
     "change": "الباقي",
     "thankYou": "شكراً لزيارتكم!",
     "keepReceipt": "يرجى الاحتفاظ بهذه الفاتورة للمراجعة",
-    "close": "إغلاق"
+    "close": "إغلاق",
+    "notes": "ملاحظات",
+    "originalInvoice": "الفاتورة الأصلية",
+    "print": "طباعة الفاتورة",
+    "printError": "تعذر فتح نافذة الطباعة. استخدم زر الطباعة للمحاولة مرة أخرى.",
+    "printing": "جارٍ الطباعة...",
+    "reason": "السبب"
   },
   "customerSelectModal": {
     "title": "اختر العميل",
@@ -4314,7 +4722,10 @@
       "receiptUnavailable": "تم إتمام البيع ولكن تعذر تحميل الإيصال.",
       "recoveredUnknownOutcome": "نتيجة عملية دفع سابقة غير معروفة. راجع سجل المبيعات، ثم أكد لإعادة إرسال الطلب نفسه تمامًا.",
       "unknownOutcomeBeforeRetry": "نتيجة الدفع غير معروفة. راجع سجل المبيعات، ثم أكد لإعادة إرسال الطلب نفسه تمامًا. لا تبدأ عملية دفع أخرى.",
-      "recoveryPersistenceFailed": "لم يتم إرسال الدفع لتعذر حفظ بيانات الاستعادة الآمنة. تحقق من تخزين المتصفح وحاول مرة أخرى."
+      "recoveryPersistenceFailed": "لم يتم إرسال الدفع لتعذر حفظ بيانات الاستعادة الآمنة. تحقق من تخزين المتصفح وحاول مرة أخرى.",
+      "cartSyncFailed": "تعذر تجهيز سلة نقطة البيع النشطة للدفع.",
+      "requestTimedOutBeforeRetry": "انتهت مهلة طلب الدفع. راجع سجل المبيعات قبل المحاولة مرة أخرى.",
+      "stockRevalidationFailed": "تعذر التحقق من المخزون الحالي. راجع المخزون وحاول مرة أخرى."
     },
     "salesRepPlaceholder": "Search sales representative...",
     "noSalesRepsFound": "No sales representatives found",
@@ -4346,6 +4757,10 @@
     },
     "walkInCustomer": "زبون عادي",
     "noSalesFound": "لم يتم العثور على مبيعات",
+    "unavailableTitle": "سجل المبيعات غير متاح",
+    "unavailableMessage": "تعذر تحميل المبيعات لهذا التحديد. هذه ليست نتيجة فارغة.",
+    "accessDenied": "ليس لديك صلاحية لعرض سجل المبيعات هذا.",
+    "accessDeniedMessage": "تم رفض الطلب. لا يتم عرض أي بيانات مبيعات، وهذه ليست نتيجة فارغة.",
     "failedToLoad": "فشل تحميل سجل المبيعات",
     "page": "صفحة",
     "of": "من",
@@ -4533,7 +4948,10 @@
     "variantNotFound": "المتغير المحدد غير موجود",
     "variant": "Variant (SKU)",
     "selectVariant": "Select Variant",
-    "searchPlaceholder": "Search by variant name, SKU..."
+    "searchPlaceholder": "Search by variant name, SKU...",
+    "adjustVariantHelp": "عدّل مخزون هذا المتغير في المخزن المحدد.",
+    "transferVariantHelp": "انقل مخزون هذا المتغير بين المخازن.",
+    "variantBadge": "متغير"
   },
   "products": {
     "title": "المنتجات",
@@ -5054,7 +5472,9 @@
     "productsCount": "{{count}} منتج",
     "expandAll": "توسيع الكل",
     "collapseAll": "طي الكل",
-    "subCategoriesCount": "{{count}} فئات فرعية"
+    "subCategoriesCount": "{{count}} فئات فرعية",
+    "syncFailed": "تعذرت مزامنة الفئات",
+    "syncSuccess": "تمت مزامنة {{count}} فئة مع واجهة المتجر."
   },
   "warehouses": {
     "title": "المخازن",
@@ -5462,7 +5882,9 @@
     "notesLabel": "ملاحظات",
     "notesRequiredInline": "الملاحظات مطلوبة عند وجود فرق.",
     "openingNotesPlaceholder": "أضف ملاحظات الفتح...",
-    "closingNotesPlaceholder": "أضف ملاحظات الإغلاق..."
+    "closingNotesPlaceholder": "أضف ملاحظات الإغلاق...",
+    "balancedTransferPolicy": "يجب تمويل الخزنة من خزنة نقدية أو بنك موجود عبر تحويل خزينة متوازن. لا تتوفر إضافة النقد أو إزالته مباشرة.",
+    "manageFundsViaTreasury": "تحويل نقد موجود في الخزينة"
   },
   "openingBalance": {
     "title": "الرصيد الافتتاحي – الخزنة (Khazna)",
@@ -5920,8 +6342,7 @@
       "BankDeposit": "إيداع بنكي",
       "Reversal": "قيد عكسي",
       "Other": "مصدر آخر"
-    },
-    "currentClassification": "متداول"
+    }
   },
   "visaStatement": {
     "title": "كشف حساب الفيزا",
@@ -6062,7 +6483,16 @@
     "changes": "التغييرات",
     "field": "الحقل",
     "oldValue": "القيمة القديمة",
-    "newValue": "القيمة الجديدة"
+    "newValue": "القيمة الجديدة",
+    "accessDenied": "تم رفض الوصول",
+    "accessDeniedMessage": "ليس لديك صلاحية لعرض سجل التدقيق.",
+    "invalidJson": "JSON غير صالح",
+    "searchPlaceholder": "ابحث في سجلات التدقيق...",
+    "showingPage": "عرض الصفحة {{page}} من {{total}} ({{count}} سجل)",
+    "source": "المصدر",
+    "system": "النظام",
+    "userAgent": "وكيل المستخدم",
+    "web": "الويب"
   },
   "trialBalance": {
     "title": "ميزان المراجعة",
@@ -6503,7 +6933,8 @@
       },
       "messages": {
         "activated": "تم تفعيل مفتاح الإيقاف وإيقاف جميع الرسائل",
-        "deactivated": "تم إلغاء تفعيل مفتاح الإيقاف واستعادة الخدمات."
+        "deactivated": "تم إلغاء تفعيل مفتاح الإيقاف واستعادة الخدمات.",
+        "statusFetchFailed": "تعذر جلب حالة مفتاح الإيقاف"
       },
       "systemStatus": "حالة النظام",
       "messagingHalted": "تم إيقاف الرسائل",
@@ -6819,7 +7250,8 @@
   "CommerceHubPayments": {
     "unavailable": {
       "title": "مدفوعات CommerceHub غير متاحة",
-      "description": "تعذر تحميل شاشة سداد التاجر الآن."
+      "description": "تعذر تحميل شاشة سداد التاجر الآن.",
+      "loading": "جارٍ تحديث مصدر المدفوعات"
     },
     "actions": {
       "retry": "إعادة المحاولة",
@@ -6962,7 +7394,14 @@
       "processing": "قيد المعالجة",
       "failed": "فشل"
     },
-    "notProcessedYet": "لم تتم المعالجة بعد"
+    "notProcessedYet": "لم تتم المعالجة بعد",
+    "actions": {
+      "retry": "إعادة المحاولة"
+    },
+    "unavailable": {
+      "loading": "جارٍ تحديث مصدر الأرباح",
+      "title": "مصدر الأرباح غير متاح"
+    }
   },
   "SmartOffersPage": {
     "hero": {
@@ -7228,13 +7667,20 @@
       "approveError": "فشل في الموافقة على الدفعة",
       "rejectionReasonRequired": "يرجى إدخال سبب الرفض",
       "rejectSuccess": "تم رفض الدفعة",
-      "rejectError": "فشل في رفض الدفعة"
+      "rejectError": "فشل في رفض الدفعة",
+      "approveTimeout": "انتهت مهلة طلب الموافقة. حدّث قائمة المدفوعات المعلقة قبل المحاولة مرة أخرى.",
+      "configurationRequired": "يلزم إكمال الإعداد.",
+      "failedToLoad": "تعذر تحميل المدفوعات المعلقة.",
+      "rejectionReasonTooLong": "يجب ألا يتجاوز سبب الرفض 500 حرف.",
+      "rejectionReasonTooShort": "يجب أن يتكون سبب الرفض من 3 أحرف على الأقل.",
+      "rejectTimeout": "انتهت مهلة طلب الرفض. حدّث قائمة المدفوعات المعلقة قبل المحاولة مرة أخرى."
     },
     "actions": {
       "viewOrderDetails": "عرض تفاصيل الطلب",
       "approve": "موافقة",
       "reject": "رفض"
-    }
+    },
+    "rejectionReasonLabel": "سبب الرفض"
   },
   "SmartOfferEditor": {
     "badge": "التجارة الإلكترونية",
@@ -8511,6 +8957,10 @@
     "emptyDescription": "أنشئ منتجات بمتغيرات لنشرها على CommerceHub.",
     "variantCount": "{{formattedCount}} متغيرات",
     "variantCount_one": "{{formattedCount}} متغير",
+    "variantCount_zero": "{{formattedCount}} متغيرات",
+    "variantCount_two": "{{formattedCount}} متغيران",
+    "variantCount_few": "{{formattedCount}} متغيرات",
+    "variantCount_many": "{{formattedCount}} متغيرًا",
     "variantCount_other": "{{formattedCount}} متغيرات",
     "publishedBadge": "منشور",
     "messages": {
@@ -8796,6 +9246,10 @@
       "ratingRequired": "يرجى اختيار تقييم من 1 إلى 5.",
       "ratingOption": "{{count}} نجوم",
       "ratingOption_one": "{{count}} نجمة",
+      "ratingOption_zero": "{{count}} نجوم",
+      "ratingOption_two": "{{count}} نجمتان",
+      "ratingOption_few": "{{count}} نجوم",
+      "ratingOption_many": "{{count}} نجمة",
       "ratingOption_other": "{{count}} نجوم",
       "marketingEvidenceTitle": "أدلة الحملة",
       "endDateValidation": "يجب أن يكون تاريخ النهاية بعد تاريخ البداية.",
@@ -8938,6 +9392,14 @@
   },
   "tenantRegistration": {
     "title": "أنشئ متجرك",
+    "formDescription": "أدخل بيانات نشاطك التجاري لإنشاء متجرك.",
+    "admission": {
+      "loading": "جارٍ التحقق من إتاحة إنشاء المتاجر",
+      "loadingDescription": "انتظر قليلًا بينما نتحقق من إمكانية إنشاء متاجر جديدة.",
+      "closedTitle": "إنشاء المتاجر غير متاح مؤقتًا",
+      "unavailableTitle": "تعذّر التحقق من إتاحة إنشاء المتاجر",
+      "existingStore": "إذا كان لديك متجر بالفعل، يمكنك تسجيل الدخول كالمعتاد."
+    },
     "subtitle": "ابدأ البيع عبر الإنترنت خلال دقائق.",
     "signInPrompt": "لديك حساب بالفعل؟",
     "signIn": "تسجيل الدخول",
@@ -8975,6 +9437,7 @@
       "addressTaken": "هذا العنوان مستخدم بالفعل",
       "addressCheckUnavailable": "تعذر التحقق من التوفر",
       "checkingAvailability": "جارٍ التحقق من التوفر...",
+      "checkingEmail": "جارٍ التحقق من البريد الإلكتروني...",
       "yourStore": "متجرك",
       "trySuggestions": "جرّب أحد هذه الاقتراحات:"
     },
@@ -8985,6 +9448,7 @@
       "createStore": "أنشئ متجرك"
     },
     "messages": {
+      "reviewDetails": "يرجى مراجعة بياناتك",
       "genericError": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
     },
     "legal": {
@@ -9426,7 +9890,9 @@
         "GREATER_THAN_OR_EQUAL": "أكبر من أو يساوي",
         "LESS_THAN": "أقل من",
         "LESS_THAN_OR_EQUAL": "أقل من أو يساوي"
-      }
+      },
+      "addCondition": "إضافة شرط",
+      "deleteCondition": "حذف الشرط"
     },
     "validation": {
       "title": "أصلح هذه المشكلات قبل الحفظ:",
@@ -9451,7 +9917,8 @@
       "ruleSourceRequired": "اختر حقلًا مصدرًا لكل شرط.",
       "ruleComparisonRequired": "أدخل قيمة مقارنة لكل شرط غير فارغ.",
       "ruleSelfReference": "لا يمكن للحقل الاعتماد على نفسه."
-    }
+    },
+    "thisField": "هذا الحقل"
   },
   "treasuryCapitalization": {
     "title": "الرسملة الأولية للخزينة",
@@ -9726,5 +10193,31 @@
       "invalidToken": "هذا الرابط غير صالح أو استُخدم من قبل.",
       "generic": "تعذر إكمال العملية."
     }
+  },
+  "balanceTransfer": {
+    "loadError": "تعذر تحميل الحسابات. يرجى تحديث الصفحة."
+  },
+  "storefrontLive": {
+    "activeCarts": "السلال النشطة",
+    "activity": {
+      "addToCart": "أُضيف إلى السلة",
+      "beginCheckout": "بدأ الدفع",
+      "orderCompleted": "اكتمل الطلب"
+    },
+    "checkoutInProgress": "عمليات دفع قيد التنفيذ",
+    "generalActivity": "نشاط جلسات واجهة المتجر",
+    "liveVisitors": "الزوار الآن",
+    "malformed": "بيانات المراقبة المباشرة غير قابلة للاستخدام",
+    "malformedMessage": "استجابة المراقبة المباشرة غير قابلة للاستخدام، لذلك لا يتم عرض أي عدادات. هذه ليست نتيجة صفر.",
+    "noRecentActivity": "لا يوجد نشاط حديث في واجهة المتجر خلال فترة المراقبة المباشرة.",
+    "polling": "يتم التحديث كل 10 ثوانٍ",
+    "recentActivity": "النشاط الحديث",
+    "recentActivitySubtitle": "أحدث أحداث الدفع والسلة في واجهة المتجر.",
+    "recentOrders": "طلبات آخر 5 دقائق",
+    "stale": "يتم عرض آخر نتيجة ناجحة من تحديث سابق.",
+    "subtitle": "النشاط المرصود دورياً خلال آخر 5 دقائق. تأخر وصول الأحداث السلوكية غير معلوم؛ الطلبات من نشاط الترحيل في SQL.",
+    "title": "المراقبة المباشرة للمتجر",
+    "unavailableMessage": "تعذر تحميل المراقبة المباشرة للمتجر. لا يتم عرض أي عدادات، وهذه ليست نتيجة صفر.",
+    "unavailableTitle": "المراقبة المباشرة للمتجر غير متاحة"
   }
 }

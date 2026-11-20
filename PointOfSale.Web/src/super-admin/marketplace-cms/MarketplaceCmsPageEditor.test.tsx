@@ -1,4 +1,6 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { ConfirmDialogProvider } from '../../common/confirm/ConfirmDialogProvider'
+import i18n from '../../i18n/config'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -57,18 +59,17 @@ function pageResponse(versions: { draft: number | null, published: number | null
 function renderEditor(entry: string) {
     return render(
         <MemoryRouter initialEntries={[entry]}>
-            <Routes>
+            <ConfirmDialogProvider><Routes>
                 <Route path="/super-admin/marketplace/pages/:pageId" element={<MarketplaceCmsPageEditor />} />
-            </Routes>
+            </Routes></ConfirmDialogProvider>
         </MemoryRouter>,
     )
 }
 
 describe('MarketplaceCmsPageEditor version adoption', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
         vi.clearAllMocks()
-        vi.spyOn(window, 'alert').mockImplementation(() => undefined)
-        vi.spyOn(window, 'confirm').mockReturnValue(true)
+        await i18n.changeLanguage('en')
     })
 
     afterEach(() => {
@@ -86,6 +87,7 @@ describe('MarketplaceCmsPageEditor version adoption', () => {
         fireEvent.change(inputs[0], { target: { value: 'Authority' } })
         fireEvent.change(inputs[1], { target: { value: 'authority' } })
         fireEvent.click(screen.getByRole('button', { name: 'Publish' }))
+        fireEvent.click(within(await screen.findByRole('dialog')).getByRole('button', { name: 'Publish' }))
 
         await waitFor(() => expect(service.createPage).toHaveBeenCalledTimes(1))
         await waitFor(() => expect(service.publishPage).toHaveBeenCalledWith(pageId, 1))
@@ -107,6 +109,7 @@ describe('MarketplaceCmsPageEditor version adoption', () => {
         fireEvent.click(screen.getByRole('button', { name: 'Save Draft' }))
         await waitFor(() => expect(service.updatePage).toHaveBeenCalledTimes(2))
         fireEvent.click(screen.getByRole('button', { name: 'Publish' }))
+        fireEvent.click(within(await screen.findByRole('dialog')).getByRole('button', { name: 'Publish' }))
         await waitFor(() => expect(service.publishPage).toHaveBeenCalledTimes(1))
 
         expect(service.updatePage.mock.calls[0][2]).toBe(1)
@@ -147,5 +150,60 @@ describe('MarketplaceCmsPageEditor version adoption', () => {
         expect(await screen.findByText(/Preview never saves or changes versions/)).toBeInTheDocument()
         expect(service.previewPage).not.toHaveBeenCalled()
         expect(service.updatePage).not.toHaveBeenCalled()
+    })
+
+    it.each(['new', pageId])('publish Cancel never creates or updates a dirty draft (%s)', async id => {
+        service.getPage.mockResolvedValue(draftResponse(1))
+        const { container } = renderEditor(`/super-admin/marketplace/pages/${id}`)
+        if (id !== 'new') await screen.findByDisplayValue('authority')
+        const inputs = container.querySelectorAll('input')
+        fireEvent.change(inputs[0], { target: { value: 'Unsaved' } })
+        fireEvent.change(inputs[1], { target: { value: 'unsaved' } })
+        fireEvent.click(screen.getByRole('button', { name: 'Publish' }))
+        const dialog = await screen.findByRole('dialog')
+        expect(service.createPage).not.toHaveBeenCalled()
+        expect(service.updatePage).not.toHaveBeenCalled()
+        fireEvent.click(within(dialog).getByRole('button', { name: 'Cancel' }))
+        expect(service.publishPage).not.toHaveBeenCalled()
+        expect(screen.getByDisplayValue('Unsaved')).toBeInTheDocument()
+    })
+
+    it('holds the same publish confirmation through save and publish settlement', async () => {
+        service.getPage.mockResolvedValue(draftResponse(1))
+        let settle!: (value: unknown) => void
+        service.updatePage.mockReturnValue(new Promise(resolve => { settle = resolve }))
+        service.publishPage.mockResolvedValue(publishedResponse(2))
+        renderEditor(`/super-admin/marketplace/pages/${pageId}`)
+        fireEvent.change(await screen.findByDisplayValue('authority'), { target: { value: 'updated' } })
+        const publish = screen.getByRole('button', { name: 'Publish' })
+        act(() => { fireEvent.click(publish); fireEvent.click(publish) })
+        const dialog = await screen.findByRole('dialog')
+        const confirm = within(dialog).getByRole('button', { name: 'Publish' })
+        act(() => { fireEvent.click(confirm); fireEvent.click(confirm) })
+        expect(service.updatePage).toHaveBeenCalledTimes(1)
+        fireEvent.keyDown(window, { key: 'Escape' })
+        expect(dialog).toBeInTheDocument()
+        await act(async () => { settle(draftResponse(2)) })
+        await waitFor(() => expect(service.publishPage).toHaveBeenCalledWith(pageId, 2))
+        await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
+    })
+
+    it('retains the canonical created draft after publish failure, then edits by versioned update instead of another create', async () => {
+        service.createPage.mockResolvedValue(draftResponse(1))
+        service.publishPage.mockRejectedValue(new Error('SQL private diagnostic'))
+        service.updatePage.mockResolvedValue(draftResponse(2))
+        const { container } = renderEditor('/super-admin/marketplace/pages/new')
+        const inputs = container.querySelectorAll('input')
+        fireEvent.change(inputs[0], { target: { value: 'Authority' } })
+        fireEvent.change(inputs[1], { target: { value: 'authority' } })
+        fireEvent.click(screen.getByRole('button', { name: 'Publish' }))
+        fireEvent.click(within(await screen.findByRole('dialog')).getByRole('button', { name: 'Publish' }))
+        await screen.findByText(/current draft is retained/i)
+        expect(screen.queryByText(/SQL private/)).toBeNull()
+        await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
+        fireEvent.change(screen.getByDisplayValue('authority'), { target: { value: 'recovered-draft' } })
+        fireEvent.click(screen.getByRole('button', { name: 'Save Draft' }))
+        await waitFor(() => expect(service.updatePage).toHaveBeenCalledWith(pageId, expect.anything(), 1))
+        expect(service.createPage).toHaveBeenCalledTimes(1)
     })
 })

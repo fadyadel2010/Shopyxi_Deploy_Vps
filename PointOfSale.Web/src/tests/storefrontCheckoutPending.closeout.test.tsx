@@ -14,24 +14,24 @@ vi.mock('../../../PointOfSale.Storefront/node_modules/react', async () => vi.imp
 vi.mock('../../../PointOfSale.Storefront/node_modules/react-router-dom', () => ({
     useSearchParams: () => [new URLSearchParams('orderId=11111111-1111-4111-8111-111111111111')],
 }))
-vi.mock('@/components/layout', () => ({ Layout: ({ children }: { children: ReactNode }) => <main>{children}</main> }))
-vi.mock('@/components/common/AffiliateLink', () => ({ AffiliateLink: ({ children }: { children: ReactNode }) => <span>{children}</span> }))
-vi.mock('@/hooks', () => ({ useCategories: () => ({ categories: [], isLoading: false }) }))
-vi.mock('@/hooks/useAffiliateNavigation', () => ({ useAffiliateNavigate: () => probes.navigate }))
-vi.mock('@/i18n', () => ({ useTranslation: () => ({ t: (key: string) => key }) }))
-vi.mock('@/services/api', () => ({
+vi.mock('@storefront/components/layout', () => ({ Layout: ({ children }: { children: ReactNode }) => <main>{children}</main> }))
+vi.mock('@storefront/components/common/AffiliateLink', () => ({ AffiliateLink: ({ children }: { children: ReactNode }) => <span>{children}</span> }))
+vi.mock('@storefront/hooks', () => ({ useCategories: () => ({ categories: [], isLoading: false }) }))
+vi.mock('@storefront/hooks/useAffiliateNavigation', () => ({ useAffiliateNavigate: () => probes.navigate }))
+vi.mock('@storefront/i18n', () => ({ useTranslation: () => ({ t: (key: string) => key }) }))
+vi.mock('@storefront/services/api', () => ({
     paymentStatusApi: { getCanonicalPaymentStatus: probes.status, retryPaymobPayment: probes.retry },
     normalizeError: () => ({ message: 'Controlled outage' }),
 }))
-vi.mock('@/store/cartStore', () => ({ useCartStore: { getState: () => ({ clearCart: probes.clearCart }) } }))
-vi.mock('@/store/checkoutStore', () => ({ useCheckoutStore: { getState: () => ({ reset: probes.reset }) }, clearPersistedCheckoutStateStorage: vi.fn() }))
-vi.mock('@/features/checkout/activeCheckoutOrderContext', () => ({
+vi.mock('@storefront/store/cartStore', () => ({ useCartStore: { getState: () => ({ clearCart: probes.clearCart }) } }))
+vi.mock('@storefront/store/checkoutStore', () => ({ useCheckoutStore: { getState: () => ({ reset: probes.reset }) }, clearPersistedCheckoutStateStorage: vi.fn() }))
+vi.mock('@storefront/features/checkout/activeCheckoutOrderContext', () => ({
     readCheckoutTokenForOrder: () => null,
     readActiveCheckoutOrderContext: () => ({ orderId: '11111111-1111-4111-8111-111111111111' }),
     clearActiveCheckoutOrderContextIfMatches: probes.clearContext,
     clearCheckoutTokenForOrder: vi.fn(),
 }))
-vi.mock('@/features/checkout/checkoutTelemetry', () => ({
+vi.mock('@storefront/features/checkout/checkoutTelemetry', () => ({
     emitGuestPaymentRecoverySuccess: vi.fn(), emitCartUnexpectedClearBlocked: vi.fn(), emitCheckoutFinalizeFailure: vi.fn(),
 }))
 

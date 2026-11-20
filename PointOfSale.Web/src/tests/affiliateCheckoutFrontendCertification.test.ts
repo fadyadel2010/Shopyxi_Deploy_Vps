@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
-import { acceptAffiliateRefVerdict, clearAffiliateRef, getAffiliateRefCode, initAffiliateRefTracker, isAffiliateRefActive } from '@/bootstrap/affiliateRefTracker';
+import { acceptAffiliateRefVerdict, clearAffiliateRef, getAffiliateRefCode, initAffiliateRefTracker, isAffiliateRefActive } from '@storefront/bootstrap/affiliateRefTracker';
 
-vi.mock('@/bootstrap/tenantScopedStorage', () => ({ tryGetTenantScopedStorageKey: (key: string) => `${key}:p53c-store` }));
+vi.mock('@storefront/bootstrap/tenantScopedStorage', () => ({ tryGetTenantScopedStorageKey: (key: string) => `${key}:p53c-store` }));
 
 const STOREFRONT_SRC = path.resolve(__dirname, '../../../PointOfSale.Storefront/src');
 

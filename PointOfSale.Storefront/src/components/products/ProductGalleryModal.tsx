@@ -2,6 +2,8 @@ import React from 'react';
 import { createPortal } from 'react-dom';
 import type { ProductMediaDto } from '@/types';
 import { OptimizedImage } from '@/components/media';
+import { useTranslation } from '@/i18n';
+import { useFocusTrap, useBodyScrollLock } from '@/hooks/useScrollPosition';
 import {
     getMediaLabel,
     isImageMedia,
@@ -36,68 +38,48 @@ export const ProductGalleryModal: React.FC<ProductGalleryModalProps> = ({
     const activeMedia = mediaItems[activeIndex] ?? null;
     const activeProvider = (activeMedia?.provider || '').toLowerCase();
     const activePlaybackUrl = activeMedia?.presentationUrl || (activeProvider === 'youtube' ? null : activeMedia?.url);
+    const { t, direction } = useTranslation();
+    const handlers = React.useRef({ onClose, onNext, onPrevious, direction });
+    handlers.current = { onClose, onNext, onPrevious, direction };
+    const active = isOpen && Boolean(activeMedia);
+    useFocusTrap(dialogRef, active);
+    useBodyScrollLock(active);
 
     React.useEffect(() => {
-        if (!isOpen || typeof document === 'undefined') {
+        if (!active || typeof document === 'undefined') {
             return undefined;
         }
 
-        const previousOverflow = document.body.style.overflow;
-        document.body.style.overflow = 'hidden';
         closeButtonRef.current?.focus();
 
         const handleKeyDown = (event: KeyboardEvent) => {
             if (event.key === 'Escape') {
                 event.preventDefault();
-                onClose();
+                handlers.current.onClose();
                 return;
             }
 
+            if (event.target instanceof Element && event.target.closest('video, input, textarea, select, iframe')) return;
             if (event.key === 'ArrowLeft') {
                 event.preventDefault();
-                onPrevious();
+                (handlers.current.direction === 'rtl' ? handlers.current.onNext : handlers.current.onPrevious)();
                 return;
             }
 
             if (event.key === 'ArrowRight') {
                 event.preventDefault();
-                onNext();
+                (handlers.current.direction === 'rtl' ? handlers.current.onPrevious : handlers.current.onNext)();
                 return;
             }
 
-            if (event.key !== 'Tab' || !dialogRef.current) {
-                return;
-            }
-
-            const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
-                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-            );
-
-            if (!focusable.length) {
-                event.preventDefault();
-                return;
-            }
-
-            const first = focusable[0];
-            const last = focusable[focusable.length - 1];
-            const activeElement = document.activeElement as HTMLElement | null;
-
-            if (event.shiftKey && activeElement === first) {
-                event.preventDefault();
-                last.focus();
-            } else if (!event.shiftKey && activeElement === last) {
-                event.preventDefault();
-                first.focus();
-            }
         };
 
         document.addEventListener('keydown', handleKeyDown);
 
         return () => {
-            document.body.style.overflow = previousOverflow;
             document.removeEventListener('keydown', handleKeyDown);
         };
-    }, [isOpen, onClose, onNext, onPrevious]);
+    }, [active]);
 
     if (!isOpen || typeof document === 'undefined' || !activeMedia) {
         return null;
@@ -108,11 +90,13 @@ export const ProductGalleryModal: React.FC<ProductGalleryModalProps> = ({
             className="fixed inset-0 z-[90] flex items-center justify-center bg-black/90 p-4 md:p-6"
             aria-modal="true"
             role="dialog"
-            aria-label={`${productName} media gallery`}
+            dir={direction}
+            aria-label={t('gallery.title', { product: productName })}
             onClick={onClose}
         >
             <div
                 ref={dialogRef}
+                tabIndex={-1}
                 className="relative flex h-full max-h-[92vh] w-full max-w-6xl flex-col overflow-hidden rounded-3xl border border-white/10 bg-slate-950 shadow-2xl"
                 onClick={(event) => event.stopPropagation()}
             >
@@ -120,7 +104,7 @@ export const ProductGalleryModal: React.FC<ProductGalleryModalProps> = ({
                     <div>
                         <div className="text-sm font-semibold">{productName}</div>
                         <div className="text-xs text-white/60">
-                            Item {activeIndex + 1} of {mediaItems.length}
+                            {t('gallery.itemCount', { current: activeIndex + 1, total: mediaItems.length })}
                         </div>
                     </div>
 
@@ -130,7 +114,7 @@ export const ProductGalleryModal: React.FC<ProductGalleryModalProps> = ({
                         onClick={onClose}
                         className="rounded-full border border-white/15 px-3 py-2 text-sm font-medium text-white transition hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/60"
                     >
-                        Close
+                        {t('common.close')}
                     </button>
                 </div>
 
@@ -153,7 +137,7 @@ export const ProductGalleryModal: React.FC<ProductGalleryModalProps> = ({
                         />
                     ) : activeProvider === 'youtube' ? (
                         <div className="flex h-full w-full items-center justify-center px-6 text-center text-sm text-white/70">
-                            Video preview unavailable
+                            {t('gallery.videoUnavailable')}
                         </div>
                     ) : (
                         <video
@@ -171,10 +155,10 @@ export const ProductGalleryModal: React.FC<ProductGalleryModalProps> = ({
                             <button
                                 type="button"
                                 onClick={onPrevious}
-                                className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/60"
-                                aria-label="Previous media"
+                                className="absolute start-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/60"
+                                aria-label={t('gallery.previous')}
                             >
-                                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <svg aria-hidden="true" className={`h-5 w-5 ${direction === 'rtl' ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                     <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </button>
@@ -182,10 +166,10 @@ export const ProductGalleryModal: React.FC<ProductGalleryModalProps> = ({
                             <button
                                 type="button"
                                 onClick={onNext}
-                                className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/60"
-                                aria-label="Next media"
+                                className="absolute end-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/60"
+                                aria-label={t('gallery.next')}
                             >
-                                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <svg aria-hidden="true" className={`h-5 w-5 ${direction === 'rtl' ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                     <path d="M9 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </button>
@@ -209,7 +193,8 @@ export const ProductGalleryModal: React.FC<ProductGalleryModalProps> = ({
                                             ? 'border-primary ring-2 ring-primary/25'
                                             : 'border-white/10 hover:border-white/30'
                                     }`}
-                                    aria-label={`View ${getMediaLabel(item, productName, index)}`}
+                                    aria-label={t('gallery.view', { label: getMediaLabel(item, productName, index) })}
+                                    aria-pressed={isActive}
                                 >
                                     {isImageMedia(item) ? (
                                         <OptimizedImage

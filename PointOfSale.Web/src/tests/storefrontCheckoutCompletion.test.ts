@@ -20,7 +20,7 @@ const {
     emitCheckoutFinalizeFailure: vi.fn(),
 }));
 
-vi.mock('@/store/cartStore', () => ({
+vi.mock('@storefront/store/cartStore', () => ({
     useCartStore: {
         getState: () => ({
             clearCart,
@@ -28,7 +28,7 @@ vi.mock('@/store/cartStore', () => ({
     },
 }));
 
-vi.mock('@/store/checkoutStore', () => ({
+vi.mock('@storefront/store/checkoutStore', () => ({
     useCheckoutStore: {
         getState: () => ({
             reset: resetCheckoutState,
@@ -37,18 +37,18 @@ vi.mock('@/store/checkoutStore', () => ({
     clearPersistedCheckoutStateStorage,
 }));
 
-vi.mock('@/features/checkout/activeCheckoutOrderContext', () => ({
+vi.mock('@storefront/features/checkout/activeCheckoutOrderContext', () => ({
     readActiveCheckoutOrderContext,
     clearActiveCheckoutOrderContextIfMatches,
     clearCheckoutTokenForOrder,
 }));
 
-vi.mock('@/features/checkout/checkoutTelemetry', () => ({
+vi.mock('@storefront/features/checkout/checkoutTelemetry', () => ({
     emitCartUnexpectedClearBlocked,
     emitCheckoutFinalizeFailure,
 }));
 
-import { finalizeSuccessfulCheckout } from '@/features/checkout/checkoutCompletion';
+import { finalizeSuccessfulCheckout } from '@storefront/features/checkout/checkoutCompletion';
 
 describe('finalizeSuccessfulCheckout', () => {
     beforeEach(() => {

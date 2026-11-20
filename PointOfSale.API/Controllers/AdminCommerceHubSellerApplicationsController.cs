@@ -4,11 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 using PointOfSale.API.DTOs.CommerceHub;
 using PointOfSale.API.Services.CommerceHub;
 using PointOfSale.Core.Interfaces;
+using PointOfSale.Core.Security;
 
 namespace PointOfSale.API.Controllers;
 
 [ApiController]
 [Authorize(Roles = "Owner,Admin")]
+// Merchant enrollment is account-level administration, not ordinary product
+// publishing. Preserve the existing Owner/Admin boundary in canonical policies.
+[Authorize(Policy = PosPermissions.SettingsManage)]
 [Route("api/admin/commercehub/seller-application")]
 public sealed class AdminCommerceHubSellerApplicationsController : ControllerBase
 {

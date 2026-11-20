@@ -7,13 +7,20 @@ import SaleDetailsModal from '../components/SaleDetailsModal'
 import { getInvoiceStatus } from '../components/invoiceAuthoring'
 import { useRTL } from '../hooks/useRTL'
 import { formatDateTime } from '../utils/dateFormat'
+import { useAuthStore } from '../store/authStore'
 
 export default function SalesHistory() {
+    const user = useAuthStore(state => state.user)
+    return <SalesHistoryContent key={JSON.stringify(user)} />
+}
+
+function SalesHistoryContent() {
     const { t } = useTranslation()
     const { formatCurrency } = useSettings()
     const { dir, isRTL, locale } = useRTL()
     const [sales, setSales] = useState([])
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
     const [page, setPage] = useState(1)
     const [totalPages, setTotalPages] = useState(1)
     const [search, setSearch] = useState('')
@@ -29,6 +36,7 @@ export default function SalesHistory() {
         const controller = new AbortController()
         const fetchSales = async () => {
             setLoading(true)
+            setError(null)
             try {
                 const params = {
                     page,
@@ -39,13 +47,17 @@ export default function SalesHistory() {
                 }
                 const response = await api.get('/sales', { params, signal: controller.signal })
                 if (controller.signal.aborted) return
+                const items = Array.isArray(response.data?.items) ? response.data.items : null
+                if (!items) throw new TypeError('malformed-sales-response')
                 const nextTotalPages = Math.max(1, response.data.totalPages || 0)
-                setSales(response.data.items)
+                setSales(items)
                 setTotalPages(nextTotalPages)
                 if (page > nextTotalPages) setPage(nextTotalPages)
             } catch (error) {
                 if (controller.signal.aborted) return
                 setSales([])
+                const status = error?.response?.status
+                setError(status === 401 || status === 403 ? 'unauthorized' : 'failed')
                 console.error('Error fetching sales:', error)
                 showError(t('salesHistory.failedToLoad'))
             } finally {
@@ -128,6 +140,25 @@ export default function SalesHistory() {
                             {loading ? (
                                 <tr>
                                     <td colSpan="6" className="px-6 py-4 text-center text-gray-500">{t('common.loading')}</td>
+                                </tr>
+                            ) : error ? (
+                                <tr>
+                                    <td colSpan="6" className="px-6 py-4 text-center">
+                                        <p className="text-sm font-medium text-gray-800">
+                                            {error === 'unauthorized' ? t('salesHistory.accessDenied') : t('salesHistory.unavailableTitle')}
+                                        </p>
+                                        <p className="mt-1 text-sm text-gray-500">
+                                            {error === 'unauthorized' ? t('salesHistory.accessDeniedMessage') : t('salesHistory.unavailableMessage')}
+                                        </p>
+                                        <button
+                                            type="button"
+                                            onClick={() => setRefreshVersion(version => version + 1)}
+                                            disabled={loading}
+                                            className="btn-secondary mt-3 text-sm"
+                                        >
+                                            {t('common.retry')}
+                                        </button>
+                                    </td>
                                 </tr>
                             ) : sales.length === 0 ? (
                                 <tr>

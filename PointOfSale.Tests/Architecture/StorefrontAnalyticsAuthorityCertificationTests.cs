@@ -15,7 +15,8 @@ public sealed class StorefrontAnalyticsAuthorityCertificationTests
         Assert.Contains("StorefrontRevenueSourceTypes.Contains(entry.JournalEntry.SourceType)", reader, StringComparison.Ordinal);
         Assert.Contains("entry.Account.AccountCode == AccountCodes.EcommerceSales", reader, StringComparison.Ordinal);
         Assert.Contains("entry.CreditAmount > 0m", reader, StringComparison.Ordinal);
-        Assert.Contains("entry.CreditAmount - entry.DebitAmount", reader, StringComparison.Ordinal);
+        Assert.Contains("line.CreditAmount - line.DebitAmount", reader, StringComparison.Ordinal);
+        Assert.Contains("entry.JournalEntry.JournalDate", reader, StringComparison.Ordinal);
         Assert.DoesNotContain("order.Total", reader, StringComparison.Ordinal);
     }
 
@@ -40,10 +41,11 @@ public sealed class StorefrontAnalyticsAuthorityCertificationTests
         var realtime = ReadRepoFile("PointOfSale.API/Services/Analytics/AnalyticsRealtimeService.cs");
         var metricReader = ReadRepoFile("PointOfSale.Infrastructure/Analytics/Alerts/AnalyticsMetricReader.cs");
 
-        Assert.Contains("_authorityReader.GetCommerceSnapshotAsync", realtime, StringComparison.Ordinal);
+        Assert.Contains("_authorityReader.GetRecognizedOrderActivityAsync", realtime, StringComparison.Ordinal);
         Assert.Contains("eventType == AnalyticsEventType.PurchaseCompleted", realtime, StringComparison.Ordinal);
         Assert.DoesNotContain("GetCounterValueAsync(tenantId, \"purchasecompleted\"", realtime, StringComparison.Ordinal);
         Assert.Contains("GetPurchaseCountAsync", metricReader, StringComparison.Ordinal);
+        Assert.Contains("_authorityReader.GetRecognizedOrderActivityAsync", metricReader, StringComparison.Ordinal);
         Assert.DoesNotContain("AnalyticsMetric.PurchaseCompleted => await GetCounterValueAsync", metricReader, StringComparison.Ordinal);
     }
 
@@ -108,7 +110,7 @@ public sealed class StorefrontAnalyticsAuthorityCertificationTests
         var controllers = ReadRepoFiles("PointOfSale.API/Controllers", "*.cs");
         var analyticsControllers = string.Join(
             Environment.NewLine,
-            controllers.Where(file => file.path.Contains("Analytics", StringComparison.OrdinalIgnoreCase))
+            controllers.Where(file => Path.GetFileName(file.path).Contains("Analytics", StringComparison.OrdinalIgnoreCase))
                 .Select(file => file.content));
 
         Assert.DoesNotContain("text/csv", analyticsControllers, StringComparison.OrdinalIgnoreCase);

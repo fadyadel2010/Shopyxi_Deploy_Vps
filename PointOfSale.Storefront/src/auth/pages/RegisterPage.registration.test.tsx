@@ -5,7 +5,18 @@ const mocks = vi.hoisted(() => ({
     guard: { status: 'unauthenticated', isLoading: true, showContent: false },
     auth: { error: null as null | { code: string; message: string }, isLoading: false },
 }));
-vi.mock('@/i18n', () => ({ useTranslation: () => ({ t: (key: string, options?: { defaultValue?: string }) => options?.defaultValue || key, direction: 'ltr' }) }));
+vi.mock('@/i18n', async () => {
+    const { t: translate } = await import('@/i18n/languageStore');
+    return {
+        useTranslation: () => ({
+            t: (key: string, options?: { defaultValue?: string }) =>
+                key.startsWith('auth.errors.')
+                    ? translate(key, undefined, 'en')
+                    : options?.defaultValue || key,
+            direction: 'ltr',
+        }),
+    };
+});
 vi.mock('react-router-dom', () => ({
     useNavigate: () => vi.fn(), useLocation: () => ({ search: '' }),
     Link: ({ to, children }: { to: string; children: React.ReactNode }) => <a href={to}>{children}</a>,

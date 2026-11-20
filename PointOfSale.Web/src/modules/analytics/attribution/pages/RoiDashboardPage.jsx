@@ -40,7 +40,7 @@ const MODEL_OPTIONS = [
 ]
 
 export default function RoiDashboardPage() {
-    const { t } = useTranslation()
+    const { t, i18n } = useTranslation()
     const [period, setPeriod] = useState('last_30_days')
     const [model, setModel] = useState('LastTouch')
 
@@ -54,7 +54,7 @@ export default function RoiDashboardPage() {
                     to="/analytics/attribution"
                     className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-4"
                 >
-                    <ArrowLeft size={16} />
+                    <ArrowLeft size={16} className={i18n.dir() === 'rtl' ? 'rotate-180' : ''} />
                     {t('roi.backToAttribution', 'Back to Attribution')}
                 </Link>
                 <div className="flex flex-wrap gap-4 items-center justify-between">
@@ -80,6 +80,7 @@ export default function RoiDashboardPage() {
             <div className="flex flex-wrap gap-3 items-center justify-between mb-6">
                 <div className="flex flex-wrap items-center gap-4">
                     <select
+                        aria-label={t('attribution.periodLabel')}
                         value={period}
                         onChange={(e) => setPeriod(e.target.value)}
                         className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500"
@@ -91,6 +92,7 @@ export default function RoiDashboardPage() {
                         ))}
                     </select>
                     <select
+                        aria-label={t('attribution.modelLabel')}
                         value={model}
                         onChange={(e) => setModel(e.target.value)}
                         className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500"
@@ -114,7 +116,7 @@ export default function RoiDashboardPage() {
 
             {/* Error State */}
             {error && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <div role="alert" className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
                     <div className="flex items-center gap-2 text-red-700">
                         <AlertCircle size={18} />
                         {error}

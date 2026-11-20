@@ -8,11 +8,12 @@
  * - Forces logout on success
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useId, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '@/i18n';
 import { useAuthStore } from '@/auth/store/authStore';
 import { useAccount } from '@/auth/hooks/useAccount';
+import { useFocusTrap, useBodyScrollLock } from '@/hooks/useScrollPosition';
 
 interface ChangePasswordModalProps {
     isOpen: boolean;
@@ -26,7 +27,9 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
     const { t, direction } = useTranslation();
     const navigate = useNavigate();
     const { logout } = useAuthStore();
-    const { changePassword, isLoading, error, clearError } = useAccount();
+    const { changePassword, isLoading: accountLoading, error, clearError } = useAccount();
+    const [submitting, setSubmitting] = useState(false);
+    const isLoading = accountLoading || submitting;
 
     // Form state
     const [currentPassword, setCurrentPassword] = useState('');
@@ -34,6 +37,17 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [validationError, setValidationError] = useState<string | null>(null);
+    const dialogRef = useRef<HTMLDivElement>(null);
+    const submittingRef = useRef(false);
+    const id = useId();
+    useFocusTrap(dialogRef, isOpen);
+    useBodyScrollLock(isOpen);
+    useEffect(() => {
+        if (isOpen) dialogRef.current?.querySelector<HTMLElement>('button:not([disabled]), input:not([disabled])')?.focus();
+    }, [isOpen, showConfirmation]);
+    useEffect(() => {
+        if (isOpen && isLoading) dialogRef.current?.focus();
+    }, [isOpen, isLoading]);
 
     const resetForm = () => {
         setCurrentPassword('');
@@ -45,6 +59,7 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
     };
 
     const handleClose = () => {
+        if (submittingRef.current || isLoading) return;
         resetForm();
         onClose();
     };
@@ -75,15 +90,18 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
     };
 
     const handleSubmitRequest = () => {
+        if (submittingRef.current || isLoading) return;
         if (!validateForm()) return;
         // Show confirmation modal BEFORE making API call
         setShowConfirmation(true);
     };
 
     const handleConfirmAndSubmit = async () => {
+        if (submittingRef.current || isLoading) return;
+        submittingRef.current = true;
+        setSubmitting(true);
         // CRITICAL: Only called after user confirms warning
-        setShowConfirmation(false);
-
+        try {
         const result = await changePassword({
             currentPassword,
             newPassword,
@@ -101,12 +119,30 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
                 }
             });
         }
+        } finally {
+            submittingRef.current = false;
+            setSubmitting(false);
+            setShowConfirmation(false);
+        }
     };
 
     if (!isOpen) return null;
 
     return (
         <div
+            ref={dialogRef}
+            tabIndex={-1}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={`${id}-title`}
+            aria-describedby={`${id}-warning`}
+            aria-busy={isLoading || undefined}
+            onKeyDown={(event) => {
+                if (event.key !== 'Escape' || submittingRef.current || isLoading) return;
+                event.preventDefault();
+                if (showConfirmation) setShowConfirmation(false);
+                else if (!currentPassword && !newPassword && !confirmPassword) handleClose();
+            }}
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
             dir={direction}
         >
@@ -121,13 +157,13 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
                             </svg>
                         </div>
                         <div>
-                            <h3 className="text-lg font-semibold text-text">
+                            <h3 id={`${id}-title`} className="text-lg font-semibold text-text">
                                 {t('common.confirm', { defaultValue: 'Confirm Action' })}
                             </h3>
                         </div>
                     </div>
 
-                    <p className="text-muted mb-6">
+                    <p id={`${id}-warning`} className="text-muted mb-6">
                         {t('account.security.passwordChangeWarning', {
                             defaultValue: 'Changing your password will log you out from all devices. You will need to log in again on all your devices.'
                         })}
@@ -135,7 +171,8 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
 
                     <div className="flex gap-3 justify-end">
                         <button
-                            onClick={() => setShowConfirmation(false)}
+                            onClick={() => { if (!submittingRef.current) setShowConfirmation(false); }}
+                            disabled={isLoading}
                             className="px-4 py-2 text-muted hover:text-text transition-colors"
                         >
                             {t('common.cancel', { defaultValue: 'Cancel' })}
@@ -158,11 +195,12 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
             {!showConfirmation && (
                 <div className="bg-background rounded-xl shadow-2xl max-w-md w-full mx-4 p-6">
                     <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-xl font-semibold text-text">
+                        <h2 id={`${id}-title`} className="text-xl font-semibold text-text">
                             {t('account.security.changePassword', { defaultValue: 'Change Password' })}
                         </h2>
                         <button
                             onClick={handleClose}
+                            disabled={isLoading}
                             className="text-muted hover:text-text transition-colors"
                             aria-label={t('common.close', { defaultValue: 'Close' })}
                         >
@@ -179,7 +217,7 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                                     d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                             </svg>
-                            <p className="text-sm text-amber-800">
+                            <p id={`${id}-warning`} className="text-sm text-amber-800">
                                 {t('account.security.passwordChangeWarning', {
                                     defaultValue: 'Changing your password will log you out from all devices.'
                                 })}
@@ -189,7 +227,7 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
 
                     {/* Error Display */}
                     {(validationError || error) && (
-                        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                        <div id={`${id}-error`} role="alert" className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
                             <p className="text-sm text-red-600">{validationError || error}</p>
                         </div>
                     )}
@@ -197,10 +235,14 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
                     <form onSubmit={(e) => { e.preventDefault(); handleSubmitRequest(); }}>
                         <div className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-text mb-1">
+                                <label htmlFor={`${id}-current`} className="block text-sm font-medium text-text mb-1">
                                     {t('account.security.currentPassword', { defaultValue: 'Current Password' })}
                                 </label>
                                 <input
+                                    id={`${id}-current`}
+                                    required
+                                    disabled={isLoading}
+                                    aria-describedby={validationError || error ? `${id}-error` : undefined}
                                     type="password"
                                     value={currentPassword}
                                     onChange={(e) => setCurrentPassword(e.target.value)}
@@ -210,17 +252,22 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-text mb-1">
+                                <label htmlFor={`${id}-new`} className="block text-sm font-medium text-text mb-1">
                                     {t('account.security.newPassword', { defaultValue: 'New Password' })}
                                 </label>
                                 <input
+                                    id={`${id}-new`}
+                                    required
+                                    minLength={8}
+                                    disabled={isLoading}
+                                    aria-describedby={`${id}-requirements${validationError || error ? ` ${id}-error` : ''}`}
                                     type="password"
                                     value={newPassword}
                                     onChange={(e) => setNewPassword(e.target.value)}
                                     className="w-full px-4 py-2 border border-muted/30 rounded-lg focus:outline-none focus:border-primary"
                                     autoComplete="new-password"
                                 />
-                                <p className="text-xs text-muted mt-1">
+                                <p id={`${id}-requirements`} className="text-xs text-muted mt-1">
                                     {t('account.security.passwordRequirements', {
                                         defaultValue: 'At least 8 characters with uppercase, lowercase, and number'
                                     })}
@@ -228,10 +275,15 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-text mb-1">
+                                <label htmlFor={`${id}-confirm`} className="block text-sm font-medium text-text mb-1">
                                     {t('account.security.confirmPassword', { defaultValue: 'Confirm Password' })}
                                 </label>
                                 <input
+                                    id={`${id}-confirm`}
+                                    required
+                                    disabled={isLoading}
+                                    aria-invalid={newPassword !== confirmPassword && Boolean(validationError) || undefined}
+                                    aria-describedby={validationError || error ? `${id}-error` : undefined}
                                     type="password"
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
@@ -245,6 +297,7 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
                             <button
                                 type="button"
                                 onClick={handleClose}
+                                disabled={isLoading}
                                 className="px-4 py-2 text-muted hover:text-text transition-colors"
                             >
                                 {t('common.cancel', { defaultValue: 'Cancel' })}

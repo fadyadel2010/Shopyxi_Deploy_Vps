@@ -12,7 +12,8 @@ describe('public merchant admission UX', () => {
     it.each([false, null, 'true'])('does not mount a registration form for a non-authoritative open policy: %s', async enabled => {
         vi.mocked(api.get).mockResolvedValue({ data: { enabled } })
         const { container } = render(<MemoryRouter><Register /></MemoryRouter>)
-        await screen.findByText('New store creation is temporarily unavailable')
+        await screen.findByText('tenantRegistration.admission.closedTitle')
+        expect(screen.getByRole('region', { name: 'tenantRegistration.admission.closedTitle' })).toBeInTheDocument()
         expect(container.querySelector('form')).toBeNull()
         expect(container.querySelector('button[type=submit]')).toBeNull()
         expect(screen.getByRole('link')).toHaveAttribute('href', '/login')
@@ -21,7 +22,7 @@ describe('public merchant admission UX', () => {
     it('fails safely when admission policy cannot be loaded', async () => {
         vi.mocked(api.get).mockRejectedValue(new Error('Unavailable'))
         const { container } = render(<MemoryRouter><Register /></MemoryRouter>)
-        await screen.findByText('New store creation is temporarily unavailable')
+        await screen.findByText('tenantRegistration.admission.unavailableTitle')
         expect(container.querySelector('form')).toBeNull()
         expect(api.post).not.toHaveBeenCalled()
     })

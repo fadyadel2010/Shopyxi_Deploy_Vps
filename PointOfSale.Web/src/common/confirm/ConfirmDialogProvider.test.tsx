@@ -6,7 +6,7 @@ import { ConfirmDialogProvider, useConfirmDialog } from './ConfirmDialogProvider
 // RTL direction from i18next; a deterministic double keeps these tests focused
 // on dialog behavior instead of translation content.
 let mockLanguage = 'en'
-const mockT = vi.fn((key: string) => key)
+const mockT = vi.fn((key: string) => key === 'common.confirm' ? 'Confirm' : key)
 
 vi.mock('react-i18next', () => ({
     useTranslation: () => ({ t: mockT, i18n: { language: mockLanguage } }),

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, Eye, FileText, Globe, Languages, Loader2, Plus, RefreshCcw, RotateCcw, Save, Sparkles, Trash2 } from 'lucide-react'
 import { marketplaceCmsService } from './marketplaceCmsService'
+import { useConfirmDialog } from '../../common/confirm/ConfirmDialogProvider'
 import { sanitizeRichTextHtml } from '@/utils/htmlSanitizer'
 import { getAuthoringErrorFeedback } from '../../modules/storefront/authoringPlatform'
 import { useSuperAdminLocale } from '../i18n/useSuperAdminLocale'
@@ -53,6 +54,9 @@ function createBlock(type) {
 export function MarketplaceCmsPageEditor() {
     const { pageId } = useParams()
     const navigate = useNavigate()
+    const { confirm, confirmAction } = useConfirmDialog()
+    const operationRef = useRef(false)
+    const acceptedPageIdRef = useRef(null)
     const { tr, formatDate, formatDateTime } = useSuperAdminLocale()
     const isNewPage = pageId === 'new'
 
@@ -86,10 +90,18 @@ export function MarketplaceCmsPageEditor() {
 
     useEffect(() => {
         if (isNewPage) {
+            acceptedPageIdRef.current = null
             setPage(null)
             const emptyForm = createEmptyForm()
             setForm(emptyForm)
             setAcceptedFingerprint(getMarketplaceFormFingerprint(emptyForm))
+            setIsLoading(false)
+            return
+        }
+        // A successful create already supplied authoritative identity/version
+        // evidence. Canonical navigation must not race that response with an
+        // older read while the confirmed publish is still settling.
+        if (acceptedPageIdRef.current === pageId) {
             setIsLoading(false)
             return
         }
@@ -108,7 +120,7 @@ export function MarketplaceCmsPageEditor() {
             } catch (err) {
                 if (!cancelled) {
                     console.error('Failed to load marketplace CMS page', err)
-                    setError(err?.message || tr('Unable to load marketplace page.', 'تعذّر تحميل صفحة السوق.'))
+                    setError(tr('Unable to load marketplace page.', 'تعذّر تحميل صفحة السوق.'))
                 }
             } finally {
                 if (!cancelled) {
@@ -125,6 +137,7 @@ export function MarketplaceCmsPageEditor() {
     }, [isNewPage, pageId])
 
     function adoptMarketplaceResponse(response) {
+        acceptedPageIdRef.current = response.id
         const acceptedForm = fromPageResponse(response)
         setPage(response)
         setForm(acceptedForm)
@@ -134,6 +147,20 @@ export function MarketplaceCmsPageEditor() {
 
     function patchForm(patch) {
         setForm((current) => ({ ...current, ...patch }))
+    }
+
+    function authoringFailure(error) {
+        const { kind } = getAuthoringErrorFeedback(error)
+        if (kind === 'conflict' || kind === 'precondition') {
+            return tr('The page changed. Refresh the latest version before retrying your draft.', 'تغيّرت الصفحة. حدّث أحدث إصدار قبل إعادة محاولة حفظ المسودة.')
+        }
+        if (kind === 'forbidden') {
+            return tr('You do not have permission to complete this action.', 'ليس لديك إذن لإكمال هذا الإجراء.')
+        }
+        if (kind === 'validation' || kind === 'duplicate' || kind === 'already-exists') {
+            return tr('Review the page fields and unique slug, then try again.', 'راجع حقول الصفحة والمعرّف الفريد، ثم أعد المحاولة.')
+        }
+        return tr('The authoring request could not be completed. Your current draft is retained; refresh before retrying.', 'تعذّر إكمال طلب التحرير. تم الاحتفاظ بالمسودة الحالية؛ حدّث الصفحة قبل إعادة المحاولة.')
     }
 
     function patchLocalizedField(fieldKey, value) {
@@ -170,8 +197,14 @@ export function MarketplaceCmsPageEditor() {
     }
 
     async function handleSave() {
+        if (operationRef.current) return null
+        operationRef.current = true
+        try { return await saveDraft() } finally { operationRef.current = false }
+    }
+
+    async function saveDraft() {
         if (!form.slug.trim() || !form.titleLocalized.en.trim()) {
-            setError('English title and slug are required.')
+            setError(tr('English title and slug are required.', 'العنوان الإنجليزي والمعرّف مطلوبان.'))
             return null
         }
         if (!isNewPage && !isDirty) return page
@@ -205,17 +238,16 @@ export function MarketplaceCmsPageEditor() {
                 setError(
                     refreshed
                         ? tr(
-                              `${err.message} The latest page version has been loaded.`,
-                              `${err.message} تم تحميل أحدث إصدار للصفحة.`,
+                              'The latest page version has been loaded.',
+                              'تم تحميل أحدث إصدار للصفحة.',
                           )
                         : tr(
-                              `${err.message} The latest page version could not be loaded.`,
-                              `${err.message} تعذّر تحميل أحدث إصدار للصفحة.`,
+                              'The latest page version could not be loaded.',
+                              'تعذّر تحميل أحدث إصدار للصفحة.',
                           ),
                 )
             } else {
-                const feedback = getAuthoringErrorFeedback(err)
-                setError(`${feedback.title}: ${feedback.message}`)
+                setError(authoringFailure(err))
             }
             return null
         } finally {
@@ -224,38 +256,34 @@ export function MarketplaceCmsPageEditor() {
     }
 
     async function handlePublish() {
-        const target = (isDirty || !page) ? await handleSave() : page
-        if (!target) {
-            return
-        }
-
-        if (
-            !window.confirm(
-                tr(
-                    'Publish this page to the marketplace domain now?',
-                    'هل تريد نشر هذه الصفحة على نطاق السوق الآن؟',
-                ),
-            )
-        ) {
-            return
-        }
-
-        setIsPublishing(true)
+        if (operationRef.current) return
+        operationRef.current = true
         try {
-            const published = await marketplaceCmsService.publishPage(
-                target.id,
-                marketplaceCmsService.getPageVersion(target),
-            )
-            adoptMarketplaceResponse(published)
-            setNotice(tr('Marketplace page published successfully.', 'تم نشر صفحة السوق بنجاح.'))
+            await confirmAction({
+                title: tr('Publish page', 'نشر الصفحة'),
+                description: tr('Save any changes and publish this page to the marketplace domain now?', 'هل تريد حفظ التغييرات ونشر هذه الصفحة على نطاق السوق الآن؟'),
+                confirmLabel: tr('Publish', 'نشر'),
+                awaitAction: true,
+                onConfirm: async () => {
+                    setIsPublishing(true)
+                    const target = (isDirty || !page) ? await saveDraft() : page
+                    if (!target) return false
+                    const published = await marketplaceCmsService.publishPage(
+                        target.id,
+                        marketplaceCmsService.getPageVersion(target),
+                    )
+                    adoptMarketplaceResponse(published)
+                    setNotice(tr('Marketplace page published successfully.', 'تم نشر صفحة السوق بنجاح.'))
+                },
+            })
         } catch (err) {
             console.error('Failed to publish marketplace CMS page', err)
             if (marketplaceCmsService.isConcurrencyConflict(err)) {
                 await refreshPageAfterConflict()
             }
-            const feedback = getAuthoringErrorFeedback(err)
-            setError(`${feedback.title}: ${feedback.message}`)
+            setError(authoringFailure(err))
         } finally {
+            operationRef.current = false
             setIsPublishing(false)
         }
     }
@@ -293,12 +321,12 @@ export function MarketplaceCmsPageEditor() {
             window.open(previewUrl, '_blank', 'noopener,noreferrer')
         } catch (err) {
             console.error('Failed to create marketplace preview link', err)
-            const feedback = getAuthoringErrorFeedback(err)
-            setError(`${feedback.title}: ${feedback.message}`)
+            setError(authoringFailure(err))
         }
     }
 
     async function handleAutoTranslate(fieldKey) {
+        if (operationRef.current) return
         if (activeLanguage !== 'ar') {
             return
         }
@@ -309,30 +337,30 @@ export function MarketplaceCmsPageEditor() {
         }
 
         if (!hasTranslatableContent(translationTarget.source)) {
-            alert(tr('Add English content first, then translate it into Arabic.', 'أضف المحتوى الإنجليزي أولًا ثم ترجمه إلى العربية.'))
+            setError(tr('Add English content first, then translate it into Arabic.', 'أضف المحتوى الإنجليزي أولًا ثم ترجمه إلى العربية.'))
             return
         }
 
-        if (
-            hasTranslatableContent(translationTarget.target) &&
-            !window.confirm(
-                tr(
-                    'Arabic content already exists. Overwrite it with a fresh AI translation?',
-                    'المحتوى العربي موجود بالفعل. هل تريد استبداله بترجمة جديدة من الذكاء الاصطناعي؟',
-                ),
-            )
-        ) {
-            return
-        }
-
-        setTranslatingField(fieldKey)
+        operationRef.current = true
         try {
-            const translated = await marketplaceCmsService.translateContent(translationTarget.source, 'en', 'ar')
-            translationTarget.apply(translated)
+            const translate = async () => {
+                setTranslatingField(fieldKey)
+                const translated = await marketplaceCmsService.translateContent(translationTarget.source, 'en', 'ar')
+                translationTarget.apply(translated)
+            }
+            if (hasTranslatableContent(translationTarget.target)) {
+                await confirmAction({
+                    title: tr('Replace Arabic content', 'استبدال المحتوى العربي'),
+                    description: tr('Arabic content already exists. Overwrite it with a fresh AI translation?', 'المحتوى العربي موجود بالفعل. هل تريد استبداله بترجمة جديدة من الذكاء الاصطناعي؟'),
+                    awaitAction: true,
+                    onConfirm: translate,
+                })
+            } else await translate()
         } catch (err) {
             console.error('Marketplace translation failed', err)
-            alert(err?.message || tr('Unable to translate this field right now.', 'تعذّرت ترجمة هذا الحقل حاليًا.'))
+            setError(tr('Unable to translate this field right now.', 'تعذّرت ترجمة هذا الحقل حاليًا.'))
         } finally {
+            operationRef.current = false
             setTranslatingField('')
         }
     }
@@ -360,8 +388,9 @@ export function MarketplaceCmsPageEditor() {
         }))
     }
 
-    function removeBlock(index) {
-        if (!window.confirm(tr('Delete this content block?', 'هل تريد حذف كتلة المحتوى هذه؟'))) return
+    async function removeBlock(index) {
+        if (operationRef.current) return
+        if (!await confirm({ title: tr('Delete block', 'حذف الكتلة'), description: tr('Delete this content block?', 'هل تريد حذف كتلة المحتوى هذه؟'), variant: 'danger' })) return
         setForm((current) => ({
             ...current,
             localizedContent: {
@@ -371,10 +400,11 @@ export function MarketplaceCmsPageEditor() {
         }))
     }
 
-    function handleCancel() {
+    async function handleCancel() {
+        if (operationRef.current) return
         if (
             !isDirty ||
-            window.confirm(tr('Discard all unsaved marketplace page changes?', 'هل تريد تجاهل كل تغييرات صفحة السوق غير المحفوظة؟'))
+            await confirm({ description: tr('Discard all unsaved marketplace page changes?', 'هل تريد تجاهل كل تغييرات صفحة السوق غير المحفوظة؟') })
         ) {
             const acceptedForm = page ? fromPageResponse(page) : createEmptyForm()
             setForm(acceptedForm)
@@ -385,14 +415,15 @@ export function MarketplaceCmsPageEditor() {
     }
 
     async function handleRefresh() {
+        if (operationRef.current) return
         if (
             isDirty &&
-            !window.confirm(
-                tr(
+            !await confirm({
+                description: tr(
                     'Discard unsaved changes and load the latest marketplace page?',
                     'هل تريد تجاهل التغييرات غير المحفوظة وتحميل أحدث إصدار لصفحة السوق؟',
                 ),
-            )
+            })
         ) return
         if (isNewPage) {
             handleCancel()
@@ -403,8 +434,7 @@ export function MarketplaceCmsPageEditor() {
         try {
             adoptMarketplaceResponse(await marketplaceCmsService.getPage(pageId))
         } catch (err) {
-            const feedback = getAuthoringErrorFeedback(err)
-            setError(`${feedback.title}: ${feedback.message}`)
+            setError(authoringFailure(err))
         } finally {
             setIsLoading(false)
         }
@@ -470,15 +500,17 @@ export function MarketplaceCmsPageEditor() {
                     <div className="flex flex-wrap items-center gap-2">
                         <button
                             type="button"
-                            onClick={() => {
+                            disabled={isSaving || isPublishing}
+                            onClick={async () => {
+                                if (operationRef.current) return
                                 if (
                                     !isDirty ||
-                                    window.confirm(
-                                        tr(
+                                    await confirm({
+                                        description: tr(
                                             'Leave this page and discard unsaved changes?',
                                             'هل تريد مغادرة هذه الصفحة وتجاهل التغييرات غير المحفوظة؟',
                                         ),
-                                    )
+                                    })
                                 ) {
                                     navigate('/super-admin/marketplace/pages')
                                 }
@@ -644,7 +676,7 @@ export function MarketplaceCmsPageEditor() {
 
             {error ? (
                 <InlineNotice tone="rose" title={tr('Action not completed', 'لم يكتمل الإجراء')}>
-                    <span dir="auto">{error}</span>
+                    <span dir="auto" role="alert">{error}</span>
                 </InlineNotice>
             ) : null}
 
@@ -654,6 +686,7 @@ export function MarketplaceCmsPageEditor() {
                 </InlineNotice>
             ) : null}
 
+            <fieldset disabled={isSaving || isPublishing || Boolean(translatingField)} className="min-w-0 border-0 p-0">
             <div className="grid gap-4 xl:grid-cols-[340px_minmax(0,1fr)]">
                 <div className="space-y-4">
                     <Panel title={tr('Page details', 'تفاصيل الصفحة')}>
@@ -800,6 +833,7 @@ export function MarketplaceCmsPageEditor() {
                     )}
                 </Panel>
             </div>
+            </fieldset>
         </SuperAdminPage>
     )
 }

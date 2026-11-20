@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 520 520">
+  <title>SHOPYXI — Standalone Brand Symbol</title>
+  <desc>Standalone blue ribbon S commerce mark with a white shopping bag, orange cart and orange motion swoosh.</desc>
+  <defs>
+    <linearGradient id="blueRibbon" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#00D7F0"/>
+      <stop offset=".38" stop-color="#078BFF"/>
+      <stop offset=".72" stop-color="#0754E8"/>
+      <stop offset="1" stop-color="#0736A8"/>
+    </linearGradient>
+    <linearGradient id="blueRibbonDark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#087BFA"/>
+      <stop offset="1" stop-color="#052F91"/>
+    </linearGradient>
+    <linearGradient id="orange" x1="0" y1="0" x2="1" y2=".2">
+      <stop offset="0" stop-color="#FFB21A"/>
+      <stop offset=".55" stop-color="#FF8A00"/>
+      <stop offset="1" stop-color="#F56A00"/>
+    </linearGradient>
+    <filter id="softShadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="5" result="blur"/>
+      <feOffset dy="4" result="offset"/>
+      <feColorMatrix in="offset" type="matrix" values="0 0 0 0 0.02  0 0 0 0 0.12  0 0 0 0 0.30  0 0 0 .16 0" result="shadow"/>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <g transform="translate(55 48)" filter="url(#softShadow)">
+    <path d="M278 34 C244 8 208 8 176 28 L75 91 C35 116 25 166 48 202 C58 218 73 229 92 239 L173 281 C191 291 197 309 188 326 C181 340 165 348 148 345 L76 330 C54 325 35 338 31 359 C27 381 42 400 64 406 L146 429 C201 445 258 417 279 366 C298 320 278 270 235 246 L151 199 C132 189 129 164 148 151 L256 82 C278 68 305 73 324 91 L347 113 C364 129 389 125 400 106 C410 88 403 66 386 53 Z"
+      fill="url(#blueRibbon)" stroke="#37DDF7" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M76 330 L148 345 C165 348 181 340 188 326 C197 309 191 291 173 281 L92 239 C73 229 58 218 48 202"
+      fill="none" stroke="url(#blueRibbonDark)" stroke-width="23" stroke-linecap="round" opacity=".95"/>
+    <path d="M154 151 Q154 141 166 141 L278 141 Q290 141 293 153 L319 303 Q322 319 306 323 L190 350 Q174 354 170 338 L145 169 Q143 157 154 151Z"
+      fill="#FFFFFF" stroke="#0B1F3B" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M199 148 C198 111 220 88 247 88 C275 88 294 111 294 148"
+      fill="none" stroke="#0B1F3B" stroke-width="12" stroke-linecap="round"/>
+    <g fill="none" stroke="url(#orange)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M190 207 L207 207 L222 267 L286 267 L302 226 L216 226"/>
+      <path d="M225 246 L294 246"/>
+    </g>
+    <circle cx="232" cy="291" r="9" fill="#FF8A00"/>
+    <circle cx="281" cy="291" r="9" fill="#FF8A00"/>
+    <path d="M83 421 C150 420 245 401 332 360 C354 350 372 337 388 320 C373 360 341 388 296 410 C220 447 143 461 83 454Z"
+      fill="url(#orange)"/>
+  </g>
+</svg>
