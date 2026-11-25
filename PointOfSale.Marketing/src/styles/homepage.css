@@ -1,0 +1,644 @@
+/* Phase 1A — premium header, homepage hero and hero product navigation.
+   Scoped to [data-shopyxi-marketing]; no global token is redefined, no filter,
+   blend mode or overlay is applied to screenshot pixels. */
+
+[data-shopyxi-marketing] {
+  --hx-ink: #070d18;
+  --hx-ink-deep: #050a14;
+  --hx-panel: #0c1424;
+  --hx-text: #f3f7fd;
+  --hx-text-soft: #c9d6e8;
+  --hx-muted: #a3b5cf;
+  --hx-muted-deep: #8b9db8;
+  --hx-accent: #98baf6;
+  --hx-line: rgb(255 255 255 / .1);
+  --hx-line-strong: rgb(255 255 255 / .2);
+  --hx-shadow-window: 0 40px 90px -42px rgb(0 0 0 / .92), 0 10px 26px -16px rgb(0 0 0 / .62);
+  --hx-shadow-window-front: 0 54px 110px -46px rgb(0 0 0 / .95), 0 16px 36px -20px rgb(0 0 0 / .7);
+  --hx-window-radius: .55rem;
+}
+
+/* ============================== Header ================================== */
+[data-shopyxi-marketing] .header {
+  position: relative;
+  z-index: 30;
+  background-color: #0a1120;
+  border-block-end: 1px solid var(--hx-line);
+}
+[data-shopyxi-marketing] .header-inner {
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .5rem clamp(1rem, 2.2vw, 2.25rem);
+  padding-block: .35rem;
+}
+[data-shopyxi-marketing] .header .brand { min-height: 46px; }
+[data-shopyxi-marketing] .header .brand {
+  flex-shrink: 0;
+  padding: .2rem .55rem;
+  background-color: #ffffff;
+  border-radius: .5rem;
+  box-shadow: 0 6px 18px -10px rgb(0 0 0 / .75), inset 0 0 0 1px rgb(255 255 255 / .7);
+}
+[data-shopyxi-marketing] .header .brand img { width: 146px; height: auto; }
+[data-shopyxi-marketing] .header .brand:focus-visible { outline: 3px solid var(--sm-blue-300); outline-offset: 4px; border-radius: .3rem; }
+
+[data-shopyxi-marketing] .nav { display: flex; align-items: center; gap: 1.6rem; margin-inline-start: .35rem; }
+[data-shopyxi-marketing] .header .nav-link,
+[data-shopyxi-marketing] .header .nav-menu-summary {
+  color: var(--hx-text-soft);
+  font-size: .9375rem;
+  font-weight: 600;
+  text-decoration: none;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding-inline: .15rem;
+  border-radius: .35rem;
+}
+[data-shopyxi-marketing] .header .nav-link:hover,
+[data-shopyxi-marketing] .header .nav-menu-summary:hover { color: #fff; }
+[data-shopyxi-marketing] .nav-menu { position: relative; }
+[data-shopyxi-marketing] .nav-menu-summary::after { display: none; }
+[data-shopyxi-marketing] .nav-chevron { color: var(--hx-muted-deep); transition: transform var(--sm-duration-fast) var(--sm-ease); }
+[data-shopyxi-marketing] .nav-menu[open] .nav-chevron { transform: rotate(180deg); }
+
+[data-shopyxi-marketing] .nav-panel {
+  position: absolute;
+  inset-inline-start: -.75rem;
+  inset-block-start: calc(100% + .55rem);
+  /* Reserve the trigger's inline offset as text grows, not just the viewport
+     gutters. At normal text size the approved 35rem panel is unchanged. */
+  width: min(35rem, calc(100vw - 14rem));
+  padding: .85rem;
+  background: var(--hx-panel);
+  border: 1px solid var(--hx-line-strong);
+  border-radius: .9rem;
+  box-shadow: 0 34px 70px -30px rgb(0 0 0 / .9), 0 0 0 1px rgb(255 255 255 / .03);
+  z-index: 40;
+}
+[data-shopyxi-marketing] .nav-panel-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .3rem; }
+[data-shopyxi-marketing] .header .nav-panel-link {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: .7rem;
+  padding: .65rem .7rem;
+  border-radius: .6rem;
+  text-decoration: none;
+  color: var(--hx-text);
+  min-height: 44px;
+}
+[data-shopyxi-marketing] .header .nav-panel-link:hover { background: rgb(255 255 255 / .055); }
+[data-shopyxi-marketing] .header .nav-panel-link:focus-visible { outline: 3px solid var(--sm-blue-300); outline-offset: -1px; }
+[data-shopyxi-marketing] .nav-panel-icon { width: 2rem; height: 2rem; border-radius: .5rem; display: grid; place-items: center; color: #fff; flex: 0 0 auto; }
+[data-shopyxi-marketing] .nav-panel-body { display: flex; flex-direction: column; align-items: flex-start; gap: .1rem; min-width: 0; }
+[data-shopyxi-marketing] .nav-panel-index { color: #7f93b1; font-size: .625rem; font-weight: 650; letter-spacing: .08em; }
+[data-shopyxi-marketing] .nav-panel-name { font-size: .9375rem; font-weight: 650; line-height: 1.3; }
+[data-shopyxi-marketing] .nav-panel-desc { color: var(--hx-muted); font-size: .75rem; line-height: 1.45; }
+[data-shopyxi-marketing] .header .nav-panel-all {
+  display: flex;
+  align-items: center;
+  margin-block-start: .55rem;
+  padding-inline: .7rem;
+  min-height: 44px;
+  border-block-start: 1px solid var(--hx-line);
+  color: #a9c6ff;
+  font-size: .875rem;
+  font-weight: 650;
+  text-decoration: none;
+}
+[data-shopyxi-marketing] .header .nav-panel-all:hover { color: #cfdfff; }
+
+[data-shopyxi-marketing] .utilities { display: flex; align-items: center; gap: .35rem; margin-inline-start: auto; flex-wrap: wrap; }
+[data-shopyxi-marketing] .header .plain.locale {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  min-height: 44px;
+  padding-inline: .55rem;
+  margin-inline-start: .55rem;
+  border-inline-start: 1px solid rgb(255 255 255 / .14);
+  border-radius: 0 .35rem .35rem 0;
+  color: var(--hx-text-soft);
+  text-decoration: none;
+  font-size: .9375rem;
+  font-weight: 600;
+}
+[data-shopyxi-marketing] .access { position: relative; }
+[data-shopyxi-marketing] .access-summary { color: var(--hx-text-soft); font-size: .9375rem; font-weight: 600; gap: .45rem; padding-inline: .45rem; border-radius: .35rem; }
+[data-shopyxi-marketing] .access-summary:hover { color: #fff; }
+[data-shopyxi-marketing] .access-icon { color: #93a9c8; flex: 0 0 auto; }
+[data-shopyxi-marketing] .access-panel {
+  background: var(--hx-panel);
+  border: 1px solid var(--hx-line-strong);
+  color: var(--hx-text);
+  box-shadow: 0 34px 70px -30px rgb(0 0 0 / .9), 0 0 0 1px rgb(255 255 255 / .03);
+  border-radius: .9rem;
+}
+[data-shopyxi-marketing] .access-panel > p:first-child { color: var(--hx-text-soft); font-weight: 600; }
+[data-shopyxi-marketing] .access-panel a { color: var(--hx-text); border-block-end-color: var(--hx-line); }
+[data-shopyxi-marketing] .access-panel a:hover { background: rgb(255 255 255 / .05); }
+[data-shopyxi-marketing] .access-panel a span { color: var(--hx-muted); }
+[data-shopyxi-marketing] .access-panel .store-account { color: var(--hx-muted); }
+[data-shopyxi-marketing] .access-panel .store-account strong { color: var(--hx-text); }
+[data-shopyxi-marketing] .access-panel :focus-visible { outline-color: var(--sm-blue-300); }
+[data-shopyxi-marketing] .header .plain.locale {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  min-height: 44px;
+  padding-inline: .55rem;
+  border-radius: .35rem;
+  color: var(--hx-text-soft);
+  text-decoration: none;
+  font-size: .9375rem;
+  font-weight: 600;
+}
+[data-shopyxi-marketing] .header .plain.locale:hover { color: #fff; background: rgb(255 255 255 / .05); border-start-start-radius: .35rem; border-end-start-radius: .35rem; }
+[data-shopyxi-marketing] .locale-icon { color: #93a9c8; flex: 0 0 auto; }
+[data-shopyxi-marketing] .header .button.header-demo {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: .65rem 1.15rem;
+  border-radius: .55rem;
+  font-size: .9375rem;
+  font-weight: 650;
+  box-shadow: 0 16px 34px -20px rgb(53 106 230 / .95), inset 0 1px 0 rgb(255 255 255 / .16);
+}
+[data-shopyxi-marketing] .header .button.header-demo:focus-visible { outline-color: var(--sm-blue-300); }
+
+[data-shopyxi-marketing] .mobile-nav { display: none; position: relative; }
+[data-shopyxi-marketing] .mobile-nav > summary {
+  color: var(--hx-text-soft);
+  font-size: .9375rem;
+  font-weight: 600;
+  gap: .4rem;
+  padding-inline: .55rem;
+  border-radius: .35rem;
+  min-height: 44px;
+}
+[data-shopyxi-marketing] .mobile-nav > summary::after { content: none; }
+[data-shopyxi-marketing] .mobile-nav-icon { color: #93a9c8; }
+[data-shopyxi-marketing] .mobile-panel { width: min(24rem, calc(100vw - 1.5rem)); max-width: none; padding: 1rem; }
+[data-shopyxi-marketing] .mobile-panel-title { color: var(--hx-muted-deep); font-size: .6875rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; margin-block: 0 .5rem; }
+[data-shopyxi-marketing] .mobile-panel-products,
+[data-shopyxi-marketing] .mobile-panel-links { list-style: none; margin: 0; padding: 0; }
+[data-shopyxi-marketing] .access-panel .mobile-panel-body { display: flex; flex-direction: column; align-items: flex-start; gap: .1rem; }
+[data-shopyxi-marketing] .mobile-panel-products a {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: .65rem;
+  align-items: center;
+  padding-block: .6rem;
+  border-block-end: 1px solid var(--hx-line);
+}
+[data-shopyxi-marketing] .mobile-panel-icon { width: 1.85rem; height: 1.85rem; border-radius: .45rem; display: grid; place-items: center; color: #fff; }
+[data-shopyxi-marketing] .mobile-panel-body > bdi { color: #7f93b1; font-size: .625rem; font-weight: 650; letter-spacing: .08em; }
+[data-shopyxi-marketing] .mobile-panel-body > span:not(.mobile-panel-desc) { color: var(--hx-text); font-size: .9375rem; font-weight: 600; line-height: 1.4; }
+[data-shopyxi-marketing] .mobile-panel-desc { color: var(--hx-muted); font-size: .75rem; line-height: 1.45; }
+[data-shopyxi-marketing] .mobile-panel-links { margin-block-start: .75rem; }
+[data-shopyxi-marketing] .mobile-panel-links a { display: flex; align-items: center; min-height: 44px; color: var(--hx-text-soft); font-weight: 600; font-size: .9375rem; }
+[data-shopyxi-marketing] .mobile-panel-cta { display: flex; width: 100%; margin-block-start: .65rem; }
+
+/* =============================== Hero ================================== */
+/* Ambient stage light is painted with inset shadows only: the section keeps a
+   solid background colour, so text contrast stays verifiable and no layer is
+   drawn over the genuine captures. */
+[data-shopyxi-marketing] .home-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  background-color: var(--hx-ink);
+  color: var(--hx-text);
+  padding-block: clamp(1.75rem, 3.2vw, 3rem) clamp(1.5rem, 2.4vw, 2.5rem);
+  box-shadow:
+    inset 0 -16rem 18rem -14rem rgb(58 120 255 / .34),
+    inset var(--hx-light-sx) 6rem 22rem -18rem rgb(36 80 168 / .34);
+}
+
+
+/* Ambient light is painted with gradients only: no oversized decorative boxes,
+   no blur filter, and every layer stays inside the section box. */
+[data-shopyxi-marketing] { --hx-light-sx: 22rem; }
+html[dir="rtl"] [data-shopyxi-marketing] { --hx-light-sx: -22rem; }
+[data-shopyxi-marketing] .hx-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+[data-shopyxi-marketing] .home-hero .hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr);
+  align-items: center;
+  gap: clamp(1.5rem, 2.6vw, 2.75rem) clamp(1.75rem, 3.4vw, 3.25rem);
+}
+[data-shopyxi-marketing] .home-hero .hero-copy { min-width: 0; }
+
+[data-shopyxi-marketing] .hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin-block-end: 1.35rem;
+  color: var(--hx-muted);
+  font-size: .8125rem;
+  font-weight: 600;
+  letter-spacing: .01em;
+}
+[data-shopyxi-marketing]:lang(en) .hero-eyebrow { text-transform: uppercase; letter-spacing: .14em; }
+[data-shopyxi-marketing] .hero-eyebrow bdi { color: #dfe9f8; font-weight: 750; letter-spacing: .04em; }
+[data-shopyxi-marketing] .hero-eyebrow-rule { display: block; width: 1px; height: .9rem; background: rgb(255 255 255 / .28); }
+
+[data-shopyxi-marketing] .home-hero h1 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(2.5rem, 4.35vw, 3.9rem);
+  line-height: 1.06;
+  letter-spacing: -.032em;
+  font-weight: 750;
+  text-wrap: balance;
+}
+[data-shopyxi-marketing]:lang(ar) .home-hero h1 {
+  font-size: clamp(2.4rem, 4.35vw, 3.85rem);
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+[data-shopyxi-marketing] .hero-line { display: block; }
+/* The headline's second line keeps the brand accent already defined for every
+   signal hero (.signal h1 > span:last-child → --sm-blue-300, #98baf6, 9.9:1 on
+   the hero base), so the homepage matches the product pages exactly. */
+[data-shopyxi-marketing] .hero-line-accent { display: block; }
+[data-shopyxi-marketing] .hero-eyebrow > bdi { white-space: nowrap; }
+[data-shopyxi-marketing] .home-hero .hero-lede {
+  margin-block: 1.15rem 0;
+  max-width: min(34rem, 100%);
+  color: var(--hx-text-soft);
+  /* Size stays with the shared signal-hero rule (.signal .hero-copy > p = 1rem),
+     so the homepage lede matches the product heroes exactly. */
+  line-height: 1.7;
+}
+[data-shopyxi-marketing]:lang(ar) .home-hero .hero-lede { line-height: 1.9; max-width: min(36rem, 100%); }
+
+[data-shopyxi-marketing] .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .8rem; margin-block: 1.85rem .25rem; }
+[data-shopyxi-marketing] .hero-actions .button {
+  min-height: 3.05rem;
+  padding-inline: 1.35rem;
+  border-radius: .55rem;
+  font-size: .9688rem;
+  font-weight: 650;
+}
+[data-shopyxi-marketing] .hero-cta-primary {
+  gap: .6rem;
+  box-shadow: 0 18px 40px -22px rgb(53 106 230 / .95), inset 0 1px 0 rgb(255 255 255 / .18);
+}
+[data-shopyxi-marketing] .hero-cta-arrow { width: 1.05rem; height: 1.05rem; }
+[data-shopyxi-marketing] .home-hero .hero-cta-secondary {
+  background: rgb(255 255 255 / .02);
+  color: #e9f1fc;
+  border-color: rgb(255 255 255 / .26);
+}
+[data-shopyxi-marketing] .home-hero .hero-cta-secondary:hover { background: rgb(255 255 255 / .09); color: #fff; border-color: rgb(255 255 255 / .38); }
+[data-shopyxi-marketing] .home-hero .pending-inline { color: var(--hx-muted); max-width: 42ch; margin-block-start: .85rem; }
+
+[data-shopyxi-marketing] .hero-points {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .7rem 1.15rem;
+  margin: 2.1rem 0 0;
+  padding: 0;
+  list-style: none;
+  color: #b8c8de;
+  font-size: .8125rem;
+  line-height: 1.4;
+}
+[data-shopyxi-marketing] .hero-points li { display: flex; align-items: center; gap: .55rem; padding-inline-start: 1.15rem; border-inline-start: 1px solid rgb(255 255 255 / .13); }
+[data-shopyxi-marketing] .hero-points li:first-child { padding-inline-start: 0; border-inline-start: 0; }
+[data-shopyxi-marketing] .hero-points svg { color: #8fb4ee; flex: 0 0 auto; }
+
+/* ---------------------------- Layered windows --------------------------- */
+[data-shopyxi-marketing] .hero-visual { position: relative; min-width: 0; }
+[data-shopyxi-marketing] .hero-windows {
+  position: relative;
+  isolation: isolate;
+  aspect-ratio: 1.3 / 1;
+  --hx-tilt-rear: -2.1deg;
+  --hx-tilt-middle: -1deg;
+}
+html[dir="rtl"] [data-shopyxi-marketing] .hero-windows { --hx-tilt-rear: 2.1deg; --hx-tilt-middle: 1deg; }
+/* Localised stage light: an invisible box painted only by its blue shadow.
+   It sits behind the windows, never over text or capture pixels. */
+[data-shopyxi-marketing] .hero-stage-light {
+  position: absolute;
+  z-index: 0;
+  inset-inline-end: 10%;
+  inset-block-end: 12%;
+  width: 44%;
+  height: 44%;
+  border-radius: 50%;
+  box-shadow: 0 0 15rem 8rem rgb(62 124 255 / .3);
+  pointer-events: none;
+}
+[data-shopyxi-marketing] .hero-window-layer { position: absolute; }
+[data-shopyxi-marketing] .hero-window-layer-rear {
+  z-index: 1;
+  inset-inline-end: 0;
+  inset-block-start: 0;
+  width: 70%;
+  transform: rotate(var(--hx-tilt-rear));
+  transform-origin: 50% 0;
+}
+[data-shopyxi-marketing] .hero-window-layer-middle {
+  z-index: 2;
+  inset-inline-end: 10.5%;
+  inset-block-start: 17.5%;
+  width: 71%;
+  transform: rotate(var(--hx-tilt-middle));
+  transform-origin: 50% 0;
+}
+[data-shopyxi-marketing] .hero-window-layer-front {
+  z-index: 3;
+  inset-inline-start: 0;
+  inset-block-end: 0;
+  width: 76%;
+}
+
+[data-shopyxi-marketing] .hero-window { margin: 0; min-width: 0; }
+[data-shopyxi-marketing] .hero-window-frame {
+  display: block;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  border-radius: var(--hx-window-radius);
+  border: 1px solid rgb(255 255 255 / .14);
+  background: var(--hx-panel);
+  box-shadow: var(--hx-shadow-window), 0 0 110px -34px rgb(78 140 255 / .55);
+}
+[data-shopyxi-marketing] .hero-window-layer-front .hero-window-frame {
+  border-color: rgb(150 190 255 / .3);
+  box-shadow:
+    var(--hx-shadow-window-front),
+    0 0 0 1px rgb(120 165 255 / .12),
+    0 0 150px -22px rgb(74 134 255 / .55),
+    0 30px 90px -30px rgb(38 88 198 / .5);
+}
+[data-shopyxi-marketing] .hero-window-frame:hover { border-color: rgb(150 185 255 / .5); }
+[data-shopyxi-marketing] .hero-window-frame:focus-visible { outline: 3px solid var(--sm-blue-300); outline-offset: 4px; }
+[data-shopyxi-marketing] .hero-window-bar {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  height: 30px;
+  padding-inline: .65rem;
+  background-color: #121b2d;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .06);
+  border-block-end: 1px solid rgb(255 255 255 / .08);
+  color: #9db0cc;
+  font-size: .6875rem;
+  line-height: 1;
+  overflow: hidden;
+}
+[data-shopyxi-marketing] .hero-window-lights { display: inline-flex; gap: .28rem; flex: 0 0 auto; }
+[data-shopyxi-marketing] .hero-window-lights i { display: block; width: .4rem; height: .4rem; border-radius: 50%; background: #f0605a; }
+[data-shopyxi-marketing] .hero-window-lights i:nth-child(2) { background: #f2bd52; }
+[data-shopyxi-marketing] .hero-window-lights i:nth-child(3) { background: #57c583; }
+[data-shopyxi-marketing] .hero-window-bar .window-index { margin-inline-start: .25rem; color: #7e92b0; font-size: .625rem; font-weight: 650; letter-spacing: .07em; flex: 0 0 auto; }
+[data-shopyxi-marketing] .hero-window-bar .window-name {
+  display: block;
+  min-width: 0;
+  color: #c6d5e9;
+  font-size: .6875rem;
+  font-weight: 600;
+  letter-spacing: .01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+[data-shopyxi-marketing] .hero-window-shot { display: block; background: #fff; }
+[data-shopyxi-marketing] .hero-window-shot img { display: block; width: 100%; height: auto; }
+[data-shopyxi-marketing] .hero-window-shot picture { display: block; }
+
+/* --------------------------- Product navigation ------------------------- */
+[data-shopyxi-marketing] .hero-products { margin-block-start: clamp(1.5rem, 2.7vw, 2.5rem); }
+[data-shopyxi-marketing] .product-nav {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .8rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+[data-shopyxi-marketing] .product-nav > li { display: flex; }
+[data-shopyxi-marketing] .product-tile {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .8rem;
+  width: 100%;
+  min-height: 5rem;
+  padding: .85rem .95rem;
+  text-decoration: none;
+  color: var(--hx-text);
+  border: 1px solid rgb(255 255 255 / .1);
+  border-radius: .8rem;
+  background-color: #101a2b;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .05);
+  transition: border-color var(--sm-duration-base) var(--sm-ease), background-color var(--sm-duration-base) var(--sm-ease), transform var(--sm-duration-base) var(--sm-ease);
+}
+[data-shopyxi-marketing] .product-tile:hover {
+  border-color: rgb(126 168 255 / .46);
+  background-color: #16233a;
+  transform: translateY(-2px);
+}
+[data-shopyxi-marketing] .product-tile:focus-visible { outline: 3px solid var(--sm-blue-300); outline-offset: 3px; }
+[data-shopyxi-marketing] .product-tile-icon { width: 2.7rem; height: 2.7rem; border-radius: .65rem; display: grid; place-items: center; color: #fff; flex: 0 0 auto; }
+[data-shopyxi-marketing] .product-tile-body { display: flex; flex-direction: column; align-items: flex-start; gap: .12rem; min-width: 0; }
+[data-shopyxi-marketing] .product-tile-name { font-size: 1rem; font-weight: 700; line-height: 1.3; letter-spacing: -.01em; }
+[data-shopyxi-marketing] .product-tile-desc { color: #9fb1cb; font-size: .8125rem; line-height: 1.4; }
+[data-shopyxi-marketing] .product-tile-arrow { width: 1.05rem; height: 1.05rem; color: #8ba3c4; }
+[data-shopyxi-marketing] .product-tile:hover .product-tile-arrow { color: #b9d0f5; }
+
+[data-shopyxi-marketing] .tile-icon-pos { background: linear-gradient(155deg, #4d86ff 0%, #2153c9 100%); }
+[data-shopyxi-marketing] .tile-icon-storefront { background: linear-gradient(155deg, #a06dff 0%, #6636cc 100%); }
+[data-shopyxi-marketing] .tile-icon-affiliate { background: linear-gradient(155deg, #3ad193 0%, #148b5c 100%); }
+[data-shopyxi-marketing] .tile-icon-commercehub { background: linear-gradient(155deg, #f2ae4f 0%, #ab6a0c 100%); }
+
+/* Directional glyphs follow the writing direction. */
+[data-shopyxi-marketing][dir="rtl"] .hero-cta-arrow,
+[data-shopyxi-marketing][dir="rtl"] .product-tile-arrow,
+html[dir="rtl"] [data-shopyxi-marketing] .hero-cta-arrow,
+html[dir="rtl"] [data-shopyxi-marketing] .product-tile-arrow { transform: scaleX(-1); }
+
+/* ============================ Responsive ================================ */
+@media (max-width: 1199px) {
+  /* Tablet landscape keeps the full desktop navigation; only the spacing tightens. */
+  [data-shopyxi-marketing] .header .nav { gap: 1rem; }
+  [data-shopyxi-marketing] .header-inner { gap: .5rem 1.25rem; }
+  [data-shopyxi-marketing] .header .brand img { width: 142px; }
+  [data-shopyxi-marketing] .header-inner { min-height: 68px; }
+  [data-shopyxi-marketing] .utilities { gap: .15rem; }
+  [data-shopyxi-marketing] .home-hero .hero-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.02fr); }
+  [data-shopyxi-marketing] .home-hero h1 { font-size: clamp(2.3rem, 4.5vw, 3.1rem); }
+  [data-shopyxi-marketing]:lang(ar) .home-hero h1 { font-size: clamp(2.2rem, 4.3vw, 3rem); }
+  [data-shopyxi-marketing] .product-tile { gap: .6rem; padding: .7rem .75rem; }
+  [data-shopyxi-marketing] .product-tile-icon { width: 2.2rem; height: 2.2rem; }
+  [data-shopyxi-marketing] .product-tile-name { font-size: .875rem; }
+  [data-shopyxi-marketing] .nav-panel { width: min(31rem, calc(100vw - 14rem)); }
+
+  /* Dropdowns stay anchored to their trigger instead of reflowing the header. */
+  [data-shopyxi-marketing] .header .mobile-nav[open],
+  [data-shopyxi-marketing] .header .access[open] { flex: 0 0 auto; order: 0; }
+  [data-shopyxi-marketing] .header details[open] > .access-panel {
+    position: absolute;
+    inset-block-start: calc(100% + .5rem);
+    inset-inline-end: 0;
+    inset-inline-start: auto;
+    width: min(22rem, calc(100vw - 2rem));
+    max-width: none;
+    margin-block: 0;
+    box-shadow: 0 30px 60px -24px rgb(0 0 0 / .92);
+  }
+}
+
+@media (max-width: 1023px) {
+  /* Below tablet landscape the navigation collapses into the disclosure drawer. */
+  [data-shopyxi-marketing] .header .nav { display: none; }
+  [data-shopyxi-marketing] .mobile-nav { display: block; margin-inline-start: 0; }
+  [data-shopyxi-marketing] .header .button.header-demo { display: none; }
+  [data-shopyxi-marketing] .home-hero { padding-block-start: 2rem; }
+  [data-shopyxi-marketing] .home-hero .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 1.85rem; }
+  [data-shopyxi-marketing] .home-hero .hero-copy { max-width: 42rem; }
+  [data-shopyxi-marketing] .home-hero {
+    box-shadow: inset 0 -22rem 20rem -12rem rgb(54 116 255 / .38);
+  }
+  [data-shopyxi-marketing] .home-hero h1 { font-size: clamp(2.15rem, 5.4vw, 2.85rem); }
+  [data-shopyxi-marketing]:lang(ar) .home-hero h1 { font-size: clamp(2.05rem, 5.1vw, 2.7rem); }
+  [data-shopyxi-marketing] .home-hero .hero-lede { max-width: 46ch; }
+  [data-shopyxi-marketing] .hero-points { margin-block-start: 1.6rem; }
+
+  /* Tablet recomposition: dominant POS beside two supporting windows. */
+  [data-shopyxi-marketing] .hero-windows {
+    aspect-ratio: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+    gap: .85rem;
+    align-items: start;
+  }
+  [data-shopyxi-marketing] .hero-window-layer { position: static; width: auto; transform: none; }
+  [data-shopyxi-marketing] .hero-window-layer-front { grid-column: 1; grid-row: 1 / span 2; }
+  [data-shopyxi-marketing] .hero-window-layer-rear { grid-column: 2; grid-row: 1; }
+  [data-shopyxi-marketing] .hero-window-layer-middle { grid-column: 2; grid-row: 2; }
+
+  [data-shopyxi-marketing] .product-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  [data-shopyxi-marketing] .product-tile { min-height: 4.25rem; }
+}
+
+/* Tablet disclosures anchor to the header, not a trigger that can wrap onto a
+   different row at enlarged text sizes (particularly in RTL). */
+@media (min-width: 768px) and (max-width: 1023px) {
+  [data-shopyxi-marketing] .header .mobile-nav { position: static; }
+  [data-shopyxi-marketing] .header .mobile-nav[open] > .mobile-panel {
+    inset-inline-start: auto;
+    inset-inline-end: var(--sm-gutter);
+    width: min(22rem, calc(100vw - var(--sm-gutter) * 2));
+    max-height: min(38rem, 72vh);
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  [data-shopyxi-marketing] .header-inner { min-height: 62px; gap: .1rem .3rem; padding-block: .3rem; }
+  [data-shopyxi-marketing] .header .utilities { width: auto; flex: 0 1 auto; justify-content: flex-start; margin-inline-start: auto; gap: .1rem; }
+  [data-shopyxi-marketing] .header .brand { padding: .16rem .4rem; border-radius: .45rem; }
+  [data-shopyxi-marketing] .header .brand img { width: 112px; }
+  [data-shopyxi-marketing] .header .access-label { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  [data-shopyxi-marketing] .access-summary { padding-inline: .5rem; gap: .25rem; min-inline-size: 44px; justify-content: center; }
+  [data-shopyxi-marketing] .access-summary::after { content: none; }
+  [data-shopyxi-marketing] .header .plain.locale { padding-inline: .45rem .35rem; gap: .3rem; margin-inline-start: .2rem; font-size: .875rem; }
+  [data-shopyxi-marketing] .mobile-nav > summary { padding-inline: .5rem; gap: .35rem; font-size: .875rem; min-inline-size: 44px; justify-content: center; }
+  [data-shopyxi-marketing] .nav-panel { width: min(22rem, calc(100vw - 1.5rem)); grid-template-columns: 1fr; }
+  [data-shopyxi-marketing] .header .utilities,
+  [data-shopyxi-marketing] .header .access,
+  [data-shopyxi-marketing] .header .mobile-nav { position: static; }
+  [data-shopyxi-marketing] .header details[open] > .access-panel {
+    inset-inline: .75rem;
+    inset-block-start: calc(100% - .15rem);
+    width: auto;
+    max-height: min(38rem, 72vh);
+    overflow-y: auto;
+  }
+  [data-shopyxi-marketing] .nav-panel-list { grid-template-columns: 1fr; }
+
+  [data-shopyxi-marketing] .home-hero { padding-block: 1.6rem 1.75rem; }
+  [data-shopyxi-marketing] .hero-eyebrow { margin-block-end: 1rem; font-size: .75rem; }
+  [data-shopyxi-marketing] .home-hero h1 { font-size: clamp(1.95rem, 8.4vw, 2.35rem); line-height: 1.12; }
+  [data-shopyxi-marketing]:lang(ar) .home-hero h1 { font-size: clamp(1.9rem, 8vw, 2.3rem); line-height: 1.28; }
+  [data-shopyxi-marketing] .home-hero .hero-lede { font-size: 1rem; margin-block-start: .9rem; }
+  [data-shopyxi-marketing] .hero-actions { flex-direction: column; align-items: stretch; margin-block: 1.2rem .25rem; gap: .55rem; }
+  [data-shopyxi-marketing] .hero-actions .button { width: 100%; min-height: 3rem; padding-inline: .9rem; font-size: .9375rem; }
+  [data-shopyxi-marketing] .hero-points { gap: .55rem .9rem; font-size: .75rem; margin-block-start: 1.5rem; }
+  [data-shopyxi-marketing] .hero-points li { padding-inline-start: .9rem; }
+  [data-shopyxi-marketing] .hero-points svg { width: 1.05rem; height: 1.05rem; }
+
+  /* Mobile: one foreground window over two compact supporting frames. */
+  [data-shopyxi-marketing] .hero-windows { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .55rem; }
+  [data-shopyxi-marketing] .hero-window-layer-front { grid-column: 1 / -1; grid-row: 1; }
+  [data-shopyxi-marketing] .hero-window-layer-rear { grid-column: 1; grid-row: 2; margin-block-start: .3rem; }
+  [data-shopyxi-marketing] .hero-window-layer-middle { grid-column: 2; grid-row: 2; }
+  [data-shopyxi-marketing] .hero-window-bar { height: 24px; gap: .3rem; padding-inline: .45rem; font-size: .625rem; }
+  [data-shopyxi-marketing] .hero-window-bar .window-name { font-size: .625rem; }
+  [data-shopyxi-marketing] .hero-window-bar .window-index { font-size: .5625rem; }
+  [data-shopyxi-marketing] .hero-window-lights i { width: .32rem; height: .32rem; }
+
+  [data-shopyxi-marketing] .hero-products { margin-block-start: 1.35rem; }
+  [data-shopyxi-marketing] .product-nav { gap: .55rem; }
+  [data-shopyxi-marketing] .product-tile { grid-template-columns: auto minmax(0, 1fr); gap: .55rem; padding: .65rem .6rem; min-height: 4rem; border-radius: .65rem; }
+  [data-shopyxi-marketing] .product-tile-icon { width: 2rem; height: 2rem; border-radius: .5rem; }
+  [data-shopyxi-marketing] .product-tile-arrow { display: none; }
+  [data-shopyxi-marketing] .product-tile-name { font-size: .8125rem; }
+  [data-shopyxi-marketing] .product-tile-desc { font-size: .6875rem; }
+}
+
+/* Small phones: the product name in the window chrome is more valuable than the
+   decorative index, so the index steps aside instead of truncating the name. */
+@media (max-width: 430px) {
+  [data-shopyxi-marketing] .hero-window-bar { gap: .3rem; }
+  [data-shopyxi-marketing] .hero-window-bar .window-index { display: none; }
+  [data-shopyxi-marketing] .hero-window-bar .window-name { letter-spacing: 0; }
+}
+
+@media (max-width: 400px) {
+  [data-shopyxi-marketing] .header-inner { gap: .1rem .15rem; }
+  [data-shopyxi-marketing] .header .brand img { width: 96px; }
+  [data-shopyxi-marketing] .header .plain.locale { font-size: .75rem; padding-inline: .25rem; gap: .2rem; margin-inline-start: .1rem; }
+  [data-shopyxi-marketing] .locale-icon { width: 14px; height: 14px; }
+  [data-shopyxi-marketing] .mobile-nav > summary span { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  [data-shopyxi-marketing] .mobile-nav > summary { padding-inline: .5rem; }
+  [data-shopyxi-marketing] .hero-actions .button { flex-basis: 100%; }
+  [data-shopyxi-marketing] .hero-points { flex-direction: column; align-items: flex-start; gap: .5rem; }
+  [data-shopyxi-marketing] .hero-points li { padding-inline-start: 0; border-inline-start: 0; }
+  [data-shopyxi-marketing] .home-hero h1 { font-size: 1.85rem; }
+  [data-shopyxi-marketing]:lang(ar) .home-hero h1 { font-size: 1.8rem; }
+  [data-shopyxi-marketing] .product-tile { gap: .45rem; padding: .6rem .5rem; }
+  /* Two columns at the approved default size; one when enlarged text makes
+     icon + label columns too narrow to read, without reducing the text size. */
+  [data-shopyxi-marketing] .product-nav { grid-template-columns: repeat(auto-fit, minmax(min(100%, 7.5rem), 1fr)); }
+  [data-shopyxi-marketing] .product-tile-icon { width: 1.75rem; height: 1.75rem; border-radius: .45rem; }
+  [data-shopyxi-marketing] .product-tile-name { font-size: .75rem; }
+  [data-shopyxi-marketing] .product-tile-desc { font-size: .6563rem; }
+  [data-shopyxi-marketing] .hero-window-bar { height: 22px; padding-inline: .35rem; }
+  [data-shopyxi-marketing] .hero-window-bar .window-index { font-size: .5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-shopyxi-marketing] .product-tile:hover { transform: none; }
+}

@@ -1,0 +1,19 @@
+{
+  "releaseState": "PUBLIC_APPROVED_LEAN",
+  "publicReleaseBlocked": false,
+  "phase4Authorized": true,
+  "gates": [
+    { "id": "art-direction", "status": "APPROVED", "required": true, "note": "Owner explicitly approved existing presentation/Cairo/editorial artwork for lean public launch; release-approval.json." },
+    { "id": "bilingual-copy-claims", "status": "APPROVED", "required": true, "note": "Exact existing EN/AR copy approved by owner; content hash bound. No independent native-editor review is claimed." },
+    { "id": "product-naming-audiences", "status": "APPROVED", "required": true, "note": "Existing copy only; no new product, audience or commercial claims." },
+    { "id": "offered-release-applicability", "status": "APPROVED", "required": true, "note": "Owner approved existing qualified copy and scope boundaries; no package, pricing or universal entitlement added." },
+    { "id": "real-screenshots-rights", "status": "APPROVED", "required": true, "note": "Owner-requested current-release actual UI with isolated synthetic-only data; agent pixel/privacy/release review, immutable hashed originals and lossless pixel-equal public assets in refinements-20261123-01/evidence/screenshot-provenance.json. POS V05 authorized secondary; V13/V18/V23 primary. Known Arabic untranslated labels remain unedited. No customer sessions, AI UI, meaningful crop or production business writes." },
+    { "id": "licensed-typography", "status": "APPROVED", "required": true, "note": "Bundled SIL OFL Cairo, glyph/rendering tests, and explicit owner public-use approval." },
+    { "id": "demo-receiving-destination", "status": "APPROVED", "required": true, "note": "Not applicable to explicitly approved no-demo/no-lead launch. No receiving destination is invented or implied." },
+    { "id": "privacy-legal-retention", "status": "APPROVED", "required": true, "note": "Explicit no-lead/no-form scope. No collection workflow, tracking or unsupported legal/privacy statements published." },
+    { "id": "company-facts-about", "status": "DEFERRED", "required": false, "note": "No About page. Required before any future About/company facts publication." },
+    { "id": "customer-access-labels", "status": "APPROVED", "required": true, "note": "Owner approved exact existing bilingual copy and unchanged destinations." },
+    { "id": "accessibility-cross-browser", "status": "APPROVED", "required": true, "note": "Source-bound release-qualification.json requires fresh public-mode Chromium/Firefox/WebKit: 180 states, 510 assertions and 72 axe audits, with zero violations/incomplete audits/errors, external requests or broken responses. No universal conformance, native-editor, real screen-reader or physical-device session is claimed." },
+    { "id": "final-publication-authorization", "status": "APPROVED", "required": true, "note": "Deployment request plus explicit owner lean-launch approval; conditional on technical release checks." }
+  ]
+}

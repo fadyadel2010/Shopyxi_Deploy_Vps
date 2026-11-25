@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "note": "Visual-only captions for genuine screenshot compositions. Not commercial claims. Product names and role labels continue to come from the approved label map.",
+  "en": {
+    "compositionLabel": "Connected product composition",
+    "galleryLabel": "Genuine application views",
+    "connectLabel": "One platform, four working surfaces",
+    "inventoryDetail": "Stock detail",
+    "inventoryDetailNote": "Detail crop of the same genuine inventory capture",
+    "catalogueDetail": "Catalogue card",
+    "mobileStorefront": "Storefront on mobile",
+    "discoveryDetail": "Eligible product",
+    "mobileAffiliate": "Affiliate on mobile",
+    "commissionPreview": "Commission preview",
+    "marketplacePricing": "Marketplace price resolution",
+    "publishingReview": "Publication review",
+    "desktopView": "Desktop application view",
+    "largeView": "View application capture at original size",
+    "inspectionHint": "Select an application view to inspect its original-size capture."
+  },
+  "ar": {
+    "compositionLabel": "تكوين متصل لمنتجات المنصة",
+    "galleryLabel": "لقطات فعلية من التطبيق",
+    "connectLabel": "منصة واحدة وأربع واجهات عمل",
+    "inventoryDetail": "تفصيل المخزون",
+    "inventoryDetailNote": "تفصيل من لقطة المخزون الفعلية نفسها",
+    "catalogueDetail": "بطاقة من الكتالوج",
+    "mobileStorefront": "المتجر على الهاتف",
+    "discoveryDetail": "منتج مؤهل",
+    "mobileAffiliate": "نظام التسويق على الهاتف",
+    "commissionPreview": "معاينة العمولة",
+    "marketplacePricing": "تحديد سعر السوق",
+    "publishingReview": "مراجعة النشر",
+    "desktopView": "عرض تطبيق سطح المكتب",
+    "largeView": "عرض لقطة التطبيق بحجمها الأصلي",
+    "inspectionHint": "اختر لقطة التطبيق لعرضها بحجمها الأصلي."
+  }
+}

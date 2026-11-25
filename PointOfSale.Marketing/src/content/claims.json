@@ -1,0 +1,450 @@
+{
+  "C01": {
+    "en": "SHOPYXI is a commerce ecosystem for merchant operations, online storefronts, affiliate promotion and marketplace selling.",
+    "ar": "SHOPYXI منظومة تجارية لإدارة أعمال التجار والمتاجر الإلكترونية والتسويق بالعمولة والبيع عبر السوق الإلكتروني.",
+    "evidence": "Ecosystem; E01/E14/E21/E27/E29",
+    "status": "VERIFIED structure; product packaging not established",
+    "approvers": "PO, RO, AR",
+    "approval": "PENDING"
+  },
+  "C02": {
+    "en": "Your commerce ecosystem, clearly connected.",
+    "ar": "منظومتك التجارية، بروابط واضحة.",
+    "evidence": "Ecosystem; E15/E22/E27/E30/E33",
+    "status": "PROPOSED headline; needs C06 scope",
+    "approvers": "PO, AR",
+    "approval": "PENDING"
+  },
+  "C03": {
+    "en": "Manage store operations. Build your online presence. Explore more channels.",
+    "ar": "أدر عمليات متجرك. ابنِ حضورك الإلكتروني. واستكشف قنوات إضافية.",
+    "evidence": "Ecosystem; E03/E13/E21/E27",
+    "status": "PROPOSED benefit positioning; not growth guarantee",
+    "approvers": "PO, AR",
+    "approval": "PENDING"
+  },
+  "C04": {
+    "en": "Help affiliates discover eligible products and review their own promotion links, referred activity and commission history.",
+    "ar": "ساعد المسوّقين بالعمولة على اكتشاف المنتجات المؤهلة ومراجعة روابطهم الترويجية والنشاط المُحال وسجل عمولاتهم.",
+    "evidence": "Affiliate; E21–E25",
+    "status": "VERIFIED capability; availability/own-account boundaries retained",
+    "approvers": "PO, RO, FO, AR",
+    "approval": "PENDING"
+  },
+  "C05": {
+    "en": "CommerceHub brings approved merchant listings into a shared marketplace, with separate experiences for sellers, customers and platform operators.",
+    "ar": "يجمع CommerceHub عروض التجار المعتمدين في سوق إلكتروني مشترك، مع تجارب منفصلة للبائعين والعملاء ومشغّلي المنصة.",
+    "evidence": "CommerceHub; E26–E31",
+    "status": "VERIFIED structure; not full customer/finance acceptance or third-party operator offer",
+    "approvers": "PO, RO, AR",
+    "approval": "PENDING"
+  },
+  "C06": {
+    "en": "Merchant catalog and stock records support Storefront and eligible CommerceHub workflows. Affiliate promotion connects to supported Storefront journeys, while accounts, permissions and order workflows retain their own boundaries.",
+    "ar": "تدعم سجلات كتالوج التاجر ومخزونه عمليات المتجر الإلكتروني والعمليات المؤهلة في CommerceHub. ويرتبط التسويق بالعمولة بمسارات التسوق المدعومة في المتجر، مع احتفاظ الحسابات والصلاحيات وعمليات الطلبات بحدودها الخاصة.",
+    "evidence": "Ecosystem; E04/E15/E16/E22/E27/E30/E33",
+    "status": "VERIFIED source relationship; not synchronous-everywhere guarantee",
+    "approvers": "PO, RO, AO, AR",
+    "approval": "PENDING"
+  },
+  "C07": {
+    "en": "Manage recorded sales, products, purchasing, customers and stock through SHOPYXI POS Admin.",
+    "ar": "أدر المبيعات المسجّلة والمنتجات والمشتريات والعملاء والمخزون من خلال إدارة نقاط البيع في SHOPYXI.",
+    "evidence": "POS; E03–E07",
+    "status": "VERIFIED module scope; individual workflows/permissions vary",
+    "approvers": "PO, RO, AR",
+    "approval": "PENDING"
+  },
+  "C17": {
+    "en": "Present your product catalog online and give shoppers a storefront experience, with separate controls for merchant administration.",
+    "ar": "اعرض كتالوج منتجاتك عبر الإنترنت، وقدّم للعملاء تجربة متجر إلكتروني، مع أدوات منفصلة لإدارة التاجر.",
+    "evidence": "Storefront; E13–E17",
+    "status": "VERIFIED; source catalog visibility and tenant controls apply",
+    "approvers": "PO, RO, AR",
+    "approval": "PENDING"
+  },
+  "C08": {
+    "en": "Organize products and variants so your team can work from a structured catalog.",
+    "ar": "نظّم المنتجات وخياراتها ليعمل فريقك انطلاقًا من كتالوج منظّم.",
+    "evidence": "POS/catalog; E04",
+    "status": "VERIFIED capability + inferred organizational benefit",
+    "approvers": "PO, RO, AR",
+    "approval": "PENDING"
+  },
+  "C09": {
+    "en": "Review warehouse stock and manage transfers between your warehouses.",
+    "ar": "راجع مخزون المستودعات وأدر التحويلات بين مستودعاتك.",
+    "evidence": "POS/inventory; E05",
+    "status": "VERIFIED; same-tenant warehouses and legal workflow states",
+    "approvers": "PO, RO, AR",
+    "approval": "PENDING"
+  },
+  "C10": {
+    "en": "Keep purchase invoices and supplier records within your merchant operations.",
+    "ar": "احتفظ بفواتير المشتريات وسجلات الموردين ضمن عمليات إدارة أعمالك التجارية.",
+    "evidence": "POS/procurement; E06",
+    "status": "VERIFIED; not automated supplier ordering/EDI",
+    "approvers": "PO, RO, AR",
+    "approval": "PENDING"
+  },
+  "C11": {
+    "en": "Review customer records and account statements to support day-to-day follow-up.",
+    "ar": "راجع سجلات العملاء وكشوف الحساب لدعم المتابعة اليومية.",
+    "evidence": "POS/customer; E07",
+    "status": "VERIFIED; not all-product customer identity or CRM campaign automation",
+    "approvers": "PO, RO, FO, AR",
+    "approval": "PENDING"
+  },
+  "C12": {
+    "en": "Record sales and purchase returns through the supported operational workflows.",
+    "ar": "سجّل مرتجعات المبيعات والمشتريات من خلال مسارات العمل التشغيلية المدعومة.",
+    "evidence": "POS/returns; E08",
+    "status": "VERIFIED records/workflow; money transfer and physical return distinct",
+    "approvers": "PO, RO, FO, AR",
+    "approval": "PENDING"
+  },
+  "C13": {
+    "en": "Review ledger-based financial reports with the appropriate permissions.",
+    "ar": "راجع التقارير المالية المستندة إلى دفتر الأستاذ وفق الصلاحيات المناسبة.",
+    "evidence": "POS/finance; E02/E09/E12",
+    "status": "VERIFIED capability; authentic full-data reconciliation not established",
+    "approvers": "PO, RO, FO, AR",
+    "approval": "PENDING"
+  },
+  "C14": {
+    "en": "Give staff access according to their roles and the permissions supported by each product.",
+    "ar": "امنح الموظفين وصولًا يتوافق مع أدوارهم والصلاحيات التي يدعمها كل منتج.",
+    "evidence": "Administration; E02/E10/E12",
+    "status": "VERIFIED controls; not arbitrary custom roles or guaranteed security",
+    "approvers": "PO, RO, AO, AR",
+    "approval": "PENDING"
+  },
+  "C15": {
+    "en": "Manage stock across multiple warehouses; discuss any additional branch-management requirements with our team.",
+    "ar": "أدر المخزون عبر مستودعات متعددة، وناقش أي متطلبات إضافية لإدارة الفروع مع فريقنا.",
+    "evidence": "POS/multi-location; E05/E11",
+    "status": "PARTIAL branch proposition; no verified branch hierarchy",
+    "approvers": "PO, SO, AR",
+    "approval": "PENDING"
+  },
+  "C16": {
+    "en": "Use product-specific dashboards and reports to review operational activity, subject to permissions and data availability.",
+    "ar": "استخدم لوحات المعلومات والتقارير الخاصة بكل منتج لمراجعة النشاط التشغيلي، وفق الصلاحيات وتوافر البيانات.",
+    "evidence": "Reporting; E09/E12/E25/E31",
+    "status": "PARTIAL broad scope; new reporting definitions/release applicability require review",
+    "approvers": "PO, RO, FO, AR",
+    "approval": "PENDING"
+  },
+  "C18": {
+    "en": "Guide shoppers from cart to order submission, with checkout checks for current prices and stock.",
+    "ar": "وجّه المتسوّقين من السلة إلى إرسال الطلب، مع التحقّق من الأسعار والمخزون الحاليين عند إتمام الطلب.",
+    "evidence": "Storefront; E14/E15",
+    "status": "VERIFIED; submission not successful money collection",
+    "approvers": "PO, RO, AR",
+    "approval": "PENDING"
+  },
+  "C19": {
+    "en": "Storefront and CommerceHub provide their own customer account experiences, separate from merchant administration.",
+    "ar": "يوفّر المتجر الإلكتروني وCommerceHub تجارب حسابات خاصة بعملائهما، منفصلة عن إدارة التاجر.",
+    "evidence": "Public accounts; E16/E29",
+    "status": "VERIFIED separation; not full account-workflow acceptance",
+    "approvers": "PO, AO, RO, AR",
+    "approval": "PENDING"
+  },
+  "C20": {
+    "en": "Configure your storefront using the supported themes, appearance controls and content sections.",
+    "ar": "اضبط متجرك الإلكتروني باستخدام القوالب وأدوات المظهر وأقسام المحتوى المدعومة.",
+    "evidence": "Storefront admin; E13/E17",
+    "status": "VERIFIED finite controls; actual enabled themes differ",
+    "approvers": "PO, RO, AR",
+    "approval": "PENDING"
+  },
+  "C21": {
+    "en": "Manage online orders and the fulfillment actions available for their current state.",
+    "ar": "أدر الطلبات الإلكترونية وإجراءات التجهيز والتنفيذ المتاحة وفق حالتها الحالية.",
+    "evidence": "Storefront admin; E14/E15/E23",
+    "status": "VERIFIED implemented workflow; provider execution bounded",
+    "approvers": "PO, RO, IO, AR",
+    "approval": "PENDING"
+  },
+  "C22": {
+    "en": "Create promotion links for eligible store products and follow attributed activity within the supported shopping journey.",
+    "ar": "أنشئ روابط ترويجية لمنتجات المتاجر المؤهلة، وتابع النشاط المنسوب إلى الإحالات ضمن مسار التسوّق المدعوم.",
+    "evidence": "Affiliate; E22/E23",
+    "status": "VERIFIED bounded journey; cookies/eligibility matter",
+    "approvers": "PO, RO, FO, AR",
+    "approval": "PENDING"
+  },
+  "C23": {
+    "en": "Keep commission records tied to captured order terms, with earning, approval and payment treated as separate stages.",
+    "ar": "احتفظ بسجلات عمولات مرتبطة بشروط الطلب المحفوظة، مع الفصل بين مراحل تسجيل العمولة واعتمادها وصرفها.",
+    "evidence": "Affiliate; E23/E24",
+    "status": "VERIFIED; current source plus isolated full lifecycle; no production transfer acceptance",
+    "approvers": "PO, RO, FO, AR",
+    "approval": "PENDING"
+  },
+  "C24": {
+    "en": "Review commission history and eligible withdrawal requests without treating analytics as a payable balance.",
+    "ar": "راجع سجل العمولات وطلبات السحب المؤهلة، دون اعتبار بيانات التحليلات رصيدًا مستحقًا للصرف.",
+    "evidence": "Affiliate; E24/E25",
+    "status": "VERIFIED; balance eligibility/request states apply",
+    "approvers": "PO, RO, FO, AR",
+    "approval": "PENDING"
+  },
+  "C25": {
+    "en": "Record approved manual cash payouts and supported cash returns with the required evidence and authorized review.",
+    "ar": "سجّل المدفوعات النقدية اليدوية المعتمدة وإعادة مبالغها النقدية وفق المسارات المدعومة، مع الأدلة المطلوبة ومراجعة الجهة المخوّلة.",
+    "evidence": "Affiliate finance; E24",
+    "status": "VERIFIED manual record/compensation; not software-operated transfer/cash execution",
+    "approvers": "PO, RO, FO, AR",
+    "approval": "PENDING"
+  },
+  "C29": {
+    "en": "Review affiliate conversion activity based on committed attributed orders, separately from payment and commission status.",
+    "ar": "راجع نشاط تحويلات التسويق بالعمولة استنادًا إلى الطلبات المحفوظة والمنسوبة إلى الإحالات، بصورة منفصلة عن حالة الدفع والعمولات.",
+    "evidence": "Affiliate analytics; E25",
+    "status": "VERIFIED bridge/isolation; authenticated production dashboard acceptance open",
+    "approvers": "PO, RO, FO, AR",
+    "approval": "PENDING"
+  },
+  "C32": {
+    "en": "Existing merchants can apply to sell on CommerceHub; publishing depends on verification, approval and product eligibility.",
+    "ar": "يمكن للتجار الحاليين التقدّم للبيع عبر CommerceHub؛ ويعتمد النشر على التحقّق والاعتماد وأهلية المنتج.",
+    "evidence": "CommerceHub; E26/E27",
+    "status": "VERIFIED; merchant roles/policies and KYC remain",
+    "approvers": "PO, RO, AO, AR",
+    "approval": "PENDING"
+  },
+  "C33": {
+    "en": "Publish eligible merchant products using marketplace categories and the required listing attributes.",
+    "ar": "انشر منتجات التاجر المؤهلة باستخدام تصنيفات السوق وخصائص العرض المطلوبة.",
+    "evidence": "CommerceHub; E27/E28",
+    "status": "VERIFIED bounded production publication; not all products auto-listed",
+    "approvers": "PO, RO, AR",
+    "approval": "PENDING"
+  },
+  "C34": {
+    "en": "Use source pricing or a CommerceHub-only listing price, with server-derived commission previews and publishing checks.",
+    "ar": "استخدم السعر الأصلي أو سعر عرض خاصًا بـCommerceHub، مع معاينات للعمولة وفحوص نشر تحدّدها المنصة.",
+    "evidence": "CommerceHub; E27/E28",
+    "status": "VERIFIED; EGP/current authority/precision; no fixed public fee",
+    "approvers": "PO, RO, FO, AR",
+    "approval": "PENDING"
+  },
+  "C26": {
+    "en": "Arabic and English are supported across the product ecosystem; coverage and presentation vary by product and configuration.",
+    "ar": "تدعم منظومة المنتجات العربية والإنجليزية؛ ويختلف نطاق التغطية وطريقة العرض باختلاف المنتج والإعدادات.",
+    "evidence": "Localization; E14/E17/E21/E27/E37",
+    "status": "VERIFIED bounded support; not every screen/content fully localized",
+    "approvers": "PO, RO, AR",
+    "approval": "PENDING"
+  },
+  "C27": {
+    "en": "Payment, shipping and other integrations depend on supported capabilities, configuration and operational readiness. Ask us to review your requirements.",
+    "ar": "تعتمد عمليات الربط بالدفع والشحن وغيرها على الإمكانات المدعومة والإعدادات والجاهزية التشغيلية. اطلب منا مراجعة متطلباتك.",
+    "evidence": "Integrations; E19/E20/E34–E36",
+    "status": "VERIFIED condition; consultation process OWNER FACT",
+    "approvers": "PO, IO, SO, AR",
+    "approval": "PENDING"
+  },
+  "C27a": {
+    "en": "Payment, shipping and other integrations depend on supported capabilities, configuration and operational readiness.",
+    "ar": "تعتمد عمليات الربط بالدفع والشحن وغيرها على الإمكانات المدعومة والإعدادات والجاهزية التشغيلية.",
+    "evidence": "Integrations; E19/E20/E34–E36 (first sentence of C27)",
+    "status": "PROPOSED fragment; first sentence of C27 only",
+    "approvers": "PO, IO, SO, AR",
+    "approval": "PENDING"
+  },
+  "C28": {
+    "en": "Review real product capabilities and their operational boundaries—not unsupported promises.",
+    "ar": "تعرّف إلى الإمكانات الفعلية للمنتجات وحدودها التشغيلية، بعيدًا عن الوعود غير المدعومة.",
+    "evidence": "Trust; evidence matrix + visual inventory",
+    "status": "PROPOSED editorial principle; no screenshot readiness implied",
+    "approvers": "PO, LO, AR",
+    "approval": "PENDING"
+  },
+  "C30": {
+    "en": "Tenant storefronts use their own existing store addresses; custom-domain availability requires a separate review.",
+    "ar": "تستخدم المتاجر الإلكترونية عناوينها الحالية الخاصة بها؛ ويتطلّب توافر النطاقات المخصّصة مراجعة منفصلة.",
+    "evidence": "Storefront/domain; E11/E18",
+    "status": "VERIFIED current serving model; custom-domain automation PARTIAL",
+    "approvers": "PO, RO, AO, AR",
+    "approval": "PENDING"
+  },
+  "C31": {
+    "en": "Access differs by product and user role. Merchant, affiliate and customer accounts are not interchangeable.",
+    "ar": "يختلف الوصول بحسب المنتج ودور المستخدم. ولا تحلّ حسابات التاجر والمسّوق بالعمولة والعميل محلّ بعضها.",
+    "evidence": "Identity; E02/E16/E21/E29",
+    "status": "VERIFIED",
+    "approvers": "PO, AO, AR",
+    "approval": "PENDING"
+  },
+  "C35": {
+    "en": "CommerceHub marketplace orders have their own marketplace and seller-order structure, separate from ordinary Storefront orders and POS sales.",
+    "ar": "لطلبات سوق CommerceHub هيكلها الخاص لطلبات السوق وطلبات البائعين، وهو منفصل عن طلبات المتجر الإلكتروني المعتادة ومبيعات نقاط البيع.",
+    "evidence": "CommerceHub/order ownership; E15/E30",
+    "status": "VERIFIED source structure; not full money-journey acceptance",
+    "approvers": "PO, RO, FO, AR",
+    "approval": "PENDING"
+  },
+  "C37": {
+    "en": "Current financial write workflows are limited to EGP; multi-currency accounting and currency conversion are not part of the verified offer.",
+    "ar": "تقتصر عمليات تسجيل المعاملات المالية الحالية على الجنيه المصري؛ ولا تشمل الإمكانات المتحقّق منها المحاسبة متعدّدة العملات أو تحويل العملات.",
+    "evidence": "Finance/platform; E12 DR-12-D, E27",
+    "status": "VERIFIED source boundary; commercial “offer” must match deployment",
+    "approvers": "PO, RO, FO, AR",
+    "approval": "PENDING"
+  },
+  "C38": {
+    "en": "Withdrawal approval does not mean a transfer has been completed. Payment and settlement require their own supported process and evidence.",
+    "ar": "لا يعني اعتماد طلب السحب اكتمال التحويل. فالدفع والتسوية يتطلّبان الإجراء المدعوم والأدلة الخاصة بهما.",
+    "evidence": "Affiliate/finance; E24",
+    "status": "VERIFIED",
+    "approvers": "PO, FO, AR",
+    "approval": "PENDING"
+  },
+  "C36": {
+    "en": "Discuss your marketplace operating requirements with our team.",
+    "ar": "ناقش متطلبات تشغيل سوقك الإلكتروني مع فريقنا.",
+    "evidence": "CommerceHub; H16 unverified commercial offer",
+    "status": "OWNER FACT: consultation only, not white-label product availability",
+    "approvers": "PO, SO, AR",
+    "approval": "PENDING"
+  },
+  "C39": {
+    "en": "Request a demo",
+    "ar": "اطلب عرضًا توضيحيًا",
+    "evidence": "Ecosystem; brief's desired goal",
+    "status": "PROPOSED CTA; real destination/process absent",
+    "approvers": "PO, SO, LO, AR",
+    "approval": "PENDING"
+  },
+  "C40": {
+    "en": "Explore the products",
+    "ar": "استكشف المنتجات",
+    "evidence": "Marketing navigation; sitemap",
+    "status": "PROPOSED navigation only",
+    "approvers": "PO, AR",
+    "approval": "PENDING"
+  },
+  "C41": {
+    "en": "Tell us about your business and the workflows you want to review.",
+    "ar": "أخبرنا عن نشاطك التجاري ومسارات العمل التي ترغب في الاطّلاع عليها.",
+    "evidence": "Contact; content proposal",
+    "status": "OWNER FACT: real receiving team, privacy/retention/access review",
+    "approvers": "PO, SO, LO, AR",
+    "approval": "PENDING"
+  },
+  "C42": {
+    "en": "Your request has been received.",
+    "ar": "تم استلام طلبك.",
+    "evidence": "Contact success",
+    "status": "OWNER FACT: only after genuine delivery confirmation in future implementation",
+    "approvers": "SO, LO, AR",
+    "approval": "PENDING"
+  },
+  "C43": {
+    "en": "Four product areas. A clearer view of commerce.",
+    "ar": "أربعة مجالات للمنتج. ورؤية أوضح لأعمالك التجارية.",
+    "evidence": "Ecosystem; E01/E14/E21/E29",
+    "status": "PROPOSED headline; no measurable improvement assertion",
+    "approvers": "PO, AR",
+    "approval": "PENDING"
+  },
+  "C44": {
+    "en": "Clearer control of daily merchant operations.",
+    "ar": "تحكّم أوضح في العمليات اليومية للتاجر.",
+    "evidence": "POS; P01–P14",
+    "status": "PROPOSED qualitative benefit",
+    "approvers": "PO, AR",
+    "approval": "PENDING"
+  },
+  "C45": {
+    "en": "Your catalog, presented for online shopping.",
+    "ar": "كتالوجك، في تجربة تسوّق إلكترونية.",
+    "evidence": "Storefront; E14/E15",
+    "status": "PROPOSED headline grounded in verified browsing",
+    "approvers": "PO, AR",
+    "approval": "PENDING"
+  },
+  "C46": {
+    "en": "Eligible products. Traceable promotion. Clear commission records.",
+    "ar": "منتجات مؤهلة. وترويج قابل للتتبّع. وسجلات عمولات واضحة.",
+    "evidence": "Affiliate; E22–E25",
+    "status": "PROPOSED headline; only supported attribution journeys",
+    "approvers": "PO, FO, AR",
+    "approval": "PENDING"
+  },
+  "C47": {
+    "en": "Marketplace selling with clear publishing controls.",
+    "ar": "بيع عبر السوق الإلكتروني بضوابط نشر واضحة.",
+    "evidence": "CommerceHub; E26–E28",
+    "status": "PROPOSED headline grounded in eligibility/publishing",
+    "approvers": "PO, AR",
+    "approval": "PENDING"
+  },
+  "C48": {
+    "en": "Existing customer? Choose your current application.",
+    "ar": "هل أنت من العملاء الحاليين؟ اختر تطبيقك الحالي.",
+    "evidence": "Access; user-provided protected destinations, E01/E21/E29",
+    "status": "PROPOSED label; exact destinations/host-path behavior must be reviewed",
+    "approvers": "AO, PO, AR",
+    "approval": "PENDING"
+  },
+  "C49": {
+    "en": "Contact our team",
+    "ar": "تواصل مع فريقنا",
+    "evidence": "Contact; brief",
+    "status": "OWNER FACT: verified channel/contact owner required",
+    "approvers": "SO, LO, AR",
+    "approval": "PENDING"
+  },
+  "C50": {
+    "en": "Capabilities across your commerce",
+    "ar": "إمكانات تدعم مختلف جوانب تجارتك",
+    "evidence": "Ecosystem; Phase 1F-C section headline",
+    "status": "PROPOSED headline; four product areas, no new capability",
+    "approvers": "PO, AR",
+    "approval": "PENDING"
+  },
+  "C51": {
+    "en": "Explore practical tools across all four SHOPYXI product areas.",
+    "ar": "اكتشف أدوات عملية عبر مجالات منتجات SHOPYXI الأربعة.",
+    "evidence": "Ecosystem; Phase 1F-C section framing",
+    "status": "PROPOSED subtitle; editorial framing only",
+    "approvers": "PO, AR",
+    "approval": "PENDING"
+  },
+  "C52": {
+    "en": "Your business deserves a better experience.",
+    "ar": "تجارتك تستحق تجربة أفضل.",
+    "evidence": "Ecosystem; Phase 1F-D free experience headline",
+    "status": "PROPOSED headline; free self-registration framing, no offer terms",
+    "approvers": "PO, SO, RO, AR",
+    "approval": "PENDING"
+  },
+  "C53": {
+    "en": "Start your free SHOPYXI experience.",
+    "ar": "ابدأ تجربتك المجانية مع SHOPYXI.",
+    "evidence": "Ecosystem; Phase 1F-D free experience sub-headline",
+    "status": "PROPOSED sub-headline; no trial duration, limits or activation promise",
+    "approvers": "PO, SO, RO, AR",
+    "approval": "PENDING"
+  },
+  "C54": {
+    "en": "Create your account and explore the SHOPYXI commerce ecosystem.",
+    "ar": "أنشئ حسابك واستكشف منظومة SHOPYXI التجارية.",
+    "evidence": "Ecosystem; Phase 1F-D supporting description",
+    "status": "PROPOSED description; self-registration destination approved, no onboarding promise",
+    "approvers": "PO, SO, RO, AR",
+    "approval": "PENDING"
+  },
+  "C55": {
+    "en": "Start your free experience",
+    "ar": "ابدأ تجربتك المجانية",
+    "evidence": "Phase 1F-D CTA; owner-approved destination https://admin.shopyxi.com/register",
+    "status": "PROPOSED CTA label; destination verified reachable, no form submitted",
+    "approvers": "PO, SO, RO, AR",
+    "approval": "PENDING"
+  }
+}

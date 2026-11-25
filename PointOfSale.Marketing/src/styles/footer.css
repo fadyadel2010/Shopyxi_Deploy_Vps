@@ -1,0 +1,208 @@
+/* Phase 1G — premium SHOPYXI footer.
+   Scoped entirely to the .sf namespace so no Phase 1A-1F-D selector, page
+   style or shared component is redefined. Logical properties mirror the full
+   composition between LTR and RTL; the reference is the visual authority. */
+
+[data-shopyxi-marketing] .sf {
+  --sf-signal: #1d68fe;
+  --sf-field: #f6f5fc;
+  --sf-heading: #5f5c78;
+  --sf-ink: #16233f;
+  --sf-muted: #4b5563;
+  --sf-divider: #ded9ec;
+  --sf-dot-pos: #2563eb;
+  --sf-dot-storefront: #7c3aed;
+  --sf-dot-affiliate: #10b981;
+  --sf-dot-commercehub: #f59e0b;
+  position: relative;
+  isolation: isolate;
+  padding-block: 0;
+  border-block-start: 4px solid var(--sf-signal);
+  background-color: var(--sf-field);
+  background-image:
+    radial-gradient(46rem 27rem at 102% -10%, rgb(210 199 249 / .58), transparent 70%),
+    radial-gradient(40rem 25rem at -8% 112%, rgb(215 205 250 / .62), transparent 72%),
+    linear-gradient(180deg, #f8f7fd 0%, #f2f0fa 100%);
+  color: var(--sf-muted);
+}
+[data-shopyxi-marketing] .sf-ambient {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+[data-shopyxi-marketing] .sf-orb {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+}
+[data-shopyxi-marketing] .sf-orb-a {
+  inline-size: 46rem;
+  block-size: 46rem;
+  inset-block-start: -25rem;
+  inset-inline-end: -13rem;
+  background: radial-gradient(closest-side, rgb(198 183 246 / .4), rgb(220 211 249 / .18) 58%, transparent 74%);
+}
+[data-shopyxi-marketing] .sf-orb-b {
+  inline-size: 34rem;
+  block-size: 34rem;
+  inset-block-end: -20rem;
+  inset-inline-start: -13rem;
+  background: radial-gradient(closest-side, rgb(203 190 248 / .42), transparent 72%);
+}
+[data-shopyxi-marketing] .sf-wrap {
+  position: relative;
+  z-index: 1;
+  padding-block: clamp(2.6rem, 4.6vw, 4.6rem) clamp(2.2rem, 3.4vw, 3.4rem);
+}
+[data-shopyxi-marketing] .sf-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2.18fr) minmax(0, 1fr) minmax(0, 1.13fr);
+  gap: clamp(2rem, 5.6vw, 5rem);
+  align-items: start;
+}
+
+/* ------------------------------- Brand -------------------------------- */
+[data-shopyxi-marketing] .sf-brand {
+  min-inline-size: 0;
+}
+[data-shopyxi-marketing] .sf-brand .brand {
+  min-block-size: 0;
+  margin-block-end: clamp(1rem, 1.6vw, 1.35rem);
+}
+[data-shopyxi-marketing] .sf-brand .brand img {
+  inline-size: clamp(10rem, 20vw, 15.5rem);
+  max-inline-size: 100%;
+  block-size: auto;
+}
+[data-shopyxi-marketing] .sf-desc {
+  max-inline-size: 32rem;
+  margin: 0;
+  color: var(--sf-muted);
+  font-size: 1.125rem;
+  line-height: 1.72;
+}
+
+/* ----------------------------- Navigation ----------------------------- */
+[data-shopyxi-marketing] .sf-group {
+  min-inline-size: 0;
+  text-align: start;
+}
+[data-shopyxi-marketing] .sf-heading {
+  margin: 0;
+  color: var(--sf-heading);
+  font-size: .875rem;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: .14em;
+}
+[data-shopyxi-marketing]:lang(en) .sf-heading {
+  text-transform: uppercase;
+}
+[data-shopyxi-marketing]:lang(ar) .sf-heading {
+  font-size: .9375rem;
+  letter-spacing: .02em;
+}
+[data-shopyxi-marketing] .sf-list {
+  display: grid;
+  gap: .125rem;
+  margin-block: clamp(1.1rem, 1.8vw, 1.6rem) 0;
+  padding: 0;
+  list-style: none;
+}
+[data-shopyxi-marketing] .sf-link {
+  display: inline-block;
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  padding-block: .55rem;
+  border-radius: .3rem;
+  color: var(--sm-link);
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.45;
+  text-decoration: none;
+}
+[data-shopyxi-marketing] .sf-link:is(:hover, :focus-visible) {
+  color: var(--sm-action-hover);
+  text-decoration: underline;
+  text-decoration-thickness: .075em;
+  text-underline-offset: .2em;
+}
+[data-shopyxi-marketing] .sf-product {
+  display: flex;
+  align-items: flex-start;
+  gap: .7rem;
+}
+[data-shopyxi-marketing] .sf-dot {
+  inline-size: .5rem;
+  block-size: .5rem;
+  flex: 0 0 auto;
+  /* Keep the marker on the first line when a localized label wraps. */
+  margin-block-start: calc(.55rem + (1.63125rem - .5rem) / 2);
+  border-radius: 50%;
+  background: var(--sf-dot-color, var(--sm-link));
+}
+[data-shopyxi-marketing] .sf-dot-pos { --sf-dot-color: var(--sf-dot-pos); }
+[data-shopyxi-marketing] .sf-dot-storefront { --sf-dot-color: var(--sf-dot-storefront); }
+[data-shopyxi-marketing] .sf-dot-affiliate { --sf-dot-color: var(--sf-dot-affiliate); }
+[data-shopyxi-marketing] .sf-dot-commercehub { --sf-dot-color: var(--sf-dot-commercehub); }
+[data-shopyxi-marketing] .sf-review-link {
+  display: inline-block;
+  min-block-size: 44px;
+  padding-block: .55rem;
+  margin-block-start: .35rem;
+  border-radius: .3rem;
+  color: var(--sf-muted);
+  font-size: .9375rem;
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .22em;
+}
+[data-shopyxi-marketing] .sf-review-link:hover { color: var(--sm-action-hover); }
+
+/* --------------------------- Brand signature --------------------------- */
+[data-shopyxi-marketing] .sf-signature {
+  margin-block-start: clamp(2.4rem, 3.4vw, 3.5rem);
+  padding-block-start: clamp(1.25rem, 1.8vw, 1.6rem);
+  border-block-start: 1px solid var(--sf-divider);
+}
+[data-shopyxi-marketing] .sf-signature img {
+  display: block;
+  inline-size: clamp(8rem, 10vw, 9.5rem);
+  block-size: auto;
+  margin-inline: 0;
+}
+
+/* ------------------------------ Responsive ----------------------------- */
+@media (max-width: 1199px) {
+  [data-shopyxi-marketing] .sf-grid { gap: clamp(1.75rem, 4.8vw, 3.4rem); }
+  [data-shopyxi-marketing] .sf-link { font-size: 1rem; }
+  [data-shopyxi-marketing] .sf-dot { margin-block-start: calc(.55rem + (1.45rem - .5rem) / 2); }
+  [data-shopyxi-marketing] .sf-desc { font-size: 1.0625rem; }
+  [data-shopyxi-marketing] .sf-heading { font-size: .8125rem; }
+  [data-shopyxi-marketing]:lang(ar) .sf-heading { font-size: .9375rem; }
+}
+@media (max-width: 999px) {
+  [data-shopyxi-marketing] .sf-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 2.5rem clamp(2rem, 5vw, 3.5rem);
+  }
+  [data-shopyxi-marketing] .sf-brand { grid-column: 1 / -1; }
+  [data-shopyxi-marketing] .sf-desc { max-inline-size: 44rem; }
+  [data-shopyxi-marketing] .sf-brand .brand img { inline-size: clamp(10.5rem, 26vw, 13.5rem); }
+  [data-shopyxi-marketing] .sf-signature { margin-block-start: 3rem; }
+}
+@media (max-width: 639px) {
+  [data-shopyxi-marketing] .sf { border-block-start-width: 3px; }
+  [data-shopyxi-marketing] .sf-grid { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
+  [data-shopyxi-marketing] .sf-brand .brand img { inline-size: clamp(10rem, 46vw, 12rem); }
+  [data-shopyxi-marketing] .sf-list { margin-block-start: .9rem; }
+  [data-shopyxi-marketing] .sf-desc { font-size: 1rem; line-height: 1.7; }
+  [data-shopyxi-marketing] .sf-signature { margin-block-start: 2.4rem; }
+  [data-shopyxi-marketing] .sf-signature img { inline-size: 8rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-shopyxi-marketing] .sf * { transition-duration: 0s !important; }
+}

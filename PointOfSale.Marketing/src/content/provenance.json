@@ -1,0 +1,19 @@
+{
+  "sources": {
+    "docs/marketing/phase-1-discovery-20261121-01/SHOPYXI-MARKETING-CLAIMS-REGISTER.md": "fc55658f040b58e9d0b848fb37923709f4e56932237e2cf4695745f8e8d3202d",
+    "docs/marketing/phase-2-design-20261121-01/tools/preview.js": "c264eb07bf7aff9dacebfe296a1a1b5cdf39db2059168ed6939b82263043a1fa",
+    "docs/marketing/phase-2-design-20261121-01/SHOPYXI-DESIGN-TOKENS.css": "bf9534c91bc31df467ca033c4bf7179ebaea399e11bb553eac10d9f12e58dee2",
+    "docs/marketing/phase-2.1-visual-refinement-20261121-01/tools/refinement.css": "7bc25de8964072c774c6715aec4dd745c593cfc5afa5fc86a6b185d0ed0c76c7",
+    "docs/branding/assets/SHOPYXI_primary_logo_transparent.png": "8fd64e7a193a081394a9ed699417cc30387cbc8644711fbff786163c2e2d70aa"
+  },
+  "claims": 56,
+  "claimApproval": "PENDING",
+  "productEvidenceStatuses": "Unchanged; Phase 1 evidence matrix is authoritative.",
+  "logo": {
+    "sha256": "8fd64e7a193a081394a9ed699417cc30387cbc8644711fbff786163c2e2d70aa",
+    "width": 2400,
+    "height": 747,
+    "treatment": "Byte-for-byte copy, no recoloring/cropping/resampling"
+  },
+  "derived": "Exact claim pairs; inherited Phase 2 labels/product maps; Phase 2.1 Signal Stage CSS with unused Open Canvas rules omitted. Review-only editorial metadata updated. Phase 1F-D adds C52-C55 (PENDING) and the free experience CTA."
+}

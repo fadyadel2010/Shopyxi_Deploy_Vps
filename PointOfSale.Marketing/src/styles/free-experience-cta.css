@@ -1,0 +1,391 @@
+/* Phase 1F-D — Free Experience CTA.
+   Scoped entirely to .fx-section / .fx-* so no Phase 1A-1F-C selector, page
+   style or shared component is redefined. The outer lavender band stays visible
+   around the inset navy panel; logical properties mirror the whole composition
+   between LTR and RTL. Windows render unmodified audited captures only. */
+
+[data-shopyxi-marketing] .fx-section {
+  --fx-lavender: #f3f0fb;
+  --fx-panel-radius: clamp(1.1rem, 1.9vw, 1.75rem);
+  --fx-window-radius: clamp(.4rem, .72vw, .66rem);
+  position: relative;
+  isolation: isolate;
+  padding-block: clamp(2.6rem, 4.6vw, 4.6rem);
+  padding-inline: var(--sm-gutter);
+  background-color: var(--fx-lavender);
+  background-image:
+    radial-gradient(50rem 30rem at 6% 4%, rgb(223 214 252 / .68), transparent 68%),
+    radial-gradient(46rem 28rem at 96% 88%, rgb(214 227 255 / .64), transparent 70%),
+    linear-gradient(180deg, #f6f3fe 0%, #f1eef9 100%);
+  overflow-wrap: break-word;
+}
+[data-shopyxi-marketing] .fx-shell {
+  position: relative;
+  inline-size: min(80rem, 100%);
+  margin-inline: auto;
+}
+[data-shopyxi-marketing] .fx-panel {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, .98fr);
+  align-items: center;
+  gap: clamp(1.2rem, 3.2vw, 3rem);
+  padding: clamp(1.6rem, 3.5vw, 3.1rem) clamp(1.25rem, 3.5vw, 3.4rem);
+  overflow: hidden;
+  border: 1px solid rgb(126 160 226 / .2);
+  border-radius: var(--fx-panel-radius);
+  background-color: #0a1734;
+  background-image:
+    radial-gradient(34rem 22rem at 8% 92%, rgb(37 96 220 / .42), transparent 70%),
+    radial-gradient(30rem 20rem at 94% 2%, rgb(124 77 227 / .32), transparent 66%),
+    linear-gradient(128deg, #123061 0%, #0b1d44 40%, #070f27 100%);
+  box-shadow:
+    0 2.6rem 5rem -2.2rem rgb(13 24 56 / .62),
+    inset 0 1px 0 rgb(255 255 255 / .08);
+}
+[data-shopyxi-marketing] .fx-panel-glow {
+  position: absolute;
+  z-index: 0;
+  inset-inline-end: 2%;
+  inset-block-start: 12%;
+  inline-size: 42%;
+  block-size: 74%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(60 124 255 / .26), transparent 72%);
+  filter: blur(8px);
+  pointer-events: none;
+}
+
+/* --------------------------------- Copy -------------------------------- */
+[data-shopyxi-marketing] .fx-copy {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-inline-size: 0;
+  max-inline-size: 36rem;
+  text-align: start;
+}
+[data-shopyxi-marketing] .fx-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  max-inline-size: 100%;
+  min-block-size: 2.35rem;
+  padding: .4rem .95rem;
+  border: 1px solid rgb(196 176 255 / .38);
+  border-radius: 999px;
+  background-image: linear-gradient(100deg, rgb(255 255 255 / .16), rgb(196 170 255 / .21));
+  color: #f1e9ff;
+  font-size: .74rem;
+  font-weight: 750;
+  line-height: 1.2;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+[data-shopyxi-marketing] .fx-badge-icon { flex: 0 0 auto; color: #cbb6ff; }
+[data-shopyxi-marketing] .fx-badge-text { min-inline-size: 0; }
+[data-shopyxi-marketing] .fx-title {
+  margin: clamp(.85rem, 1.5vw, 1.25rem) 0 0;
+  color: #ffffff;
+  font-size: clamp(1.95rem, 3.15vw, 2.95rem);
+  font-weight: 800;
+  line-height: 1.14;
+  letter-spacing: -.032em;
+  text-wrap: balance;
+}
+[data-shopyxi-marketing] .fx-title-line { display: block; }
+[data-shopyxi-marketing] .fx-title-accent {
+  display: block;
+  margin-block-start: .12em;
+  color: #7db8ff;
+  background-image: linear-gradient(96deg, #a8d1ff 0%, #5fa6ff 48%, #8f8bff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+[data-shopyxi-marketing] .fx-lede {
+  max-inline-size: 33rem;
+  margin: clamp(.7rem, 1.2vw, .95rem) 0 0;
+  color: #c8d5ea;
+  font-size: clamp(.98rem, 1.15vw, 1.08rem);
+  line-height: 1.75;
+}
+[data-shopyxi-marketing] .fx-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  inline-size: min(100%, 30rem);
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  min-block-size: 3.5rem;
+  margin-block-start: clamp(1.15rem, 2vw, 1.6rem);
+  padding: .7rem 1.3rem;
+  border: 1px solid rgb(255 255 255 / .16);
+  border-radius: .85rem;
+  background-image: linear-gradient(180deg, #2a6fe8 0%, #1f63e0 52%, #1a56cd 100%);
+  color: #ffffff;
+  font-size: clamp(1rem, 1.1vw, 1.1rem);
+  font-weight: 800;
+  line-height: 1.25;
+  text-align: center;
+  text-decoration: none;
+  box-shadow:
+    0 1.05rem 2.1rem -1rem rgb(28 92 216 / .85),
+    inset 0 1px 0 rgb(255 255 255 / .3);
+  transition:
+    box-shadow var(--sm-duration-fast) var(--sm-ease),
+    transform var(--sm-duration-fast) var(--sm-ease);
+}
+[data-shopyxi-marketing] .fx-cta:hover {
+  box-shadow:
+    0 1.25rem 2.4rem -1rem rgb(28 92 216 / .95),
+    0 0 0 1px rgb(190 218 255 / .5),
+    inset 0 1px 0 rgb(255 255 255 / .38);
+}
+[data-shopyxi-marketing] .fx-cta:active { transform: translateY(1px); }
+[data-shopyxi-marketing] .fx-cta:focus-visible { outline: 3px solid #a9cbff; outline-offset: 3px; }
+[data-shopyxi-marketing] .fx-cta-icon { flex: 0 0 auto; }
+[data-shopyxi-marketing] .fx-cta > span { min-inline-size: 0; }
+[data-shopyxi-marketing] .fx-benefits {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  inline-size: 100%;
+  max-inline-size: 34rem;
+  margin: clamp(1rem, 1.7vw, 1.35rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+[data-shopyxi-marketing] .fx-benefit {
+  display: flex;
+  align-items: center;
+  gap: .42rem;
+  min-inline-size: 0;
+  padding-inline-end: clamp(.7rem, 1.1vw, .95rem);
+  color: #c6d4ea;
+  font-size: clamp(.8rem, .92vw, .87rem);
+  line-height: 1.35;
+}
+[data-shopyxi-marketing] .fx-benefit + .fx-benefit {
+  padding-inline-start: clamp(.7rem, 1.1vw, .95rem);
+  border-inline-start: 1px solid rgb(150 181 232 / .3);
+}
+[data-shopyxi-marketing] .fx-benefit-icon { flex: 0 0 auto; color: #8fbcff; }
+
+/* ------------------------------- Artwork ------------------------------- */
+[data-shopyxi-marketing] .fx-art { position: relative; z-index: 1; min-inline-size: 0; }
+[data-shopyxi-marketing] .fx-stage {
+  position: relative;
+  inline-size: 100%;
+  aspect-ratio: 1.16 / 1;
+  isolation: isolate;
+}
+[data-shopyxi-marketing] .fx-stage::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset-inline-start: 12%;
+  inset-block-start: 12%;
+  inline-size: 76%;
+  block-size: 66%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(58 118 255 / .3), transparent 74%);
+  filter: blur(10px);
+  pointer-events: none;
+}
+[data-shopyxi-marketing] .fx-glow {
+  position: absolute;
+  z-index: 0;
+  inset-inline-start: -8%;
+  inset-block-start: 6%;
+  inline-size: 116%;
+  block-size: 70%;
+  border: 1.5px solid rgb(126 180 255 / .72);
+  border-radius: 50%;
+  box-shadow:
+    0 0 3.2rem rgb(70 136 255 / .42),
+    inset 0 0 3.4rem rgb(70 136 255 / .22);
+  transform: rotate(-8deg);
+  pointer-events: none;
+}
+[data-shopyxi-marketing] .fx-window {
+  position: absolute;
+  margin: 0;
+  min-inline-size: 0;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / .55);
+  border-radius: var(--fx-window-radius);
+  background: #f4f7fe;
+  box-shadow:
+    0 1.4rem 3.4rem -1.2rem rgb(2 8 26 / .9),
+    0 0 0 1px rgb(9 22 52 / .32),
+    0 0 3rem -1rem rgb(80 140 255 / .5);
+}
+[data-shopyxi-marketing] .fx-window-commercehub {
+  z-index: 1;
+  inset-block-start: 1%;
+  inset-inline-start: 1%;
+  inline-size: 47%;
+  transform: rotate(-7deg);
+  transform-origin: 50% 0;
+}
+[data-shopyxi-marketing] .fx-window-storefront {
+  z-index: 2;
+  inset-block-start: 5%;
+  inset-inline-end: 0;
+  inline-size: 55%;
+  transform: rotate(6deg);
+  transform-origin: 50% 0;
+}
+[data-shopyxi-marketing] .fx-window-affiliate {
+  z-index: 3;
+  inset-block-start: 37%;
+  inset-inline-start: 0;
+  inline-size: 58%;
+  transform: rotate(-3deg);
+}
+[data-shopyxi-marketing] .fx-window-pos {
+  z-index: 4;
+  inset-block-start: 33%;
+  inset-inline-end: 1%;
+  inline-size: 67%;
+  transform: rotate(2deg);
+}
+[data-shopyxi-marketing] .fx-window-bar {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  block-size: clamp(16px, 1.7vw, 25px);
+  padding-inline: clamp(6px, .6vw, 9px);
+  border-block-end: 1px solid #dbe5f6;
+  background-image: linear-gradient(180deg, #ffffff, #edf2fd);
+}
+[data-shopyxi-marketing] .fx-window-lights { display: inline-flex; flex: 0 0 auto; gap: clamp(2px, .22vw, 4px); }
+[data-shopyxi-marketing] .fx-window-lights i {
+  display: block;
+  inline-size: clamp(4px, .4vw, 6px);
+  block-size: clamp(4px, .4vw, 6px);
+  border-radius: 50%;
+  background: #f0605a;
+}
+[data-shopyxi-marketing] .fx-window-lights i:nth-child(2) { background: #f2bd52; }
+[data-shopyxi-marketing] .fx-window-lights i:nth-child(3) { background: #57c583; }
+[data-shopyxi-marketing] .fx-window-pill {
+  flex: 0 1 42%;
+  block-size: clamp(5px, .5vw, 8px);
+  border: 1px solid #e2e9f7;
+  border-radius: 999px;
+  background: #eef3fc;
+}
+[data-shopyxi-marketing] .fx-window-shot { display: block; background: #ffffff; }
+[data-shopyxi-marketing] .fx-window-shot img { display: block; inline-size: 100%; block-size: auto; }
+[data-shopyxi-marketing] .fx-tiles {
+  position: absolute;
+  z-index: 5;
+  inset-block-end: -.3rem;
+  inset-inline-start: 1%;
+  display: flex;
+  gap: clamp(5px, .7vw, 9px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+[data-shopyxi-marketing] .fx-tile {
+  display: grid;
+  place-items: center;
+  inline-size: clamp(35px, 3.3vw, 50px);
+  block-size: clamp(35px, 3.3vw, 50px);
+  border: 1px solid rgb(255 255 255 / .28);
+  border-radius: clamp(9px, .9vw, 14px);
+  background-image: linear-gradient(155deg, var(--fx-tile-a), var(--fx-tile-b));
+  color: #ffffff;
+  box-shadow:
+    0 .8rem 1.6rem -.6rem rgb(2 8 26 / .95),
+    inset 0 1px 0 rgb(255 255 255 / .35);
+}
+[data-shopyxi-marketing] .fx-tile-pos { --fx-tile-a: #4f93ff; --fx-tile-b: #2563eb; }
+[data-shopyxi-marketing] .fx-tile-storefront { --fx-tile-a: #a78bfa; --fx-tile-b: #7c3aed; }
+[data-shopyxi-marketing] .fx-tile-affiliate { --fx-tile-a: #34d399; --fx-tile-b: #15803d; }
+[data-shopyxi-marketing] .fx-tile-commercehub { --fx-tile-a: #fbbf24; --fx-tile-b: #c2410c; }
+
+/* ------------------------------ Responsive ----------------------------- */
+@media (max-width: 1180px) {
+  [data-shopyxi-marketing] .fx-glow { inset-inline-start: -5%; inline-size: 110%; }
+  [data-shopyxi-marketing] .fx-panel {
+    gap: clamp(1rem, 2.4vw, 2rem);
+    padding-inline: clamp(1.25rem, 2.6vw, 2.4rem);
+  }
+  [data-shopyxi-marketing] .fx-title { font-size: clamp(1.85rem, 3.5vw, 2.55rem); }
+  [data-shopyxi-marketing] .fx-cta { inline-size: 100%; }
+}
+@media (max-width: 980px) {
+  [data-shopyxi-marketing] .fx-panel {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(1.5rem, 3vw, 2.2rem);
+    padding: clamp(1.7rem, 3.4vw, 2.6rem);
+  }
+  [data-shopyxi-marketing] .fx-copy { max-inline-size: 34rem; }
+  [data-shopyxi-marketing] .fx-art { inline-size: min(100%, 30rem); margin-inline: auto; }
+  [data-shopyxi-marketing] .fx-stage { aspect-ratio: 1.3 / 1; }
+  [data-shopyxi-marketing] .fx-title { font-size: clamp(1.95rem, 4.4vw, 2.75rem); }
+  [data-shopyxi-marketing] .fx-benefits { max-inline-size: none; }
+}
+@media (max-width: 720px) {
+  [data-shopyxi-marketing] .fx-section { padding-block: 2.1rem; }
+  [data-shopyxi-marketing] .fx-panel {
+    gap: 1.5rem;
+    padding: 1.55rem 1.35rem 1.7rem;
+    border-radius: 1.15rem;
+  }
+  [data-shopyxi-marketing] .fx-glow { inset-inline-start: -0.5%; inline-size: 101%; }
+  [data-shopyxi-marketing] .fx-badge {
+    min-block-size: 2.1rem;
+    padding: .35rem .8rem;
+    font-size: .7rem;
+    letter-spacing: .1em;
+  }
+  [data-shopyxi-marketing] .fx-title { font-size: clamp(1.8rem, 6.4vw, 2.2rem); }
+  [data-shopyxi-marketing] .fx-lede { font-size: .95rem; line-height: 1.7; }
+  [data-shopyxi-marketing] .fx-cta { min-block-size: 3.25rem; font-size: .98rem; }
+  [data-shopyxi-marketing] .fx-benefits {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: .55rem;
+    margin-block-start: 1.1rem;
+  }
+  [data-shopyxi-marketing] .fx-benefit { padding-inline: 0; font-size: .84rem; }
+  [data-shopyxi-marketing] .fx-benefit + .fx-benefit { padding-inline: 0; border-inline-start: 0; }
+  [data-shopyxi-marketing] .fx-stage { aspect-ratio: 1.22 / 1; }
+}
+@media (max-width: 420px) {
+  [data-shopyxi-marketing] .fx-cta { padding-inline: .9rem; font-size: clamp(.82rem, 4vw, .95rem); }
+  [data-shopyxi-marketing] .fx-title { hyphens: auto; }
+  [data-shopyxi-marketing] .fx-panel { padding: 1.35rem .9rem 1.45rem; }
+  [data-shopyxi-marketing] .fx-title { font-size: clamp(1.65rem, 7.2vw, 2rem); }
+  [data-shopyxi-marketing] .fx-badge { font-size: .64rem; letter-spacing: .08em; }
+  [data-shopyxi-marketing] .fx-lede { font-size: .92rem; }
+  [data-shopyxi-marketing] .fx-tile { inline-size: 34px; block-size: 34px; }
+  [data-shopyxi-marketing] .fx-tile svg { inline-size: 17px; block-size: 17px; }
+}
+[data-shopyxi-marketing]:lang(ar) .fx-badge {
+  font-size: .84rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+[data-shopyxi-marketing]:lang(ar) .fx-title { line-height: 1.42; letter-spacing: 0; }
+[data-shopyxi-marketing]:lang(ar) .fx-lede { line-height: 1.95; }
+[data-shopyxi-marketing]:lang(ar) .fx-glow { transform: rotate(9deg); }
+[data-shopyxi-marketing]:lang(ar) .fx-window-commercehub { transform: rotate(7deg); }
+[data-shopyxi-marketing]:lang(ar) .fx-window-storefront { transform: rotate(-6deg); }
+[data-shopyxi-marketing]:lang(ar) .fx-window-affiliate { transform: rotate(3deg); }
+[data-shopyxi-marketing]:lang(ar) .fx-window-pos { transform: rotate(-2deg); }
+@media (max-width: 720px) {
+  [data-shopyxi-marketing]:lang(ar) .fx-badge { font-size: .8rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-shopyxi-marketing] .fx-cta { transition: none; }
+}

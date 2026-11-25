@@ -1,0 +1,80 @@
+[
+  {
+    "key": "pos",
+    "n": "01",
+    "desc": "C07",
+    "headline": "C44",
+    "proof": "C08",
+    "candidate": "V03",
+    "secondary": "V05",
+    "caps": [
+      "C08",
+      "C09",
+      "C10",
+      "C13"
+    ],
+    "boundary": [
+      "C15",
+      "C14"
+    ],
+    "audience": "operational"
+  },
+  {
+    "key": "storefront",
+    "n": "02",
+    "desc": "C17",
+    "headline": "C45",
+    "proof": "C17",
+    "candidate": "V13",
+    "secondary": "V14",
+    "caps": [
+      "C18",
+      "C20",
+      "C21"
+    ],
+    "boundary": [
+      "C19",
+      "C27",
+      "C30"
+    ],
+    "audience": "shopping"
+  },
+  {
+    "key": "affiliate",
+    "n": "03",
+    "desc": "C04",
+    "headline": "C46",
+    "proof": "C22",
+    "candidate": "V18",
+    "secondary": "V21",
+    "caps": [
+      "C22",
+      "C23",
+      "C24"
+    ],
+    "boundary": [
+      "C29",
+      "C38"
+    ],
+    "audience": "promotion"
+  },
+  {
+    "key": "commercehub",
+    "n": "04",
+    "desc": "C05",
+    "headline": "C47",
+    "proof": "C33",
+    "candidate": "V23",
+    "secondary": "V22",
+    "caps": [
+      "C32",
+      "C33",
+      "C34"
+    ],
+    "boundary": [
+      "C35",
+      "C31"
+    ],
+    "audience": "selling"
+  }
+]

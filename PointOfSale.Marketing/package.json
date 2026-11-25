@@ -1,0 +1,26 @@
+{
+  "name": "pointofsale-marketing",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "build:public": "node scripts/build.mjs --public",
+    "preview": "node scripts/preview.mjs",
+    "test": "node --test tests/static.test.mjs",
+    "test:browser": "node tests/browser.mjs",
+    "test:public": "node --test tests/public-static.test.mjs tests/release-guard.test.mjs",
+    "test:public:browser": "node tests/public.mjs"
+  },
+  "dependencies": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "lucide-react": "0.556.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.12",
+    "playwright": "1.65.1",
+    "axe-core": "4.14.1"
+  }
+}

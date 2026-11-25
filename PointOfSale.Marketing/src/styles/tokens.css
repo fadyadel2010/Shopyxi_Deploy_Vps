@@ -1,0 +1,96 @@
+/* Inherited Phase 2 marketing-only tokens. Never import into existing application projects.
+   Brand-constrained synthesis of UI/UX Pro Max; not the raw generator export. */
+[data-shopyxi-marketing] {
+  /* Primitive layer */
+  --sm-white: #ffffff;
+  --sm-canvas-50: #f7f8fa;
+  --sm-gray-100: #f3f4f6;
+  --sm-gray-200: #e5e7eb;
+  --sm-gray-300: #d1d5db;
+  --sm-gray-500: #6b7280;
+  --sm-gray-600: #4b5563;
+  --sm-ink-800: #1f2937;
+  --sm-ink-900: #111827;
+  --sm-blue-50: #eff4fe;
+  --sm-blue-300: #98baf6;
+  --sm-blue-600: #356ae6;
+  --sm-blue-700: #2a56c4;
+  --sm-blue-800: #2347a1;
+  --sm-warning-50: #fffbeb;
+  --sm-warning-800: #92400e;
+  --sm-space-1: .25rem;
+  --sm-space-2: .5rem;
+  --sm-space-3: .75rem;
+  --sm-space-4: 1rem;
+  --sm-space-6: 1.5rem;
+  --sm-space-8: 2rem;
+  --sm-space-12: 3rem;
+  --sm-space-16: 4rem;
+  --sm-space-24: 6rem;
+  --sm-radius-control: .375rem;
+  --sm-radius-card: .625rem;
+  --sm-radius-panel: .875rem;
+  --sm-font-en: "Cairo", "Segoe UI", Arial, sans-serif;
+  --sm-font-ar: "Cairo", "Segoe UI", Tahoma, Arial, sans-serif;
+  --sm-duration-fast: 120ms;
+  --sm-duration-base: 180ms;
+  --sm-ease: cubic-bezier(.2, 0, 0, 1);
+  /* Semantic layer */
+  --sm-bg: var(--sm-white);
+  --sm-bg-soft: var(--sm-canvas-50);
+  --sm-text: var(--sm-ink-900);
+  --sm-text-secondary: var(--sm-gray-600);
+  --sm-inverse: var(--sm-ink-900);
+  --sm-on-inverse: var(--sm-white);
+  --sm-inverse-secondary: var(--sm-gray-300);
+  --sm-action: var(--sm-blue-600);
+  --sm-action-hover: var(--sm-blue-700);
+  --sm-action-active: var(--sm-blue-800);
+  --sm-link: var(--sm-blue-700);
+  --sm-border: var(--sm-gray-200);
+  --sm-control-border: var(--sm-gray-500);
+  --sm-focus: var(--sm-blue-600);
+  --sm-focus-inverse: var(--sm-blue-300);
+  --sm-font: var(--sm-font-en);
+  --sm-body-size: 1.125rem;
+  --sm-body-leading: 1.7;
+  --sm-display-size: clamp(2.25rem, 4.4vw, 4rem);
+  --sm-display-leading: 1.13;
+  --sm-title-size: clamp(1.875rem, 3vw, 2.75rem);
+  --sm-section-space: var(--sm-space-24);
+  --sm-gutter: var(--sm-space-8);
+  --sm-content-max: 76rem;
+  --sm-shadow-menu: 0 12px 32px rgb(17 24 39 / .14);
+  /* Component layer */
+  --sm-button-bg: var(--sm-action);
+  --sm-button-fg: var(--sm-white);
+  --sm-button-radius: var(--sm-radius-control);
+  --sm-button-min-height: 3rem;
+  --sm-card-bg: var(--sm-bg);
+  --sm-card-radius: var(--sm-radius-card);
+  --sm-card-padding: var(--sm-space-8);
+  --sm-proof-bg: var(--sm-bg-soft);
+  --sm-proof-border: var(--sm-control-border);
+  --sm-nav-bg: var(--sm-bg);
+  --sm-menu-shadow: var(--sm-shadow-menu);
+}
+[data-shopyxi-marketing]:lang(ar) {
+  --sm-font: var(--sm-font-ar);
+  --sm-body-leading: 1.9;
+  --sm-display-size: clamp(2.125rem, 3.9vw, 3.5rem);
+  --sm-display-leading: 1.5;
+}
+@media (max-width: 767px) {
+  [data-shopyxi-marketing] {
+    --sm-section-space: var(--sm-space-16);
+    --sm-gutter: var(--sm-space-6);
+    --sm-body-size: 1rem;
+    --sm-card-padding: var(--sm-space-6);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-shopyxi-marketing] {
+    --sm-duration-fast: 0ms;
+    --sm-duration-base: 0ms;
+  }
+}
