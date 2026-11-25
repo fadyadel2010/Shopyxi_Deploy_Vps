@@ -1,0 +1,51 @@
+/* Implementation-only refinements. All selectors/tokens remain marketing-scoped. */
+[data-shopyxi-marketing] .review-label { font-size: .75rem; }
+[data-shopyxi-marketing] .review-label small { font-size: .75rem; max-width: 85ch; }
+[data-shopyxi-marketing] .variant-label { font-size: .75rem; }
+[data-shopyxi-marketing] .header-inner { flex-wrap: wrap; }
+[data-shopyxi-marketing] .plain { display: inline-flex; align-items: center; min-width: 44px; }
+[data-shopyxi-marketing] .access-panel .store-account { margin-block: 1rem 0; }
+[data-shopyxi-marketing] .reserved-title { margin-block: 1rem; }
+[data-shopyxi-marketing] .trust :focus-visible { outline-color: var(--sm-focus); }
+[data-shopyxi-marketing] .product-scope :focus-visible { outline-color: var(--sm-focus-inverse); }
+[data-shopyxi-marketing] .signal .secondary:hover { background: var(--sm-ink-800); }
+[data-shopyxi-marketing] a[aria-current="page"]:not(.brand) { text-decoration-thickness: 2px; }
+[data-shopyxi-marketing] .language-entry { max-width: 46rem; padding-block: 5rem; }
+[data-shopyxi-marketing] .language-entry>img { width: min(100%,22rem); height: auto; margin-block-end: 3rem; }
+[data-shopyxi-marketing] .language-entry h1 { margin-block-end: 2rem; }
+/* Preserve the 1.08:1 stage while letting enlarged text trigger intrinsic stacking. */
+[data-shopyxi-marketing] .hero-grid { display: flex; flex-wrap: wrap; }
+[data-shopyxi-marketing] .hero-grid>.hero-copy { flex: 1.08 1 28.08rem; }
+[data-shopyxi-marketing] .hero-grid>.portfolio { flex: 1 1 26rem; }
+@media (max-width: 1199px) {
+  /* Intrinsic dropdown layout: cannot extend beyond a 320px or enlarged-text header. */
+  [data-shopyxi-marketing] .mobile-nav[open] { flex: 1 1 100%; order: 0; }
+  [data-shopyxi-marketing] .mobile-nav[open] .access-panel { position: static; width: 100%; max-width: 100%; margin-block: .5rem; box-shadow: none; }
+}
+@media (max-width: 56rem) {
+  [data-shopyxi-marketing] :is(.hero-grid,.section-head,.capabilities,.faq-layout,.product-opening,.product-detail,.platform-heading) { grid-template-columns: 1fr; gap: 2.5rem; }
+  [data-shopyxi-marketing] .hero-grid { flex-direction: column; align-items: stretch; }
+  [data-shopyxi-marketing] .hero-grid>:is(.hero-copy,.portfolio) { flex-basis: auto; }
+  [data-shopyxi-marketing] .access[open] { flex: 1 1 100%; }
+  [data-shopyxi-marketing] .access[open] .access-panel { position: static; width: 100%; max-width: 100%; margin-block: .5rem; box-shadow: none; }
+}
+@media (max-width: 40rem) {
+  [data-shopyxi-marketing] .review-label { font-size: .75rem; }
+  [data-shopyxi-marketing] .mobile-nav { max-width: 100%; }
+  [data-shopyxi-marketing] .folio-composition { grid-template-columns: repeat(auto-fit,minmax(min(100%,7rem),1fr)); }
+}
+
+/* Preserve normal card padding, but reserve a useful copy width when 200% text
+   makes the rem-based padding and index consume a narrow phone's content area. */
+@media (max-width: 400px) {
+  [data-shopyxi-marketing] .capabilities .cap-list { container-type: inline-size; }
+  [data-shopyxi-marketing] .capabilities .cap-list article {
+    padding-inline: min(1.75rem, max(.5rem, calc((100% - 12rem) / 2)));
+  }
+}
+@container (max-width: 10rem) {
+  [data-shopyxi-marketing] .capabilities .cap-list article {
+    grid-template-columns: minmax(0, 1fr);
+    gap: .5rem;
+  }
+}

@@ -1,0 +1,640 @@
+{
+  "schemaVersion": 2,
+  "syntheticOnly": true,
+  "actualReleaseUi": true,
+  "review": "Owner review pending. Crops preserve original pixels; UI and application bundles unchanged.",
+  "disclosure": {
+    "en": "Actual SHOPYXI application screen. All displayed data is synthetic demonstration data.",
+    "ar": "شاشة فعلية من تطبيق SHOPYXI. جميع البيانات المعروضة بيانات تجريبية."
+  },
+  "products": {
+    "pos": {
+      "en": {
+        "alt": "SHOPYXI POS inventory with multiple synthetic products, variants, and available, reserved and zero stock.",
+        "detailAlt": "SHOPYXI POS detail: synthetic variant SKUs with quantity, reserved and available stock.",
+        "desktopOnly": true,
+        "desktop": {
+          "publicPath": "/assets/screen-pos-en-desktop-2c006343533b.webp",
+          "publicSha256": "2c006343533be7289c4f55d85dacd13a1e8ec7a01416a2d1fc01bc35cc790017",
+          "originalSha256": "b8f70c80e8f54accd89b6d48781223cb3dab4fad012c43baa01883ed3a09eb52",
+          "original": "evidence/captures-03/pos-en-desktop.png",
+          "crop": {
+            "x": 620,
+            "y": 350,
+            "width": 780,
+            "height": 520
+          },
+          "dimensions": {
+            "width": 780,
+            "height": 520
+          },
+          "candidate": "V05",
+          "sourceRoute": "/inventory",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "scrollY": 0,
+          "captureTime": "2026-11-23T00:26:40.575Z",
+          "sourceReleaseDigest": "sha256:3765bdcc33f55b3882d5833873a5f8a84daf141d610c0214aa029c0fa6f62a29",
+          "apiSourceReleaseDigest": "sha256:db187084ac1e58940fbd00d0097cbdea8619899f5ecc00c6018ad8b05b673f3c",
+          "losslessPixelEquality": true,
+          "locale": "en",
+          "bytes": 11550
+        },
+        "folio": {
+          "publicPath": "/assets/screen-pos-en-folio-ddeb35e6a6e9.webp",
+          "publicSha256": "ddeb35e6a6e93b4a48b70ce72c4bb080b60ac3834b28631106b25e11071b96cd",
+          "originalSha256": "b8f70c80e8f54accd89b6d48781223cb3dab4fad012c43baa01883ed3a09eb52",
+          "original": "evidence/captures-03/pos-en-desktop.png",
+          "crop": {
+            "x": 870,
+            "y": 350,
+            "width": 540,
+            "height": 360
+          },
+          "dimensions": {
+            "width": 540,
+            "height": 360
+          },
+          "candidate": "V05",
+          "sourceRoute": "/inventory",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "scrollY": 0,
+          "captureTime": "2026-11-23T00:26:40.575Z",
+          "sourceReleaseDigest": "sha256:3765bdcc33f55b3882d5833873a5f8a84daf141d610c0214aa029c0fa6f62a29",
+          "apiSourceReleaseDigest": "sha256:db187084ac1e58940fbd00d0097cbdea8619899f5ecc00c6018ad8b05b673f3c",
+          "losslessPixelEquality": true,
+          "locale": "en",
+          "bytes": 5244
+        }
+      },
+      "ar": {
+        "alt": "مخزون SHOPYXI POS مع منتجات ومتغيرات تجريبية وكميات متاحة ومحجوزة وصفرية.",
+        "detailAlt": "تفصيل من SHOPYXI POS: رموز متغيرات تجريبية والكميات المحجوزة والمتاحة.",
+        "desktopOnly": true,
+        "desktop": {
+          "publicPath": "/assets/screen-pos-ar-desktop-328aebd304b4.webp",
+          "publicSha256": "328aebd304b49cc5768172a49b83d5ef41343e03f036cb144ffb43f420a60c17",
+          "originalSha256": "635f385e1fe859fb67925ed0221a02de315ad4e44ecc46b5535bf69a98e288c5",
+          "original": "evidence/captures-03/pos-ar-desktop.png",
+          "crop": {
+            "x": 32,
+            "y": 350,
+            "width": 780,
+            "height": 520
+          },
+          "dimensions": {
+            "width": 780,
+            "height": 520
+          },
+          "candidate": "V05",
+          "sourceRoute": "/inventory",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "scrollY": 0,
+          "captureTime": "2026-11-23T00:26:41.899Z",
+          "sourceReleaseDigest": "sha256:3765bdcc33f55b3882d5833873a5f8a84daf141d610c0214aa029c0fa6f62a29",
+          "apiSourceReleaseDigest": "sha256:db187084ac1e58940fbd00d0097cbdea8619899f5ecc00c6018ad8b05b673f3c",
+          "losslessPixelEquality": true,
+          "locale": "ar",
+          "bytes": 11256
+        },
+        "folio": {
+          "publicPath": "/assets/screen-pos-ar-folio-8d84ac744fa4.webp",
+          "publicSha256": "8d84ac744fa483e5e9e581da669dc315c670cbe0b9dbbc42c9156853034ea6ed",
+          "originalSha256": "635f385e1fe859fb67925ed0221a02de315ad4e44ecc46b5535bf69a98e288c5",
+          "original": "evidence/captures-03/pos-ar-desktop.png",
+          "crop": {
+            "x": 32,
+            "y": 350,
+            "width": 540,
+            "height": 360
+          },
+          "dimensions": {
+            "width": 540,
+            "height": 360
+          },
+          "candidate": "V05",
+          "sourceRoute": "/inventory",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "scrollY": 0,
+          "captureTime": "2026-11-23T00:26:41.899Z",
+          "sourceReleaseDigest": "sha256:3765bdcc33f55b3882d5833873a5f8a84daf141d610c0214aa029c0fa6f62a29",
+          "apiSourceReleaseDigest": "sha256:db187084ac1e58940fbd00d0097cbdea8619899f5ecc00c6018ad8b05b673f3c",
+          "losslessPixelEquality": true,
+          "locale": "ar",
+          "bytes": 5136
+        }
+      }
+    },
+    "storefront": {
+      "en": {
+        "alt": "SHOPYXI Storefront synthetic product catalogue with category labels and ordering controls.",
+        "detailAlt": "SHOPYXI Storefront product-card details with category labels and option controls.",
+        "desktopOnly": false,
+        "desktop": {
+          "publicPath": "/assets/screen-storefront-en-desktop-b0557ef4fc36.webp",
+          "publicSha256": "b0557ef4fc367ae70e9795477f562af386bdeedd39ba5ab8a7977b553188b805",
+          "originalSha256": "3bd0f0e1f088376d22bcdff3d66e5f5fc8c2961a6bfcb6de4fb927ff67706f4b",
+          "original": "evidence/captures-03/storefront-en-desktop.png",
+          "crop": {
+            "x": 96,
+            "y": 148,
+            "width": 1008,
+            "height": 672
+          },
+          "dimensions": {
+            "width": 1008,
+            "height": 672
+          },
+          "candidate": "V13",
+          "sourceRoute": "/en/products",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "scrollY": 370,
+          "captureTime": "2026-11-23T00:26:43.206Z",
+          "sourceReleaseDigest": "sha256:42bcb693c4e9cdd8a26d99cf2020d04d0905768ae7a992fa45bab4368da5c889",
+          "apiSourceReleaseDigest": "sha256:db187084ac1e58940fbd00d0097cbdea8619899f5ecc00c6018ad8b05b673f3c",
+          "losslessPixelEquality": true,
+          "locale": "en",
+          "bytes": 31592
+        },
+        "folio": {
+          "publicPath": "/assets/screen-storefront-en-folio-48767b7aae7e.webp",
+          "publicSha256": "48767b7aae7e58be84299509451c728f33b01900ed56272eb0d5f72e35e7bbd8",
+          "originalSha256": "3bd0f0e1f088376d22bcdff3d66e5f5fc8c2961a6bfcb6de4fb927ff67706f4b",
+          "original": "evidence/captures-03/storefront-en-desktop.png",
+          "crop": {
+            "x": 400,
+            "y": 392,
+            "width": 462,
+            "height": 308
+          },
+          "dimensions": {
+            "width": 462,
+            "height": 308
+          },
+          "candidate": "V13",
+          "sourceRoute": "/en/products",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "scrollY": 370,
+          "captureTime": "2026-11-23T00:26:43.206Z",
+          "sourceReleaseDigest": "sha256:42bcb693c4e9cdd8a26d99cf2020d04d0905768ae7a992fa45bab4368da5c889",
+          "apiSourceReleaseDigest": "sha256:db187084ac1e58940fbd00d0097cbdea8619899f5ecc00c6018ad8b05b673f3c",
+          "losslessPixelEquality": true,
+          "locale": "en",
+          "bytes": 8996
+        },
+        "mobile": {
+          "publicPath": "/assets/screen-storefront-en-mobile-c5327c2cd639.webp",
+          "publicSha256": "c5327c2cd639c75aa8e55acb331083b0811f049fc55b487f0512378fcf472058",
+          "originalSha256": "9895690de03178b308fb5b408f0adec02460106fad7ee460a6adb16ad58b45cb",
+          "original": "evidence/captures-03/storefront-en-mobile.png",
+          "crop": {
+            "x": 0,
+            "y": 64,
+            "width": 375,
+            "height": 748
+          },
+          "dimensions": {
+            "width": 375,
+            "height": 748
+          },
+          "candidate": "V13",
+          "sourceRoute": "/en/products",
+          "viewport": {
+            "width": 375,
+            "height": 812
+          },
+          "scrollY": 470,
+          "captureTime": "2026-11-23T00:26:43.268Z",
+          "sourceReleaseDigest": "sha256:42bcb693c4e9cdd8a26d99cf2020d04d0905768ae7a992fa45bab4368da5c889",
+          "apiSourceReleaseDigest": "sha256:db187084ac1e58940fbd00d0097cbdea8619899f5ecc00c6018ad8b05b673f3c",
+          "losslessPixelEquality": true,
+          "locale": "en",
+          "bytes": 13198
+        }
+      },
+      "ar": {
+        "alt": "كتالوج منتجات تجريبية في متجر SHOPYXI مع مسميات الفئات وأدوات الطلب.",
+        "detailAlt": "تفاصيل بطاقات المنتجات في متجر SHOPYXI مع مسميات الفئات وأدوات اختيار الخيارات.",
+        "desktopOnly": false,
+        "desktop": {
+          "publicPath": "/assets/screen-storefront-ar-desktop-69116d28f98b.webp",
+          "publicSha256": "69116d28f98bba049b6d40ca19ca8a89a49f08729fff7a1c64ddc6fe17bc5638",
+          "originalSha256": "fb41f8393feea6fe375d9d13c041d2ac31d65c28f78bd022b662ae51fc2f8239",
+          "original": "evidence/captures-03/storefront-ar-desktop.png",
+          "crop": {
+            "x": 336,
+            "y": 150,
+            "width": 1008,
+            "height": 672
+          },
+          "dimensions": {
+            "width": 1008,
+            "height": 672
+          },
+          "candidate": "V13",
+          "sourceRoute": "/ar/products",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "scrollY": 370,
+          "captureTime": "2026-11-23T00:26:44.256Z",
+          "sourceReleaseDigest": "sha256:42bcb693c4e9cdd8a26d99cf2020d04d0905768ae7a992fa45bab4368da5c889",
+          "apiSourceReleaseDigest": "sha256:db187084ac1e58940fbd00d0097cbdea8619899f5ecc00c6018ad8b05b673f3c",
+          "losslessPixelEquality": true,
+          "locale": "ar",
+          "bytes": 26444
+        },
+        "folio": {
+          "publicPath": "/assets/screen-storefront-ar-folio-00fb73f722e2.webp",
+          "publicSha256": "00fb73f722e2a9460ba6185179f9ce98373212c5df322b38fbdc04be5bd728ea",
+          "originalSha256": "fb41f8393feea6fe375d9d13c041d2ac31d65c28f78bd022b662ae51fc2f8239",
+          "original": "evidence/captures-03/storefront-ar-desktop.png",
+          "crop": {
+            "x": 578,
+            "y": 392,
+            "width": 462,
+            "height": 308
+          },
+          "dimensions": {
+            "width": 462,
+            "height": 308
+          },
+          "candidate": "V13",
+          "sourceRoute": "/ar/products",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "scrollY": 370,
+          "captureTime": "2026-11-23T00:26:44.256Z",
+          "sourceReleaseDigest": "sha256:42bcb693c4e9cdd8a26d99cf2020d04d0905768ae7a992fa45bab4368da5c889",
+          "apiSourceReleaseDigest": "sha256:db187084ac1e58940fbd00d0097cbdea8619899f5ecc00c6018ad8b05b673f3c",
+          "losslessPixelEquality": true,
+          "locale": "ar",
+          "bytes": 6916
+        },
+        "mobile": {
+          "publicPath": "/assets/screen-storefront-ar-mobile-23f2ee2a76bf.webp",
+          "publicSha256": "23f2ee2a76bff71687edb524ef5345db34a83395262e32c449326cc5a9f81af4",
+          "originalSha256": "aca1ec2d4e0b61c35903baa4846fbd8074dd3123f4cc1dadc778524d78f55dee",
+          "original": "evidence/captures-03/storefront-ar-mobile.png",
+          "crop": {
+            "x": 0,
+            "y": 64,
+            "width": 375,
+            "height": 748
+          },
+          "dimensions": {
+            "width": 375,
+            "height": 748
+          },
+          "candidate": "V13",
+          "sourceRoute": "/ar/products",
+          "viewport": {
+            "width": 375,
+            "height": 812
+          },
+          "scrollY": 470,
+          "captureTime": "2026-11-23T00:26:44.311Z",
+          "sourceReleaseDigest": "sha256:42bcb693c4e9cdd8a26d99cf2020d04d0905768ae7a992fa45bab4368da5c889",
+          "apiSourceReleaseDigest": "sha256:db187084ac1e58940fbd00d0097cbdea8619899f5ecc00c6018ad8b05b673f3c",
+          "losslessPixelEquality": true,
+          "locale": "ar",
+          "bytes": 9670
+        }
+      }
+    },
+    "affiliate": {
+      "en": {
+        "alt": "SHOPYXI Affiliate discovery with eligible synthetic products, stock and demonstration commission previews.",
+        "detailAlt": "SHOPYXI Affiliate product-card details with synthetic stock and commission previews.",
+        "desktopOnly": false,
+        "desktop": {
+          "publicPath": "/assets/screen-affiliate-en-desktop-7420ee45469c.webp",
+          "publicSha256": "7420ee45469c497bcc0d63365dad25a7b7840ca69d90ff1c965a315417dd20af",
+          "originalSha256": "c36b55969a57755b454bad725b846300df76c97361bce2a0a05db548f1f8e9db",
+          "original": "evidence/captures-03/affiliate-en-desktop.png",
+          "crop": {
+            "x": 264,
+            "y": 80,
+            "width": 1152,
+            "height": 768
+          },
+          "dimensions": {
+            "width": 1152,
+            "height": 768
+          },
+          "candidate": "V18",
+          "sourceRoute": "/affiliate/portal?tab=discover",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "scrollY": 0,
+          "captureTime": "2026-11-23T00:26:46.900Z",
+          "sourceReleaseDigest": "sha256:3765bdcc33f55b3882d5833873a5f8a84daf141d610c0214aa029c0fa6f62a29",
+          "apiSourceReleaseDigest": "sha256:db187084ac1e58940fbd00d0097cbdea8619899f5ecc00c6018ad8b05b673f3c",
+          "losslessPixelEquality": true,
+          "locale": "en",
+          "bytes": 24848
+        },
+        "folio": {
+          "publicPath": "/assets/screen-affiliate-en-folio-d99517546ca0.webp",
+          "publicSha256": "d99517546ca04fe12b0b4e7acc466374d81319d93a8fda3609ea9784debb44b5",
+          "originalSha256": "c36b55969a57755b454bad725b846300df76c97361bce2a0a05db548f1f8e9db",
+          "original": "evidence/captures-03/affiliate-en-desktop.png",
+          "crop": {
+            "x": 263,
+            "y": 366,
+            "width": 570,
+            "height": 380
+          },
+          "dimensions": {
+            "width": 570,
+            "height": 380
+          },
+          "candidate": "V18",
+          "sourceRoute": "/affiliate/portal?tab=discover",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "scrollY": 0,
+          "captureTime": "2026-11-23T00:26:46.900Z",
+          "sourceReleaseDigest": "sha256:3765bdcc33f55b3882d5833873a5f8a84daf141d610c0214aa029c0fa6f62a29",
+          "apiSourceReleaseDigest": "sha256:db187084ac1e58940fbd00d0097cbdea8619899f5ecc00c6018ad8b05b673f3c",
+          "losslessPixelEquality": true,
+          "locale": "en",
+          "bytes": 9796
+        },
+        "mobile": {
+          "publicPath": "/assets/screen-affiliate-en-mobile-836612b0f749.webp",
+          "publicSha256": "836612b0f7492bf87c1cdda1be2c264a8d361619568c05156265c2e281619c63",
+          "originalSha256": "4ba6aeb214bf302548583487ab2fe3755beef59593e2150606e1dbda4172aae8",
+          "original": "evidence/captures-03/affiliate-en-mobile.png",
+          "crop": {
+            "x": 0,
+            "y": 64,
+            "width": 375,
+            "height": 748
+          },
+          "dimensions": {
+            "width": 375,
+            "height": 748
+          },
+          "candidate": "V18",
+          "sourceRoute": "/affiliate/portal?tab=discover",
+          "viewport": {
+            "width": 375,
+            "height": 812
+          },
+          "scrollY": 0,
+          "captureTime": "2026-11-23T00:26:46.937Z",
+          "sourceReleaseDigest": "sha256:3765bdcc33f55b3882d5833873a5f8a84daf141d610c0214aa029c0fa6f62a29",
+          "apiSourceReleaseDigest": "sha256:db187084ac1e58940fbd00d0097cbdea8619899f5ecc00c6018ad8b05b673f3c",
+          "losslessPixelEquality": true,
+          "locale": "en",
+          "bytes": 13048
+        }
+      },
+      "ar": {
+        "alt": "اكتشاف المنتجات في SHOPYXI Affiliate مع منتجات تجريبية مؤهلة ومخزون ومعاينات عمولات تجريبية.",
+        "detailAlt": "تفاصيل بطاقات المنتجات في SHOPYXI Affiliate مع مخزون ومعاينات عمولات تجريبية.",
+        "desktopOnly": false,
+        "desktop": {
+          "publicPath": "/assets/screen-affiliate-ar-desktop-74cf8740f93e.webp",
+          "publicSha256": "74cf8740f93eb0909f81f107c93e1cf3a18a7320177b9057c7d020ee7bf757c1",
+          "originalSha256": "514bf87ce6f0f344d63bbecb3d6eab89df7fd9e424bdd05fefb31ab9504afdf0",
+          "original": "evidence/captures-03/affiliate-ar-desktop.png",
+          "crop": {
+            "x": 24,
+            "y": 80,
+            "width": 1152,
+            "height": 768
+          },
+          "dimensions": {
+            "width": 1152,
+            "height": 768
+          },
+          "candidate": "V18",
+          "sourceRoute": "/affiliate/portal?tab=discover",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "scrollY": 0,
+          "captureTime": "2026-11-23T00:26:48.068Z",
+          "sourceReleaseDigest": "sha256:3765bdcc33f55b3882d5833873a5f8a84daf141d610c0214aa029c0fa6f62a29",
+          "apiSourceReleaseDigest": "sha256:db187084ac1e58940fbd00d0097cbdea8619899f5ecc00c6018ad8b05b673f3c",
+          "losslessPixelEquality": true,
+          "locale": "ar",
+          "bytes": 25774
+        },
+        "folio": {
+          "publicPath": "/assets/screen-affiliate-ar-folio-a3d817b34f07.webp",
+          "publicSha256": "a3d817b34f071127011b94d3d35bf8813f9c6b10b3d89b937f7999a26d5df6ae",
+          "originalSha256": "514bf87ce6f0f344d63bbecb3d6eab89df7fd9e424bdd05fefb31ab9504afdf0",
+          "original": "evidence/captures-03/affiliate-ar-desktop.png",
+          "crop": {
+            "x": 607,
+            "y": 366,
+            "width": 570,
+            "height": 380
+          },
+          "dimensions": {
+            "width": 570,
+            "height": 380
+          },
+          "candidate": "V18",
+          "sourceRoute": "/affiliate/portal?tab=discover",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "scrollY": 0,
+          "captureTime": "2026-11-23T00:26:48.068Z",
+          "sourceReleaseDigest": "sha256:3765bdcc33f55b3882d5833873a5f8a84daf141d610c0214aa029c0fa6f62a29",
+          "apiSourceReleaseDigest": "sha256:db187084ac1e58940fbd00d0097cbdea8619899f5ecc00c6018ad8b05b673f3c",
+          "losslessPixelEquality": true,
+          "locale": "ar",
+          "bytes": 9794
+        },
+        "mobile": {
+          "publicPath": "/assets/screen-affiliate-ar-mobile-55f32b7e3ea8.webp",
+          "publicSha256": "55f32b7e3ea8920bbcbb12235ae6560f5de5995b5dcecccf0acc366bb57a416a",
+          "originalSha256": "4e0400abd039dfe22ceb7f17fd917efc08fe3aa534e196a61aa9eb1f16e0f5a2",
+          "original": "evidence/captures-03/affiliate-ar-mobile.png",
+          "crop": {
+            "x": 0,
+            "y": 64,
+            "width": 375,
+            "height": 748
+          },
+          "dimensions": {
+            "width": 375,
+            "height": 748
+          },
+          "candidate": "V18",
+          "sourceRoute": "/affiliate/portal?tab=discover",
+          "viewport": {
+            "width": 375,
+            "height": 812
+          },
+          "scrollY": 0,
+          "captureTime": "2026-11-23T00:26:48.543Z",
+          "sourceReleaseDigest": "sha256:3765bdcc33f55b3882d5833873a5f8a84daf141d610c0214aa029c0fa6f62a29",
+          "apiSourceReleaseDigest": "sha256:db187084ac1e58940fbd00d0097cbdea8619899f5ecc00c6018ad8b05b673f3c",
+          "losslessPixelEquality": true,
+          "locale": "ar",
+          "bytes": 16348
+        }
+      }
+    },
+    "commercehub": {
+      "en": {
+        "alt": "Actual CommerceHub marketplace price, commission preview and publication-review controls; publication not executed.",
+        "detailAlt": "CommerceHub detail of a synthetic price, resolved commission and applied rule.",
+        "desktopOnly": true,
+        "desktop": {
+          "publicPath": "/assets/screen-commercehub-en-desktop-0e3ebe5faf52.webp",
+          "publicSha256": "0e3ebe5faf525b073f709b2a876c8974fca1e3d85519cff0fb86d74ff649890c",
+          "originalSha256": "ec6212d37cba89f97a95b6a6efc5814c62fbc77fe6a65735627de79479238650",
+          "original": "evidence/captures-03/commercehub-en-desktop.png",
+          "crop": {
+            "x": 340,
+            "y": 75,
+            "width": 1050,
+            "height": 700
+          },
+          "dimensions": {
+            "width": 1050,
+            "height": 700
+          },
+          "candidate": "V23",
+          "sourceRoute": "/admin/commercehub",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "scrollY": 1150,
+          "captureTime": "2026-11-23T00:26:52.057Z",
+          "sourceReleaseDigest": "sha256:3765bdcc33f55b3882d5833873a5f8a84daf141d610c0214aa029c0fa6f62a29",
+          "apiSourceReleaseDigest": "sha256:db187084ac1e58940fbd00d0097cbdea8619899f5ecc00c6018ad8b05b673f3c",
+          "losslessPixelEquality": true,
+          "locale": "en",
+          "bytes": 32888
+        },
+        "folio": {
+          "publicPath": "/assets/screen-commercehub-en-folio-879d67bb3ead.webp",
+          "publicSha256": "879d67bb3ead38c9ff1a6e5c2d380fee6720af5efa7706f1ab9533bf365c26a8",
+          "originalSha256": "ec6212d37cba89f97a95b6a6efc5814c62fbc77fe6a65735627de79479238650",
+          "original": "evidence/captures-03/commercehub-en-desktop.png",
+          "crop": {
+            "x": 358,
+            "y": 318,
+            "width": 540,
+            "height": 360
+          },
+          "dimensions": {
+            "width": 540,
+            "height": 360
+          },
+          "candidate": "V23",
+          "sourceRoute": "/admin/commercehub",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "scrollY": 1150,
+          "captureTime": "2026-11-23T00:26:52.057Z",
+          "sourceReleaseDigest": "sha256:3765bdcc33f55b3882d5833873a5f8a84daf141d610c0214aa029c0fa6f62a29",
+          "apiSourceReleaseDigest": "sha256:db187084ac1e58940fbd00d0097cbdea8619899f5ecc00c6018ad8b05b673f3c",
+          "losslessPixelEquality": true,
+          "locale": "en",
+          "bytes": 11816
+        }
+      },
+      "ar": {
+        "alt": "أدوات سعر السوق ومعاينة العمولة ومراجعة النشر الفعلية في CommerceHub؛ لم يتم تنفيذ النشر.",
+        "detailAlt": "تفصيل من CommerceHub لسعر تجريبي وعمولة محسوبة وقاعدة مطبقة.",
+        "desktopOnly": true,
+        "desktop": {
+          "publicPath": "/assets/screen-commercehub-ar-desktop-9581c2ffb4d4.webp",
+          "publicSha256": "9581c2ffb4d436b8aa557d4cfa6392bb541be707e4e784afd1a52b484025cad5",
+          "originalSha256": "c3f09546c5f8636c7949d7fc58df8c0f2738c9045c64ab6d7c5d7c53157a951c",
+          "original": "evidence/captures-03/commercehub-ar-desktop.png",
+          "crop": {
+            "x": 52,
+            "y": 65,
+            "width": 1050,
+            "height": 700
+          },
+          "dimensions": {
+            "width": 1050,
+            "height": 700
+          },
+          "candidate": "V23",
+          "sourceRoute": "/admin/commercehub",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "scrollY": 1150,
+          "captureTime": "2026-11-23T00:26:54.083Z",
+          "sourceReleaseDigest": "sha256:3765bdcc33f55b3882d5833873a5f8a84daf141d610c0214aa029c0fa6f62a29",
+          "apiSourceReleaseDigest": "sha256:db187084ac1e58940fbd00d0097cbdea8619899f5ecc00c6018ad8b05b673f3c",
+          "losslessPixelEquality": true,
+          "locale": "ar",
+          "bytes": 27028
+        },
+        "folio": {
+          "publicPath": "/assets/screen-commercehub-ar-folio-2686f2932271.webp",
+          "publicSha256": "2686f29322712b91dc37bf44a3ca0281f2a38727d247dcf9376f5694aa064e8e",
+          "originalSha256": "c3f09546c5f8636c7949d7fc58df8c0f2738c9045c64ab6d7c5d7c53157a951c",
+          "original": "evidence/captures-03/commercehub-ar-desktop.png",
+          "crop": {
+            "x": 542,
+            "y": 298,
+            "width": 540,
+            "height": 360
+          },
+          "dimensions": {
+            "width": 540,
+            "height": 360
+          },
+          "candidate": "V23",
+          "sourceRoute": "/admin/commercehub",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "scrollY": 1150,
+          "captureTime": "2026-11-23T00:26:54.083Z",
+          "sourceReleaseDigest": "sha256:3765bdcc33f55b3882d5833873a5f8a84daf141d610c0214aa029c0fa6f62a29",
+          "apiSourceReleaseDigest": "sha256:db187084ac1e58940fbd00d0097cbdea8619899f5ecc00c6018ad8b05b673f3c",
+          "losslessPixelEquality": true,
+          "locale": "ar",
+          "bytes": 9536
+        }
+      }
+    }
+  }
+}

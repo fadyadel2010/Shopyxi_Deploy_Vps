@@ -1,0 +1,408 @@
+/* Refinement 03 — composition layer around genuine ProductScreenshot assets.
+   Rendering (composition.jsx) and placement (this file) stay separate.
+   Every image below is an independent, unmodified crop from the audited manifest. */
+
+[data-shopyxi-marketing] {
+  --comp-radius: .625rem;
+  --comp-caption: var(--sm-text);
+  --comp-muted: var(--sm-text-secondary);
+  --comp-frame: var(--sm-border);
+  --comp-frame-strong: var(--sm-gray-300);
+  --comp-shadow-primary: 0 36px 84px -38px rgb(17 24 39 / .5), 0 2px 5px rgb(17 24 39 / .08);
+  --comp-shadow-support: 0 20px 48px -28px rgb(17 24 39 / .4), 0 1px 3px rgb(17 24 39 / .08);
+  --comp-shadow-detail: 0 26px 60px -30px rgb(17 24 39 / .46), 0 1px 3px rgb(17 24 39 / .1);
+}
+
+[data-shopyxi-marketing] .composition-rail,
+[data-shopyxi-marketing] .showcase-rail {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-block-end: .875rem;
+  color: var(--comp-muted);
+  font-size: .6875rem;
+  line-height: 1.6;
+}
+
+[data-shopyxi-marketing] .composition-stage {
+  position: relative;
+  isolation: isolate;
+}
+
+[data-shopyxi-marketing] .screenshot-window {
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  min-width: 0;
+}
+
+[data-shopyxi-marketing] .window-frame {
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--comp-frame);
+  border-radius: var(--comp-radius);
+  background: var(--sm-white);
+  box-shadow: var(--comp-shadow-support);
+}
+
+[data-shopyxi-marketing] .window-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+[data-shopyxi-marketing] .window-frame picture { display: block; }
+
+[data-shopyxi-marketing] .window-frame:focus-visible {
+  outline: 3px solid var(--sm-focus);
+  outline-offset: 4px;
+}
+
+[data-shopyxi-marketing] .window-caption {
+  display: flex;
+  align-items: flex-start;
+  gap: .55rem;
+  margin: 0;
+  padding-block-start: .6rem;
+  color: var(--comp-caption);
+  text-align: start;
+}
+
+[data-shopyxi-marketing] .window-caption-compact { padding-block-start: .4rem; }
+
+[data-shopyxi-marketing] .window-index {
+  flex: 0 0 auto;
+  min-width: 1.7rem;
+  padding-block-start: .08rem;
+  color: var(--sm-blue-700);
+  font-size: .6875rem;
+  font-weight: 650;
+  letter-spacing: .04em;
+}
+
+[data-shopyxi-marketing] .window-identity { min-width: 0; }
+
+[data-shopyxi-marketing] .window-name {
+  display: block;
+  font-size: .8125rem;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+[data-shopyxi-marketing] .window-role,
+[data-shopyxi-marketing] .window-note {
+  display: block;
+  margin-block-start: .08rem;
+  color: var(--comp-muted);
+  font-size: .6875rem;
+  line-height: 1.5;
+}
+
+[data-shopyxi-marketing] .window-note { font-size: .625rem; }
+[data-shopyxi-marketing] .composition-inspection-hint { margin-block: .75rem 0; font-size: .75rem; color: var(--comp-muted); }
+
+/* Dark stages: homepage hero signal field, affiliate product study. */
+[data-shopyxi-marketing] .signal .hero-composition,
+[data-shopyxi-marketing] .product-affiliate .product-showcase {
+  --comp-caption: var(--sm-white);
+  --comp-muted: var(--sm-gray-300);
+  --comp-frame: rgb(255 255 255 / .15);
+  --comp-frame-strong: rgb(255 255 255 / .26);
+  --comp-shadow-primary: 0 42px 96px -36px rgb(0 0 0 / .86), 0 3px 8px rgb(0 0 0 / .36);
+  --comp-shadow-support: 0 26px 58px -30px rgb(0 0 0 / .8), 0 2px 5px rgb(0 0 0 / .3);
+  --comp-shadow-detail: 0 30px 68px -30px rgb(0 0 0 / .84), 0 2px 5px rgb(0 0 0 / .3);
+}
+
+[data-shopyxi-marketing] .signal .window-index,
+[data-shopyxi-marketing] .product-affiliate .window-index { color: var(--sm-blue-300); }
+
+/* ---------- Homepage hero: one dominant operational surface, three satellites ---------- */
+[data-shopyxi-marketing] .hero-composition { width: 100%; }
+
+[data-shopyxi-marketing] .hero-stage {
+  aspect-ratio: 1.13 / 1;
+}
+
+[data-shopyxi-marketing] .hero-stage .item-primary {
+  z-index: 3;
+  inset-inline-start: 0;
+  top: 2.5%;
+  width: 72%;
+}
+
+[data-shopyxi-marketing] .hero-stage .item-primary .window-frame { box-shadow: var(--comp-shadow-primary); }
+
+[data-shopyxi-marketing] .hero-stage .hero-storefront {
+  z-index: 2;
+  inset-inline-end: 0;
+  top: 0;
+  width: 33%;
+}
+
+[data-shopyxi-marketing] .hero-stage .hero-storefront .window-caption { padding-inline-start: 2.5rem; }
+
+[data-shopyxi-marketing] .hero-stage .hero-affiliate {
+  z-index: 1;
+  inset-inline-end: 0;
+  top: 60%;
+  width: 29%;
+}
+
+[data-shopyxi-marketing] .hero-stage .hero-commercehub {
+  z-index: 4;
+  inset-inline-start: 0;
+  bottom: 0;
+  width: 34%;
+}
+
+/* ---------- Platform: dominant operating core with three supporting surfaces ---------- */
+[data-shopyxi-marketing] .platform-composition { width: 100%; container-type: inline-size; }
+
+[data-shopyxi-marketing] .platform-stage {
+  height: calc(44cqw + 6rem);
+}
+
+[data-shopyxi-marketing] .platform-stage .item-primary {
+  z-index: 3;
+  inset-inline-start: 2%;
+  top: 3%;
+  width: 66%;
+}
+
+[data-shopyxi-marketing] .platform-stage .item-primary .window-frame { box-shadow: var(--comp-shadow-primary); }
+
+[data-shopyxi-marketing] .platform-stage .platform-storefront {
+  z-index: 1;
+  inset-inline-end: 0;
+  top: 0;
+  width: 33%;
+}
+
+[data-shopyxi-marketing] .platform-stage .platform-storefront .window-caption { padding-inline-start: 1rem; }
+
+[data-shopyxi-marketing] .platform-stage .platform-affiliate {
+  z-index: 4;
+  inset-inline-end: 0;
+  top: 61%;
+  width: 16%;
+}
+
+[data-shopyxi-marketing] .platform-stage .platform-commercehub {
+  z-index: 2;
+  inset-inline-end: 17%;
+  top: 61%;
+  width: 15%;
+}
+
+/* ---------- Product studies: distinct arrangements around the dominant capture ---------- */
+[data-shopyxi-marketing] .product-showcase { width: 100%; container-type: inline-size; }
+
+[data-shopyxi-marketing] .showcase-stage { height: calc(48cqw + 7rem); }
+
+[data-shopyxi-marketing] .showcase-stage .item-primary { z-index: 3; }
+
+[data-shopyxi-marketing] .showcase-stage .item-primary .window-frame { box-shadow: var(--comp-shadow-primary); }
+
+[data-shopyxi-marketing] .showcase-stage .item-detail { z-index: 4; }
+
+[data-shopyxi-marketing] .showcase-stage .item-detail .window-frame { box-shadow: var(--comp-shadow-detail); border-color: var(--comp-frame-strong); }
+
+/* POS: operating core with the genuine stock-detail crop set low opposite it. */
+[data-shopyxi-marketing] .showcase-pos .item-primary { inset-inline-start: 0; top: 1.5%; width: 66%; }
+[data-shopyxi-marketing] .showcase-pos .showcase-detail { inset-inline-end: 0; top: 38%; width: 32%; }
+
+/* Storefront: catalogue, a genuine mobile capture and a card crop. */
+[data-shopyxi-marketing] .showcase-storefront .item-primary { inset-inline-start: 0; top: 1.5%; width: 61%; }
+[data-shopyxi-marketing] .showcase-storefront .showcase-phone { inset-inline-end: 0; top: 0; width: 16%; }
+[data-shopyxi-marketing] .showcase-storefront .showcase-detail { inset-inline-end: 17%; top: 50%; width: 22%; }
+
+/* Affiliate: discovery core with a vertical evidence rail opposite it. */
+[data-shopyxi-marketing] .showcase-affiliate .item-primary { inset-inline-end: 0; top: 1.5%; width: 70%; }
+[data-shopyxi-marketing] .showcase-affiliate .showcase-detail { inset-inline-start: 9%; top: 0; width: 21%; }
+[data-shopyxi-marketing] .showcase-affiliate .showcase-phone { inset-inline-start: 11%; top: calc(14cqw + 4rem); width: 16%; }
+[data-shopyxi-marketing] .showcase-affiliate .showcase-stage { height: calc(46cqw + 11rem); }
+
+/* CommerceHub: publication review with the genuine commission preview crop. */
+[data-shopyxi-marketing] .showcase-commercehub .item-primary { inset-inline-end: 0; top: 1.5%; width: 64%; }
+[data-shopyxi-marketing] .showcase-commercehub .showcase-detail { inset-inline-start: 0; top: 26%; width: 34%; z-index: 2; }
+
+/* RTL: logical placement already puts the reading-start surface on the right.
+   Affiliate and CommerceHub alternate in English, so flip their primary to the reading start in Arabic. */
+html[dir="rtl"] [data-shopyxi-marketing] .showcase-affiliate .item-primary { inset-inline-start: 0; inset-inline-end: auto; }
+html[dir="rtl"] [data-shopyxi-marketing] .showcase-affiliate .showcase-detail { inset-inline-start: auto; inset-inline-end: 9%; }
+html[dir="rtl"] [data-shopyxi-marketing] .showcase-affiliate .showcase-phone { inset-inline-start: auto; inset-inline-end: 11%; }
+html[dir="rtl"] [data-shopyxi-marketing] .showcase-commercehub .item-primary { inset-inline-start: 0; inset-inline-end: auto; }
+html[dir="rtl"] [data-shopyxi-marketing] .showcase-commercehub .showcase-detail { inset-inline-start: auto; inset-inline-end: 0; }
+
+/* Arabic captions require their own breathing room, without reflecting image pixels. */
+@media (min-width: 64.01rem) {
+  html[dir="rtl"] [data-shopyxi-marketing] .hero-stage .item-primary { width: 70%; top: 1.5%; }
+  html[dir="rtl"] [data-shopyxi-marketing] .hero-stage .hero-storefront { width: 34%; }
+  html[dir="rtl"] [data-shopyxi-marketing] .hero-stage .hero-affiliate { top: 59%; width: 30%; }
+}
+
+[data-shopyxi-marketing] .showcase-pos .window-note { max-width: 32ch; }
+
+/* The product study needs the full measure, not the prose column cap. */
+[data-shopyxi-marketing] .product-opening > .product-showcase { max-width: none; }
+
+/* ---------- Responsive recomposition ---------- */
+@media (max-width: 64rem) {
+  [data-shopyxi-marketing] .hero-grid { flex-direction: column; align-items: stretch; }
+  [data-shopyxi-marketing] .hero-grid > :is(.hero-copy, .portfolio) { flex-basis: auto; }
+  [data-shopyxi-marketing] .signal .portfolio { max-width: none; }
+}
+
+/* Tablet: keep the dominant surface, reduce the satellites to one quieter rail. */
+@media (min-width: 40.01rem) and (max-width: 64rem) {
+  [data-shopyxi-marketing] :is(.hero-stage, .platform-stage) {
+    aspect-ratio: auto;
+    height: auto;
+    display: grid;
+    grid-template-columns: 64% 30%;
+    justify-content: space-between;
+    gap: 1.25rem 0;
+    align-items: start;
+  }
+  [data-shopyxi-marketing] :is(.hero-stage, .platform-stage) .screenshot-window { position: static; }
+
+  [data-shopyxi-marketing] :is(.hero-stage, .platform-stage) .item-primary {
+    inset-inline-start: 0;
+    inset-inline-end: auto;
+    top: 2%;
+    width: 64%;
+    width: 100%;
+    grid-column: 1;
+    grid-row: 1 / 4;
+  }
+
+  [data-shopyxi-marketing] .hero-stage .hero-storefront {
+    inset-inline-start: auto;
+    inset-inline-end: 0;
+    top: 0;
+    width: 100%;
+    grid-column: 2;
+  }
+
+  [data-shopyxi-marketing] .hero-stage .hero-affiliate {
+    inset-inline-start: auto;
+    inset-inline-end: 3%;
+    top: 35%;
+    width: 93%;
+    grid-column: 2;
+  }
+
+  [data-shopyxi-marketing] .hero-stage .hero-commercehub {
+    inset-inline-start: auto;
+    inset-inline-end: 6%;
+    top: 64%;
+    bottom: auto;
+    width: 86%;
+    grid-column: 2;
+  }
+
+  [data-shopyxi-marketing] .platform-stage .platform-storefront {
+    inset-inline-start: auto;
+    inset-inline-end: 0;
+    top: 0;
+    width: 100%;
+    grid-column: 2;
+  }
+
+  [data-shopyxi-marketing] .platform-stage .platform-affiliate {
+    inset-inline-start: auto;
+    inset-inline-end: 0;
+    top: 35%;
+    width: 93%;
+    grid-column: 2;
+  }
+
+  [data-shopyxi-marketing] .platform-stage .platform-commercehub {
+    inset-inline-start: auto;
+    inset-inline-end: 0;
+    top: 64%;
+    bottom: auto;
+    width: 86%;
+    grid-column: 2;
+  }
+
+  [data-shopyxi-marketing] .hero-storefront .window-caption { padding-inline-start: 0; }
+  [data-shopyxi-marketing] .platform-storefront .window-caption { padding-inline-start: 0; }
+}
+
+@media (max-width: 56rem) {
+  [data-shopyxi-marketing] .showcase-stage {
+    aspect-ratio: auto;
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.75rem 1.25rem;
+    align-items: flex-start;
+  }
+  [data-shopyxi-marketing] .showcase-affiliate .showcase-stage { aspect-ratio: auto; height: auto; }
+
+  [data-shopyxi-marketing] .showcase-stage .screenshot-window {
+    position: static;
+    width: auto;
+  }
+
+  [data-shopyxi-marketing] .showcase-stage .item-primary { width: 100%; }
+  [data-shopyxi-marketing] .showcase-stage .item-detail { width: calc(62% - .625rem); }
+  [data-shopyxi-marketing] .showcase-stage .item-phone { width: calc(34% - .625rem); margin-block-start: 3rem; }
+  [data-shopyxi-marketing] .showcase-pos .item-detail,
+  [data-shopyxi-marketing] .showcase-commercehub .item-detail { width: 74%; margin-inline-start: auto; }
+}
+
+@media (max-width: 40rem) {
+  [data-shopyxi-marketing] :is(.hero-stage, .platform-stage) {
+    aspect-ratio: auto;
+    height: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  [data-shopyxi-marketing] :is(.hero-stage, .platform-stage) .screenshot-window {
+    position: static;
+    width: 100%;
+  }
+
+  [data-shopyxi-marketing] .hero-stage .hero-affiliate,
+  [data-shopyxi-marketing] .platform-stage .platform-affiliate {
+    width: 92%;
+    margin-inline-start: auto;
+  }
+
+  [data-shopyxi-marketing] .hero-stage .hero-commercehub,
+  [data-shopyxi-marketing] .platform-stage .platform-commercehub {
+    width: 86%;
+    margin-inline-start: auto;
+  }
+
+  [data-shopyxi-marketing] .hero-storefront .window-caption { padding-inline-start: 0; }
+  [data-shopyxi-marketing] .platform-storefront .window-caption { padding-inline-start: 0; }
+
+  [data-shopyxi-marketing] .showcase-stage { display: block; }
+  [data-shopyxi-marketing] .showcase-stage .screenshot-window { position: static; width: 100%; margin-block-end: 1.5rem; }
+  [data-shopyxi-marketing] .showcase-stage .screenshot-window:last-child { margin-block-end: 0; }
+  [data-shopyxi-marketing] .showcase-stage .item-detail:not(.item-phone) { width: 88%; margin-inline-start: 0; }
+  [data-shopyxi-marketing] .showcase-stage .item-phone { width: 78%; margin-inline-start: auto; margin-block-start: 0; }
+  [data-shopyxi-marketing] .showcase-pos .item-detail,
+  [data-shopyxi-marketing] .showcase-commercehub .item-detail { width: 88%; margin-inline-start: auto; }
+}
+
+/* Stable frame geometry before lazy image decode; keyboard targets remain usable. */
+[data-shopyxi-marketing] .window-frame { min-height: 44px; }
+[data-shopyxi-marketing] .window-frame img { aspect-ratio: 3 / 2; }
+[data-shopyxi-marketing] .item-phone .window-frame img { aspect-ratio: 375 / 748; }
+[data-shopyxi-marketing] .screen-full-link { display: inline-flex; align-items: center; min-height: 44px; }
+[data-shopyxi-marketing] .screenshot-frame { width: 100%; min-width: 44px; min-height: 44px; }
+
+@media (max-width: 24rem) {
+  [data-shopyxi-marketing] .window-name { font-size: .75rem; }
+  [data-shopyxi-marketing] .window-role,
+  [data-shopyxi-marketing] .window-note { font-size: .625rem; }
+}

@@ -1,0 +1,379 @@
+/* Phase 1C — Ecosystem Relationships. Scoped to .er-section; no Phase 1A/1B
+   selector and no global style is overridden.
+
+   Atmosphere is painted on pseudo-elements only. Every text-bearing surface
+   keeps an opaque background colour, so contrast stays measurable by axe and
+   no decorative layer is ever drawn across text. */
+
+[data-shopyxi-marketing] .er-section {
+  --er-ink: #060c17;
+  --er-card-bg: #0a1322;
+  --er-text: #f4f8fd;
+  --er-text-soft: #c7d5e8;
+  --er-muted: #a9bcd4;
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  padding-block: clamp(3.5rem, 5.2vw, 4.75rem) clamp(3.25rem, 5vw, 4.5rem);
+  background-color: var(--er-ink);
+  color: var(--er-text);
+  /* Ambient electric-blue light is a pair of inset shadows on the section itself.
+     A shadow is never part of the background stack under the copy, so every text
+     node keeps a single, exact, opaque backdrop that automated contrast checks
+     can measure; gradients, blurred layers and pseudo-elements cannot offer that
+     guarantee. */
+  box-shadow:
+    inset 0 220px 250px -190px rgb(32 92 226 / .62),
+    inset 0 -200px 250px -200px rgb(24 62 146 / .55);
+}
+
+
+
+[data-shopyxi-marketing] .er-shell {
+  position: relative;
+  z-index: 1;
+  width: min(84rem, calc(100% - var(--sm-gutter) * 2));
+  margin-inline: auto;
+}
+
+/* ---------------------------------------------------------------- intro */
+[data-shopyxi-marketing] .er-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-inline-size: 54rem;
+  margin-inline: auto;
+  margin-block-end: clamp(2.25rem, 3.4vw, 3.25rem);
+  text-align: center;
+}
+[data-shopyxi-marketing] .er-eyebrow {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  min-block-size: 2.15rem;
+  max-inline-size: 100%;
+  margin: 0;
+  padding: .4rem .95rem;
+  border: 1px solid rgb(96 146 240 / .45);
+  border-radius: 999px;
+  background-color: #0d1a2e;
+  color: #d3e2f7;
+  font-size: .76rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+[data-shopyxi-marketing] .er-eyebrow svg { color: #8db6f3; flex: 0 0 auto; }
+[data-shopyxi-marketing] .er-eyebrow bdi { letter-spacing: .06em; }
+html[dir="rtl"] [data-shopyxi-marketing] .er-eyebrow { font-size: .82rem; letter-spacing: 0; text-transform: none; }
+
+[data-shopyxi-marketing] .er-intro h2 {
+  margin: 1.05rem 0 0;
+  color: #ffffff;
+  font-size: clamp(2.2rem, 4.4vw, 3.7rem);
+  font-weight: 800;
+  line-height: 1.06;
+  letter-spacing: -.035em;
+  text-wrap: balance;
+}
+html[dir="rtl"] [data-shopyxi-marketing] .er-intro h2 {
+  font-size: clamp(2.25rem, 4.5vw, 3.8rem);
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+[data-shopyxi-marketing] .er-sub {
+  max-inline-size: 44rem;
+  margin: .85rem 0 0;
+  color: var(--er-text-soft);
+  font-size: clamp(1rem, 1.15vw, 1.125rem);
+  line-height: 1.7;
+}
+html[dir="rtl"] [data-shopyxi-marketing] .er-sub { line-height: 1.95; }
+
+/* ----------------------------------------------------------------- grid */
+[data-shopyxi-marketing] .er-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  /* Rows size to their own content; grid stretch still equalises the cards
+     that share a row without inflating every row to the tallest card. */
+  grid-auto-rows: auto;
+  gap: clamp(.9rem, 1.35vw, 1.3rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* The card is a query container so its header can reflow against its own
+   width-to-text ratio; container em units follow the card font size. */
+[data-shopyxi-marketing] .er-item { display: flex; min-inline-size: 0; container-type: inline-size; }
+
+/* Product accents reuse the approved Phase 1B values. Solid tones are darkened
+   where needed so white badge text and glyphs keep their contrast. */
+[data-shopyxi-marketing] .er-accent-blue {
+  --er-accent: #3b82f6;
+  --er-accent-rgb: 59 130 246;
+  --er-accent-solid: #2457d6;
+  --er-accent-line: rgb(59 130 246 / .34);
+  --er-icon-from: #3b82f6;
+  --er-icon-to: #1d4ed8;
+}
+[data-shopyxi-marketing] .er-accent-violet {
+  --er-accent: #8b5cf6;
+  --er-accent-rgb: 139 92 246;
+  --er-accent-solid: #6d28d9;
+  --er-accent-line: rgb(139 92 246 / .34);
+  --er-icon-from: #7c3aed;
+  --er-icon-to: #5b21b6;
+}
+[data-shopyxi-marketing] .er-accent-green {
+  --er-accent: #10b981;
+  --er-accent-rgb: 16 185 129;
+  --er-accent-solid: #047857;
+  --er-accent-line: rgb(16 185 129 / .32);
+  --er-icon-from: #059669;
+  --er-icon-to: #065f46;
+}
+[data-shopyxi-marketing] .er-accent-amber {
+  --er-accent: #f59e0b;
+  --er-accent-rgb: 245 158 11;
+  --er-accent-solid: #b45309;
+  --er-accent-line: rgb(245 158 11 / .34);
+  --er-icon-from: #d97706;
+  --er-icon-to: #92400e;
+}
+
+[data-shopyxi-marketing] .er-card {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  overflow: clip;
+  inline-size: 100%;
+  border: 1px solid var(--er-accent-line);
+  border-radius: 1.15rem;
+  background-color: var(--er-card-bg);
+  /* Accent light and depth are shadows, not painted layers: a shadow never sits
+     between the copy and its background, so the measured surface stays exact. */
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / .05),
+    inset -20px 18px 60px -44px rgb(var(--er-accent-rgb) / 1),
+    inset 0 -46px 58px -50px rgb(var(--er-accent-rgb) / .8),
+    0 26px 54px -38px rgb(0 0 0 / .95);
+  /* overflow:clip keeps the corner light (painted outside the padding box)
+     from enlarging the card scroll box. */
+}
+
+[data-shopyxi-marketing] .er-card-body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  inline-size: 100%;
+  padding: clamp(1.05rem, 1.35vw, 1.45rem);
+}
+
+[data-shopyxi-marketing] .er-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .4rem .7rem;
+}
+[data-shopyxi-marketing] .er-heading { display: flex; align-items: center; gap: .55rem; min-inline-size: 0; }
+[data-shopyxi-marketing] .er-number {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 2.1rem;
+  block-size: 1.7rem;
+  padding-inline: .42rem;
+  border-radius: .5rem;
+  background-color: var(--er-accent-solid);
+  color: #ffffff;
+  font-size: .82rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: .03em;
+}
+[data-shopyxi-marketing] .er-title {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(1.1rem, 1.28vw, 1.32rem);
+  font-weight: 800;
+  line-height: 1.22;
+  letter-spacing: -.02em;
+}
+html[dir="rtl"] [data-shopyxi-marketing] .er-title { line-height: 1.42; letter-spacing: 0; }
+[data-shopyxi-marketing] .er-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  /* Decorative tile: capped so text scaling enlarges copy, not chrome. */
+  inline-size: min(2.85rem, 3rem);
+  block-size: min(2.85rem, 3rem);
+  margin-inline-start: auto;
+  border-radius: .85rem;
+  background-image: linear-gradient(150deg, var(--er-icon-from), var(--er-icon-to));
+  box-shadow: 0 10px 22px -14px rgb(var(--er-accent-rgb) / .9), inset 0 1px 0 rgb(255 255 255 / .3);
+  color: #ffffff;
+}
+
+[data-shopyxi-marketing] .er-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  margin: .8rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+[data-shopyxi-marketing] .er-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .32rem;
+  max-inline-size: 100%;
+  padding: .22rem .55rem;
+  border: 1px solid var(--er-chip-line);
+  border-radius: 999px;
+  background-color: var(--er-chip-bg);
+  color: #e8eefb;
+  font-size: .74rem;
+  font-weight: 650;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+[data-shopyxi-marketing] .er-chip svg { flex: 0 0 auto; color: var(--er-chip-icon); }
+[data-shopyxi-marketing] .er-chip-pos { --er-chip-bg: #0e2042; --er-chip-line: #2f5ea8; --er-chip-icon: #93c5fd; }
+[data-shopyxi-marketing] .er-chip-storefront { --er-chip-bg: #1c1942; --er-chip-line: #4c3a8f; --er-chip-icon: #c4b5fd; }
+[data-shopyxi-marketing] .er-chip-affiliate { --er-chip-bg: #09282d; --er-chip-line: #1d6b57; --er-chip-icon: #6ee7b7; }
+[data-shopyxi-marketing] .er-chip-commercehub { --er-chip-bg: #2b231e; --er-chip-line: #8a5a1e; --er-chip-icon: #fcd34d; }
+
+[data-shopyxi-marketing] .er-desc {
+  margin: .75rem 0 0;
+  color: var(--er-text-soft);
+  font-size: clamp(.9375rem, 1vw, .975rem);
+  line-height: 1.75;
+}
+html[dir="rtl"] [data-shopyxi-marketing] .er-desc { font-size: .94rem; line-height: 1.95; }
+
+/* ------------------------------------------------------------ illustration */
+[data-shopyxi-marketing] .er-art { margin-block-start: auto; padding-block-start: .9rem; }
+[data-shopyxi-marketing] .er-art-svg { display: block; inline-size: 100%; block-size: auto; }
+[data-shopyxi-marketing] .er-art-roles { position: relative; display: flex; flex-direction: column; gap: .55rem; }
+[data-shopyxi-marketing] .er-roles {
+  position: relative;
+  z-index: 1;
+  /* Halo around the audience cluster; the role cards themselves stay opaque so
+     every label keeps a measurable backdrop. */
+  box-shadow: 0 0 46px -10px rgb(96 140 230 / .24);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(4.5rem, 1fr));
+  gap: .4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+[data-shopyxi-marketing] .er-role {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .4rem;
+  min-inline-size: 0;
+  padding: .55rem .3rem .6rem;
+  border: 1px solid var(--er-role-line);
+  border-radius: .7rem;
+  background-color: var(--er-role-bg);
+  text-align: center;
+}
+[data-shopyxi-marketing] .er-role-icon { display: inline-flex; color: var(--er-role-icon); }
+[data-shopyxi-marketing] .er-role-label { color: #e8eefb; font-size: .7rem; font-weight: 650; line-height: 1.35; }
+[data-shopyxi-marketing] .er-role-pos { --er-role-bg: #0e2042; --er-role-line: #2f5ea8; --er-role-icon: #93c5fd; }
+[data-shopyxi-marketing] .er-role-storefront { --er-role-bg: #1c1942; --er-role-line: #4c3a8f; --er-role-icon: #c4b5fd; }
+[data-shopyxi-marketing] .er-role-affiliate { --er-role-bg: #09282d; --er-role-line: #1d6b57; --er-role-icon: #6ee7b7; }
+[data-shopyxi-marketing] .er-role-commercehub { --er-role-bg: #2b231e; --er-role-line: #8a5a1e; --er-role-icon: #fcd34d; }
+[data-shopyxi-marketing] .er-fee {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: .35rem;
+  margin: 0;
+  color: var(--er-muted);
+  font-size: .68rem;
+  line-height: 1.4;
+}
+[data-shopyxi-marketing] .er-fee-tag { padding: .14rem .45rem; border: 1px solid; border-radius: 999px; font-weight: 650; }
+[data-shopyxi-marketing] .er-fee-affiliate { border-color: #1d6b57; background-color: #09282d; color: #a7f3d0; }
+[data-shopyxi-marketing] .er-fee-hub { border-color: #8a5a1e; background-color: #2b231e; color: #fde68a; }
+
+/* -------------------------------------------------------------- boundaries */
+[data-shopyxi-marketing] .er-bounds {
+  margin-block-start: clamp(1.85rem, 2.6vw, 2.5rem);
+  padding-block-start: 1.35rem;
+  border-block-start: 1px solid rgb(255 255 255 / .12);
+}
+[data-shopyxi-marketing] .er-bounds-title {
+  margin: 0 0 .85rem;
+  color: #d7e3f3;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+html[dir="rtl"] [data-shopyxi-marketing] .er-bounds-title { font-size: .84rem; letter-spacing: 0; }
+[data-shopyxi-marketing] .er-bounds-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem 1.6rem; }
+[data-shopyxi-marketing] .er-bounds-list p { margin: 0; color: var(--er-muted); font-size: .8rem; line-height: 1.7; }
+html[dir="rtl"] [data-shopyxi-marketing] .er-bounds-list p { font-size: .84rem; line-height: 1.85; }
+
+/* ------------------------------------------------------------- responsive */
+@media (max-width: 1199px) {
+  [data-shopyxi-marketing] .er-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  [data-shopyxi-marketing] .er-bounds-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  [data-shopyxi-marketing] .er-intro h2 { font-size: clamp(2rem, 4.2vw, 2.9rem); }
+  html[dir="rtl"] [data-shopyxi-marketing] .er-intro h2 { font-size: clamp(2.05rem, 4.3vw, 3rem); }
+}
+@media (max-width: 719px) {
+  [data-shopyxi-marketing] .er-grid { grid-template-columns: minmax(0, 1fr); grid-auto-rows: auto; gap: 1rem; }
+  [data-shopyxi-marketing] .er-bounds-list { grid-template-columns: minmax(0, 1fr); }
+  [data-shopyxi-marketing] .er-intro { margin-block-end: 2rem; }
+  [data-shopyxi-marketing] .er-intro h2 { font-size: clamp(1.8rem, 7.6vw, 2.4rem); }
+  html[dir="rtl"] [data-shopyxi-marketing] .er-intro h2 { font-size: clamp(1.8rem, 7.6vw, 2.4rem); line-height: 1.35; }
+  [data-shopyxi-marketing] .er-sub { font-size: 1rem; }
+  [data-shopyxi-marketing] .er-card-body { padding: 1.1rem; }
+  [data-shopyxi-marketing] .er-title { font-size: 1.05rem; }
+}
+/* Narrow card (small viewport or enlarged text): the index and the icon share
+   the first line and the title keeps the full card width, in both directions. */
+@container (max-width: 20em) {
+  [data-shopyxi-marketing] .er-head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    row-gap: .55rem;
+  }
+  [data-shopyxi-marketing] .er-heading { display: contents; }
+  [data-shopyxi-marketing] .er-number { grid-row: 1; grid-column: 1; justify-self: start; }
+  [data-shopyxi-marketing] .er-icon { grid-row: 1; grid-column: 2; justify-self: end; margin-inline-start: 0; }
+  [data-shopyxi-marketing] .er-title { grid-row: 2; grid-column: 1 / -1; }
+}
+@media (max-width: 479px) {
+  [data-shopyxi-marketing] .er-roles { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Decorative emphasis only; removed entirely when motion is reduced. */
+@media (hover: hover) {
+  [data-shopyxi-marketing] .er-card {
+    transition: border-color var(--sm-duration-base) var(--sm-ease);
+  }
+  [data-shopyxi-marketing] .er-card:hover { border-color: rgb(var(--er-accent-rgb) / .52); }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-shopyxi-marketing] .er-card { transition: none; }
+}

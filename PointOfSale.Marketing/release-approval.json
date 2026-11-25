@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "authority": "Original lean-launch approval plus owner-requested Arabic-default routing and genuine current-release synthetic product captures; continued execution explicitly requested.",
+  "date": "2026-11-23",
+  "approvedContentSha256": "e8f020eb29b7948bc080cf521322bb10d0c5cc6fd1d241d55185fcffc4bb71f4",
+  "scope": {
+    "existingBilingualCopyAndProductBoundaries": true,
+    "cairoAndFourEditorialArtworks": true,
+    "publicIndexingAtApex": true,
+    "demoSubmission": false,
+    "leadCollection": false,
+    "productScreenshots": true,
+    "aboutCompanyFacts": false,
+    "universalAccessibilityConformanceClaim": false
+  },
+  "conditions": [
+    "Preserve existing design, Cairo, bilingual page structure and factual qualification boundaries.",
+    "Replace only four product-story and corresponding product-page figures with reviewed actual release captures: POS V05 secondary (V03 identity-column defect), Storefront V13, Affiliate V18 and CommerceHub V23. Preserve unrelated editorial artwork.",
+    "Screenshots must use synthetic-only isolated data, immutable originals, lossless pixel-equal assets and exact EN/AR demonstration disclosures; no fake UI, no production sessions or business writes.",
+    "No forms, contact destination, invented legal/privacy workflow, tracking, cookies or runtime business API.",
+    "Technical release requires static, browser, accessibility and production security/routing checks."
+  ],
+  "screenshotProvenanceSha256": "0ec9f57410e2840d65f82f46f81a9cd30358300eda2d3079855e80a5f03f1085"
+}

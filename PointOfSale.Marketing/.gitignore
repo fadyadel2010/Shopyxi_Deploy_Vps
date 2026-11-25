@@ -1,0 +1,10 @@
+.build/
+dist/
+test-output/
+node_modules/
+temp/
+.cache/
+.env
+.env.*
+*.local.env
+*.log
