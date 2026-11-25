@@ -396,6 +396,10 @@ public sealed class SuperAdminAffectedEntityDto
 
 public sealed class SuperAdminFinancialIntegrityCheckDto
 {
+    public bool IncludesGlobalLedgerChecks { get; init; }
+    public int CheckedOrderCount { get; init; }
+    public int CheckedRefundCount { get; init; }
+    public int CheckedLedgerEntryCount { get; init; }
     public string Status { get; init; } = "OK";
     public DateTime ExecutedAtUtc { get; init; }
     public DateTime SnapshotBoundaryUtc { get; init; }

@@ -1,290 +1,120 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Loader2, TrendingUp } from 'lucide-react'
-import {
-    calculateRequiredPriceForTargetEarnings,
-    roundCurrencyAmount,
-} from './commissionCalculator'
+import { useFormatting } from '../../hooks/useFormatting'
+import { calculateRequiredPriceForTargetEarnings, roundCurrencyAmount } from './commissionCalculator'
 import { useCommissionPreview } from './useCommissionPreview'
 
 interface CommissionPreviewPanelProps {
     vendorId?: string | null
+    variantId: string
+    parentCategoryId?: string | null
     categoryId?: string | null
     categoryName?: string | null
-    price: number
-    priceLabel: string
-    currencyCode?: string
+    pricingMode: 'source' | 'custom'
+    marketplacePrice?: number | null
     onApplySuggestedPrice?: (price: number) => void
-}
-
-function formatMoney(value: number, currencyCode: string): string {
-    return `${new Intl.NumberFormat('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-    }).format(value)} ${currencyCode}`
-}
-
-function formatRate(rate: number | null): string {
-    if (rate === null) {
-        return '-'
-    }
-
-    return `${new Intl.NumberFormat('en-US', {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 2,
-    }).format(rate * 100)}%`
-}
-
-function getAppliedRuleLabel(source: string | null, categoryName?: string | null): string {
-    if (source === 'Category') {
-        return `Applied Rule: Category (${categoryName || 'Selected category'})`
-    }
-
-    if (source === 'Vendor') {
-        return 'Applied Rule: Vendor override'
-    }
-
-    if (source === 'Global') {
-        return 'Applied Rule: Global default'
-    }
-
-    if (source === 'Legacy') {
-        return 'Applied Rule: Legacy fallback'
-    }
-
-    return 'Applied Rule: Awaiting resolution'
+    onResolutionChange?: (state: { ready: boolean; ruleId: string | null }) => void
 }
 
 export default function CommissionPreviewPanel({
     vendorId,
+    variantId,
+    parentCategoryId,
     categoryId,
     categoryName,
-    price,
-    priceLabel,
-    currencyCode = 'EGP',
+    pricingMode,
+    marketplacePrice,
     onApplySuggestedPrice,
+    onResolutionChange,
 }: CommissionPreviewPanelProps) {
-    const {
-        rate,
-        source,
-        ruleId,
-        priority,
-        commissionAmount,
-        vendorReceives,
-        loading,
-        error,
-        usedLegacyFallback,
-        usingEstimate,
-    } = useCommissionPreview({
+    const { t } = useTranslation()
+    const { formatCurrency, formatNumber, isRTL } = useFormatting()
+    const preview = useCommissionPreview({
         vendorId,
+        variantId,
+        parentCategoryId,
         categoryId,
-        price,
+        pricingMode,
+        marketplacePrice,
     })
-    const [keepTargetEarnings, setKeepTargetEarnings] = useState(false)
+    const [showTargetEarnings, setShowTargetEarnings] = useState(false)
     const [targetEarningsInput, setTargetEarningsInput] = useState('')
 
+    useEffect(() => {
+        onResolutionChange?.({ ready: preview.isResolved && !preview.loading, ruleId: preview.ruleId })
+    }, [onResolutionChange, preview.isResolved, preview.loading, preview.ruleId])
+
     const targetEarnings = useMemo(() => {
-        if (!targetEarningsInput.trim()) {
-            return null
-        }
-
         const parsed = Number(targetEarningsInput)
-        return Number.isFinite(parsed) ? roundCurrencyAmount(parsed) : null
+        return targetEarningsInput.trim() && Number.isFinite(parsed) && parsed > 0
+            ? roundCurrencyAmount(parsed)
+            : null
     }, [targetEarningsInput])
+    const targetPreview = useMemo(() => (
+        showTargetEarnings && preview.rate !== null && targetEarnings !== null
+            ? calculateRequiredPriceForTargetEarnings(targetEarnings, preview.rate)
+            : null
+    ), [preview.rate, showTargetEarnings, targetEarnings])
 
-    const targetPreview = useMemo(() => {
-        if (!keepTargetEarnings || rate === null || targetEarnings === null) {
-            return null
-        }
+    const errorKey = preview.errorCode === 'COMMISSION_AUTHORITY_MISSING'
+        ? 'commerceHub.commission.errors.missingRule'
+        : preview.errorCode === 'COMMISSION_AUTHORITY_AMBIGUOUS'
+            ? 'commerceHub.commission.errors.ambiguousRule'
+            : preview.errorCode === 'INVALID_CUSTOM_PRICE'
+                ? 'commerceHub.commission.errors.invalidPrice'
+                : 'commerceHub.commission.errors.unavailable'
 
-        return calculateRequiredPriceForTargetEarnings(targetEarnings, rate)
-    }, [keepTargetEarnings, rate, targetEarnings])
+    const sourceLabel = preview.source
+        ? t(`commerceHub.commission.sources.${preview.source}`, { defaultValue: preview.source })
+        : t('commerceHub.commission.pending')
+    const ruleLabel = preview.source === 'Category'
+        ? t('commerceHub.commission.appliedCategory', { category: categoryName || t('commerceHub.subcategory') })
+        : preview.source
+            ? t('commerceHub.commission.appliedRule', { source: sourceLabel })
+            : t('commerceHub.commission.awaitingResolution')
 
     if (!categoryId) {
-        return (
-            <div className="mt-4 rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-4 text-sm text-slate-600">
-                Select a category to see commission details
-            </div>
-        )
+        return <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-600">{t('commerceHub.commission.selectCategory')}</div>
     }
 
-    return (
-        <section className="mt-4 overflow-hidden rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 via-white to-slate-50 shadow-sm">
-            <div className="border-b border-emerald-100 px-4 py-4 sm:px-5">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-700">
-                            Commission Breakdown
-                        </p>
-                        <p className="mt-1 text-sm text-slate-600">
-                            Preview exactly what CommerceHub will deduct before you publish.
-                        </p>
-                    </div>
+    const money = (value: number | null) => value === null ? '—' : formatCurrency(value, 'EGP')
+    const rate = preview.rate === null ? '—' : `${formatNumber(preview.rate * 100, { maximumFractionDigits: 2 })}%`
 
-                    {loading ? (
-                        <div className="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3 py-1.5 text-xs font-semibold text-sky-800">
-                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                            Resolving commission...
-                        </div>
-                    ) : null}
+    return (
+        <section className="overflow-hidden rounded-2xl border border-emerald-200 bg-emerald-50/30" dir={isRTL ? 'rtl' : 'ltr'}>
+            <div className="flex flex-wrap items-start justify-between gap-3 border-b border-emerald-100 bg-white px-4 py-4">
+                <div>
+                    <h4 className="font-bold text-slate-950">{t('commerceHub.commission.title')}</h4>
+                    <p className="mt-1 text-sm text-slate-600">{t('commerceHub.commission.help')}</p>
                 </div>
+                {preview.loading && <span className="inline-flex items-center gap-2 rounded-full bg-sky-50 px-3 py-1.5 text-xs font-semibold text-sky-800"><Loader2 className="h-4 w-4 animate-spin" />{t('commerceHub.commission.loading')}</span>}
             </div>
 
-            <div className="space-y-4 px-4 py-4 sm:px-5 sm:py-5">
-                {(error || usedLegacyFallback) ? (
-                    <div
-                        className={`rounded-xl px-4 py-3 text-sm ${
-                            error
-                                ? 'border border-amber-200 bg-amber-50 text-amber-900'
-                                : 'border border-sky-200 bg-sky-50 text-sky-900'
-                        }`}
-                    >
-                        {error || 'No active commission rule matched this category, so the preview is using the legacy fallback rate.'}
+            <div className="grid gap-4 p-4 lg:grid-cols-[1.1fr_0.9fr]">
+                <div className="space-y-4">
+                    {preview.errorCode && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{t(errorKey)}</div>}
+                    <div className="rounded-xl border border-slate-200 bg-white p-4">
+                        <dl className="space-y-3 text-sm">
+                            <div className="flex justify-between gap-4"><dt className="text-slate-600">{t('commerceHub.commission.sourcePrice')}</dt><dd className="font-semibold text-slate-950">{money(preview.sourceProductPrice)}</dd></div>
+                            <div className="flex justify-between gap-4"><dt className="text-slate-600">{t('commerceHub.commission.marketplacePrice')}</dt><dd className="font-semibold text-slate-950">{money(preview.marketplacePrice)}</dd></div>
+                            <div className="flex justify-between gap-4"><dt className="text-slate-600">{t('commerceHub.commission.rate')}</dt><dd className="font-semibold text-slate-950">{rate}</dd></div>
+                            <div className="flex justify-between gap-4 text-red-700"><dt>{t('commerceHub.commission.deduction')}</dt><dd className="font-semibold">{preview.commissionAmount === null ? '—' : `− ${money(preview.commissionAmount)}`}</dd></div>
+                            <div className="flex justify-between gap-4 border-t border-dashed border-slate-200 pt-3 text-base"><dt className="font-bold text-slate-950">{t('commerceHub.commission.net')}</dt><dd className="text-lg font-bold text-emerald-700">{money(preview.vendorReceives)}</dd></div>
+                        </dl>
                     </div>
-                ) : null}
-
-                <div className="rounded-2xl border border-slate-200 bg-white p-4">
-                    <div className="space-y-3 text-sm text-slate-700">
-                        <div className="flex items-center justify-between gap-4">
-                            <span>{priceLabel}</span>
-                            <span className="font-semibold text-slate-900">
-                                {formatMoney(price, currencyCode)}
-                            </span>
-                        </div>
-
-                        <div className="flex items-center justify-between gap-4">
-                            <span>Commission Rate</span>
-                            <span className="font-semibold text-slate-900">
-                                {formatRate(rate)}
-                            </span>
-                        </div>
-
-                        <div className="flex items-center justify-between gap-4 text-red-600">
-                            <span>
-                                Commission ({formatRate(rate)})
-                            </span>
-                            <span className="font-semibold">
-                                -{formatMoney(commissionAmount, currencyCode)}
-                            </span>
-                        </div>
-
-                        <div className="border-t border-dashed border-slate-200 pt-3">
-                            <div className="flex items-center justify-between gap-4 text-base">
-                                <span className="font-semibold text-slate-900">
-                                    You will receive
-                                </span>
-                                <span className="text-lg font-bold text-emerald-600">
-                                    {formatMoney(vendorReceives, currencyCode)}
-                                </span>
-                            </div>
-                        </div>
+                    <div className="rounded-xl border border-slate-200 bg-white p-4">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t('commerceHub.commission.ruleResolution')}</p>
+                        <p className="mt-2 text-sm font-semibold text-slate-950">{ruleLabel}</p>
+                        <div className="mt-3 grid grid-cols-2 gap-3 text-sm"><div><span className="text-slate-500">{t('commerceHub.commission.source')}</span><p className="font-medium">{sourceLabel}</p></div><div><span className="text-slate-500">{t('commerceHub.commission.priority')}</span><p className="font-medium">{preview.priority ?? '—'}</p></div></div>
                     </div>
                 </div>
 
-                <div className="grid gap-3 lg:grid-cols-[1.2fr_0.8fr]">
-                    <div className="rounded-2xl border border-slate-200 bg-white p-4">
-                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                            Rule Resolution
-                        </p>
-                        <p className="mt-2 text-sm font-semibold text-slate-900">
-                            {getAppliedRuleLabel(source, categoryName)}
-                        </p>
-                        <div className="mt-3 grid gap-3 text-sm text-slate-600 sm:grid-cols-2">
-                            <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                                    Source
-                                </p>
-                                <p className="mt-1 font-medium text-slate-900">
-                                    {source || 'Pending'}
-                                </p>
-                            </div>
-                            <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                                    Priority
-                                </p>
-                                <p className="mt-1 font-medium text-slate-900">
-                                    {priority ?? '-'}
-                                </p>
-                            </div>
-                        </div>
-                        {ruleId ? (
-                            <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-                                    Rule ID
-                                </p>
-                                <p className="mt-1 break-all font-mono text-xs text-slate-700">
-                                    {ruleId}
-                                </p>
-                            </div>
-                        ) : null}
-                        {usingEstimate ? (
-                            <p className="mt-3 text-xs font-medium text-amber-800">
-                                Showing the latest available estimate until live commission resolution succeeds.
-                            </p>
-                        ) : null}
-                    </div>
-
-                    <div className="rounded-2xl border border-slate-200 bg-white p-4">
-                        <label className="flex items-start gap-3">
-                            <input
-                                type="checkbox"
-                                checked={keepTargetEarnings}
-                                onChange={(event) => setKeepTargetEarnings(event.target.checked)}
-                                className="mt-0.5 h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
-                            />
-                            <span>
-                                <span className="block text-sm font-semibold text-slate-900">
-                                    Adjust price to maintain my target earnings
-                                </span>
-                                <span className="mt-1 block text-xs leading-5 text-slate-500">
-                                    Use the resolved rate to see what CommerceHub price preserves your payout.
-                                </span>
-                            </span>
-                        </label>
-
-                        {keepTargetEarnings ? (
-                            <div className="mt-4 space-y-3">
-                                <div>
-                                    <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                                        Desired earnings
-                                    </label>
-                                    <input
-                                        type="number"
-                                        min="0"
-                                        step="0.01"
-                                        value={targetEarningsInput}
-                                        onChange={(event) => setTargetEarningsInput(event.target.value)}
-                                        placeholder="0.00"
-                                        className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
-                                    />
-                                </div>
-
-                                {targetPreview ? (
-                                    <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3">
-                                        <div className="flex items-center gap-2 text-sm font-semibold text-emerald-900">
-                                            <TrendingUp className="h-4 w-4" />
-                                            Required CommerceHub price
-                                        </div>
-                                        <p className="mt-2 text-xl font-bold text-emerald-700">
-                                            {formatMoney(targetPreview.requiredPrice, currencyCode)}
-                                        </p>
-                                        {onApplySuggestedPrice ? (
-                                            <button
-                                                type="button"
-                                                onClick={() => onApplySuggestedPrice(targetPreview.requiredPrice)}
-                                                className="mt-3 inline-flex items-center rounded-xl border border-emerald-300 bg-white px-3 py-2 text-xs font-semibold text-emerald-800 transition hover:bg-emerald-100"
-                                            >
-                                                Use this as Hub Price
-                                            </button>
-                                        ) : null}
-                                    </div>
-                                ) : (
-                                    <p className="text-xs leading-5 text-slate-500">
-                                        Enter the amount you want to receive, and we will calculate the required selling price.
-                                    </p>
-                                )}
-                            </div>
-                        ) : null}
-                    </div>
+                <div className="rounded-xl border border-slate-200 bg-white p-4">
+                    <label className="flex items-start gap-3"><input type="checkbox" checked={showTargetEarnings} onChange={(event) => setShowTargetEarnings(event.target.checked)} className="mt-1" disabled={!preview.isResolved} /><span><span className="block text-sm font-semibold text-slate-950">{t('commerceHub.commission.target.title')}</span><span className="mt-1 block text-xs leading-5 text-slate-500">{t('commerceHub.commission.target.help')}</span></span></label>
+                    {showTargetEarnings && <div className="mt-4 space-y-3"><label className="block text-xs font-semibold text-slate-600">{t('commerceHub.commission.target.desired')}</label><input type="number" min="0.01" step="0.01" value={targetEarningsInput} onChange={(event) => setTargetEarningsInput(event.target.value)} className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm" />
+                        {targetPreview ? <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3"><div className="flex items-center gap-2 text-sm font-semibold text-emerald-900"><TrendingUp className="h-4 w-4" />{t('commerceHub.commission.target.required')}</div><p className="mt-2 text-xl font-bold text-emerald-700">{money(targetPreview.requiredPrice)}</p>{onApplySuggestedPrice && <button type="button" onClick={() => onApplySuggestedPrice(targetPreview.requiredPrice)} className="mt-3 rounded-lg border border-emerald-300 bg-white px-3 py-2 text-xs font-semibold text-emerald-800">{t('commerceHub.commission.target.apply')}</button>}</div> : <p className="text-xs text-slate-500">{t('commerceHub.commission.target.prompt')}</p>}
+                    </div>}
                 </div>
             </div>
         </section>

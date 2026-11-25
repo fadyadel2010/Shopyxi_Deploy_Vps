@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PointOfSale.API.CommerceHub.Commands;
 using PointOfSale.API.CommerceHub.Handlers;
+using PointOfSale.API.CommerceHub.Services;
 using PointOfSale.API.DTOs.CommerceHub;
 using PointOfSale.API.Filters;
 using PointOfSale.API.Middleware;
@@ -89,8 +90,9 @@ public class AdminCommerceHubController : ControllerBase
         var normalizedProductCurrency = CommerceHubPublicationCurrencyPolicy.Normalize(productCurrency);
         var isCommerceHubCurrencyEligible =
             CommerceHubPublicationCurrencyPolicy.IsEgpPricedProduct(normalizedProductCurrency);
-        var isCommerceHubPriceOverrideEnabled =
-            CommerceHubPriceOverrideRuntimePolicy.IsEnabledForTenant(tenantId);
+        // This controller is already approval-gated. Approved CommerceHub sellers
+        // may persist listing-only prices without changing POS/Storefront authority.
+        const bool isCommerceHubPriceOverrideEnabled = true;
         var commerceHubCurrencyPolicyMessage = isCommerceHubCurrencyEligible
             ? null
             : CommerceHubPublicationCurrencyPolicy.BuildUnsupportedCurrencyMessage(normalizedProductCurrency);
@@ -173,6 +175,10 @@ public class AdminCommerceHubController : ControllerBase
                                 IsPublished = l.IsPublished,
                                 CommerceHubCategoryId = l.CommerceHubCategoryId,
                                 CategoryId = l.CommerceHubCategoryId,
+                                ParentCategoryId = _dbContext.CommerceHubCategories
+                                    .Where(category => category.Id == l.CommerceHubCategoryId)
+                                    .Select(category => category.ParentId ?? category.Id)
+                                    .First(),
                                 CommerceHubPrice = l.CommerceHubPrice,
                                 PriceOverrideMutationVersion = l.CommerceHubPriceOverrideMutationVersion,
                                 AttributesJson = l.AttributesJson
@@ -445,11 +451,21 @@ public class AdminCommerceHubController : ControllerBase
             listings.Select(listing => listing.CommerceHubCategoryId),
             cancellationToken);
 
-        if (operation == "update_category" &&
-            (!request.CategoryId.HasValue ||
-             !await CommerceHubCategoryLineageAuthority.IsLiveAsync(_dbContext, request.CategoryId.Value, cancellationToken)))
+        if (operation == "update_category" && !request.CategoryId.HasValue)
         {
             return BadRequest(new { message = "A live CommerceHub category is required for bulk category update." });
+        }
+        if (operation == "update_category")
+        {
+            try
+            {
+                await CommerceHubCategorySelectionAuthority.ValidateAsync(
+                    _dbContext, request.ParentCategoryId, request.CategoryId!.Value, cancellationToken);
+            }
+            catch (CommerceHubValidationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         var response = new CommerceHubBulkListingOperationResponse
@@ -579,9 +595,14 @@ public class AdminCommerceHubController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public ActionResult<CommerceHubAdminCommissionPreviewDto> ResolveCommissionPreview(
+    public async Task<ActionResult<CommerceHubAdminCommissionPreviewDto>> ResolveCommissionPreview(
         [FromQuery] Guid? vendorId,
-        [FromQuery] Guid? categoryId)
+        [FromQuery] Guid? categoryId,
+        [FromQuery] Guid? parentCategoryId,
+        [FromQuery] Guid? variantId,
+        [FromQuery] string? pricingMode,
+        [FromQuery] decimal? marketplacePrice,
+        CancellationToken cancellationToken)
     {
         var tenantId = _tenantContext.RequiredTenantId;
 
@@ -589,6 +610,59 @@ public class AdminCommerceHubController : ControllerBase
         {
             return BadRequest(new { message = "Vendor preview must match the authenticated tenant." });
         }
+
+        if (!variantId.HasValue || variantId.Value == Guid.Empty ||
+            !categoryId.HasValue || categoryId.Value == Guid.Empty)
+        {
+            return BadRequest(new { message = "Variant, main category, and selected category are required for commission preview." });
+        }
+
+        try
+        {
+            await CommerceHubCategorySelectionAuthority.ValidateAsync(
+                _dbContext, parentCategoryId, categoryId.Value, cancellationToken);
+            PublishToCommerceHubHandler.ValidatePublishOrUpdate(
+                tenantId, variantId.Value, categoryId.Value, marketplacePrice, pricingMode);
+        }
+        catch (CommerceHubValidationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+
+        var variant = await _dbContext.ProductVariants
+            .AsNoTracking()
+            .Include(item => item.Product)
+            .FirstOrDefaultAsync(item =>
+                item.Id == variantId.Value &&
+                item.TenantId == tenantId &&
+                item.Product.TenantId == tenantId &&
+                item.IsActive &&
+                !item.IsDeleted &&
+                item.Product.IsActive &&
+                item.Product.IsOnlineVisible &&
+                item.Product.PublishStatus == PublishStatus.Published &&
+                item.SemanticLifecycleState == ProductVariantSemanticLifecycleState.Current &&
+                item.SemanticSupersededAtUtc == null &&
+                item.SemanticReplacementVariantId == null,
+                cancellationToken);
+        if (variant == null)
+        {
+            return NotFound(new { message = "Variant not found for this tenant." });
+        }
+
+        var tenantCurrency = await _dbContext.Tenants
+            .AsNoTracking()
+            .Where(tenant => tenant.Id == tenantId)
+            .Select(tenant => tenant.Currency)
+            .FirstOrDefaultAsync(cancellationToken);
+        if (!CommerceHubPublicationCurrencyPolicy.IsEgpPricedProduct(tenantCurrency))
+        {
+            return BadRequest(new { message = CommerceHubPublicationCurrencyPolicy.BuildUnsupportedCurrencyMessage(tenantCurrency) });
+        }
+
+        var sourceProductPrice = CommerceHubPriceAuthority.ResolveBaseVariantPrice(variant.Price, variant.OnlinePrice);
+        var normalizedMode = pricingMode?.Trim().ToLowerInvariant() == "custom" ? "custom" : "source";
+        var effectivePrice = normalizedMode == "custom" ? marketplacePrice!.Value : sourceProductPrice;
 
         CommissionResolutionResult resolution;
         try
@@ -605,6 +679,9 @@ public class AdminCommerceHubController : ControllerBase
             });
         }
 
+        var commissionAmount = CommissionCalculator.RoundAmount(effectivePrice * resolution.Rate);
+        var merchantNet = CommissionCalculator.RoundAmount(effectivePrice - commissionAmount);
+
         return Ok(new CommerceHubAdminCommissionPreviewDto
         {
             VendorId = tenantId,
@@ -616,7 +693,14 @@ public class AdminCommerceHubController : ControllerBase
             ScopeType = resolution.ScopeType,
             ScopeId = resolution.ScopeId,
             UsedLegacyFallback = resolution.UsedLegacyFallback,
-            CacheStrategy = "MemoryCache"
+            CacheStrategy = "MemoryCache",
+            VariantId = variant.Id,
+            ParentCategoryId = parentCategoryId!.Value,
+            PricingMode = normalizedMode,
+            SourceProductPrice = sourceProductPrice,
+            MarketplacePrice = effectivePrice,
+            CommissionAmount = commissionAmount,
+            MerchantNet = merchantNet
         });
     }
 
@@ -638,7 +722,10 @@ public class AdminCommerceHubController : ControllerBase
                     RequestContextMetadata.GetCorrelationId(HttpContext),
                     HttpContext.TraceIdentifier,
                     request.OverrideReason,
-                    request.ExpectedPriceOverrideMutationVersion),
+                    request.ExpectedPriceOverrideMutationVersion,
+                    request.ParentCategoryId,
+                    request.PricingMode,
+                    request.ExpectedCommissionRuleId),
                 cancellationToken);
 
             return Ok(result);
@@ -650,6 +737,10 @@ public class AdminCommerceHubController : ControllerBase
         catch (CommerceHubNotFoundException ex)
         {
             return NotFound(new { message = ex.Message });
+        }
+        catch (CommissionAuthorityException ex)
+        {
+            return Conflict(new { code = ex.Code, message = ex.Message, details = ex.Details });
         }
     }
 
@@ -671,7 +762,10 @@ public class AdminCommerceHubController : ControllerBase
                     RequestContextMetadata.GetCorrelationId(HttpContext),
                     HttpContext.TraceIdentifier,
                     request.OverrideReason,
-                    request.ExpectedPriceOverrideMutationVersion),
+                    request.ExpectedPriceOverrideMutationVersion,
+                    request.ParentCategoryId,
+                    request.PricingMode,
+                    request.ExpectedCommissionRuleId),
                 cancellationToken);
 
             return Ok(result);
@@ -683,6 +777,10 @@ public class AdminCommerceHubController : ControllerBase
         catch (CommerceHubNotFoundException ex)
         {
             return NotFound(new { message = ex.Message });
+        }
+        catch (CommissionAuthorityException ex)
+        {
+            return Conflict(new { code = ex.Code, message = ex.Message, details = ex.Details });
         }
     }
 

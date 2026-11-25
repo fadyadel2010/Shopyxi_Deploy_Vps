@@ -276,17 +276,17 @@ export default function ShippingAdministrationWorkspace({ initialTab = 'overview
             </div>
 
             {error && (
-                <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-                    {error}
+                <div role="alert" className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                    {t('common.unavailable')}
                 </div>
             )}
 
-            <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-4">
+            {!loading && !error ? <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-4">
                 <SummaryCard label={t('shippingAdministration.summary.activeAccounts')} value={summary.activeCarriers} />
                 <SummaryCard label={t('shippingAdministration.summary.blockedAccounts')} value={summary.blockedCarriers} />
                 <SummaryCard label={t('shippingAdministration.summary.supported')} value={supportedCarriers.length} />
                 <SummaryCard label={t('shippingAdministration.summary.auditEvents')} value={audit.length} />
-            </div>
+            </div> : null}
 
             <div className="mb-6 overflow-x-auto border-b border-gray-200">
                 <div className="flex min-w-max gap-2" role="tablist" aria-label={t('shippingAdministration.tabs.label')}>
@@ -308,11 +308,11 @@ export default function ShippingAdministrationWorkspace({ initialTab = 'overview
                 </div>
             </div>
 
-            {loading && carrierAccounts.length === 0 ? (
+            {loading ? (
                 <div className="flex justify-center py-16">
                     <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent" role="status" aria-label={t('shippingAdministration.loading')}></div>
                 </div>
-            ) : (
+            ) : error ? null : (
                 <>
                     {activeTab === 'overview' && <OverviewTab accounts={carrierAccounts} audit={audit} />}
                     {activeTab === 'carrier-accounts' && (

@@ -38,9 +38,10 @@ export default function AttributionSummaryCards({ data, loading }) {
 
     if (!data) return null
 
-    const avgOrderValue = data.totalOrders > 0
-        ? data.totalRevenue / data.totalOrders
-        : 0
+    // Group 5C: refunds affect signed net, never gross-recognition AOV.
+    const avgOrderValue = Number.isFinite(data.recognizedRevenue) && Number.isSafeInteger(data.totalOrders) && data.totalOrders >= 0
+        ? (data.totalOrders > 0 ? data.recognizedRevenue / data.totalOrders : 0)
+        : null
 
     const cards = [
         {
@@ -58,7 +59,7 @@ export default function AttributionSummaryCards({ data, loading }) {
         {
             icon: TrendingUp,
             label: t('attribution.avgOrderValue', 'Avg. Order Value'),
-            value: formatCurrency(avgOrderValue),
+            value: avgOrderValue === null ? '—' : formatCurrency(avgOrderValue),
             color: 'purple',
         }
     ]

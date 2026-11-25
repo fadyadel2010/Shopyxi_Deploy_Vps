@@ -8,6 +8,8 @@
  */
 import { createContext, useContext, useState, useCallback, useEffect } from 'react'
 import translations from './translations'
+import i18n from '../../../i18n/config'
+import { syncDocumentLanguage } from '../../../i18n/documentLanguage'
 
 const LanguageContext = createContext(null)
 
@@ -15,13 +17,13 @@ const STORAGE_KEY = 'affiliate_lang'
 
 export function LanguageProvider({ children }) {
     const [lang, setLangState] = useState(() => {
-        return localStorage.getItem(STORAGE_KEY) === 'ar' ? 'ar' : 'en'
+        try { return localStorage.getItem(STORAGE_KEY) === 'ar' ? 'ar' : 'en' } catch { return 'en' }
     })
 
     const setLang = useCallback((newLang) => {
         if (newLang !== 'en' && newLang !== 'ar') return
         setLangState(newLang)
-        localStorage.setItem(STORAGE_KEY, newLang)
+        try { localStorage.setItem(STORAGE_KEY, newLang) } catch { /* In-memory switching remains available. */ }
     }, [])
 
     const toggleLang = useCallback(() => {
@@ -57,11 +59,14 @@ export function LanguageProvider({ children }) {
 
     // Apply font for Arabic
     useEffect(() => {
-        const oldLang = document.documentElement.lang
-        const oldDir = document.documentElement.dir
-        document.documentElement.lang = lang
-        document.documentElement.dir = dir
-        return () => { document.documentElement.lang = oldLang; document.documentElement.dir = oldDir }
+        const applyAffiliateLanguage = () => syncDocumentLanguage(lang)
+        applyAffiliateLanguage()
+        // The Affiliate choice stays independent even when the host preference changes.
+        i18n.on('languageChanged', applyAffiliateLanguage)
+        return () => {
+            i18n.off('languageChanged', applyAffiliateLanguage)
+            syncDocumentLanguage(i18n.resolvedLanguage || i18n.language)
+        }
     }, [lang, dir])
 
     useEffect(() => {

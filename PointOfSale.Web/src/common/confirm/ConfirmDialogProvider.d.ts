@@ -2,6 +2,9 @@ import type { ReactElement, ReactNode } from 'react';
 export interface ConfirmOptions {
     title?: string; message?: ReactNode; confirmText?: string; cancelText?: string;
     variant?: string; isDangerous?: boolean; loadingText?: string;
+    description?: ReactNode; confirmLabel?: string; cancelLabel?: string;
+    confirmTone?: string; surface?: string;
+    inputLabel?: string; label?: string; trim?: boolean; minLength?: number; maxLength?: number;
 }
 export interface ConfirmDialog {
     confirm(options?: ConfirmOptions): Promise<boolean>;

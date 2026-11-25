@@ -176,13 +176,13 @@ public class AnalyticsMetricReader : IAnalyticsMetricReader
     {
         var endUtc = DateTime.UtcNow;
         var startUtc = endUtc.AddMinutes(-Math.Max(1, windowMinutes));
-        var snapshot = await _authorityReader.GetCommerceSnapshotAsync(
+        var activity = await _authorityReader.GetRecognizedOrderActivityAsync(
             tenantId,
             startUtc,
             endUtc,
             cancellationToken);
 
-        return snapshot.PurchaseCount;
+        return activity.Count;
     }
 
     #endregion

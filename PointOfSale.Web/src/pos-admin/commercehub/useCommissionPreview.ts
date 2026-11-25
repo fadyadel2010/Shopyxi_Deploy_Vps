@@ -1,238 +1,165 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import api from '../../services/api'
 import { useDebouncedValue } from '../../hooks/useDebouncedValue'
-import {
-    calculateCommissionBreakdown,
-    type CommissionBreakdown,
-} from './commissionCalculator'
 
 interface CommissionPreviewApiResponse {
     vendorId?: string | null
+    variantId?: string | null
+    parentCategoryId?: string | null
     categoryId?: string | null
+    pricingMode?: string | null
+    currency?: string | null
+    commissionBase?: string | null
+    sourceProductPrice?: number | null
+    marketplacePrice?: number | null
     rate?: number | null
+    commissionAmount?: number | null
+    merchantNet?: number | null
     source?: string | null
     ruleId?: string | null
     priority?: number | null
-    usedLegacyFallback?: boolean
-    cacheStrategy?: string | null
 }
 
 interface UseCommissionPreviewInput {
     vendorId?: string | null
+    variantId?: string | null
+    parentCategoryId?: string | null
     categoryId?: string | null
-    price?: number | null
+    pricingMode: 'source' | 'custom'
+    marketplacePrice?: number | null
     debounceMs?: number
 }
 
-export interface UseCommissionPreviewResult extends Omit<CommissionBreakdown, 'rate'> {
+export interface UseCommissionPreviewResult {
+    sourceProductPrice: number | null
+    marketplacePrice: number | null
     rate: number | null
+    commissionAmount: number | null
+    vendorReceives: number | null
+    commissionBase: string | null
     source: string | null
     ruleId: string | null
     priority: number | null
     loading: boolean
-    error: string | null
+    errorCode: string | null
     hasCategory: boolean
-    usedLegacyFallback: boolean
-    usingEstimate: boolean
+    isResolved: boolean
 }
 
-interface CommissionPreviewResolution {
-    rate: number
-    source: string
-    ruleId: string | null
-    priority: number | null
-    usedLegacyFallback: boolean
-    cacheStrategy: string | null
-}
-
-interface CommissionPreviewRequestIdentity {
+interface RequestIdentity {
     vendorId: string | null
+    variantId: string | null
+    parentCategoryId: string | null
     categoryId: string | null
+    pricingMode: 'source' | 'custom'
+    marketplacePrice: number | null
 }
 
 const DEFAULT_DEBOUNCE_MS = 400
-const resolutionCache = new Map<string, CommissionPreviewResolution>()
-const defaultEstimateCache = new Map<string, CommissionPreviewResolution>()
-
-function createCacheKey(vendorId?: string | null, categoryId?: string | null): string {
-    return `${vendorId ?? ''}::${categoryId ?? ''}`
-}
-
-function normalizeResolution(
-    response: CommissionPreviewApiResponse | null | undefined,
-): CommissionPreviewResolution {
-    return {
-        rate: Number(response?.rate ?? 0),
-        source: response?.source?.trim() || 'Legacy',
-        ruleId: response?.ruleId ?? null,
-        priority: response?.priority ?? null,
-        usedLegacyFallback: Boolean(response?.usedLegacyFallback),
-        cacheStrategy: response?.cacheStrategy ?? null,
-    }
-}
-
-function getFallbackEstimate(
-    vendorId?: string | null,
-    categoryId?: string | null,
-): CommissionPreviewResolution | null {
-    const exactMatch = resolutionCache.get(createCacheKey(vendorId, categoryId))
-    if (exactMatch) {
-        return exactMatch
-    }
-
-    if (vendorId) {
-        return defaultEstimateCache.get(vendorId) ?? null
-    }
-
-    return null
-}
 
 export function useCommissionPreview({
     vendorId,
+    variantId,
+    parentCategoryId,
     categoryId,
-    price,
+    pricingMode,
+    marketplacePrice,
     debounceMs = DEFAULT_DEBOUNCE_MS,
 }: UseCommissionPreviewInput): UseCommissionPreviewResult {
-    const [resolution, setResolution] = useState<CommissionPreviewResolution | null>(null)
+    const [resolution, setResolution] = useState<CommissionPreviewApiResponse | null>(null)
     const [loading, setLoading] = useState(false)
-    const [error, setError] = useState<string | null>(null)
-    const [usingEstimate, setUsingEstimate] = useState(false)
+    const [errorCode, setErrorCode] = useState<string | null>(null)
     const requestIdRef = useRef(0)
-    const requestIdentity = useMemo<CommissionPreviewRequestIdentity>(
-        () => ({
-            vendorId: vendorId ?? null,
-            categoryId: categoryId ?? null,
-        }),
-        [categoryId, vendorId],
-    )
-    const debouncedRequestIdentity = useDebouncedValue(requestIdentity, debounceMs)
+    const requestIdentity = useMemo<RequestIdentity>(() => ({
+        vendorId: vendorId ?? null,
+        variantId: variantId ?? null,
+        parentCategoryId: parentCategoryId ?? null,
+        categoryId: categoryId ?? null,
+        pricingMode,
+        marketplacePrice: pricingMode === 'custom' && Number.isFinite(marketplacePrice)
+            ? Number(marketplacePrice)
+            : null,
+    }), [categoryId, marketplacePrice, parentCategoryId, pricingMode, variantId, vendorId])
+    const debouncedRequest = useDebouncedValue(requestIdentity, debounceMs)
 
-    useEffect(() => {
-        return () => {
-            requestIdRef.current += 1
-        }
-    }, [])
+    useEffect(() => () => { requestIdRef.current += 1 }, [])
 
     useEffect(() => {
         requestIdRef.current += 1
-
-        if (!requestIdentity.categoryId) {
-            setLoading(false)
-            setError(null)
-            setUsingEstimate(false)
-            setResolution(null)
-            return
-        }
-
         setResolution(null)
-        setError(null)
-        setUsingEstimate(false)
-        setLoading(true)
+        setErrorCode(null)
+        setLoading(Boolean(requestIdentity.categoryId && requestIdentity.parentCategoryId && requestIdentity.variantId))
     }, [requestIdentity])
 
     useEffect(() => {
-        const { vendorId: requestVendorId, categoryId: requestCategoryId } = debouncedRequestIdentity
-        const hasCategory = Boolean(requestCategoryId)
-
-        if (!hasCategory) {
+        if (!debouncedRequest.categoryId || !debouncedRequest.parentCategoryId || !debouncedRequest.variantId) {
             return undefined
         }
-
-        const requestKey = createCacheKey(requestVendorId, requestCategoryId)
-        const cached = resolutionCache.get(requestKey)
-        if (cached) {
-            setResolution(cached)
+        if (debouncedRequest.pricingMode === 'custom' && (!debouncedRequest.marketplacePrice || debouncedRequest.marketplacePrice <= 0)) {
             setLoading(false)
-            setError(null)
-            setUsingEstimate(false)
+            setErrorCode('INVALID_CUSTOM_PRICE')
             return undefined
         }
 
         const controller = new AbortController()
         const requestId = ++requestIdRef.current
         setLoading(true)
-        setError(null)
-        setUsingEstimate(false)
+        setErrorCode(null)
 
-        async function fetchResolution() {
+        async function resolvePreview() {
             try {
-                const response = await api.get<CommissionPreviewApiResponse>(
-                    '/admin/commercehub/commission/resolve-preview',
-                    {
-                        params: {
-                            vendorId: requestVendorId,
-                            categoryId: requestCategoryId,
-                        },
-                        signal: controller.signal,
+                const response = await api.get<CommissionPreviewApiResponse>('/admin/commercehub/commission/resolve-preview', {
+                    params: {
+                        vendorId: debouncedRequest.vendorId,
+                        variantId: debouncedRequest.variantId,
+                        parentCategoryId: debouncedRequest.parentCategoryId,
+                        categoryId: debouncedRequest.categoryId,
+                        pricingMode: debouncedRequest.pricingMode,
+                        marketplacePrice: debouncedRequest.pricingMode === 'custom'
+                            ? debouncedRequest.marketplacePrice
+                            : undefined,
                     },
-                )
-
-                const nextResolution = normalizeResolution(response.data)
-                resolutionCache.set(requestKey, nextResolution)
-
-                if (
-                    requestVendorId &&
-                    (nextResolution.source === 'Global' || nextResolution.usedLegacyFallback)
-                ) {
-                    defaultEstimateCache.set(requestVendorId, nextResolution)
-                }
-
-                if (requestId !== requestIdRef.current) {
-                    return
-                }
-
-                setResolution(nextResolution)
-                setUsingEstimate(false)
-                setError(null)
-            } catch {
-                if (controller.signal.aborted) {
-                    return
-                }
-
-                const fallbackResolution = getFallbackEstimate(requestVendorId, requestCategoryId)
-
-                if (requestId !== requestIdRef.current) {
-                    return
-                }
-
-                if (fallbackResolution) {
-                    setResolution(fallbackResolution)
-                    setUsingEstimate(true)
-                    setError('Unable to fetch commission. Using default estimate.')
-                } else {
+                    signal: controller.signal,
+                })
+                if (requestId !== requestIdRef.current) return
+                const data = response.data
+                if (!data?.ruleId || data.rate == null || data.commissionAmount == null || data.merchantNet == null) {
                     setResolution(null)
-                    setUsingEstimate(false)
-                    setError('Unable to fetch commission preview right now.')
+                    setErrorCode('INVALID_PREVIEW_RESPONSE')
+                    return
                 }
+                setResolution(data)
+                setErrorCode(null)
+            } catch (error: unknown) {
+                if (controller.signal.aborted || requestId !== requestIdRef.current) return
+                const apiError = error as { response?: { status?: number; data?: { code?: string } } }
+                setResolution(null)
+                setErrorCode(apiError.response?.data?.code || (apiError.response?.status === 409
+                    ? 'COMMISSION_AUTHORITY_MISSING'
+                    : 'PREVIEW_UNAVAILABLE'))
             } finally {
-                if (requestId === requestIdRef.current) {
-                    setLoading(false)
-                }
+                if (requestId === requestIdRef.current) setLoading(false)
             }
         }
 
-        void fetchResolution()
+        void resolvePreview()
 
-        return () => {
-            controller.abort()
-        }
-    }, [debouncedRequestIdentity])
-
-    const breakdown = useMemo(
-        () => calculateCommissionBreakdown(price, resolution?.rate ?? 0),
-        [price, resolution?.rate],
-    )
+        return () => controller.abort()
+    }, [debouncedRequest])
 
     return {
-        ...breakdown,
+        sourceProductPrice: resolution?.sourceProductPrice ?? null,
+        marketplacePrice: resolution?.marketplacePrice ?? null,
         rate: resolution?.rate ?? null,
+        commissionAmount: resolution?.commissionAmount ?? null,
+        vendorReceives: resolution?.merchantNet ?? null,
+        commissionBase: resolution?.commissionBase ?? null,
         source: resolution?.source ?? null,
         ruleId: resolution?.ruleId ?? null,
         priority: resolution?.priority ?? null,
         loading,
-        error,
+        errorCode,
         hasCategory: Boolean(categoryId),
-        usedLegacyFallback: resolution?.usedLegacyFallback ?? false,
-        usingEstimate,
+        isResolved: Boolean(resolution?.ruleId),
     }
 }

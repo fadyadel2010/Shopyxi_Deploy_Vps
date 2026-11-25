@@ -25,6 +25,7 @@
     "paths": {
       "@/*": ["./src/*", "../PointOfSale.Storefront/src/*"],
       "@web/*": ["./src/*"],
+      "@storefront/*": ["../PointOfSale.Storefront/src/*"],
       "@theme-authority/*": ["../theme-authority/*"]
     }
   },

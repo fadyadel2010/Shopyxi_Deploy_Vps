@@ -58,11 +58,14 @@ public class SourceRoiResult
     public string Medium { get; set; } = string.Empty;
     public decimal TotalCost { get; set; }
     public decimal TotalRevenue { get; set; }
+    public decimal RecognizedRevenue { get; set; }
+    public decimal RevenueAdjustments => TotalRevenue - RecognizedRevenue;
+    public string FinancialBasis => "journal-date-utc-period-movement";
     public int TotalOrders { get; set; }
     public decimal Profit { get; set; }
     public decimal? RoiPercentage { get; set; }
-    public decimal AverageOrderValue => TotalOrders > 0 ? TotalRevenue / TotalOrders : 0;
-    public string Currency { get; set; } = "USD";
+    public decimal AverageOrderValue => TotalOrders > 0 ? RecognizedRevenue / TotalOrders : 0;
+    public string Currency { get; set; } = string.Empty;
 }
 
 public class CampaignRoiService : ICampaignRoiService
@@ -124,6 +127,7 @@ public class CampaignRoiService : ICampaignRoiService
             }
 
             results[key].Revenue += rev.TotalRevenue;
+            results[key].RecognizedRevenue += rev.RecognizedRevenue;
             results[key].Orders += rev.OrderCount;
         }
 
@@ -221,6 +225,7 @@ public class CampaignRoiService : ICampaignRoiService
             }
 
             results[key].TotalRevenue += rev.TotalRevenue;
+            results[key].RecognizedRevenue += rev.RecognizedRevenue;
             results[key].TotalOrders += rev.OrderCount;
         }
 
@@ -267,19 +272,8 @@ public class CampaignRoiService : ICampaignRoiService
         Guid tenantId,
         CancellationToken cancellationToken)
     {
-        var currency = await _dbContext.Tenants
-            .IgnoreQueryFilters()
-            .AsNoTracking()
-            .Where(tenant => tenant.Id == tenantId)
-            .Select(tenant => tenant.Currency)
-            .SingleOrDefaultAsync(cancellationToken);
-
-        if (string.IsNullOrWhiteSpace(currency))
-        {
-            throw new InvalidOperationException($"Tenant {tenantId:D} has no configured currency.");
-        }
-
-        return currency.Trim().ToUpperInvariant();
+        return await PointOfSale.Infrastructure.Accounting.FinancialReportingCurrency.RequireTenantAsync(
+            _dbContext, tenantId, cancellationToken);
     }
 
     private List<Core.Analytics.Attribution.CampaignCost> FilterCurrencyMismatches(

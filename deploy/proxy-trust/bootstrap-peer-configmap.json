@@ -1,0 +1,10 @@
+{
+  "apiVersion": "v1",
+  "kind": "ConfigMap",
+  "metadata": {
+    "name": "shopixy-proxy-trust-peers-v1",
+    "namespace": "shopixy-app",
+    "labels": {"shopixy.io/proxy-trust": "peers-v1"}
+  },
+  "data": {"lease.json": "{}"}
+}

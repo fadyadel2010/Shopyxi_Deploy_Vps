@@ -38,7 +38,6 @@ internal static class RefundFinancialDecisionEngine
     {
         var normalizedRefundAmount = RoundCurrency(refundAmount);
         var normalizedVendorEarningReversalAmount = RoundCurrency(vendorEarningReversalAmount);
-        var normalizedCommissionReversalAmount = RoundCurrency(commissionReversalAmount);
         var normalizedGrossCommissionReversalAmount = RoundCurrency(grossCommissionReversalAmount);
         var normalizedCurrency = FinancialCurrencyGuard.RequireEgpCurrency(
             currency,
@@ -54,7 +53,7 @@ internal static class RefundFinancialDecisionEngine
                 PlatformCashDelta: -normalizedRefundAmount,
                 PlatformPayableDelta: -normalizedVendorEarningReversalAmount,
                 VendorDebtDelta: 0m,
-                CommissionReceivableDelta: -normalizedCommissionReversalAmount,
+                CommissionReceivableDelta: -normalizedGrossCommissionReversalAmount,
                 ExecutionPath: "OnlineBeforePayout",
                 ImpactSummary:
                     $"This refund will pay out {normalizedRefundAmount:0.00} {normalizedCurrency} to the customer and remove {normalizedVendorEarningReversalAmount:0.00} {normalizedCurrency} from vendor payable."),
@@ -66,7 +65,7 @@ internal static class RefundFinancialDecisionEngine
                 PlatformCashDelta: -normalizedRefundAmount,
                 PlatformPayableDelta: 0m,
                 VendorDebtDelta: normalizedVendorEarningReversalAmount,
-                CommissionReceivableDelta: -normalizedCommissionReversalAmount,
+                CommissionReceivableDelta: -normalizedGrossCommissionReversalAmount,
                 ExecutionPath: "OnlineAfterPayout",
                 ImpactSummary:
                     $"This refund will pay out {normalizedRefundAmount:0.00} {normalizedCurrency} to the customer and increase vendor debt by {normalizedVendorEarningReversalAmount:0.00} {normalizedCurrency}."),

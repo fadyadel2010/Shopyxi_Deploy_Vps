@@ -11,8 +11,8 @@ namespace PointOfSale.Core.Analytics.Attribution;
 /// - Frontend is PURE RENDERER
 /// 
 /// CALCULATION RULES:
-/// - Revenue = SUM(Order.Total) for attributed orders
-/// - Orders = COUNT(attributed orders)
+/// - Revenue = signed accounting-period movements for attributed orders
+/// - Orders = distinct attributed orders recognized in the accounting period
 /// - Profit = Revenue - Cost
 /// - ROI% = (Profit / Cost) * 100
 /// 
@@ -47,6 +47,9 @@ public class CampaignRoiResult
     /// Total revenue from attributed orders.
     /// </summary>
     public decimal Revenue { get; set; }
+    public decimal RecognizedRevenue { get; set; }
+    public decimal RevenueAdjustments => Revenue - RecognizedRevenue;
+    public string FinancialBasis => "journal-date-utc-period-movement";
 
     /// <summary>
     /// Count of attributed orders.
@@ -72,7 +75,7 @@ public class CampaignRoiResult
     /// <summary>
     /// Average order value for this campaign.
     /// </summary>
-    public decimal AverageOrderValue => Orders > 0 ? Revenue / Orders : 0;
+    public decimal AverageOrderValue => Orders > 0 ? RecognizedRevenue / Orders : 0;
 
     /// <summary>
     /// Cost per acquisition (Cost / Orders).
@@ -83,7 +86,7 @@ public class CampaignRoiResult
     /// <summary>
     /// Currency code for monetary values.
     /// </summary>
-    public string Currency { get; set; } = "USD";
+    public string Currency { get; set; } = string.Empty;
 
     /// <summary>
     /// Indicates if this campaign has positive ROI.

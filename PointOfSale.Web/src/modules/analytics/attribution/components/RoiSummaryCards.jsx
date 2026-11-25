@@ -36,10 +36,10 @@ export default function RoiSummaryCards({ data, loading }) {
     if (!data) return null
 
     // Safely destructure with default values
-    const totalCost = data.totalCost ?? 0
-    const totalRevenue = data.totalRevenue ?? 0
-    const totalProfit = data.totalProfit ?? 0
-    const totalOrders = data.totalOrders ?? 0
+    const totalCost = data.totalCost
+    const totalRevenue = data.totalRevenue
+    const totalProfit = data.totalProfit
+    const totalOrders = data.totalOrders
     const overallRoi = data.overallRoi
 
     // Calculate CPA (Cost Per Acquisition)
@@ -89,7 +89,7 @@ export default function RoiSummaryCards({ data, loading }) {
         },
         {
             label: t('roi.orders', 'Orders'),
-            value: (totalOrders ?? 0).toLocaleString(),
+            value: Number.isSafeInteger(totalOrders) ? totalOrders.toLocaleString() : '—',
             icon: ShoppingCart,
             iconBg: 'bg-amber-100',
             iconColor: 'text-amber-600',

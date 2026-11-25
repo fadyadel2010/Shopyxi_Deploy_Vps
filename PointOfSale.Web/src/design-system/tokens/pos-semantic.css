@@ -1,0 +1,145 @@
+/*
+ * SHOPYXI POS design system - semantic tokens.
+ *
+ * Semantic tokens give product meaning to primitive values. They are the
+ * default consumption layer for POS screens, primitives, and layout.
+ *
+ * Scope: [data-product="pos"] only. No :root, html, or body declarations.
+ */
+
+[data-product="pos"] {
+  /* Canvas and surfaces. */
+  --pos-color-bg-canvas: var(--pos-neutral-50);
+  --pos-color-surface: var(--pos-neutral-0);
+  --pos-color-surface-subtle: var(--pos-neutral-100);
+  /* Elevation color is intentionally the same as surface; use --pos-shadow-* to express depth. */
+  --pos-color-surface-elevated: var(--pos-neutral-0);
+  --pos-color-surface-inverse: var(--pos-neutral-900);
+
+  /* Text hierarchy. */
+  --pos-color-text-primary: var(--pos-neutral-900);
+  --pos-color-text-secondary: var(--pos-neutral-600);
+  --pos-color-text-muted: var(--pos-neutral-500);
+  --pos-color-text-inverse: var(--pos-neutral-0);
+  /* Disabled text is exempt from WCAG contrast minimums, but remains readable. */
+  --pos-color-text-disabled: var(--pos-neutral-500);
+  --pos-color-text-placeholder: var(--pos-neutral-500);
+
+  /* Borders. */
+  /* Decorative separators only; never the sole boundary of an interactive control. */
+  --pos-color-border-subtle: var(--pos-neutral-200);
+  /* Low-emphasis structural borders. */
+  --pos-color-border-default: var(--pos-neutral-300);
+  /* Interactive control boundaries; meets the 3:1 non-text contrast target on white. */
+  --pos-color-border-strong: var(--pos-neutral-500);
+
+  /* Primary action. */
+  --pos-color-action-primary: var(--pos-blue-600);
+  --pos-color-action-primary-hover: var(--pos-blue-700);
+  --pos-color-action-primary-active: var(--pos-blue-800);
+  --pos-color-action-primary-subtle: var(--pos-blue-50);
+  --pos-color-action-primary-text: var(--pos-neutral-0);
+
+  /* Destructive action. */
+  --pos-color-action-danger: var(--pos-red-700);
+  --pos-color-action-danger-hover: var(--pos-red-800);
+  --pos-color-action-danger-active: var(--pos-red-900);
+  --pos-color-action-danger-text: var(--pos-neutral-0);
+
+  /* Focus indicators. */
+  --pos-color-focus-ring: var(--pos-blue-600);
+  --pos-color-focus-ring-inverse: var(--pos-blue-300);
+
+  /* Success status. */
+  --pos-color-success: var(--pos-green-700);
+  --pos-color-success-hover: var(--pos-green-800);
+  --pos-color-success-subtle: var(--pos-green-50);
+  --pos-color-success-border: var(--pos-green-200);
+  --pos-color-success-text: var(--pos-green-800);
+
+  /* Warning status. */
+  --pos-color-warning: var(--pos-amber-700);
+  --pos-color-warning-hover: var(--pos-amber-800);
+  --pos-color-warning-subtle: var(--pos-amber-50);
+  --pos-color-warning-border: var(--pos-amber-200);
+  --pos-color-warning-text: var(--pos-amber-800);
+
+  /* Danger status. Distinct from destructive action; use for state, not buttons. */
+  --pos-color-danger: var(--pos-red-700);
+  --pos-color-danger-hover: var(--pos-red-800);
+  --pos-color-danger-subtle: var(--pos-red-50);
+  --pos-color-danger-border: var(--pos-red-200);
+  --pos-color-danger-text: var(--pos-red-800);
+
+  /* Information status. Uses brand blue as a status role, never as an action. */
+  --pos-color-info: var(--pos-blue-700);
+  --pos-color-info-hover: var(--pos-blue-800);
+  --pos-color-info-subtle: var(--pos-blue-50);
+  --pos-color-info-border: var(--pos-blue-200);
+  --pos-color-info-text: var(--pos-blue-800);
+
+  /* Modal and drawer scrim. */
+  --pos-color-overlay: rgb(var(--pos-ink-rgb) / var(--pos-opacity-overlay));
+
+  /*
+   * Typography roles.
+   * The family token switches to the Arabic stack through :lang(ar) below.
+   * Both stacks currently resolve to Cairo because it is the only loaded
+   * family. Inter and IBM Plex Sans Arabic are not referenced until approved
+   * font assets exist.
+   */
+  --pos-font-family-ui: var(--pos-font-family-latin);
+  --pos-font-family-code: var(--pos-font-family-mono);
+
+  --pos-font-size-display: var(--pos-font-size-32);
+  --pos-line-height-display: var(--pos-line-height-40);
+  --pos-font-weight-display: var(--pos-font-weight-semibold);
+  --pos-letter-spacing-display: var(--pos-letter-spacing-tight);
+
+  --pos-font-size-page-title: var(--pos-font-size-24);
+  --pos-line-height-page-title: var(--pos-line-height-32);
+  --pos-font-weight-page-title: var(--pos-font-weight-semibold);
+  --pos-letter-spacing-page-title: var(--pos-letter-spacing-tight);
+
+  --pos-font-size-section-title: var(--pos-font-size-18);
+  --pos-line-height-section-title: var(--pos-line-height-28);
+  --pos-font-weight-section-title: var(--pos-font-weight-semibold);
+  --pos-letter-spacing-section-title: var(--pos-letter-spacing-normal);
+
+  --pos-font-size-body: var(--pos-font-size-14);
+  --pos-line-height-body: var(--pos-line-height-22);
+  --pos-font-weight-body: var(--pos-font-weight-regular);
+  --pos-letter-spacing-body: var(--pos-letter-spacing-normal);
+
+  --pos-font-size-body-strong: var(--pos-font-size-14);
+  --pos-line-height-body-strong: var(--pos-line-height-22);
+  --pos-font-weight-body-strong: var(--pos-font-weight-semibold);
+  --pos-letter-spacing-body-strong: var(--pos-letter-spacing-normal);
+
+  --pos-font-size-label: var(--pos-font-size-13);
+  --pos-line-height-label: var(--pos-line-height-18);
+  --pos-font-weight-label: var(--pos-font-weight-medium);
+  --pos-letter-spacing-label: var(--pos-letter-spacing-normal);
+
+  --pos-font-size-caption: var(--pos-font-size-12);
+  --pos-line-height-caption: var(--pos-line-height-16);
+  --pos-font-weight-caption: var(--pos-font-weight-regular);
+  --pos-letter-spacing-caption: var(--pos-letter-spacing-normal);
+
+  /* Data-dense and financial values use tabular figures. */
+  --pos-font-size-data: var(--pos-font-size-14);
+  --pos-line-height-data: var(--pos-line-height-20);
+  --pos-font-weight-data: var(--pos-font-weight-medium);
+  --pos-letter-spacing-data: var(--pos-letter-spacing-normal);
+  --pos-font-variant-numeric: var(--pos-font-variant-tabular);
+  --pos-font-feature-numeric: var(--pos-font-feature-tabular);
+
+  --pos-font-size-code: var(--pos-font-size-13);
+  --pos-line-height-code: var(--pos-line-height-20);
+  --pos-font-weight-code: var(--pos-font-weight-regular);
+  --pos-letter-spacing-code: var(--pos-letter-spacing-normal);
+}
+
+[data-product="pos"]:lang(ar) {
+  --pos-font-family-ui: var(--pos-font-family-arabic);
+}

@@ -1,0 +1,92 @@
+[data-product="pos"] .pos-tabs {
+  display: block;
+  font-family: var(--pos-font-family-ui);
+}
+
+[data-product="pos"] .pos-tabs__list {
+  display: flex;
+  align-items: center;
+  gap: var(--pos-space-1);
+  border-block-end: var(--pos-border-width) solid var(--pos-tabs-border);
+}
+
+[data-product="pos"] .pos-tabs__trigger {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pos-space-1);
+  padding-block: var(--pos-space-2);
+  padding-inline: var(--pos-space-3);
+  border: 0;
+  border-start-start-radius: var(--pos-radius-control);
+  border-start-end-radius: var(--pos-radius-control);
+  background-color: transparent;
+  color: var(--pos-tabs-trigger-text);
+  font-family: inherit;
+  font-size: var(--pos-font-size-14);
+  line-height: var(--pos-line-height-20);
+  font-weight: var(--pos-font-weight-medium);
+  cursor: pointer;
+}
+
+[data-product="pos"] .pos-tabs__trigger:hover:not(:disabled) {
+  background-color: var(--pos-tabs-trigger-hover-bg);
+  color: var(--pos-tabs-trigger-text-hover);
+}
+
+[data-product="pos"] .pos-tabs__trigger:focus-visible {
+  outline: var(--pos-focus-ring-width) solid var(--pos-tabs-focus-ring);
+  outline-offset: calc(var(--pos-focus-ring-offset) * -1);
+}
+
+[data-product="pos"] .pos-tabs__trigger[data-state="active"] {
+  color: var(--pos-tabs-trigger-text-selected);
+}
+
+[data-product="pos"] .pos-tabs__trigger[data-state="active"]::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: calc(var(--pos-border-width) * -1);
+  height: var(--pos-border-width-strong);
+  border-radius: var(--pos-radius-pill);
+  background-color: var(--pos-tabs-indicator);
+}
+
+[data-product="pos"] .pos-tabs__trigger:disabled {
+  color: var(--pos-tabs-trigger-disabled-text);
+  cursor: not-allowed;
+}
+
+[data-product="pos"] .pos-tabs__content {
+  padding-block-start: var(--pos-space-4);
+  color: var(--pos-color-text-primary);
+  font-size: var(--pos-font-size-14);
+  line-height: var(--pos-line-height-20);
+}
+
+[data-product="pos"] .pos-tabs__content:focus-visible {
+  outline: var(--pos-focus-ring-width) solid var(--pos-tabs-focus-ring);
+  outline-offset: var(--pos-focus-ring-offset);
+}
+
+[data-product="pos"] .pos-tabs--pills .pos-tabs__list {
+  display: inline-flex;
+  padding: var(--pos-space-1);
+  border-block-end: 0;
+  border-radius: var(--pos-radius-control);
+  background-color: var(--pos-color-surface-subtle);
+}
+
+[data-product="pos"] .pos-tabs--pills .pos-tabs__trigger {
+  border-radius: var(--pos-radius-control);
+}
+
+[data-product="pos"] .pos-tabs--pills .pos-tabs__trigger[data-state="active"] {
+  background-color: var(--pos-color-surface);
+  box-shadow: var(--pos-shadow-xs);
+}
+
+[data-product="pos"] .pos-tabs--pills .pos-tabs__trigger[data-state="active"]::after {
+  display: none;
+}

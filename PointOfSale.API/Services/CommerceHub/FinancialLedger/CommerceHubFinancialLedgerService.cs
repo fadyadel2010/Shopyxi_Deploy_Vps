@@ -381,14 +381,17 @@ public class CommerceHubFinancialLedgerService : ICommerceHubFinancialLedgerServ
                         cancellationToken: cancellationToken);
                 }
 
-                if (refund.CommissionReversalAmount > 0m)
+                // Reverse gross commission, then restore the promo expense
+                // separately. Reversing net commission here would count the
+                // promo recovery twice in platform revenue.
+                if (grossCommissionReversalAmount > 0m)
                 {
                     await AppendTransactionIfMissingAsync(
                         CommerceHubFinancialEntityType.Platform,
                         null,
                         CommerceHubFinancialTransactionType.Commission,
                         CommerceHubFinancialTransactionDirection.Debit,
-                        refund.CommissionReversalAmount,
+                        grossCommissionReversalAmount,
                         refund.Currency,
                         CommerceHubFinancialReferenceType.Refund,
                         refund.Id,

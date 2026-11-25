@@ -5,6 +5,9 @@ import StorefrontAnalyticsDashboard from './StorefrontAnalyticsDashboard'
 import { useRTL } from '../hooks/useRTL'
 import { useAuthStore } from '../store/authStore'
 import { hasPosPermission } from '../auth/posPermissions'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../design-system/primitives'
+import { useDashboardActorScope } from '../components/dashboard/usePosDashboardData'
+import '../components/dashboard/PosDashboard.css'
 
 const DASHBOARD_TAB_STORAGE_KEY = 'admin.dashboard.activeTab'
 
@@ -15,7 +18,8 @@ const DASHBOARD_TABS = [
 
 export default function Dashboard() {
     const { t } = useTranslation()
-    const { isRTL, dir } = useRTL()
+    const { dir } = useRTL()
+    const actorScope = useDashboardActorScope()
     const user = useAuthStore((state) => state.user)
     const availableTabs = DASHBOARD_TABS.filter((tab) => hasPosPermission(user, tab.permission))
     const [activeTab, setActiveTab] = useState(() => {
@@ -34,41 +38,26 @@ export default function Dashboard() {
         window.localStorage.setItem(DASHBOARD_TAB_STORAGE_KEY, activeTab)
     }, [activeTab, availableTabs])
 
+    const selectedTab = availableTabs.some(tab => tab.id === activeTab) ? activeTab : availableTabs[0]?.id ?? 'pos'
+    const renderView = tab => tab.id === 'storefront'
+        ? <StorefrontAnalyticsDashboard key={actorScope} presentation="dashboard" />
+        : <PosDashboardContent key={actorScope} />
     return (
-        <div className="space-y-6" dir={dir}>
-            <div className="rounded-2xl border border-gray-200 bg-white p-3 shadow-sm">
-                <div className={`flex flex-col gap-3 md:flex-row md:items-center md:justify-between ${isRTL ? 'md:flex-row-reverse' : ''}`}>
-                    <div className={isRTL ? 'text-right' : 'text-left'}>
-                        <p className="text-sm font-semibold uppercase tracking-wide text-gray-400">
-                            {t('dashboard.title')}
-                        </p>
-                        <h1 className="text-xl font-bold text-gray-900">
-                            {t('dashboard.dashboardSwitcher')}
-                        </h1>
-                    </div>
-
-                    {availableTabs.length > 1 ? (
-                    <div className={`inline-flex rounded-xl bg-gray-100 p-1 ${isRTL ? 'flex-row-reverse self-end md:self-auto' : ''}`}>
-                        {availableTabs.map(tab => (
-                            <button
-                                key={tab.id}
-                                onClick={() => setActiveTab(tab.id)}
-                                className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${activeTab === tab.id
-                                    ? 'bg-white text-gray-900 shadow-sm'
-                                    : 'text-gray-500 hover:text-gray-800'
-                                    }`}
-                            >
-                                {t(tab.labelKey)}
-                            </button>
-                        ))}
-                    </div>
-                    ) : null}
-                </div>
-            </div>
-
-            {activeTab === 'storefront' && availableTabs.some((tab) => tab.id === 'storefront')
-                ? <StorefrontAnalyticsDashboard />
-                : <PosDashboardContent />}
+        <div className="pos-dashboard" dir={dir}>
+            <header className="pos-dashboard__header">
+                <h1>{t('dashboard.title')}</h1>
+                <p className="pos-dashboard__caption">{t('dashboard.phase42.scope')}</p>
+            </header>
+            <Tabs value={selectedTab} onValueChange={setActiveTab} dir={dir}>
+                {availableTabs.length > 1 ? (
+                    <TabsList aria-label={t('dashboard.dashboardSwitcher')}>
+                        {availableTabs.map(tab => <TabsTrigger key={tab.id} value={tab.id}>{t(tab.labelKey)}</TabsTrigger>)}
+                    </TabsList>
+                ) : null}
+                {availableTabs.length > 1
+                    ? availableTabs.map(tab => <TabsContent key={tab.id} value={tab.id}>{renderView(tab)}</TabsContent>)
+                    : availableTabs.map(tab => <div key={tab.id}>{renderView(tab)}</div>)}
+            </Tabs>
         </div>
     )
 }

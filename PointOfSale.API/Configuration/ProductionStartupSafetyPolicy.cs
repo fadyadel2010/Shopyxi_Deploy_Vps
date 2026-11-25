@@ -22,6 +22,7 @@ public static class ProductionStartupSafetyPolicy
         typeof(PointOfSale.API.SuperAdmin.Services.SuperAdminRootSeeder),
         typeof(PointOfSale.API.Services.MarketplaceCms.MarketplaceCmsPageSeeder),
         typeof(PointOfSale.Infrastructure.Accounting.ChartOfAccountsStartupSeeder),
+        typeof(PointOfSale.Infrastructure.Data.Seeding.AffiliateTaxonomyStartupInitializer),
         typeof(PointOfSale.Infrastructure.Elasticsearch.ElasticsearchIndexInitializer),
         typeof(PointOfSale.Infrastructure.Elasticsearch.Services.CommerceHubElasticsearchIndexInitializer)
     ];

@@ -20,6 +20,7 @@ import { useToastStore } from "@/store";
 import type { CustomerOrderItem, RefundPayoutMethod, RefundReasonCode } from "@/types";
 import { Button } from "@/ui/button";
 import { formatCurrency } from "@/utils";
+import { useCopy } from "@/i18n/useCopy";
 
 type RefundRequestModalProps = {
   currency: string;
@@ -51,6 +52,10 @@ const ACCEPTED_TYPES = ["image/jpeg", "image/png", "video/mp4"];
 
 export const RefundRequestModal = ({ currency, item, open, onClose, resolveCurrentItem }: RefundRequestModalProps) => {
   const queryClient = useQueryClient();
+  const copy = useCopy();
+  const dialogRef = useRef<HTMLDialogElement | null>(null);
+  const submitLockRef = useRef(false);
+  const [discardRequested, setDiscardRequested] = useState(false);
   const showToast = useToastStore((state) => state.showToast);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const payoutDetailsQuery = useQuery({
@@ -77,6 +82,7 @@ export const RefundRequestModal = ({ currency, item, open, onClose, resolveCurre
     }
 
     setQuantity(item.maxRefundableQuantity > 0 ? 1 : 0);
+    setDiscardRequested(false);
     setReasonCode(item.eligibleRefundReasonCodes && !item.eligibleRefundReasonCodes.includes("Other") ? "" : "Other");
     setReasonText("");
     setIdempotencyKey(createRefundIdempotencyKey());
@@ -91,7 +97,7 @@ export const RefundRequestModal = ({ currency, item, open, onClose, resolveCurre
       current.forEach((upload) => URL.revokeObjectURL(upload.previewUrl));
       return [];
     });
-  }, [item, open]);
+  }, [item?.orderItemId, open]);
 
   useEffect(() => {
     if (open) {
@@ -232,8 +238,23 @@ export const RefundRequestModal = ({ currency, item, open, onClose, resolveCurre
       });
 
       onClose();
-    }
+    },
+    onSettled: () => { submitLockRef.current = false; }
   });
+
+  useEffect(() => {
+    if (!open || !item || !dialogRef.current) return;
+    const dialog = dialogRef.current;
+    const opener = document.activeElement as HTMLElement | null;
+    const overflow = document.body.style.overflow;
+    if (!dialog.open) dialog.showModal();
+    document.body.style.overflow = "hidden";
+    return () => {
+      dialog.close();
+      document.body.style.overflow = overflow;
+      opener?.focus();
+    };
+  }, [open, item?.orderItemId]);
 
   if (!open || !item) {
     return null;
@@ -249,6 +270,20 @@ export const RefundRequestModal = ({ currency, item, open, onClose, resolveCurre
     Boolean(currentPayoutError) ||
     hasUploadingFiles ||
     hasFailedFiles;
+  const initialReason = item.eligibleRefundReasonCodes && !item.eligibleRefundReasonCodes.includes("Other") ? "" : "Other";
+  const dirty = Boolean(reasonText.trim() || payoutAccountIdentifier.trim() || payoutAccountHolderName.trim()
+    || uploads.length || quantity !== (item.maxRefundableQuantity > 0 ? 1 : 0) || savePayoutDetails
+    || reasonCode !== initialReason || payoutMethod !== "VodafoneCash"
+    || payoutMode !== (savedPayoutDetails.length ? "saved" : "manual")
+    || selectedPayoutDetailsId && selectedPayoutDetailsId !== savedPayoutDetails[0]?.id);
+  const requestClose = (implicit = false) => {
+    if (submitLockRef.current || createRefundMutation.isPending || hasUploadingFiles) return;
+    if (dirty) {
+      if (!implicit) setDiscardRequested(true);
+      return;
+    }
+    onClose();
+  };
 
   const handleFilesSelected = (files: FileList | null) => {
     if (!files) {
@@ -358,13 +393,15 @@ export const RefundRequestModal = ({ currency, item, open, onClose, resolveCurre
   };
 
   return (
-    <div className="fixed inset-0 z-[70] flex items-start justify-center overflow-y-auto bg-slate-950/55 px-3 py-4 backdrop-blur-sm sm:px-6 sm:py-6" onClick={onClose}>
+    <dialog ref={dialogRef}
+      className="fixed inset-0 z-[70] m-0 h-full max-h-none w-full max-w-none flex items-start justify-center overflow-y-auto border-0 bg-slate-950/55 px-3 py-4 backdrop-blur-sm sm:px-6 sm:py-6"
+      aria-labelledby="refund-request-title" aria-describedby="refund-request-description"
+      aria-busy={createRefundMutation.isPending || undefined}
+      onCancel={(event) => { event.preventDefault(); requestClose(true); }}
+      onClick={(event) => { if (event.target === event.currentTarget) requestClose(true); }}>
       <div
         className="my-auto w-full max-w-[1180px] overflow-hidden rounded-[2rem] border border-white/70 bg-white shadow-2xl"
         onClick={(event) => event.stopPropagation()}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="refund-request-title"
       >
         <div className="flex max-h-[calc(100vh-2rem)] flex-col sm:max-h-[calc(100vh-3rem)]">
           <div className="flex items-start justify-between gap-4 border-b border-border/60 px-5 py-5 sm:px-6">
@@ -374,12 +411,12 @@ export const RefundRequestModal = ({ currency, item, open, onClose, resolveCurre
               {item.productName}
             </h2>
             {item.variant ? <p className="text-sm text-muted-foreground">{item.variant}</p> : null}
-            <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+            <p id="refund-request-description" className="max-w-2xl text-sm leading-6 text-muted-foreground">
               Review the item details, choose where the refund should be sent, and add evidence if it helps explain the issue.
             </p>
           </div>
 
-          <Button type="button" variant="ghost" size="icon" onClick={onClose} aria-label="Close refund request">
+          <Button type="button" variant="ghost" size="icon" onClick={() => requestClose()} disabled={createRefundMutation.isPending || hasUploadingFiles} aria-label={copy("Close refund request", "إغلاق طلب الاسترداد")}>
             <X className="h-5 w-5" />
           </Button>
         </div>
@@ -687,7 +724,7 @@ export const RefundRequestModal = ({ currency, item, open, onClose, resolveCurre
                             </p>
                           </div>
 
-                          <Button type="button" variant="ghost" size="icon" onClick={() => removeUpload(upload.id)}>
+                          <Button type="button" variant="ghost" size="icon" disabled={createRefundMutation.isPending || upload.status === "uploading"} aria-label={copy(`Remove ${upload.file.name}`, `إزالة ${upload.file.name}`)} onClick={() => removeUpload(upload.id)}>
                             <X className="h-4 w-4" />
                           </Button>
                         </div>
@@ -745,29 +782,40 @@ export const RefundRequestModal = ({ currency, item, open, onClose, resolveCurre
 
           <div className="border-t border-border/60 bg-white px-5 py-4 sm:px-6">
             {createRefundMutation.isError ? (
-              <div className="mb-4 rounded-[1.5rem] border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+              <div role="alert" className="mb-4 rounded-[1.5rem] border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
                 <div className="flex items-start gap-2">
                   <CircleAlert className="mt-0.5 h-4 w-4 shrink-0" />
                   <p>{createRefundMutation.error.message}</p>
                 </div>
               </div>
             ) : null}
+            {discardRequested ? <div role="alert" className="mb-4 rounded-2xl border border-amber-200 bg-amber-50 p-4">
+              <p>{copy("Discard this unsaved refund request?", "هل تريد تجاهل طلب الاسترداد غير المحفوظ؟")}</p>
+              <div className="mt-3 flex gap-3">
+                <Button type="button" variant="outline" onClick={() => setDiscardRequested(false)}>{copy("Keep editing", "متابعة التحرير")}</Button>
+                <Button type="button" disabled={createRefundMutation.isPending || hasUploadingFiles} onClick={() => { if (!submitLockRef.current) onClose(); }}>{copy("Discard request", "تجاهل الطلب")}</Button>
+              </div>
+            </div> : null}
 
             <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
               <div className="mr-auto flex items-center text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 {reasonCode ? `${formatRefundReasonLabel(reasonCode)} selected` : "Reason required"}
               </div>
-              <Button type="button" variant="outline" onClick={onClose} disabled={createRefundMutation.isPending}>
+              <Button type="button" variant="outline" onClick={() => requestClose()} disabled={createRefundMutation.isPending || hasUploadingFiles}>
                 Cancel
               </Button>
-              <Button type="button" onClick={() => createRefundMutation.mutate()} disabled={submitDisabled}>
+              <Button type="button" onClick={() => {
+                if (submitLockRef.current || submitDisabled) return;
+                submitLockRef.current = true;
+                createRefundMutation.mutate();
+              }} disabled={submitDisabled}>
                 {createRefundMutation.isPending ? "Submitting..." : "Submit refund request"}
               </Button>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </dialog>
   );
 };
 

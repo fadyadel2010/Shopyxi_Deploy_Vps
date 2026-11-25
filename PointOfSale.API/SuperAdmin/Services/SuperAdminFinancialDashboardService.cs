@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PointOfSale.API.Services.CommerceHub;
+using PointOfSale.API.Services.CommerceHub.Finance;
 using PointOfSale.API.SuperAdmin.DTOs;
 using PointOfSale.Core.Enums;
 using PointOfSale.Core.Enums.CommerceHubFinance;
@@ -79,7 +80,9 @@ public sealed partial class SuperAdminFinancialDashboardService : ISuperAdminFin
                 filter.FromDateUtc,
                 filter.ToDateUtc);
 
-            return BuildOverviewFromAggregateWindow(filter, aggregateWindow, generatedAtUtc, reconciliationSnapshot);
+            var distinctRefundedOrders = await BuildRefundCohortQuery(filter)
+                .Select(row => row.SubOrderId).Distinct().CountAsync(cancellationToken);
+            return BuildOverviewFromAggregateWindow(filter, aggregateWindow, generatedAtUtc, reconciliationSnapshot, distinctRefundedOrders);
         }
 
         var orderSummaryRows = await BuildOrderCommissionQuery(filter)
@@ -137,7 +140,6 @@ public sealed partial class SuperAdminFinancialDashboardService : ISuperAdminFin
             .Concat(refundSummaryRows.Select(row => row.Currency))
             .Concat(refundCommissionRows.Select(row => row.Currency))
             .Concat(refundPromotionRows.Select(row => row.Currency))
-            .Where(currency => !string.IsNullOrWhiteSpace(currency))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
 
@@ -151,7 +153,8 @@ public sealed partial class SuperAdminFinancialDashboardService : ISuperAdminFin
         var promoCost = RoundCurrency((orderPromotionRows.SingleOrDefault()?.Amount ?? 0m) - (refundPromotionRows.SingleOrDefault()?.Amount ?? 0m));
         var refundImpact = RoundCurrency(refundCommissionRows.SingleOrDefault()?.Amount ?? 0m);
         var refundAmount = RoundCurrency(refundSummary?.Amount ?? 0m);
-        var refundedOrdersCount = refundSummary?.DistinctCount ?? 0;
+        var refundedOrdersCount = await BuildRefundCohortQuery(filter)
+            .Select(row => row.SubOrderId).Distinct().CountAsync(cancellationToken);
         var netCommission = RoundCurrency(grossCommission - promoCost);
         var netRevenue = RoundCurrency(netCommission - refundImpact);
 
@@ -302,7 +305,6 @@ public sealed partial class SuperAdminFinancialDashboardService : ISuperAdminFin
             .Concat(refundPromoRows.Select(row => row.Currency))
             .Concat(refundCommissionRows.Select(row => row.Currency))
             .Concat(refundAmountRows.Select(row => row.Currency))
-            .Where(currency => !string.IsNullOrWhiteSpace(currency))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
 
@@ -603,6 +605,18 @@ public sealed partial class SuperAdminFinancialDashboardService : ISuperAdminFin
         MergeVendorRows(accumulators, refundCommissionRows);
         MergeVendorRows(accumulators, refundPromotionRows);
 
+        var cohortRefundCounts = await BuildRefundCohortQuery(filter)
+            .GroupBy(row => new { row.VendorId, row.Currency })
+            .Select(group => new { group.Key.VendorId, group.Key.Currency,
+                Count = group.Select(row => row.SubOrderId).Distinct().Count() })
+            .ToListAsync(cancellationToken);
+        foreach (var accumulator in accumulators.Values)
+        {
+            accumulator.RefundedOrdersCount = cohortRefundCounts
+                .Where(row => row.VendorId == accumulator.VendorId && row.Currency == accumulator.Currency)
+                .Select(row => row.Count).SingleOrDefault();
+        }
+
         var items = accumulators.Values
             .Select(accumulator =>
             {
@@ -680,7 +694,9 @@ public sealed partial class SuperAdminFinancialDashboardService : ISuperAdminFin
                 filter.ToDateUtc,
                 query.GroupBy);
 
-            aggregateSnapshot = BuildRefundSnapshotFromAggregateWindow(filter, query.GroupBy, aggregateWindow);
+            var distinctRefundedOrders = await BuildRefundCohortQuery(filter)
+                .Select(row => row.SubOrderId).Distinct().CountAsync(cancellationToken);
+            aggregateSnapshot = BuildRefundSnapshotFromAggregateWindow(filter, query.GroupBy, aggregateWindow, distinctRefundedOrders);
         }
 
         var orderCount = aggregateSnapshot?.OrdersCount ?? await BuildOrderCommissionQuery(filter).CountAsync(cancellationToken);
@@ -789,7 +805,6 @@ public sealed partial class SuperAdminFinancialDashboardService : ISuperAdminFin
                 .Concat(refundTrendRows.Select(row => row.Currency))
                 .Concat(topVendorRows.Select(row => row.Currency))
                 .Concat(topItemRows.Select(row => row.Currency))
-                .Where(currentCurrency => !string.IsNullOrWhiteSpace(currentCurrency))
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToList();
 
@@ -809,7 +824,8 @@ public sealed partial class SuperAdminFinancialDashboardService : ISuperAdminFin
                 .ToList();
 
             var refundSummary = refundSummaryRows.SingleOrDefault();
-            refundedOrdersCount = refundSummary?.DistinctCount ?? 0;
+            refundedOrdersCount = await BuildRefundCohortQuery(filter)
+                .Select(row => row.SubOrderId).Distinct().CountAsync(cancellationToken);
             refundRate = orderCount == 0
                 ? 0m
                 : RoundRatio(refundedOrdersCount / (decimal)orderCount);
@@ -895,12 +911,13 @@ public sealed partial class SuperAdminFinancialDashboardService : ISuperAdminFin
 
         var generatedAtUtc = DateTime.UtcNow;
         var filter = await NormalizeFilterAsync(query, defaultToLast30Days: false, generatedAtUtc, cancellationToken);
-        var isGlobalScope = !filter.HasDateFilter && !filter.HasVendorFilter && !filter.HasPromoFilter;
+        var isGlobalScope = !filter.HasDateFilter && !filter.HasVendorFilter && !filter.HasPromoFilter
+                            && !query.SnapshotBoundaryUtc.HasValue;
         if (filter.HasVendorFilter && filter.VendorIds.Count == 0)
         {
             return new SuperAdminFinancialIntegrityCheckDto
             {
-                Status = "OK",
+                Status = "NO_RECORDS",
                 ExecutedAtUtc = generatedAtUtc,
                 SnapshotBoundaryUtc = filter.SnapshotBoundaryUtc,
                 ScopeDescription = $"No vendors matched '{filter.VendorSearch}', so no financial records were checked.",
@@ -1190,12 +1207,6 @@ public sealed partial class SuperAdminFinancialDashboardService : ISuperAdminFin
             orphanTransactionsCount +
             orderFlowMismatchCount +
             refundFlowMismatchCount +
-            (isGlobalScope
-                ? promoUsageWithoutLedgerCount +
-                  promoLedgerWithoutUsageCount +
-                  duplicatePromoUsageCount +
-                  missingRefundReversalCount
-                : 0) +
             payoutFlowMismatchCount +
             adjustmentFlowMismatchCount +
             payableMismatchCount +
@@ -1209,9 +1220,22 @@ public sealed partial class SuperAdminFinancialDashboardService : ISuperAdminFin
             multiCurrencyReferenceCount +
             invalidEntityScopeCount;
 
+        var checkedOrderCount = await BuildIntegritySubOrderScope(filter).CountAsync(cancellationToken);
+        var checkedRefundCount = await BuildIntegrityRefundScope(filter).CountAsync(cancellationToken);
+        var checkedLedgerEntryCount = filter.HasVendorFilter || filter.HasPromoFilter ? 0 :
+            await _dbContext.CommerceHubFinancialTransactions.AsNoTracking().CountAsync(
+                row => row.CreatedAtUtc <= filter.SnapshotBoundaryUtc &&
+                       (!filter.FromDateUtc.HasValue || row.CreatedAtUtc >= filter.FromDateUtc.Value) &&
+                       (!filter.ToDateUtc.HasValue || row.CreatedAtUtc <= filter.ToDateUtc.Value), cancellationToken);
+
         return new SuperAdminFinancialIntegrityCheckDto
         {
-            Status = totalIssueCount == 0 ? "OK" : "ISSUES_DETECTED",
+            Status = totalIssueCount > 0 ? "ISSUES_DETECTED" :
+                checkedOrderCount + checkedRefundCount + checkedLedgerEntryCount == 0 ? "NO_RECORDS" : "OK",
+            IncludesGlobalLedgerChecks = isGlobalScope,
+            CheckedOrderCount = checkedOrderCount,
+            CheckedRefundCount = checkedRefundCount,
+            CheckedLedgerEntryCount = checkedLedgerEntryCount,
             ExecutedAtUtc = executedAtUtc,
             SnapshotBoundaryUtc = filter.SnapshotBoundaryUtc,
             ScopeDescription = scopeDescription,
@@ -1251,20 +1275,16 @@ public sealed partial class SuperAdminFinancialDashboardService : ISuperAdminFin
     private IQueryable<OrderLedgerRow> BuildOrderCommissionQuery(DashboardFilterContext filter)
     {
         var query =
-            from transaction in _dbContext.CommerceHubFinancialTransactions.AsNoTracking()
+            from transaction in CommerceHubRecognizedOrderQuery.Build(_dbContext, filter.SnapshotBoundaryUtc)
             join subOrder in _dbContext.CommerceHubSubOrders.AsNoTracking() on transaction.ReferenceId equals subOrder.Id
             join marketplaceOrder in _dbContext.CommerceHubMarketplaceOrders.AsNoTracking() on subOrder.MarketplaceOrderId equals marketplaceOrder.Id
             join usage in _dbContext.PromoCodeUsages.AsNoTracking() on marketplaceOrder.Id equals usage.MarketplaceOrderId into usageJoin
-            from usage in usageJoin.DefaultIfEmpty()
+            from usage in usageJoin.Where(row => !row.IsDeleted)
+                .OrderBy(row => row.AppliedAtUtc).ThenBy(row => row.Id).Take(1).DefaultIfEmpty()
             join tenant in _dbContext.Tenants.AsNoTracking() on subOrder.StoreId equals tenant.Id into tenantJoin
             from tenant in tenantJoin.DefaultIfEmpty()
             where !subOrder.IsDeleted
                   && !marketplaceOrder.IsDeleted
-                  && transaction.EntityType == CommerceHubFinancialEntityType.Platform
-                  && transaction.EntityId == null
-                  && transaction.TransactionType == CommerceHubFinancialTransactionType.Commission
-                  && transaction.Direction == CommerceHubFinancialTransactionDirection.Credit
-                  && transaction.ReferenceType == CommerceHubFinancialReferenceType.Order
             select new OrderLedgerRow
             {
                 ReferenceId = subOrder.Id,
@@ -1295,7 +1315,8 @@ public sealed partial class SuperAdminFinancialDashboardService : ISuperAdminFin
             join subOrder in _dbContext.CommerceHubSubOrders.AsNoTracking() on transaction.ReferenceId equals subOrder.Id
             join marketplaceOrder in _dbContext.CommerceHubMarketplaceOrders.AsNoTracking() on subOrder.MarketplaceOrderId equals marketplaceOrder.Id
             join usage in _dbContext.PromoCodeUsages.AsNoTracking() on marketplaceOrder.Id equals usage.MarketplaceOrderId into usageJoin
-            from usage in usageJoin.DefaultIfEmpty()
+            from usage in usageJoin.Where(row => !row.IsDeleted)
+                .OrderBy(row => row.AppliedAtUtc).ThenBy(row => row.Id).Take(1).DefaultIfEmpty()
             join tenant in _dbContext.Tenants.AsNoTracking() on subOrder.StoreId equals tenant.Id into tenantJoin
             from tenant in tenantJoin.DefaultIfEmpty()
             where !subOrder.IsDeleted
@@ -1334,7 +1355,8 @@ public sealed partial class SuperAdminFinancialDashboardService : ISuperAdminFin
             join subOrder in _dbContext.CommerceHubSubOrders.AsNoTracking() on refund.SubOrderId equals subOrder.Id
             join marketplaceOrder in _dbContext.CommerceHubMarketplaceOrders.AsNoTracking() on subOrder.MarketplaceOrderId equals marketplaceOrder.Id
             join usage in _dbContext.PromoCodeUsages.AsNoTracking() on marketplaceOrder.Id equals usage.MarketplaceOrderId into usageJoin
-            from usage in usageJoin.DefaultIfEmpty()
+            from usage in usageJoin.Where(row => !row.IsDeleted)
+                .OrderBy(row => row.AppliedAtUtc).ThenBy(row => row.Id).Take(1).DefaultIfEmpty()
             join tenant in _dbContext.Tenants.AsNoTracking() on subOrder.StoreId equals tenant.Id into tenantJoin
             from tenant in tenantJoin.DefaultIfEmpty()
             where !refund.IsDeleted
@@ -1368,6 +1390,14 @@ public sealed partial class SuperAdminFinancialDashboardService : ISuperAdminFin
         return ApplyRefundFilters(query, filter);
     }
 
+    private IQueryable<RefundMetricRow> BuildRefundCohortQuery(DashboardFilterContext filter)
+    {
+        var recognizedOrderIds = BuildOrderCommissionQuery(filter).Select(row => row.ReferenceId);
+        // The rate numerator must be a subset of its denominator. Refund value
+        // still includes all completed refund events in the reporting window.
+        return BuildRefundMetricQuery(filter).Where(row => recognizedOrderIds.Contains(row.SubOrderId));
+    }
+
     private IQueryable<RefundCommissionRow> BuildRefundCommissionQuery(DashboardFilterContext filter)
     {
         var query =
@@ -1376,7 +1406,8 @@ public sealed partial class SuperAdminFinancialDashboardService : ISuperAdminFin
             join subOrder in _dbContext.CommerceHubSubOrders.AsNoTracking() on refund.SubOrderId equals subOrder.Id
             join marketplaceOrder in _dbContext.CommerceHubMarketplaceOrders.AsNoTracking() on subOrder.MarketplaceOrderId equals marketplaceOrder.Id
             join usage in _dbContext.PromoCodeUsages.AsNoTracking() on marketplaceOrder.Id equals usage.MarketplaceOrderId into usageJoin
-            from usage in usageJoin.DefaultIfEmpty()
+            from usage in usageJoin.Where(row => !row.IsDeleted)
+                .OrderBy(row => row.AppliedAtUtc).ThenBy(row => row.Id).Take(1).DefaultIfEmpty()
             join tenant in _dbContext.Tenants.AsNoTracking() on subOrder.StoreId equals tenant.Id into tenantJoin
             from tenant in tenantJoin.DefaultIfEmpty()
             where !refund.IsDeleted
@@ -1419,7 +1450,8 @@ public sealed partial class SuperAdminFinancialDashboardService : ISuperAdminFin
             join subOrder in _dbContext.CommerceHubSubOrders.AsNoTracking() on refund.SubOrderId equals subOrder.Id
             join marketplaceOrder in _dbContext.CommerceHubMarketplaceOrders.AsNoTracking() on subOrder.MarketplaceOrderId equals marketplaceOrder.Id
             join usage in _dbContext.PromoCodeUsages.AsNoTracking() on marketplaceOrder.Id equals usage.MarketplaceOrderId into usageJoin
-            from usage in usageJoin.DefaultIfEmpty()
+            from usage in usageJoin.Where(row => !row.IsDeleted)
+                .OrderBy(row => row.AppliedAtUtc).ThenBy(row => row.Id).Take(1).DefaultIfEmpty()
             join tenant in _dbContext.Tenants.AsNoTracking() on subOrder.StoreId equals tenant.Id into tenantJoin
             from tenant in tenantJoin.DefaultIfEmpty()
             where !refund.IsDeleted
@@ -1849,16 +1881,16 @@ public sealed partial class SuperAdminFinancialDashboardService : ISuperAdminFin
                     transaction.TransactionType == CommerceHubFinancialTransactionType.Promotion &&
                     transaction.Direction == CommerceHubFinancialTransactionDirection.Credit)
                 .Sum(transaction => (decimal?)transaction.Amount) ?? 0m
-            where ledgerCommissionReversal != row.CommissionReversalAmount ||
+            where ledgerCommissionReversal != row.CommissionReversalAmount + row.PromoDiscountReversalAmount ||
                   ledgerPromoReversal != row.PromoDiscountReversalAmount
             select new IntegrityIssueSeedRow
             {
                 ReferenceId = row.RefundId,
                 Currency = row.Currency,
                 OccurredAtUtc = row.OccurredAtUtc,
-                ExpectedAmount = row.CommissionReversalAmount,
+                ExpectedAmount = row.CommissionReversalAmount + row.PromoDiscountReversalAmount,
                 ActualAmount = ledgerCommissionReversal,
-                Summary = ledgerCommissionReversal != row.CommissionReversalAmount
+                Summary = ledgerCommissionReversal != row.CommissionReversalAmount + row.PromoDiscountReversalAmount
                     ? "Platform commission reversal ledger entries do not match the refund."
                     : "Platform promotion reversal ledger entries do not match the refund."
             };
@@ -1886,7 +1918,7 @@ public sealed partial class SuperAdminFinancialDashboardService : ISuperAdminFin
                     transaction.TransactionType == CommerceHubFinancialTransactionType.Promotion &&
                     transaction.Direction == CommerceHubFinancialTransactionDirection.Credit)
                 .Sum(transaction => (decimal?)transaction.Amount) ?? 0m
-            where (row.CommissionReversalAmount > 0m && ledgerCommissionReversal <= 0m) ||
+            where (row.CommissionReversalAmount + row.PromoDiscountReversalAmount > 0m && ledgerCommissionReversal <= 0m) ||
                   (row.PromoDiscountReversalAmount > 0m && ledgerPromoReversal <= 0m)
             select new IntegrityIssueSeedRow
             {
@@ -1894,24 +1926,24 @@ public sealed partial class SuperAdminFinancialDashboardService : ISuperAdminFin
                 Currency = row.Currency,
                 OccurredAtUtc = row.OccurredAtUtc,
                 ExpectedAmount =
-                    (row.CommissionReversalAmount > 0m && ledgerCommissionReversal <= 0m
-                        ? row.CommissionReversalAmount
+                    (row.CommissionReversalAmount + row.PromoDiscountReversalAmount > 0m && ledgerCommissionReversal <= 0m
+                        ? row.CommissionReversalAmount + row.PromoDiscountReversalAmount
                         : 0m) +
                     (row.PromoDiscountReversalAmount > 0m && ledgerPromoReversal <= 0m
                         ? row.PromoDiscountReversalAmount
                         : 0m),
                 ActualAmount =
-                    (row.CommissionReversalAmount > 0m && ledgerCommissionReversal <= 0m
+                    (row.CommissionReversalAmount + row.PromoDiscountReversalAmount > 0m && ledgerCommissionReversal <= 0m
                         ? ledgerCommissionReversal
                         : 0m) +
                     (row.PromoDiscountReversalAmount > 0m && ledgerPromoReversal <= 0m
                         ? ledgerPromoReversal
                         : 0m),
                 Summary =
-                    row.CommissionReversalAmount > 0m && ledgerCommissionReversal <= 0m &&
+                    row.CommissionReversalAmount + row.PromoDiscountReversalAmount > 0m && ledgerCommissionReversal <= 0m &&
                     row.PromoDiscountReversalAmount > 0m && ledgerPromoReversal <= 0m
                         ? "Refund is missing both commission and promo reversal ledger entries."
-                        : row.CommissionReversalAmount > 0m && ledgerCommissionReversal <= 0m
+                        : row.CommissionReversalAmount + row.PromoDiscountReversalAmount > 0m && ledgerCommissionReversal <= 0m
                             ? "Refund is missing the platform commission reversal ledger entry."
                             : "Refund is missing the platform promo reversal ledger entry."
             };
@@ -1932,6 +1964,7 @@ public sealed partial class SuperAdminFinancialDashboardService : ISuperAdminFin
             join subOrder in _dbContext.CommerceHubSubOrders.AsNoTracking() on transaction.ReferenceId equals subOrder.Id into subOrderJoin
             from subOrder in subOrderJoin.DefaultIfEmpty()
             where transaction.EntityType == CommerceHubFinancialEntityType.Platform
+                  && transaction.CreatedAtUtc <= filter.SnapshotBoundaryUtc
                   && transaction.EntityId == null
                   && transaction.ReferenceType == CommerceHubFinancialReferenceType.Order
                   && (transaction.TransactionType == CommerceHubFinancialTransactionType.Commission ||
@@ -1973,6 +2006,7 @@ public sealed partial class SuperAdminFinancialDashboardService : ISuperAdminFin
             join refund in _dbContext.CommerceHubRefunds.AsNoTracking() on transaction.ReferenceId equals refund.Id into refundJoin
             from refund in refundJoin.DefaultIfEmpty()
             where transaction.EntityType == CommerceHubFinancialEntityType.Platform
+                  && transaction.CreatedAtUtc <= filter.SnapshotBoundaryUtc
                   && transaction.EntityId == null
                   && transaction.ReferenceType == CommerceHubFinancialReferenceType.Refund
                   && (transaction.TransactionType == CommerceHubFinancialTransactionType.Commission ||
@@ -2005,6 +2039,7 @@ public sealed partial class SuperAdminFinancialDashboardService : ISuperAdminFin
             from subOrder in _dbContext.CommerceHubSubOrders.AsNoTracking()
             join marketplaceOrder in _dbContext.CommerceHubMarketplaceOrders.AsNoTracking() on subOrder.MarketplaceOrderId equals marketplaceOrder.Id
             where !subOrder.IsDeleted && !marketplaceOrder.IsDeleted
+                  && subOrder.CreatedAt <= filter.SnapshotBoundaryUtc
             select new IntegritySubOrderRow
             {
                 SubOrderId = subOrder.Id,
@@ -2019,7 +2054,17 @@ public sealed partial class SuperAdminFinancialDashboardService : ISuperAdminFin
                 FinalPlatformCommissionAmount = subOrder.FinalPlatformCommissionAmount,
                 PromoDiscountAmount = subOrder.PromoDiscountAmount,
                 VendorEarningAmount = subOrder.VendorEarningAmount,
-                OccurredAtUtc = subOrder.CreatedAt
+                // Include older orders recognized during this reporting
+                // window. Creation date remains the fallback for missing-ledger
+                // checks, not the authority for already recognized revenue.
+                OccurredAtUtc = _dbContext.CommerceHubFinancialTransactions.AsNoTracking()
+                    .Where(transaction => transaction.ReferenceType == CommerceHubFinancialReferenceType.Order &&
+                        transaction.ReferenceId == subOrder.Id &&
+                        transaction.CreatedAtUtc <= filter.SnapshotBoundaryUtc &&
+                        transaction.Direction == CommerceHubFinancialTransactionDirection.Credit &&
+                        (transaction.TransactionType == CommerceHubFinancialTransactionType.Commission ||
+                         transaction.TransactionType == CommerceHubFinancialTransactionType.OrderPayment))
+                    .Min(transaction => (DateTime?)transaction.CreatedAtUtc) ?? subOrder.CreatedAt
             };
 
         if (filter.HasVendorFilter)
@@ -2052,6 +2097,7 @@ public sealed partial class SuperAdminFinancialDashboardService : ISuperAdminFin
             join subOrder in _dbContext.CommerceHubSubOrders.AsNoTracking() on refund.SubOrderId equals subOrder.Id
             join marketplaceOrder in _dbContext.CommerceHubMarketplaceOrders.AsNoTracking() on subOrder.MarketplaceOrderId equals marketplaceOrder.Id
             where !refund.IsDeleted
+                  && (refund.ProcessedAtUtc ?? refund.UpdatedAt ?? refund.CreatedAt) <= filter.SnapshotBoundaryUtc
                   && !subOrder.IsDeleted
                   && !marketplaceOrder.IsDeleted
                   && refund.Status == CommerceHubRefundStatus.Completed

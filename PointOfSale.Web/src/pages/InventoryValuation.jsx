@@ -4,28 +4,51 @@ import { useToast } from '../components/Toast'
 import api from '../services/api'
 import BarChart from '../components/BarChart'
 import { useSettings } from '../contexts/SettingsContext'
+import { useAuthStore } from '../store/authStore'
+import { useLatestRequestGuard } from '../hooks/useLatestRequestGuard'
+
+const number = value => typeof value === 'number' && Number.isFinite(value)
+const validValuation = value => value &&
+    (number(value.totalInventoryValue) || value.valuationComplete === false && value.unvaluedInTransitLines > 0) &&
+    number(value.totalProductsInStock) && number(value.lowStockItemsCount) &&
+    Array.isArray(value.warehouseValuations) && value.warehouseValuations.every(w => w && typeof w.warehouseName === 'string' && number(w.totalValue) && number(w.itemCount)) &&
+    Array.isArray(value.lowStockItems) && value.lowStockItems.every(row => row && typeof row.productName === 'string' && number(row.currentStock) && number(row.minimumStock))
 
 export default function InventoryValuation() {
+    const user = useAuthStore(state => state.user)
+    return <InventoryValuationContent key={JSON.stringify(user)} />
+}
+
+function InventoryValuationContent() {
     const { t } = useTranslation()
     const { formatCurrency } = useSettings()
     const { showError } = useToast()
     const [loading, setLoading] = useState(false)
     const [data, setData] = useState(null)
+    const [failed, setFailed] = useState(false)
+    const { beginRequest, isLatestRequest } = useLatestRequestGuard()
 
     useEffect(() => {
         fetchReport()
     }, [])
 
     const fetchReport = async () => {
+        const requestId = beginRequest()
         setLoading(true)
+        setFailed(false)
         try {
             const response = await api.get('/reports/inventory-valuation')
+            if (!isLatestRequest(requestId)) return
+            if (!validValuation(response.data)) throw new TypeError('malformed-inventory-valuation')
             setData(response.data)
         } catch (error) {
-            console.error('Failed to fetch inventory report:', error)
+            if (!isLatestRequest(requestId)) return
+            setData(null)
+            setFailed(true)
+            console.error('Failed to fetch inventory report:', { status: error?.response?.status })
             showError(t('inventoryValuation.failedToLoad'))
         } finally {
-            setLoading(false)
+            if (isLatestRequest(requestId)) setLoading(false)
         }
     }
 
@@ -50,14 +73,14 @@ export default function InventoryValuation() {
                 <>
                     {/* Key Metrics */}
                     <div className="rounded border bg-amber-50 p-3 space-y-1">
-                        <p>{t('transferWorkflow.warehouseValue')}: {formatCurrency(data.warehouseInventoryValue ?? data.totalInventoryValue)}</p>
-                        <p>{t('transferWorkflow.inTransitValue')}: {formatCurrency(data.inTransitValue ?? 0)} · {t('transferWorkflow.inTransit')}: {data.inTransitQuantity ?? 0}</p>
+                        <p>{t('transferWorkflow.warehouseValue')}: {number(data.warehouseInventoryValue) ? formatCurrency(data.warehouseInventoryValue) : data.valuationComplete === false ? '—' : formatCurrency(data.totalInventoryValue)}</p>
+                        <p>{t('transferWorkflow.inTransitValue')}: {data.unvaluedInTransitLines > 0 || data.inTransitValue == null ? '—' : formatCurrency(data.inTransitValue)} · {t('transferWorkflow.inTransit')}: {data.inTransitQuantity ?? '—'}</p>
                         {data.unvaluedInTransitLines > 0 && <p role="alert">{t('transferWorkflow.unvaluedWarning')}: {data.unvaluedInTransitLines}</p>}
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <MetricCard
                             title={t('inventoryValuation.totalValue')}
-                            value={formatCurrency(data.totalInventoryValue)}
+                            value={data.valuationComplete === false || data.unvaluedInTransitLines > 0 || data.totalInventoryValue == null ? '—' : formatCurrency(data.totalInventoryValue)}
                             icon="💰"
                             color="bg-green-100 text-green-800"
                         />
@@ -81,7 +104,7 @@ export default function InventoryValuation() {
                             <h3 className="text-lg font-bold text-gray-900 mb-4">{t('inventoryValuation.valueByWarehouse')}</h3>
                             <div className="h-64">
                                 {warehouseChartData.length > 0 ? (
-                                    <BarChart data={warehouseChartData} height={250} color="#3b82f6" />
+                                    <BarChart data={warehouseChartData} height={250} color="#3b82f6" formatValue={formatCurrency} />
                                 ) : (
                                     <p className="text-center text-gray-500 py-10">{t('common.noData')}</p>
                                 )}
@@ -157,7 +180,7 @@ export default function InventoryValuation() {
                                         {data.lowStockItems.map((item, idx) => (
                                             <tr key={idx} className="hover:bg-red-50/30">
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                    {item.productName}
+                                                    {item.productName}{item.warehouseName ? ` — ${item.warehouseName}` : ''}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                     {item.sku || '-'}
@@ -185,7 +208,8 @@ export default function InventoryValuation() {
                 </>
             ) : (
                 <div className="text-center p-12 bg-white rounded-lg shadow">
-                    <p className="text-gray-500">{t('common.loading')}</p>
+                    <p className="text-gray-500" role="status">{t(failed ? 'inventoryValuation.failedToLoad' : 'common.loading')}</p>
+                    {failed ? <button className="btn-secondary mt-3" onClick={fetchReport}>{t('common.retry')}</button> : null}
                 </div>
             )}
         </div>

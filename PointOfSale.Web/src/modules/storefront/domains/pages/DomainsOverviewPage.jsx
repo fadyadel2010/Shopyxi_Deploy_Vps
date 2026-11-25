@@ -25,7 +25,7 @@ import { useDomainDashboard } from '../hooks'
 
 export function DomainsOverviewPage() {
     const { t } = useTranslation()
-    const { data, error, isLoading, isEmpty, isError, isUnauthorized, refetch } =
+    const { data, isLoading, isEmpty, isError, isNotFound, isUnauthorized, refetch } =
         useDomainDashboard()
 
     const { requestNavigation } = useAuthoringGuard({
@@ -51,13 +51,13 @@ export function DomainsOverviewPage() {
         )
     }
 
-    if (isError) {
+    if (isError || isNotFound || (!data && !isEmpty)) {
         return (
             <div className="space-y-4">
                 <AuthoringFeedback
                     kind="error"
                     title={t('storefront.domains.loadError', 'Unable to load domains')}
-                    message={error || t('storefront.domains.loadErrorDesc', 'Please try again.')}
+                    message={t('storefront.domains.loadErrorDesc', 'Please try again.')}
                     action={{
                         label: t('common.retry', 'Retry'),
                         onClick: () => refetch(),

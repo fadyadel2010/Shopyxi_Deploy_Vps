@@ -19,7 +19,7 @@ import { ChevronUp, ChevronDown, TrendingUp, TrendingDown, Minus, Target } from 
 import { useSettings } from '../../../../contexts/SettingsContext'
 
 export default function CampaignRoiTable({ data, loading }) {
-    const { t } = useTranslation()
+    const { t, i18n } = useTranslation()
     const { formatCurrency } = useSettings()
     const [sortField, setSortField] = useState('revenue')
     const [sortDir, setSortDir] = useState('desc')
@@ -46,7 +46,8 @@ export default function CampaignRoiTable({ data, loading }) {
         )
     }
 
-    const campaigns = data?.campaigns || []
+    if (!data) return null
+    const campaigns = data.campaigns
 
     if (campaigns.length === 0) {
         return (
@@ -73,7 +74,10 @@ export default function CampaignRoiTable({ data, loading }) {
     const sortedCampaigns = [...campaigns].sort((a, b) => {
         const aVal = a[sortField] ?? 0
         const bVal = b[sortField] ?? 0
-        return sortDir === 'desc' ? bVal - aVal : aVal - bVal
+        const comparison = sortField === 'campaign'
+            ? String(aVal).localeCompare(String(bVal), i18n.language)
+            : aVal - bVal
+        return sortDir === 'desc' ? -comparison : comparison
     })
 
     const handleSort = (field) => {
@@ -88,8 +92,8 @@ export default function CampaignRoiTable({ data, loading }) {
     const SortIcon = ({ field }) => {
         if (sortField !== field) return null
         return sortDir === 'desc'
-            ? <ChevronDown size={14} className="inline ml-1" />
-            : <ChevronUp size={14} className="inline ml-1" />
+            ? <ChevronDown aria-hidden="true" size={14} className="inline ms-1" />
+            : <ChevronUp aria-hidden="true" size={14} className="inline ms-1" />
     }
 
     const getRoiDisplay = (campaign) => {
@@ -153,11 +157,14 @@ export default function CampaignRoiTable({ data, loading }) {
                             {columns.map(col => (
                                 <th
                                     key={col.key}
-                                    className={`px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider ${col.align === 'right' ? 'text-right' : col.align === 'center' ? 'text-center' : 'text-left'} ${col.sortable ? 'cursor-pointer hover:text-gray-700' : ''}`}
-                                    onClick={() => col.sortable && handleSort(col.key)}
+                                    scope="col"
+                                    aria-sort={col.sortable ? sortField === col.key ? sortDir === 'desc' ? 'descending' : 'ascending' : 'none' : undefined}
+                                    className={`px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider ${col.align === 'right' ? 'text-end' : col.align === 'center' ? 'text-center' : 'text-start'} ${col.sortable ? 'cursor-pointer hover:text-gray-700' : ''}`}
                                 >
-                                    {col.label}
-                                    {col.sortable && <SortIcon field={col.key} />}
+                                    {col.sortable ? <button type="button" onClick={() => handleSort(col.key)}
+                                        className="rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-500">
+                                        {col.label}<SortIcon field={col.key} />
+                                    </button> : col.label}
                                 </th>
                             ))}
                         </tr>

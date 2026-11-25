@@ -40,7 +40,6 @@ public partial class CommerceHubQueryService
         var requestedTenantId = request.TenantId;
         var requestedCategoryId = request.CategoryId;
         var excludedTenantIds = request.ExcludedTenantIds.Where(id => id != Guid.Empty).Distinct().ToArray();
-        var overrideTenantIds = capturedOverrideTenantIds ?? CommerceHubPriceOverrideRuntimePolicy.CaptureEnabledTenantIds();
         var categoryRows = await _dbContext.CommerceHubCategories.AsNoTracking()
             .Select(category => new AuthorityCategory(category.Id, category.Name, category.ParentId, category.IsActive))
             .ToListAsync(cancellationToken);
@@ -79,7 +78,7 @@ public partial class CommerceHubQueryService
                       !stock.IsDeleted && !warehouse.IsDeleted && warehouse.IsActive
                 select (decimal?)(stock.Quantity - stock.ReservedQuantity)).Sum() ?? 0m
             let basePrice = variant.OnlinePrice.GetValueOrDefault() > 0m ? variant.OnlinePrice.GetValueOrDefault() : variant.Price
-            let overridePrice = overrideTenantIds.Contains(listing.TenantId) && listing.CommerceHubPrice.GetValueOrDefault() > 0m
+            let overridePrice = listing.CommerceHubPrice.GetValueOrDefault() > 0m
                 ? listing.CommerceHubPrice : null
             select new
             {

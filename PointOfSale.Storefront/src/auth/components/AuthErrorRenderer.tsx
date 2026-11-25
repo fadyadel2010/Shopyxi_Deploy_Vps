@@ -77,8 +77,13 @@ export const AuthErrorRenderer: React.FC<AuthErrorRendererProps> = ({
     const severity = getErrorSeverity(error.code);
     const icon = getErrorIcon(error.code);
 
-    // Get translated message or fall back to error message
-    const message = t(`auth.errors.${error.code}`, { defaultValue: error.message });
+    // Resolve the translated message. Unknown backend codes must not leak the raw
+    // translation key or the server-supplied technical message to the user.
+    const translationKey = `auth.errors.${error.code}`;
+    const translated = t(translationKey);
+    const message = translated === translationKey
+        ? t('auth.errors.UNKNOWN_ERROR')
+        : translated;
 
     // Severity-based styles
     const severityStyles = {

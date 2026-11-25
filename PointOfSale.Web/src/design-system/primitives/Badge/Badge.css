@@ -1,0 +1,62 @@
+[data-product="pos"] .pos-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pos-space-1);
+  border: var(--pos-border-width) solid transparent;
+  border-radius: var(--pos-badge-radius);
+  padding-block: 0;
+  padding-inline: var(--pos-space-2);
+  font-family: var(--pos-font-family-ui);
+  font-size: var(--pos-font-size-12);
+  line-height: var(--pos-line-height-18);
+  font-weight: var(--pos-font-weight-medium);
+  white-space: nowrap;
+}
+
+[data-product="pos"] .pos-badge--neutral {
+  background-color: var(--pos-badge-neutral-bg);
+  border-color: var(--pos-badge-neutral-border);
+  color: var(--pos-badge-neutral-text);
+}
+
+[data-product="pos"] .pos-badge--sm {
+  font-size: var(--pos-font-size-caption);
+  line-height: var(--pos-line-height-caption);
+}
+
+[data-product="pos"] .pos-badge__dot {
+  inline-size: var(--pos-space-1);
+  block-size: var(--pos-space-1);
+  border-radius: var(--pos-badge-radius);
+  background-color: currentColor;
+}
+
+[data-product="pos"] .pos-badge--brand {
+  background-color: var(--pos-badge-brand-bg);
+  border-color: var(--pos-badge-brand-border);
+  color: var(--pos-badge-brand-text);
+}
+
+[data-product="pos"] .pos-badge--success {
+  background-color: var(--pos-badge-success-bg);
+  border-color: var(--pos-badge-success-border);
+  color: var(--pos-badge-success-text);
+}
+
+[data-product="pos"] .pos-badge--warning {
+  background-color: var(--pos-badge-warning-bg);
+  border-color: var(--pos-badge-warning-border);
+  color: var(--pos-badge-warning-text);
+}
+
+[data-product="pos"] .pos-badge--danger {
+  background-color: var(--pos-badge-danger-bg);
+  border-color: var(--pos-badge-danger-border);
+  color: var(--pos-badge-danger-text);
+}
+
+[data-product="pos"] .pos-badge--info {
+  background-color: var(--pos-badge-info-bg);
+  border-color: var(--pos-badge-info-border);
+  color: var(--pos-badge-info-text);
+}

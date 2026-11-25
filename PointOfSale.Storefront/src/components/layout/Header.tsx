@@ -93,7 +93,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, model, slots }
                 className="fixed inset-y-0 w-72 max-w-[85vw] bg-background shadow-xl z-50 md:hidden animate-slide-in-right ltr:right-0 rtl:left-0"
                 role="dialog"
                 aria-modal="true"
-                aria-label="Navigation menu"
+                aria-label={labels.mainNavigation}
             >
                 <div className="flex flex-col h-full safe-area-inset-bottom">
                     {/* Header */}
@@ -180,14 +180,17 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, model, slots }
 
 interface HamburgerButtonProps {
     onClick: () => void;
+    label: string;
+    expanded: boolean;
 }
 
-const HamburgerButton: React.FC<HamburgerButtonProps> = ({ onClick }) => (
+const HamburgerButton: React.FC<HamburgerButtonProps> = ({ onClick, label, expanded }) => (
     <button
         onClick={onClick}
         className="md:hidden p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-white/90 hover:text-white transition-colors rounded-lg hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white/50"
-        aria-label="Open menu"
+        aria-label={label}
         aria-haspopup="dialog"
+        aria-expanded={expanded}
     >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -201,11 +204,12 @@ const HamburgerButton: React.FC<HamburgerButtonProps> = ({ onClick }) => (
 
 interface SearchButtonProps {
     SearchSlot: HeaderRuntimeSlots['SearchSlot'];
+    label: string;
     className?: string;
     onClick?: () => void;
 }
 
-const SearchButton: React.FC<SearchButtonProps> = ({ SearchSlot, className = '', onClick }) => {
+const SearchButton: React.FC<SearchButtonProps> = ({ SearchSlot, label, className = '', onClick }) => {
     // Detect platform for shortcut hint
     const isMac = typeof navigator !== 'undefined' && /Mac|iPod|iPhone|iPad/.test(navigator.platform);
     const shortcutKey = isMac ? '⌘K' : 'Ctrl+K';
@@ -214,7 +218,7 @@ const SearchButton: React.FC<SearchButtonProps> = ({ SearchSlot, className = '',
         <SearchSlot
             onClick={onClick}
             className={`p-2 rounded-lg transition-colors flex items-center gap-2 group ${className}`}
-            aria-label="Search products"
+            aria-label={label}
         >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -270,7 +274,7 @@ const HeaderStandard: React.FC<HeaderProps> = ({ model, slots }) => {
 
                         {/* Actions */}
                         <div className="flex shrink-0 items-center gap-1">
-                            <SearchButton SearchSlot={SearchSlot} className="text-white/80 hover:text-white hover:bg-white/10 hidden sm:flex" />
+                            <SearchButton SearchSlot={SearchSlot} label={labels.searchProducts} className="text-white/80 hover:text-white hover:bg-white/10 hidden sm:flex" />
                             <LanguageSlot
                                 variant="text"
                                 className="text-white/80 hover:text-white hidden sm:flex"
@@ -288,7 +292,7 @@ const HeaderStandard: React.FC<HeaderProps> = ({ model, slots }) => {
                                 className="text-white/80 hover:text-white hover:bg-white/10"
                                 showTooltip
                             />
-                            <HamburgerButton onClick={() => setMobileMenuOpen(true)} />
+                            <HamburgerButton label={labels.menu} expanded={mobileMenuOpen} onClick={() => setMobileMenuOpen(true)} />
                         </div>
                     </div>
                 </div>
@@ -328,7 +332,7 @@ const HeaderCentered: React.FC<HeaderProps> = ({ model, slots }) => {
                     {/* Top row - search and cart */}
                     <div className="flex items-center justify-between h-14 border-b border-white/10">
                         <div className="flex-1 flex items-center">
-                            <SearchButton SearchSlot={SearchSlot} className="text-white/80 hover:text-white hover:bg-white/10 hidden sm:flex" />
+                            <SearchButton SearchSlot={SearchSlot} label={labels.searchProducts} className="text-white/80 hover:text-white hover:bg-white/10 hidden sm:flex" />
                         </div>
 
                         {/* Centered Logo */}
@@ -352,7 +356,7 @@ const HeaderCentered: React.FC<HeaderProps> = ({ model, slots }) => {
                                 className="text-white/80 hover:text-white hover:bg-white/10"
                                 showTooltip
                             />
-                            <HamburgerButton onClick={() => setMobileMenuOpen(true)} />
+                            <HamburgerButton label={labels.menu} expanded={mobileMenuOpen} onClick={() => setMobileMenuOpen(true)} />
                         </div>
                     </div>
 
@@ -410,7 +414,7 @@ const HeaderMinimal: React.FC<HeaderProps> = ({ model, slots }) => {
 
                         {/* Actions */}
                         <div className="flex items-center gap-1">
-                            <SearchButton SearchSlot={SearchSlot} className="text-white/80 hover:text-white hover:bg-white/10 hidden sm:flex" />
+                            <SearchButton SearchSlot={SearchSlot} label={labels.searchProducts} className="text-white/80 hover:text-white hover:bg-white/10 hidden sm:flex" />
                             <LanguageSlot variant="text" className="hidden text-white/80 hover:text-white sm:flex" size="sm" />
                             <div className="hidden md:flex">
                                 <AuthenticationSlot variant="desktop" />
@@ -423,7 +427,7 @@ const HeaderMinimal: React.FC<HeaderProps> = ({ model, slots }) => {
                                 className="text-white/80 hover:text-white hover:bg-white/10"
                                 showTooltip
                             />
-                            <HamburgerButton onClick={() => setMobileMenuOpen(true)} />
+                            <HamburgerButton label={labels.menu} expanded={mobileMenuOpen} onClick={() => setMobileMenuOpen(true)} />
                         </div>
                     </div>
                     <NavigationSlot

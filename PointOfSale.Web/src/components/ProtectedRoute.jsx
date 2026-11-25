@@ -1,4 +1,5 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '../store/authStore'
 import EmailVerificationRequired from './EmailVerificationRequired'
 
@@ -12,13 +13,14 @@ import EmailVerificationRequired from './EmailVerificationRequired'
  * Follows the same pattern as SuperAdminProtectedRoute.
  */
 export default function ProtectedRoute() {
+    const { t } = useTranslation()
     const { hasHydrated, isAuthenticated, user } = useAuthStore()
     const location = useLocation()
 
     if (!hasHydrated) {
         return (
             <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 text-sm text-gray-500">
-                Restoring session...
+                {t('common.restoringSession', { defaultValue: 'Restoring session...' })}
             </div>
         )
     }

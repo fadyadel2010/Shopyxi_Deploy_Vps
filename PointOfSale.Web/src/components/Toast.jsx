@@ -1,6 +1,9 @@
-import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { CheckCircle2, CircleAlert, Info, TriangleAlert, X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useRTL } from '../hooks/useRTL'
+import { usePosSurface } from '../design-system/overlays/posOverlayContext'
+import '../design-system/providers/posProviderBridge.css'
 
 const ToastContext = createContext()
 
@@ -18,9 +21,13 @@ export function ToastProvider({ children }) {
         setToasts((prev) => prev.filter((toast) => toast.id !== id))
     }, [])
 
-    const addToast = useCallback((message, type = 'info', duration = 3000) => {
+    const addToast = useCallback((message, type = 'info', duration = 3000, surface = 'other') => {
+        if (duration && typeof duration === 'object') {
+            surface = duration.surface ?? surface
+            duration = duration.duration ?? 3000
+        }
         const id = Date.now() + Math.random()
-        const toast = { id, message, type, duration }
+        const toast = { id, message, type, duration, surface }
 
         setToasts((prev) => [...prev, toast])
 
@@ -43,36 +50,55 @@ export function ToastProvider({ children }) {
         }
     }, [])
 
-    const showSuccess = useCallback((message, duration) => {
-        addToast(message, 'success', duration)
+    const showSuccess = useCallback((message, duration, surface) => {
+        addToast(message, 'success', duration, surface)
     }, [addToast])
 
-    const showError = useCallback((message, duration) => {
-        addToast(message, 'error', duration)
+    const showError = useCallback((message, duration, surface) => {
+        addToast(message, 'error', duration, surface)
     }, [addToast])
 
-    const showInfo = useCallback((message, duration) => {
-        addToast(message, 'info', duration)
+    const showInfo = useCallback((message, duration, surface) => {
+        addToast(message, 'info', duration, surface)
     }, [addToast])
 
-    const showWarning = useCallback((message, duration) => {
-        addToast(message, 'warning', duration)
+    const showWarning = useCallback((message, duration, surface) => {
+        addToast(message, 'warning', duration, surface)
     }, [addToast])
+
+    const contextValue = useMemo(() => ({ showSuccess, showError, showInfo, showWarning }), [
+        showSuccess, showError, showInfo, showWarning,
+    ])
 
     return (
-        <ToastContext.Provider value={{ showSuccess, showError, showInfo, showWarning }}>
+        <ToastContext.Provider value={contextValue}>
             {children}
             <ToastContainer toasts={toasts} onRemove={removeToast} />
         </ToastContext.Provider>
     )
 }
 
-export function useToast() {
+export function useToast({ surface: explicitSurface } = {}) {
     const context = useContext(ToastContext)
+    const inheritedSurface = usePosSurface()
+    const surface = explicitSurface ?? inheritedSurface
+    const scopedContext = useMemo(() => {
+        if (!context || surface !== 'pos') {
+            return context
+        }
+
+        return {
+            showSuccess: (message, duration) => context.showSuccess(message, duration, surface),
+            showError: (message, duration) => context.showError(message, duration, surface),
+            showInfo: (message, duration) => context.showInfo(message, duration, surface),
+            showWarning: (message, duration) => context.showWarning(message, duration, surface),
+        }
+    }, [context, surface])
+
     if (!context) {
         throw new Error('useToast must be used within ToastProvider')
     }
-    return context
+    return scopedContext
 }
 
 function ToastContainer({ toasts, onRemove }) {
@@ -86,6 +112,7 @@ function ToastContainer({ toasts, onRemove }) {
                     aria-live={toast.type === 'error' ? 'assertive' : 'polite'}
                     role={toast.type === 'error' ? 'alert' : 'status'}
                     aria-atomic="true"
+                    data-product={toast.surface === 'pos' ? 'pos' : undefined}
                 >
                     <Toast toast={toast} onRemove={onRemove} />
                 </div>
@@ -97,6 +124,8 @@ function ToastContainer({ toasts, onRemove }) {
 function Toast({ toast, onRemove }) {
     const { id, message, type } = toast
     const { dir, isRTL } = useRTL()
+    const isPos = toast.surface === 'pos'
+    const { t } = useTranslation()
 
     const styles = {
         success: 'bg-green-500 text-white',
@@ -117,20 +146,23 @@ function Toast({ toast, onRemove }) {
     return (
         <div
             dir={dir}
-            className={`${styles[type]} px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 min-w-[300px] max-w-md pointer-events-auto ${isRTL ? 'animate-slide-in-left' : 'animate-slide-in-right'}`}
+            className={isPos
+                ? `pos-toast pos-toast--${type} pointer-events-auto ${isRTL ? 'animate-slide-in-left' : 'animate-slide-in-right'}`
+                : `${styles[type]} px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 min-w-[300px] max-w-md pointer-events-auto ${isRTL ? 'animate-slide-in-left' : 'animate-slide-in-right'}`}
             onClick={() => onRemove(id)}
         >
-            <Icon className="h-5 w-5 shrink-0" />
-            <div className="flex-1 text-sm font-medium">{message}</div>
+            <Icon aria-hidden="true" className={isPos ? 'pos-toast__icon' : 'h-5 w-5 shrink-0'} />
+            <div className={isPos ? 'pos-toast__message' : 'flex-1 text-sm font-medium'}>{message}</div>
             <button
+                type="button"
                 onClick={(event) => {
                     event.stopPropagation()
                     onRemove(id)
                 }}
-                className="text-white hover:text-gray-200 transition-colors"
-                aria-label="Dismiss notification"
+                className={isPos ? 'pos-toast__dismiss' : 'text-white hover:text-gray-200 transition-colors'}
+                aria-label={t('common.dismissNotification', { defaultValue: isRTL ? 'إغلاق الإشعار' : 'Dismiss notification' })}
             >
-                <X className="h-4 w-4" />
+                <X aria-hidden="true" className={isPos ? 'pos-toast__close-icon' : 'h-4 w-4'} />
             </button>
         </div>
     )

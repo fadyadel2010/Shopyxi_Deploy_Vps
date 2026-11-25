@@ -1,24 +1,32 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { ChartNoAxesColumnIncreasing, Check, CircleAlert, Eye, EyeOff, Layers3, LockKeyhole, ShoppingBag } from 'lucide-react'
 import { useAuthStore } from '../store/authStore'
 import { requirePosVendorSessionUserAuthority } from '../auth/posVendorSessionAuthority'
 import api from '../services/api'
 import { normalizeStoreSlug, isStoreSlugFormatValid } from './storeSlug'
+import LanguageSwitcher from '../components/LanguageSwitcher'
+import { Button, Card, Field, IconButton, Input } from '../design-system/primitives'
+import primaryLogo from '../assets/brand/SHOPYXI_primary_logo_transparent.png'
+import standaloneSymbol from '../assets/brand/SHOPYXI_standalone_symbol.svg'
+import './Register.css'
 
-/**
- * Tenant Registration Page
- * Phase 8.2: Implementation following Phase 8.1 UX Design exactly
- * 
- * Single-page registration with:
- * - Business Name
- * - Email
- * - Password (with show/hide toggle)
- * - Store Address (subdomain with real-time availability check)
- */
+const fieldOrder = ['businessName', 'email', 'password', 'subdomain']
+const key = name => `tenantRegistration.${name}`
+
 export default function Register() {
-    const { t, i18n } = useTranslation()
+    const { t } = useTranslation()
     const [admission, setAdmission] = useState('loading')
+    const focusAdmissionRef = useRef(false)
+    const pageTitle = `${t(key('title'))} | ${t('login.brandName')}`
+    useEffect(() => {
+        const previousTitle = document.title
+        document.title = pageTitle
+        return () => {
+            if (document.title === pageTitle) document.title = previousTitle
+        }
+    }, [pageTitle])
     useEffect(() => {
         const controller = new AbortController()
         api.get('/platform/registration-policy', { signal: controller.signal })
@@ -29,349 +37,271 @@ export default function Register() {
         return () => controller.abort()
     }, [])
 
-    if (admission === 'open') return <MerchantRegistrationForm onAdmissionClosed={() => setAdmission('closed')} />
-    const ar = i18n.resolvedLanguage === 'ar'
     return (
-        <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-500 to-primary-700 p-4" dir={ar ? 'rtl' : 'ltr'}>
-            <section className="w-full max-w-lg rounded-xl bg-white p-8 shadow-2xl" aria-labelledby="registration-admission-heading">
-                <h1 id="registration-admission-heading" className="text-2xl font-bold text-gray-900">
-                    {admission === 'loading' ? (ar ? 'جارٍ التحميل…' : 'Loading…') : (ar ? 'إنشاء المتاجر غير متاح مؤقتًا' : 'New store creation is temporarily unavailable')}
+        <RegistrationLayout>
+            {admission === 'open'
+                ? <MerchantRegistrationForm onAdmissionClosed={() => {
+                    focusAdmissionRef.current = true
+                    setAdmission('closed')
+                }} />
+                : <RegistrationAdmission admission={admission} focusOnMount={focusAdmissionRef.current} />}
+        </RegistrationLayout>
+    )
+}
+
+// Register-local composition; no changes to shared layouts or token definitions.
+function RegistrationLayout({ children }) {
+    const { t } = useTranslation()
+    return (
+        <div className="pos-register" data-product="pos">
+            <aside className="pos-register__brand" aria-label={t('login.brandName')}>
+                <div className="pos-register__brand-content">
+                    <div className="pos-register__identity">
+                        <div className="pos-register__logo-plate">
+                            <picture>
+                                <source media="(width < 1024px)" srcSet={standaloneSymbol} />
+                                <img className="pos-register__logo" src={primaryLogo} width="2400" height="747" alt="" />
+                            </picture>
+                        </div>
+                        <p className="pos-register__wordmark">
+                            <bdi dir="ltr" lang="en" className="pos-register__brand-name">{t('login.brandName')}</bdi>
+                            <span className="pos-register__qualifier"><bdi dir="ltr" lang="en">{t('login.productQualifier')}</bdi></span>
+                        </p>
+                    </div>
+                    <div className="pos-register__story">
+                        <div>
+                            <p className="pos-register__tagline">{t('login.tagline')}</p>
+                            <p className="pos-register__description">{t('login.brandDescription')}</p>
+                        </div>
+                        <ul className="pos-register__proof" role="list">
+                            <li><ShoppingBag size={28} aria-hidden="true" /><span>{t('login.brandProofSales')}</span></li>
+                            <li><Layers3 size={28} aria-hidden="true" /><span>{t('login.brandProofInventory')}</span></li>
+                            <li><ChartNoAxesColumnIncreasing size={28} aria-hidden="true" /><span>{t('login.brandProofReporting')}</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </aside>
+            <main className="pos-register__panel">
+                <div className="pos-register__language"><LanguageSwitcher variant="login" /></div>
+                {children}
+            </main>
+        </div>
+    )
+}
+
+function RegistrationAdmission({ admission, focusOnMount }) {
+    const { t } = useTranslation()
+    const headingRef = useRef(null)
+    useEffect(() => {
+        // Includes replacement of the submitted form if admission closes.
+        if (focusOnMount && admission !== 'loading') headingRef.current?.focus()
+    }, [admission, focusOnMount])
+    const loading = admission === 'loading'
+    const heading = loading ? 'loading' : admission === 'unavailable' ? 'unavailableTitle' : 'closedTitle'
+    return (
+        <Card as="section" className="pos-register__card pos-register__admission" padding="none" aria-labelledby="registration-admission-heading">
+            <div className="pos-register__state-icon" aria-hidden="true"><LockKeyhole size={28} /></div>
+            <p className="pos-register__eyebrow">{t(key('title'))}</p>
+            <div role="status" aria-atomic="true">
+                <h1 className="pos-register__title" id="registration-admission-heading" tabIndex={-1} ref={headingRef}>
+                    {t(key(`admission.${heading}`))}
                 </h1>
-                <p className="mt-4 text-gray-600">{ar ? 'إذا كان لديك متجر بالفعل، يمكنك تسجيل الدخول كالمعتاد.' : 'If you already have a store, you can sign in as usual.'}</p>
-                <Link to="/login" className="btn-primary mt-6 inline-flex">{t('tenantRegistration.signIn')}</Link>
-            </section>
-        </main>
+                <div className="pos-register__state-copy">
+                    <p>{t(key(`admission.${loading ? 'loadingDescription' : 'existingStore'}`))}</p>
+                </div>
+            </div>
+            <Link to="/login" tabIndex={0} className="pos-button pos-button--primary pos-button--lg pos-button--full pos-register__primary">
+                <span className="pos-button__label">{t(key('signIn'))}</span>
+            </Link>
+        </Card>
     )
 }
 
 function MerchantRegistrationForm({ onAdmissionClosed }) {
-    const { t, i18n } = useTranslation()
+    const { t } = useTranslation()
     const navigate = useNavigate()
     const { isAuthenticated, login } = useAuthStore()
-    const isRTL = i18n.resolvedLanguage === 'ar'
-
-    // Redirect if already authenticated
     useEffect(() => {
-        if (isAuthenticated) {
-            navigate('/', { replace: true })
-        }
+        if (isAuthenticated) navigate('/', { replace: true })
     }, [isAuthenticated, navigate])
 
-    // Form state
-    const [formData, setFormData] = useState({
-        businessName: '',
-        email: '',
-        password: '',
-        subdomain: ''
-    })
-
-    // Validation state
+    const [formData, setFormData] = useState({ businessName: '', email: '', password: '', subdomain: '' })
     const [errors, setErrors] = useState({})
     const [touched, setTouched] = useState({})
-
-    // Subdomain availability state
     const [subdomainStatus, setSubdomainStatus] = useState({
-        checking: false,
-        available: null,
-        suggestions: [],
-        message: '',
-        storefrontUrl: ''
+        checking: false, available: null, suggestions: [], message: '', storefrontUrl: ''
     })
-
-    // Email check state
-    const [emailStatus, setEmailStatus] = useState({
-        checking: false,
-        registered: false
-    })
-
-    // Form submission state
+    const [emailStatus, setEmailStatus] = useState({ checking: false, registered: false })
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [submitError, setSubmitError] = useState('')
-
-    // Password visibility
     const [showPassword, setShowPassword] = useState(false)
-
-    // Refs for focus management
+    const [summaryVersion, setSummaryVersion] = useState(0)
     const businessNameRef = useRef(null)
     const emailRef = useRef(null)
     const passwordRef = useRef(null)
     const subdomainRef = useRef(null)
+    const errorSummaryRef = useRef(null)
     const emailCheckRequestIdRef = useRef(0)
     const registrationRequestIdRef = useRef(null)
+    const submissionRef = useRef(false)
     const currentEmailRef = useRef('')
     const latestSubdomainRef = useRef(formData.subdomain)
+    const messageText = message => message?.startsWith('tenantRegistration.') ? t(message) : message
 
-    // Auto-focus first field on mount
+    useEffect(() => { businessNameRef.current?.focus() }, [])
+    useEffect(() => { currentEmailRef.current = formData.email }, [formData.email])
     useEffect(() => {
-        businessNameRef.current?.focus()
-    }, [])
+        if (summaryVersion) errorSummaryRef.current?.focus()
+    }, [summaryVersion])
 
-    useEffect(() => {
-        currentEmailRef.current = formData.email
-    }, [formData.email])
-
-    // ==========================================================================
-    // Validation
-    // ==========================================================================
-
+    // Existing eligibility/length/format rules; store keys so local validation
+    // and asynchronous status copy retranslate without losing entered values.
     const validateField = useCallback((name, value) => {
         switch (name) {
             case 'businessName':
-                if (!value.trim()) return t('tenantRegistration.validation.businessNameRequired')
-                if (value.trim().length < 2) return t('tenantRegistration.validation.businessNameTooShort')
-                if (value.trim().length > 100) return t('tenantRegistration.validation.businessNameTooLong')
+                if (!value.trim()) return key('validation.businessNameRequired')
+                if (value.trim().length < 2) return key('validation.businessNameTooShort')
+                if (value.trim().length > 100) return key('validation.businessNameTooLong')
                 return ''
-
             case 'email':
-                if (!value.trim()) return t('tenantRegistration.validation.emailRequired')
-                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return t('tenantRegistration.validation.emailInvalid')
+                if (!value.trim()) return key('validation.emailRequired')
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return key('validation.emailInvalid')
                 return ''
-
             case 'password':
-                if (!value) return t('tenantRegistration.validation.passwordRequired')
-                if (value.length < 8) return t('tenantRegistration.validation.passwordTooShort')
+                if (!value) return key('validation.passwordRequired')
+                if (value.length < 8) return key('validation.passwordTooShort')
                 return ''
-
-            case 'subdomain':
-                if (!value.trim()) return t('tenantRegistration.validation.storeAddressRequired')
-                if (/\p{Cc}/u.test(value)) return t('tenantRegistration.validation.storeAddressInvalidCharacters')
-                {
-                    const normalized = normalizeStoreSlug(value)
-                    if (normalized.length < 3) return t('tenantRegistration.validation.storeAddressTooShort')
-                    if (normalized.length > 63) return t('tenantRegistration.validation.storeAddressTooLong')
-                    if (!isStoreSlugFormatValid(normalized)) {
-                        if (normalized.includes('--')) return t('tenantRegistration.validation.storeAddressExtraHyphens')
-                        if (!/^[a-z0-9]/.test(normalized)) return t('tenantRegistration.validation.storeAddressStartsInvalid')
-                        if (!/[a-z0-9]$/.test(normalized)) return t('tenantRegistration.validation.storeAddressEndsInvalid')
-                        return t('tenantRegistration.validation.storeAddressInvalidCharacters')
-                    }
+            case 'subdomain': {
+                if (!value.trim()) return key('validation.storeAddressRequired')
+                if (/\p{Cc}/u.test(value)) return key('validation.storeAddressInvalidCharacters')
+                const normalized = normalizeStoreSlug(value)
+                if (normalized.length < 3) return key('validation.storeAddressTooShort')
+                if (normalized.length > 63) return key('validation.storeAddressTooLong')
+                if (!isStoreSlugFormatValid(normalized)) {
+                    if (normalized.includes('--')) return key('validation.storeAddressExtraHyphens')
+                    if (!/^[a-z0-9]/.test(normalized)) return key('validation.storeAddressStartsInvalid')
+                    if (!/[a-z0-9]$/.test(normalized)) return key('validation.storeAddressEndsInvalid')
+                    return key('validation.storeAddressInvalidCharacters')
                 }
                 return ''
-
-            default:
-                return ''
+            }
+            default: return ''
         }
-    }, [t])
+    }, [])
 
-    // ==========================================================================
-    // Generate subdomain from business name
-    // ==========================================================================
-
-    const generateSubdomain = useCallback((businessName) => {
+    const generateSubdomain = useCallback(businessName => {
         if (!businessName.trim()) return ''
-
-        let slug = businessName.toLowerCase()
-            .trim()
-            .replace(/[^a-z0-9\s-]/g, '') // Remove special chars
-            .replace(/\s+/g, '-')          // Spaces to hyphens
-            .replace(/-+/g, '-')           // Collapse multiple hyphens
-            .replace(/^-|-$/g, '')         // Trim hyphens
-
-        // Ensure valid length
+        let slug = businessName.toLowerCase().trim()
+            .replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-')
+            .replace(/-+/g, '-').replace(/^-|-$/g, '')
         if (slug.length < 3) return ''
         if (slug.length > 63) slug = slug.substring(0, 63)
-
         return slug
     }, [])
 
-    // ==========================================================================
-    // Subdomain availability check (debounced)
-    // ==========================================================================
-
-    const checkSubdomainAvailability = useCallback(async (subdomain) => {
+    const checkSubdomainAvailability = useCallback(async subdomain => {
         const requestedSlug = subdomain
         const isCurrentSubdomainRequest = () => requestedSlug === latestSubdomainRef.current
-
         if (!requestedSlug || requestedSlug.length < 3) {
-            if (!isCurrentSubdomainRequest()) {
-                return
+            if (isCurrentSubdomainRequest()) {
+                setSubdomainStatus({ checking: false, available: null, suggestions: [], message: '', storefrontUrl: '' })
             }
-
-            setSubdomainStatus({ checking: false, available: null, suggestions: [], message: '', storefrontUrl: '' })
             return
         }
-
-        // Validate format first
         const error = validateField('subdomain', requestedSlug)
         if (error) {
-            if (!isCurrentSubdomainRequest()) {
-                return
+            if (isCurrentSubdomainRequest()) {
+                setSubdomainStatus({ checking: false, available: false, suggestions: [], message: error, storefrontUrl: '' })
             }
-
-            setSubdomainStatus({ checking: false, available: false, suggestions: [], message: error, storefrontUrl: '' })
             return
         }
-
-        if (!isCurrentSubdomainRequest()) {
-            return
-        }
-
+        if (!isCurrentSubdomainRequest()) return
         setSubdomainStatus(prev => ({ ...prev, checking: true }))
-
         try {
             const response = await api.get(`/platform/subdomain/check?slug=${encodeURIComponent(requestedSlug)}`)
             const { available, suggestions, reason, storefrontUrl } = response.data
-
-            if (!isCurrentSubdomainRequest()) {
-                return
-            }
-
+            if (!isCurrentSubdomainRequest()) return
             setSubdomainStatus({
-                checking: false,
-                available,
-                suggestions: suggestions || [],
-                storefrontUrl: storefrontUrl || '',
-                message: available
-                    ? t('tenantRegistration.status.addressAvailable')
-                    : (reason || t('tenantRegistration.status.addressTaken'))
+                checking: false, available, suggestions: suggestions || [], storefrontUrl: storefrontUrl || '',
+                message: available ? key('status.addressAvailable') : (reason || key('status.addressTaken'))
             })
-        } catch (err) {
-            if (!isCurrentSubdomainRequest()) {
-                return
-            }
-
-            console.error('Subdomain check failed:', err)
+        } catch {
+            if (!isCurrentSubdomainRequest()) return
             setSubdomainStatus({
-                checking: false,
-                available: null,
-                suggestions: [],
-                storefrontUrl: '',
-                message: t('tenantRegistration.status.addressCheckUnavailable')
+                checking: false, available: null, suggestions: [], storefrontUrl: '',
+                message: key('status.addressCheckUnavailable')
             })
         }
-    }, [t, validateField])
+    }, [validateField])
 
-    // Debounced subdomain check
     useEffect(() => {
         const requestedSlug = formData.subdomain
         const timer = setTimeout(() => {
             if (requestedSlug && touched.subdomain && requestedSlug === latestSubdomainRef.current) {
                 void checkSubdomainAvailability(requestedSlug)
             }
-        }, 400) // 400ms debounce as per Phase 8.1
-
+        }, 400)
         return () => clearTimeout(timer)
     }, [formData.subdomain, touched.subdomain, checkSubdomainAvailability])
 
-    // ==========================================================================
-    // Email existence check (debounced)
-    // ==========================================================================
-
     const checkEmailExists = useCallback(async (email, requestId) => {
-        const isCurrentEmailRequest = () => (
-            requestId === emailCheckRequestIdRef.current &&
-            currentEmailRef.current === email
-        )
-
+        const isCurrentEmailRequest = () => requestId === emailCheckRequestIdRef.current && currentEmailRef.current === email
         if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            if (isCurrentEmailRequest()) {
-                setEmailStatus({ checking: false, registered: false })
-            }
+            if (isCurrentEmailRequest()) setEmailStatus({ checking: false, registered: false })
             return
         }
-
-        if (!isCurrentEmailRequest()) {
-            return
-        }
-
+        if (!isCurrentEmailRequest()) return
         setEmailStatus(prev => ({ ...prev, checking: true }))
-
         try {
             const response = await api.get(`/platform/email/check?email=${encodeURIComponent(email)}`)
-
-            if (!isCurrentEmailRequest()) {
-                return
-            }
-
-            setEmailStatus({
-                checking: false,
-                registered: response.data.isRegistered
-            })
-
-            if (response.data.isRegistered) {
-                setErrors(prev => ({ ...prev, email: t('tenantRegistration.validation.emailRegistered') }))
-            }
-        } catch (err) {
-            if (!isCurrentEmailRequest()) {
-                return
-            }
-
-            console.error('Email check failed:', err)
-            setEmailStatus({ checking: false, registered: false })
+            if (!isCurrentEmailRequest()) return
+            setEmailStatus({ checking: false, registered: response.data.isRegistered })
+            if (response.data.isRegistered) setErrors(prev => ({ ...prev, email: key('validation.emailRegistered') }))
+        } catch {
+            if (isCurrentEmailRequest()) setEmailStatus({ checking: false, registered: false })
         }
-    }, [t])
+    }, [])
 
-    // Debounced email check
     useEffect(() => {
         if (!formData.email || !touched.email || errors.email) {
             emailCheckRequestIdRef.current += 1
             return
         }
-
         const email = formData.email
         const requestId = ++emailCheckRequestIdRef.current
-        const timer = setTimeout(() => {
-            void checkEmailExists(email, requestId)
-        }, 300) // 300ms debounce as per Phase 8.1
-
+        const timer = setTimeout(() => { void checkEmailExists(email, requestId) }, 300)
         return () => {
             clearTimeout(timer)
-
-            if (emailCheckRequestIdRef.current === requestId) {
-                emailCheckRequestIdRef.current += 1
-            }
+            if (emailCheckRequestIdRef.current === requestId) emailCheckRequestIdRef.current += 1
         }
     }, [formData.email, touched.email, errors.email, checkEmailExists])
 
-    // ==========================================================================
-    // Field handlers
-    // ==========================================================================
-
-    const handleChange = (e) => {
+    const handleChange = e => {
         registrationRequestIdRef.current = null
         const { name, value } = e.target
-        let processedValue = value
-
-        // Lowercase subdomain in real-time
-        if (name === 'subdomain') {
-            processedValue = value.toLowerCase()
-            latestSubdomainRef.current = processedValue
-        }
-
+        const processedValue = name === 'subdomain' ? value.toLowerCase() : value
+        if (name === 'subdomain') latestSubdomainRef.current = processedValue
         setFormData(prev => ({ ...prev, [name]: processedValue }))
-
-        // Clear error on change
-        if (errors[name]) {
-            setErrors(prev => ({ ...prev, [name]: '' }))
-        }
-
-        // Reset subdomain status when typing
+        if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }))
         if (name === 'subdomain') {
             setSubdomainStatus(prev => ({ ...prev, available: null, message: '', storefrontUrl: '' }))
         }
-
-        // Reset email status when typing
         if (name === 'email') {
             currentEmailRef.current = processedValue
             emailCheckRequestIdRef.current += 1
             setEmailStatus({ checking: false, registered: false })
         }
     }
-
-    const handleBlur = (e) => {
+    const handleBlur = e => {
         const { name, value } = e.target
         setTouched(prev => ({ ...prev, [name]: true }))
-
         const error = validateField(name, value)
         setErrors(prev => ({ ...prev, [name]: error }))
-
         if (name === 'subdomain' && !error) {
             const normalizedSubdomain = normalizeStoreSlug(value)
             latestSubdomainRef.current = normalizedSubdomain
             setFormData(prev => ({ ...prev, subdomain: normalizedSubdomain }))
         }
-
-        // Auto-generate subdomain from business name
         if (name === 'businessName' && value.trim() && !formData.subdomain) {
             const generatedSubdomain = generateSubdomain(value)
             if (generatedSubdomain) {
@@ -381,464 +311,199 @@ function MerchantRegistrationForm({ onAdmissionClosed }) {
             }
         }
     }
-
-    const handleSuggestionClick = (suggestion) => {
+    const handleSuggestionClick = suggestion => {
         latestSubdomainRef.current = suggestion
         setFormData(prev => ({ ...prev, subdomain: suggestion }))
         setTouched(prev => ({ ...prev, subdomain: true }))
         void checkSubdomainAvailability(suggestion)
         subdomainRef.current?.focus()
     }
-
-    // ==========================================================================
-    // Form submission
-    // ==========================================================================
-
-    const isFormValid = () => {
-        return (
-            formData.businessName.trim().length >= 2 &&
-            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) &&
-            formData.password.length >= 8 &&
-            subdomainStatus.available === true &&
-            !emailStatus.registered
-        )
-    }
-
-    const handleSubmit = async (e) => {
+    const isFormValid = () => (
+        formData.businessName.trim().length >= 2 &&
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) &&
+        formData.password.length >= 8 &&
+        subdomainStatus.available === true &&
+        !emailStatus.registered
+    )
+    const handleSubmit = async e => {
         e.preventDefault()
-
-        // Validate all fields
+        if (submissionRef.current) return
         const newErrors = {}
-        Object.keys(formData).forEach(key => {
-            const error = validateField(key, formData[key])
-            if (error) newErrors[key] = error
+        Object.keys(formData).forEach(name => {
+            const error = validateField(name, formData[name])
+            if (error) newErrors[name] = error
         })
-
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors)
             setTouched({ businessName: true, email: true, password: true, subdomain: true })
-            // Focus first error field
-            const firstErrorField = ['businessName', 'email', 'password', 'subdomain'].find(f => newErrors[f])
-            if (firstErrorField === 'businessName') businessNameRef.current?.focus()
-            else if (firstErrorField === 'email') emailRef.current?.focus()
-            else if (firstErrorField === 'password') passwordRef.current?.focus()
-            else if (firstErrorField === 'subdomain') subdomainRef.current?.focus()
+            setSummaryVersion(version => version + 1)
             return
         }
-
         if (!subdomainStatus.available) {
-            setErrors(prev => ({ ...prev, subdomain: t('tenantRegistration.validation.availableStoreAddress') }))
-            subdomainRef.current?.focus()
+            setErrors(prev => ({ ...prev, subdomain: key('validation.availableStoreAddress') }))
+            setTouched(prev => ({ ...prev, subdomain: true }))
+            setSummaryVersion(version => version + 1)
             return
         }
-
+        submissionRef.current = true
         setIsSubmitting(true)
         setSubmitError('')
-
-        // Generate unique request ID for idempotency
+        // Same payload, request-ID lifecycle, session authority and navigation.
         registrationRequestIdRef.current ||= `reg-${crypto.randomUUID()}`
         const requestId = registrationRequestIdRef.current
-
         try {
             await api.post('/platform/register', {
                 businessName: formData.businessName.trim(),
                 email: formData.email.trim().toLowerCase(),
                 password: formData.password,
                 subdomain: normalizeStoreSlug(formData.subdomain)
-            }, {
-                headers: {
-                    'X-Request-Id': requestId
-                }
-            })
-
-            // Rehydrate from the authoritative POS session DTO so server-derived
-            // role, permissions, and CommerceHub capabilities are validated,
-            // never inferred in the browser. AuthBootstrap revalidates on mount
-            // if this fetch cannot complete.
+            }, { headers: { 'X-Request-Id': requestId } })
             try {
                 const sessionResponse = await api.get('/auth/session')
                 login(requirePosVendorSessionUserAuthority(sessionResponse.data?.user ?? null))
             } catch {
-                // Navigation still proceeds; AuthBootstrap hydrates the session.
+                // Existing bootstrap owns session hydration if this read fails.
             }
-
-            // Redirect to dashboard
             navigate('/', { replace: true })
-
         } catch (err) {
-            if (import.meta.env.DEV) {
-                console.error('Registration failed:', err)
-            }
-
             const errorData = err.response?.data
-
             if (err.response?.status === 403 || errorData?.error === 'REGISTRATION_DISABLED') {
                 onAdmissionClosed()
                 return
             }
-
             if (errorData?.fieldErrors) {
                 setErrors(errorData.fieldErrors)
-                // Focus first error field
-                const firstErrorField = ['businessName', 'email', 'password', 'subdomain'].find(f => errorData.fieldErrors[f])
-                if (firstErrorField === 'businessName') businessNameRef.current?.focus()
-                else if (firstErrorField === 'email') emailRef.current?.focus()
-                else if (firstErrorField === 'password') passwordRef.current?.focus()
-                else if (firstErrorField === 'subdomain') subdomainRef.current?.focus()
+                setTouched({ businessName: true, email: true, password: true, subdomain: true })
             }
-
             if (errorData?.suggestions && errorData.suggestions.length > 0) {
                 setSubdomainStatus(prev => ({
-                    ...prev,
-                    available: false,
-                    suggestions: errorData.suggestions,
-                    message: errorData.message || t('tenantRegistration.status.addressTaken')
+                    ...prev, available: false, suggestions: errorData.suggestions,
+                    message: errorData.message || key('status.addressTaken')
                 }))
             }
-
-            setSubmitError(
-                errorData?.message ||
-                err.message ||
-                t('tenantRegistration.messages.genericError')
-            )
+            setSubmitError(errorData?.message || key('messages.genericError'))
+            setSummaryVersion(version => version + 1)
         } finally {
+            submissionRef.current = false
             setIsSubmitting(false)
         }
     }
-
-    // ==========================================================================
-    // Render
-    // ==========================================================================
+    const fieldLabel = name => t(key(`fields.${name === 'subdomain' ? 'storeAddress' : name}`))
+    const visibleErrors = fieldOrder.filter(name => errors[name] && touched[name])
+    const fieldError = name => touched[name] ? messageText(errors[name]) : undefined
 
     return (
-        <div
-            className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-500 to-primary-700 py-12 px-4"
-            dir={isRTL ? 'rtl' : 'ltr'}
-        >
-            <div className="w-full max-w-lg">
-                {/* Header */}
-                <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-white">{t('tenantRegistration.title')}</h1>
-                    <p className="text-primary-100 mt-2">{t('tenantRegistration.subtitle')}</p>
-                </div>
-
-                {/* Registration Card */}
-                <div className="bg-white rounded-xl shadow-2xl p-8">
-                    {/* Sign in link */}
-                    <div className={`mb-6 ${isRTL ? 'text-left' : 'text-right'}`}>
-                        <span className="text-gray-600 text-sm">{t('tenantRegistration.signInPrompt')} </span>
-                        <Link to="/login" className="text-primary-600 hover:text-primary-700 font-medium text-sm">
-                            {t('tenantRegistration.signIn')}
-                        </Link>
+        <Card className="pos-register__card" padding="none">
+            <header className="pos-register__header">
+                <h1 className="pos-register__title">{t(key('title'))}</h1>
+                <p className="pos-register__subtitle">{t(key('formDescription'))}</p>
+            </header>
+            {summaryVersion > 0 && (submitError || visibleErrors.length > 0) ? (
+                <div className="pos-register__alert" role="alert" tabIndex={-1} ref={errorSummaryRef} aria-labelledby="registration-error-title">
+                    <CircleAlert size={20} aria-hidden="true" />
+                    <div>
+                        <h2 id="registration-error-title">{t(key('messages.reviewDetails'))}</h2>
+                        {submitError ? <p dir="auto">{messageText(submitError)}</p> : null}
+                        {visibleErrors.length ? <ul>{visibleErrors.map(name => (
+                            <li key={name}><a href={`#${name}`} onClick={event => {
+                                event.preventDefault()
+                                document.getElementById(name)?.focus()
+                            }}>{fieldLabel(name)}: {messageText(errors[name])}</a></li>
+                        ))}</ul> : null}
                     </div>
-
-                    {/* Submit error alert */}
-                    {submitError && (
-                        <div
-                            className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3"
-                            role="alert"
-                        >
-                            <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                            </svg>
+                </div>
+            ) : null}
+            <div className="sr-only" role="status">{isSubmitting ? t(key('actions.creatingStore')) : ''}</div>
+            <form className="pos-register__form" aria-label={t(key('title'))} onSubmit={handleSubmit} noValidate aria-busy={isSubmitting || undefined}>
+                <div className="pos-register__field">
+                    <Field id="businessName" label={fieldLabel('businessName')} error={fieldError('businessName')}>
+                        {({ describedBy, invalid }) => (
+                            <Input ref={businessNameRef} type="text" id="businessName" name="businessName"
+                                value={formData.businessName} onChange={handleChange} onBlur={handleBlur}
+                                disabled={isSubmitting} required autoComplete="organization" maxLength={100} dir="auto"
+                                invalid={invalid} aria-describedby={['businessName-helper', describedBy].filter(Boolean).join(' ')} />
+                        )}
+                    </Field>
+                    <p className="pos-register__helper" id="businessName-helper">{t(key('helpers.businessName'))}</p>
+                </div>
+                <div className="pos-register__field">
+                    <Field id="email" label={fieldLabel('email')} error={fieldError('email')} invalid={emailStatus.registered}>
+                        {({ describedBy, invalid }) => (
+                            <Input ref={emailRef} type="email" id="email" name="email"
+                                value={formData.email} onChange={handleChange} onBlur={handleBlur}
+                                disabled={isSubmitting} required autoComplete="email" inputMode="email" dir="ltr" autoCapitalize="none" spellCheck={false}
+                                invalid={invalid} aria-describedby={['email-helper', 'registration-email-status', describedBy].filter(Boolean).join(' ')} />
+                        )}
+                    </Field>
+                    <p className="pos-register__helper" id="email-helper">{t(key('helpers.email'))}</p>
+                    <div id="registration-email-status" className="pos-register__helper" role="status">
+                        {emailStatus.checking ? t(key('status.checkingEmail')) : ''}
+                    </div>
+                    {emailStatus.registered ? <Link className="pos-register__text-link" to="/login">{t(key('signIn'))}</Link> : null}
+                </div>
+                <div className="pos-register__field">
+                    <Field id="password" label={fieldLabel('password')} error={fieldError('password')}>
+                        {({ describedBy, invalid }) => (
+                            <div className="pos-register__password">
+                                <Input ref={passwordRef} type={showPassword ? 'text' : 'password'} id="password" name="password"
+                                    value={formData.password} onChange={handleChange} onBlur={handleBlur}
+                                    disabled={isSubmitting} required autoComplete="new-password" dir="ltr" autoCapitalize="none" spellCheck={false}
+                                    invalid={invalid} aria-describedby={['password-helper', describedBy].filter(Boolean).join(' ')} />
+                                <IconButton className="pos-register__password-toggle" variant="ghost" size="sm"
+                                    label={t(key('actions.showPassword'))} icon={showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                    onClick={() => setShowPassword(visible => !visible)} disabled={isSubmitting}
+                                    aria-controls="password" aria-pressed={showPassword} />
+                            </div>
+                        )}
+                    </Field>
+                    <p className="pos-register__helper" id="password-helper">{t(key('helpers.password'))}</p>
+                </div>
+                <div className="pos-register__field">
+                    <Field id="subdomain" label={fieldLabel('subdomain')} error={fieldError('subdomain')} invalid={subdomainStatus.available === false}>
+                        {({ describedBy, invalid }) => (
+                            <Input ref={subdomainRef} type="text" id="subdomain" name="subdomain"
+                                value={formData.subdomain} onChange={handleChange} onBlur={handleBlur}
+                                disabled={isSubmitting} required autoComplete="off" inputMode="url" dir="ltr"
+                                pattern="[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?" spellCheck={false} autoCapitalize="none" maxLength={63}
+                                invalid={invalid} aria-describedby={['subdomain-status', describedBy].filter(Boolean).join(' ')} />
+                        )}
+                    </Field>
+                    <div id="subdomain-status" className="pos-register__availability" role="status" aria-atomic="true">
+                        {subdomainStatus.checking ? <p>{t(key('status.checkingAvailability'))}</p> : subdomainStatus.message ? (
                             <div>
-                                <p className="text-red-800 font-medium">{submitError}</p>
-                            </div>
-                        </div>
-                    )}
-
-                    <form onSubmit={handleSubmit} noValidate>
-                        {/* Business Name */}
-                        <div className="mb-5">
-                            <label htmlFor="businessName" className="block text-sm font-medium text-gray-700 mb-1">
-                                {t('tenantRegistration.fields.businessName')}
-                            </label>
-                            <input
-                                ref={businessNameRef}
-                                type="text"
-                                id="businessName"
-                                name="businessName"
-                                value={formData.businessName}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                disabled={isSubmitting}
-                                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${errors.businessName && touched.businessName
-                                    ? 'border-red-300 focus:ring-red-200 focus:border-red-500'
-                                    : 'border-gray-300 focus:ring-primary-200 focus:border-primary-500'
-                                    } disabled:bg-gray-100 disabled:cursor-not-allowed`}
-                                aria-describedby="businessName-helper businessName-error"
-                                aria-invalid={errors.businessName && touched.businessName ? 'true' : 'false'}
-                                autoComplete="organization"
-                                maxLength={100}
-                            />
-                            <p id="businessName-helper" className="mt-1 text-sm text-gray-500">
-                                {t('tenantRegistration.helpers.businessName')}
-                            </p>
-                            {errors.businessName && touched.businessName && (
-                                <p id="businessName-error" className="mt-1 text-sm text-red-600" role="alert">
-                                    {errors.businessName}
+                                <p className={subdomainStatus.available === true ? 'pos-register__available' : subdomainStatus.available === false ? 'pos-register__unavailable' : ''}>
+                                    {subdomainStatus.available === true ? <Check size={18} aria-hidden="true" /> : <CircleAlert size={18} aria-hidden="true" />}
+                                    <span dir="auto">{messageText(subdomainStatus.message)}</span>
                                 </p>
-                            )}
-                        </div>
-
-                        {/* Email */}
-                        <div className="mb-5">
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                                {t('tenantRegistration.fields.email')}
-                            </label>
-                            <div className="relative">
-                                <input
-                                    ref={emailRef}
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    disabled={isSubmitting}
-                                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${(errors.email && touched.email) || emailStatus.registered
-                                        ? 'border-red-300 focus:ring-red-200 focus:border-red-500'
-                                        : 'border-gray-300 focus:ring-primary-200 focus:border-primary-500'
-                                        } disabled:bg-gray-100 disabled:cursor-not-allowed`}
-                                    aria-describedby="email-helper email-error"
-                                    aria-invalid={(errors.email && touched.email) || emailStatus.registered ? 'true' : 'false'}
-                                    autoComplete="email"
-                                    inputMode="email"
-                                />
-                                {emailStatus.checking && (
-                                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                                        <svg className="animate-spin h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24">
-                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                                        </svg>
-                                    </div>
-                                )}
+                                {subdomainStatus.available === true && subdomainStatus.storefrontUrl ? (
+                                    <p>{t(key('status.yourStore'))}: <bdi dir="ltr" className="pos-register__url">{subdomainStatus.storefrontUrl}</bdi></p>
+                                ) : null}
                             </div>
-                            <p id="email-helper" className="mt-1 text-sm text-gray-500">
-                                {t('tenantRegistration.helpers.email')}
-                            </p>
-                            {errors.email && touched.email && (
-                                <p id="email-error" className="mt-1 text-sm text-red-600" role="alert">
-                                    {errors.email}
-                                    {emailStatus.registered && (
-                                        <Link to="/login" className="ml-1 underline hover:text-red-700">
-                                            {t('tenantRegistration.signIn')}
-                                        </Link>
-                                    )}
-                                </p>
-                            )}
+                        ) : null}
+                    </div>
+                    {!subdomainStatus.checking && subdomainStatus.available === false && subdomainStatus.suggestions.length > 0 ? (
+                        <div className="pos-register__suggestions">
+                            <p className="pos-register__helper">{t(key('status.trySuggestions'))}</p>
+                            <div>{subdomainStatus.suggestions.map(suggestion => (
+                                <Button key={suggestion} variant="secondary" size="sm" disabled={isSubmitting}
+                                    onClick={() => handleSuggestionClick(suggestion)}><bdi dir="ltr">{suggestion}</bdi></Button>
+                            ))}</div>
                         </div>
-
-                        {/* Password */}
-                        <div className="mb-5">
-                            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                                {t('tenantRegistration.fields.password')}
-                            </label>
-                            <div className="relative">
-                                <input
-                                    ref={passwordRef}
-                                    type={showPassword ? 'text' : 'password'}
-                                    id="password"
-                                    name="password"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    disabled={isSubmitting}
-                                    className={`w-full px-4 py-3 pr-16 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${errors.password && touched.password
-                                        ? 'border-red-300 focus:ring-red-200 focus:border-red-500'
-                                        : 'border-gray-300 focus:ring-primary-200 focus:border-primary-500'
-                                        } disabled:bg-gray-100 disabled:cursor-not-allowed`}
-                                    aria-describedby="password-helper password-error"
-                                    aria-invalid={errors.password && touched.password ? 'true' : 'false'}
-                                    autoComplete="new-password"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 text-sm font-medium focus:outline-none focus:text-primary-600"
-                                    aria-label={showPassword
-                                        ? t('tenantRegistration.actions.hidePassword')
-                                        : t('tenantRegistration.actions.showPassword')}
-                                >
-                                    {showPassword
-                                        ? t('tenantRegistration.actions.hidePassword')
-                                        : t('tenantRegistration.actions.showPassword')}
-                                </button>
-                            </div>
-                            <p id="password-helper" className="mt-1 text-sm text-gray-500">
-                                {t('tenantRegistration.helpers.password')}
-                            </p>
-                            {errors.password && touched.password && (
-                                <p id="password-error" className="mt-1 text-sm text-red-600" role="alert">
-                                    {errors.password}
-                                </p>
-                            )}
-                        </div>
-
-                        {/* Store Address (Subdomain) */}
-                        <div className="mb-6">
-                            <label htmlFor="subdomain" className="block text-sm font-medium text-gray-700 mb-1">
-                                {t('tenantRegistration.fields.storeAddress')}
-                            </label>
-                            <div className="flex">
-                                <input
-                                    ref={subdomainRef}
-                                    type="text"
-                                    id="subdomain"
-                                    name="subdomain"
-                                    value={formData.subdomain}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    disabled={isSubmitting}
-                                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:z-10 transition-colors ${(errors.subdomain && touched.subdomain) || subdomainStatus.available === false
-                                        ? 'border-red-300 focus:ring-red-200 focus:border-red-500'
-                                        : subdomainStatus.available === true
-                                            ? 'border-green-300 focus:ring-green-200 focus:border-green-500'
-                                            : 'border-gray-300 focus:ring-primary-200 focus:border-primary-500'
-                                        } disabled:bg-gray-100 disabled:cursor-not-allowed`}
-                                    aria-describedby="subdomain-status subdomain-error"
-                                    aria-invalid={(errors.subdomain && touched.subdomain) || subdomainStatus.available === false ? 'true' : 'false'}
-                                    autoComplete="off"
-                                    inputMode="url"
-                                    pattern="[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?"
-                                    spellCheck="false"
-                                    maxLength={63}
-                                />
-                            </div>
-
-                            {/* Subdomain status */}
-                            <div id="subdomain-status" className="mt-2" aria-live="polite">
-                                {subdomainStatus.checking && (
-                                    <p className="text-sm text-gray-500 flex items-center gap-2">
-                                        <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                                        </svg>
-                                        {t('tenantRegistration.status.checkingAvailability')}
-                                    </p>
-                                )}
-
-                                {!subdomainStatus.checking && subdomainStatus.available === true && (
-                                    <div>
-                                        <p className="text-sm text-green-600 flex items-center gap-1">
-                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                            </svg>
-                                            {subdomainStatus.message}
-                                        </p>
-                                        <p className="text-sm text-gray-500 mt-1">
-                                            {t('tenantRegistration.status.yourStore')}:{' '}
-                                            <span className="font-medium">{subdomainStatus.storefrontUrl}</span>
-                                        </p>
-                                    </div>
-                                )}
-
-                                {!subdomainStatus.checking && subdomainStatus.available === false && (
-                                    <div>
-                                        <p className="text-sm text-red-600 flex items-center gap-1">
-                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                                            </svg>
-                                            {subdomainStatus.message}
-                                        </p>
-
-                                        {/* Suggestions */}
-                                        {subdomainStatus.suggestions.length > 0 && (
-                                            <div className="mt-2">
-                                                <p className="text-sm text-gray-600 mb-2">
-                                                    {t('tenantRegistration.status.trySuggestions')}
-                                                </p>
-                                                <div className="flex flex-wrap gap-2">
-                                                    {subdomainStatus.suggestions.map((suggestion) => (
-                                                        <button
-                                                            key={suggestion}
-                                                            type="button"
-                                                            onClick={() => handleSuggestionClick(suggestion)}
-                                                            className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary-200"
-                                                        >
-                                                            {suggestion}
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-                            </div>
-
-                            {errors.subdomain && touched.subdomain && !subdomainStatus.message && (
-                                <p id="subdomain-error" className="mt-1 text-sm text-red-600" role="alert">
-                                    {errors.subdomain}
-                                </p>
-                            )}
-                        </div>
-
-                        {/* Submit Button */}
-                        <button
-                            type="submit"
-                            disabled={!isFormValid() || isSubmitting}
-                            className={`w-full py-3 px-4 rounded-lg font-medium text-white transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 ${isFormValid() && !isSubmitting
-                                ? 'bg-primary-600 hover:bg-primary-700 focus:ring-primary-500'
-                                : 'bg-gray-400 cursor-not-allowed'
-                                }`}
-                            aria-busy={isSubmitting}
-                        >
-                            {isSubmitting ? (
-                                <span className="flex items-center justify-center gap-2">
-                                    <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                                    </svg>
-                                    {t('tenantRegistration.actions.creatingStore')}
-                                </span>
-                            ) : (
-                                t('tenantRegistration.actions.createStore')
-                            )}
-                        </button>
-
-                        {/* Legal text */}
-                        <p className="mt-4 text-center text-xs text-gray-500">
-                            {t('tenantRegistration.legal.prefix')}{' '}
-                            <a href="/terms" target="_blank" className="underline hover:text-gray-700">
-                                {t('tenantRegistration.legal.termsOfService')}
-                            </a>
-                            {' '}
-                            {t('tenantRegistration.legal.and')}{' '}
-                            <a href="/privacy" target="_blank" className="underline hover:text-gray-700">
-                                {t('tenantRegistration.legal.privacyPolicy')}
-                            </a>.
-                        </p>
-                    </form>
+                    ) : null}
                 </div>
-
-                {/* Value propositions - visible on larger screens */}
-                <div className="mt-8 grid grid-cols-2 gap-4 text-white text-sm">
-                    <div className="flex items-center gap-2">
-                        <svg className="w-5 h-5 text-green-300" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                        {t('tenantRegistration.benefits.freeToStart')}
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <svg className="w-5 h-5 text-green-300" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                        {t('tenantRegistration.benefits.noCardRequired')}
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <svg className="w-5 h-5 text-green-300" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                        {t('tenantRegistration.benefits.setupInSeconds')}
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <svg className="w-5 h-5 text-green-300" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                        {t('tenantRegistration.benefits.storePrivate')}
-                    </div>
-                </div>
-            </div>
-        </div>
+                <Button className="pos-register__primary" type="submit" variant="primary" size="lg" fullWidth disabled={!isFormValid()} loading={isSubmitting}>
+                    {t(key(`actions.${isSubmitting ? 'creatingStore' : 'createStore'}`))}
+                </Button>
+                <p className="pos-register__legal">
+                    {t(key('legal.prefix'))}{' '}
+                    <a href="/terms" target="_blank" rel="noopener noreferrer">{t(key('legal.termsOfService'))}</a>{' '}
+                    {t(key('legal.and'))}{' '}
+                    <a href="/privacy" target="_blank" rel="noopener noreferrer">{t(key('legal.privacyPolicy'))}</a>.
+                </p>
+            </form>
+            <p className="pos-register__prompt">
+                {t(key('signInPrompt'))}{' '}<Link to="/login" tabIndex={0}>{t(key('signIn'))}</Link>
+            </p>
+        </Card>
     )
 }

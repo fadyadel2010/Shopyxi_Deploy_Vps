@@ -63,7 +63,7 @@ export default function OrdersFilters({
     onToDateChange,
     onReset,
 }: OrdersFiltersProps) {
-    const { tr } = useSuperAdminLocale()
+    const { tr, locale } = useSuperAdminLocale()
 
     return (
         <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -165,6 +165,9 @@ export default function OrdersFilters({
                                 ? tr('Loading tenants…', 'جارٍ تحميل المتاجر…')
                                 : tr('All tenants', 'كل المتاجر')}
                         </option>
+                        {filters.tenantId && !tenants.some(tenant => tenant.id === filters.tenantId) ? (
+                            <option value={filters.tenantId}>{tr('Selected store (label unavailable)', 'المتجر المحدد (الاسم غير متاح)')}</option>
+                        ) : null}
                         {tenants.map((tenant) => (
                             <option key={tenant.id} value={tenant.id}>
                                 {tenant.name}
@@ -179,6 +182,8 @@ export default function OrdersFilters({
                     </span>
                     <input
                         type="date"
+                        lang={locale}
+                        aria-label={tr('Orders created from date', 'طلبات أُنشئت من تاريخ')}
                         value={filters.fromDate ?? ''}
                         onChange={(event) => onFromDateChange(event.target.value)}
                         className={saInput}
@@ -191,6 +196,8 @@ export default function OrdersFilters({
                     </span>
                     <input
                         type="date"
+                        lang={locale}
+                        aria-label={tr('Orders created through date', 'طلبات أُنشئت حتى تاريخ')}
                         value={filters.toDate ?? ''}
                         onChange={(event) => onToDateChange(event.target.value)}
                         className={saInput}
@@ -202,8 +209,8 @@ export default function OrdersFilters({
                 {isRefreshing
                     ? tr('Refreshing orders snapshot…', 'جارٍ تحديث لقطة الطلبات…')
                     : tr(
-                          'Live stats refresh automatically while this tab is active.',
-                          'تُحدَّث الإحصاءات المباشرة تلقائيًا ما دام هذا التبويب نشطًا.',
+                          'Orders and stats refresh every 30 seconds while this tab is active. Date filters use inclusive UTC calendar days; the browser controls the native date format.',
+                          'تُحدَّث الطلبات والإحصاءات كل ٣٠ ثانية ما دام التبويب نشطًا. تشمل مرشحات التاريخ أيام UTC كاملة؛ ويتحكم المتصفح بتنسيق حقل التاريخ الأصلي.',
                       )}
             </div>
         </section>

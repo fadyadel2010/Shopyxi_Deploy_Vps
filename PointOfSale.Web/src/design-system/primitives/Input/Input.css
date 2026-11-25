@@ -1,0 +1,48 @@
+[data-product="pos"] .pos-input {
+  width: 100%;
+  box-sizing: border-box;
+  border: var(--pos-border-width) solid var(--pos-input-border);
+  border-radius: var(--pos-input-radius);
+  background-color: var(--pos-input-bg);
+  color: var(--pos-input-text);
+  font-family: var(--pos-font-family-ui);
+  font-size: var(--pos-font-size-body);
+  line-height: var(--pos-line-height-body);
+  padding-block: var(--pos-space-2);
+  padding-inline: var(--pos-space-3);
+  transition:
+    border-color var(--pos-duration-fast) var(--pos-ease-standard),
+    box-shadow var(--pos-duration-fast) var(--pos-ease-standard);
+}
+
+[data-product="pos"] .pos-input::placeholder {
+  color: var(--pos-input-placeholder);
+}
+
+[data-product="pos"] .pos-input:hover:not(:disabled):not(:read-only) {
+  border-color: var(--pos-input-border-hover);
+}
+
+[data-product="pos"] .pos-input:focus-visible {
+  border-color: var(--pos-input-border-focus);
+  outline: var(--pos-focus-ring-width) solid var(--pos-input-focus-ring);
+  outline-offset: var(--pos-focus-ring-offset);
+}
+
+[data-product="pos"] .pos-input--invalid {
+  border-color: var(--pos-input-border-invalid);
+}
+
+[data-product="pos"] .pos-input--invalid:focus-visible {
+  outline-color: var(--pos-input-invalid-ring);
+}
+
+[data-product="pos"] .pos-input:disabled {
+  background-color: var(--pos-input-disabled-bg);
+  color: var(--pos-input-disabled-text);
+  cursor: not-allowed;
+}
+
+[data-product="pos"] .pos-input:read-only:not(:disabled) {
+  background-color: var(--pos-input-disabled-bg);
+}

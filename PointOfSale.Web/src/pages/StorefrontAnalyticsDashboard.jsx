@@ -10,10 +10,17 @@ import {
     TrendingUp,
     Users
 } from 'lucide-react'
-import { getRequestErrorMessage, useLatestRequestGuard } from '../hooks/useLatestRequestGuard'
+import { useLatestRequestGuard } from '../hooks/useLatestRequestGuard'
 import { useSettings } from '../contexts/SettingsContext'
 import storefrontAnalyticsApi from '../services/storefrontAnalyticsApi'
 import StorefrontLiveMonitoring from '../components/StorefrontLiveMonitoring'
+import { Button, Card } from '../design-system/primitives'
+import { useRTL } from '../hooks/useRTL'
+import { formatNumber } from '../utils/dateFormat'
+import { isNumber, useDashboardActorScope, useDashboardSource, useDashboardUtcDay } from '../components/dashboard/usePosDashboardData'
+import DashboardDataState from '../components/dashboard/DashboardDataState'
+import DashboardMetric from '../components/dashboard/DashboardMetric'
+import DashboardRankedAmounts from '../components/dashboard/DashboardRankedAmounts'
 
 const RANGE_OPTIONS = [
     { value: 'today', label: 'Today' },
@@ -62,39 +69,62 @@ function SectionCard({ title, subtitle, children }) {
     )
 }
 
-export default function StorefrontAnalyticsDashboard() {
+const summaryFields = ['visits', 'orders', 'revenue', 'conversionRate', 'addToCart', 'checkoutStarted', 'abandonedCheckouts', 'abandonedRevenue', 'averageOrderValue']
+const funnelFields = ['pageView', 'viewProduct', 'addToCart', 'beginCheckout', 'purchaseCompleted']
+const validRootSummary = value => value && summaryFields.every(key => isNumber(value[key]))
+    && value.funnel && funnelFields.every(key => isNumber(value.funnel[key]))
+    && Array.isArray(value.topSellingProducts)
+    && value.topSellingProducts.every(row => row && typeof row.productName === 'string' && row.productName.trim() && isNumber(row.sales))
+
+export default function StorefrontAnalyticsDashboard({ presentation } = {}) {
+    const actor = useDashboardActorScope()
+    const day = useDashboardUtcDay()
+    return presentation === 'dashboard' ? <RootStorefrontAnalytics /> : <DefaultStorefrontAnalyticsDashboard key={`${actor}:${day}`} />
+}
+
+function DefaultStorefrontAnalyticsDashboard() {
     const { t } = useTranslation()
     const { formatCurrency } = useSettings()
 
     const [range, setRange] = useState('7d')
-    const [dashboard, setDashboard] = useState(null)
+    // A successful response is stored with the exact range that produced it, so a
+    // figure can never be presented under a different range's label.
+    const [result, setResult] = useState({ range: null, payload: null })
     const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(null)
+    const [errorKind, setErrorKind] = useState(null)
     const { beginRequest, isLatestRequest } = useLatestRequestGuard()
 
     const fetchDashboard = useCallback(async (silent = false) => {
         const requestId = beginRequest()
+        const requestedRange = range
 
         try {
             if (!silent) {
                 setLoading(true)
             }
 
-            setError(null)
-            const data = await storefrontAnalyticsApi.getStorefrontAnalyticsDashboard(range)
+            setErrorKind(null)
+            const data = await storefrontAnalyticsApi.getStorefrontAnalyticsDashboard(requestedRange)
 
             if (!isLatestRequest(requestId)) {
                 return
             }
 
-            setDashboard(data)
+            if (!validRootSummary(data)) {
+                setErrorKind('malformed')
+                return
+            }
+
+            setResult({ range: requestedRange, payload: data })
         } catch (err) {
             if (!isLatestRequest(requestId)) {
                 return
             }
 
-            console.error('[Storefront Analytics] Failed to fetch dashboard:', err)
-            setError(getRequestErrorMessage(err, 'Failed to load storefront analytics dashboard'))
+            const status = err?.response?.status
+            if (status === 401 || status === 403) setResult({ range: null, payload: null })
+            console.error('[Storefront Analytics] Failed to fetch dashboard:', { status })
+            setErrorKind(status === 401 || status === 403 ? 'unauthorized' : 'failed')
         } finally {
             if (isLatestRequest(requestId)) {
                 setLoading(false)
@@ -106,6 +136,8 @@ export default function StorefrontAnalyticsDashboard() {
         void fetchDashboard()
     }, [fetchDashboard])
 
+    // Only the selected range's own successful response is displayable.
+    const dashboard = result.range === range ? result.payload : null
     const topProducts = dashboard?.topSellingProducts || []
     const funnel = useMemo(() => dashboard?.funnel || {}, [dashboard?.funnel])
     const funnelSteps = useMemo(() => ([
@@ -118,17 +150,12 @@ export default function StorefrontAnalyticsDashboard() {
 
     const maxProductSales = Math.max(...topProducts.map(product => product.sales), 0)
     const maxFunnelCount = Math.max(...funnelSteps.map(step => step.count), 0)
-
-    if (loading && !dashboard) {
-        return (
-            <div className="flex h-80 items-center justify-center">
-                <div className="text-center">
-                    <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-indigo-600"></div>
-                    <p className="mt-4 text-gray-600">{t('common.loading', 'Loading...')}</p>
-                </div>
-            </div>
-        )
-    }
+    const hasDashboard = dashboard !== null
+    const stateMessageKey = errorKind === 'unauthorized'
+        ? 'accessDenied'
+        : errorKind === 'malformed'
+            ? 'malformed'
+            : 'unavailableTitle'
 
     return (
         <div className="space-y-6">
@@ -143,10 +170,11 @@ export default function StorefrontAnalyticsDashboard() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2">
-                    <div className="inline-flex rounded-xl border border-gray-200 bg-white p-1 shadow-sm">
+                    <div role="group" aria-label={t('dashboard.phase42.storefront.range')} className="inline-flex max-w-full flex-wrap rounded-xl border border-gray-200 bg-white p-1 shadow-sm">
                         {RANGE_OPTIONS.map(option => (
                             <button
                                 key={option.value}
+                                aria-pressed={range === option.value}
                                 onClick={() => setRange(option.value)}
                                 className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${range === option.value
                                     ? 'bg-indigo-600 text-white shadow-sm'
@@ -169,15 +197,26 @@ export default function StorefrontAnalyticsDashboard() {
                 </div>
             </div>
 
-            {error ? (
-                <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-                    {error}
+            {errorKind && hasDashboard ? (
+                <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700" role="status">
+                    <p className="font-medium">{t(`storefrontAnalytics.${stateMessageKey}`, 'Storefront analytics unavailable')}</p>
+                    <p className="mt-1">{t('storefrontAnalytics.staleResult', 'Showing the last successful result for this range.')}</p>
+                    <button
+                        type="button"
+                        onClick={() => fetchDashboard()}
+                        disabled={loading}
+                        className="mt-3 rounded-lg border border-red-300 bg-white px-3 py-1.5 text-sm font-medium text-red-700 disabled:opacity-60"
+                    >
+                        {t('common.retry', 'Retry')}
+                    </button>
                 </div>
             ) : null}
 
             <StorefrontLiveMonitoring />
 
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {hasDashboard ? (
+                <>
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
                 <MetricCard
                     label={t('storefrontAnalytics.visits', 'Visits')}
                     value={(dashboard?.visits || 0).toLocaleString()}
@@ -195,7 +234,11 @@ export default function StorefrontAnalyticsDashboard() {
                 <MetricCard
                     label={t('storefrontAnalytics.revenue', 'Revenue')}
                     value={formatCurrency(dashboard?.revenue || 0)}
-                    hint={t('storefrontAnalytics.grossRevenue', 'Revenue from storefront orders in the selected period')}
+                    hint={isNumber(dashboard.recognizedRevenue) && isNumber(dashboard.revenueAdjustments)
+                        ? t('storefrontAnalytics.revenueBreakdown', {
+                            recognized: formatCurrency(dashboard.recognizedRevenue),
+                            adjustments: formatCurrency(dashboard.revenueAdjustments),
+                        }) : t('storefrontAnalytics.grossRevenue')}
                     color="amber"
                     icon={TrendingUp}
                 />
@@ -250,7 +293,7 @@ export default function StorefrontAnalyticsDashboard() {
                 ) : (
                     <div className="space-y-4">
                         {topProducts.map((product, index) => {
-                            const width = maxProductSales > 0 ? Math.max((product.sales / maxProductSales) * 100, 8) : 0
+                            const width = maxProductSales > 0 && product.sales > 0 ? Math.max((product.sales / maxProductSales) * 100, 8) : 0
 
                             return (
                                 <div key={`${product.productName}-${index}`} className="rounded-xl border border-gray-100 bg-gray-50 p-4">
@@ -284,7 +327,7 @@ export default function StorefrontAnalyticsDashboard() {
             >
                 <div className="grid grid-cols-1 gap-4 xl:grid-cols-5">
                     {funnelSteps.map((step, index) => {
-                        const width = maxFunnelCount > 0 ? Math.max((step.count / maxFunnelCount) * 100, 6) : 0
+                        const width = maxFunnelCount > 0 && step.count > 0 ? Math.max((step.count / maxFunnelCount) * 100, 6) : 0
 
                         return (
                             <div key={step.key} className="rounded-xl border border-gray-100 bg-gray-50 p-4">
@@ -308,6 +351,99 @@ export default function StorefrontAnalyticsDashboard() {
                     })}
                 </div>
             </SectionCard>
+                </>
+            ) : loading ? (
+                <div className="flex h-80 items-center justify-center">
+                    <div className="text-center">
+                        <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-indigo-600"></div>
+                        <p className="mt-4 text-gray-600">{t('common.loading', 'Loading...')}</p>
+                    </div>
+                </div>
+            ) : (
+                <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center text-sm text-red-700" role="status">
+                    <p className="text-lg font-semibold">{t(`storefrontAnalytics.${stateMessageKey}`, 'Storefront analytics unavailable')}</p>
+                    <p className="mt-2">
+                        {errorKind === 'unauthorized'
+                            ? t('storefrontAnalytics.accessDeniedMessage', 'You do not have permission to view storefront analytics.')
+                            : errorKind === 'malformed'
+                                ? t('storefrontAnalytics.malformedMessage', 'The analytics response was unusable, so no figures are shown. This is not a zero result.')
+                                : t('storefrontAnalytics.unavailableMessage', 'We could not load storefront analytics. No figures are shown, and this is not a zero result.')}
+                    </p>
+                    <button
+                        type="button"
+                        onClick={() => fetchDashboard()}
+                        disabled={loading}
+                        className="mt-4 rounded-lg border border-red-300 bg-white px-4 py-2 font-medium text-red-700 disabled:opacity-60"
+                    >
+                        {t('common.retry', 'Retry')}
+                    </button>
+                </div>
+            )}
+        </div>
+    )
+}
+
+function RootStorefrontAnalytics() {
+    const { t } = useTranslation()
+    const { locale } = useRTL()
+    const { formatCurrency } = useSettings()
+    const actor = useDashboardActorScope()
+    const day = useDashboardUtcDay()
+    const [range, setRange] = useState('7d')
+    const load = useCallback(() => storefrontAnalyticsApi.getStorefrontAnalyticsDashboard(range), [range])
+    const source = useDashboardSource({ scope: `${actor}:${day}:${range}`, load, valid: validRootSummary })
+    const summary = source.data
+    const copy = key => t(`dashboard.phase42.storefront.${key}`)
+    const number = value => formatNumber(value, locale)
+    const metrics = [
+        ['visits', 'visits', 'visitsBasis'],
+        ['orders', 'orders', 'ordersBasis'],
+        ['revenue', 'revenue', 'revenueBasis', formatCurrency],
+        ['conversionRate', 'conversion', 'conversionBasis', value => `${number(value)}%`],
+        ['addToCart', 'addToCart', 'cartBasis'],
+        ['checkoutStarted', 'checkoutStarted', 'checkoutBasis'],
+        ['abandonedCheckouts', 'abandonedCheckouts', 'abandonedBasis'],
+        ['averageOrderValue', 'averageOrderValue', 'averageBasis', formatCurrency],
+    ]
+    return (
+        <div className="pos-dashboard__storefront">
+            <div className="pos-dashboard__toolbar">
+                <div>
+                    <h2>{t('storefrontAnalytics.title', 'Storefront Analytics')}</h2>
+                    <p className="pos-dashboard__caption">{copy('summaryBasis')}</p>
+                    <div className="pos-dashboard__actions" role="group" aria-label={copy('range')}>
+                        {RANGE_OPTIONS.map(option => <Button key={option.value} variant={range === option.value ? 'primary' : 'secondary'} aria-pressed={range === option.value} onClick={() => setRange(option.value)}>{copy(`ranges.${option.value}`)}</Button>)}
+                    </div>
+                </div>
+                <Button variant="secondary" disabled={source.pending} onClick={source.retry}>{t('common.refresh')}</Button>
+            </div>
+            <DashboardDataState source={source}>
+                <div className="pos-dashboard__kpis">
+                    {metrics.map(([field, label, basis, formatter = number]) => <DashboardMetric key={field} label={copy(label)} value={summary ? formatter(summary[field]) : undefined} caption={copy(basis)}>
+                        {field === 'revenue' && isNumber(summary?.recognizedRevenue) && isNumber(summary?.revenueAdjustments) ? <p className="pos-dashboard__caption">{t('storefrontAnalytics.revenueBreakdown', {
+                            recognized: formatCurrency(summary.recognizedRevenue),
+                            adjustments: formatCurrency(summary.revenueAdjustments),
+                        })}</p> : null}
+                        {field === 'abandonedCheckouts' && summary ? <p className="pos-dashboard__caption">{copy('cartValue')}: <bdi>{formatCurrency(summary.abandonedRevenue)}</bdi></p> : null}
+                    </DashboardMetric>)}
+                </div>
+            </DashboardDataState>
+            {/* Independent five-minute scope and 10-second refresh; never tied to summary range. */}
+            <StorefrontLiveMonitoring presentation="dashboard" key={actor} />
+            {summary ? (
+                <div className="pos-dashboard__pair">
+                    <Card as="section" className="pos-dashboard__panel">
+                        <h3>{copy('productsTitle')}</h3>
+                        <p className="pos-dashboard__caption">{copy('productsBasis')}</p>
+                        {summary?.topSellingProducts.length ? <DashboardRankedAmounts data={summary.topSellingProducts.map(row => ({ label: row.productName, value: row.sales }))} caption={copy('productsBasis')} labelHeading={t('dashboard.product')} valueHeading={copy('units')} formatValue={number} /> : <p className="pos-dashboard__empty">{t('dashboard.phase42.empty')}</p>}
+                    </Card>
+                    <Card as="section" className="pos-dashboard__panel">
+                        <h3>{copy('activityCounts')}</h3>
+                        <p className="pos-dashboard__caption">{copy('funnelBasis')}</p>
+                        <DashboardRankedAmounts data={funnelFields.map(key => ({ label: copy(`steps.${key}`), value: summary?.funnel[key] }))} caption={copy('activityCounts')} labelHeading={t('dashboard.phase42.name')} valueHeading={copy('count')} formatValue={number} />
+                    </Card>
+                </div>
+            ) : null}
         </div>
     )
 }

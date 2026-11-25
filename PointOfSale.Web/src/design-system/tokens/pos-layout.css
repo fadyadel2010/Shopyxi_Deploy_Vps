@@ -1,0 +1,31 @@
+/*
+ * SHOPYXI POS design system - layout tokens.
+ *
+ * These values encode the current POS shell dimensions so future layout work
+ * can consume a stable contract instead of repeating Tailwind literals. They
+ * do not change the rendered shell in Phase 1.
+ *
+ * Scope: [data-product="pos"] only.
+ */
+
+[data-product="pos"] {
+  /* Matches the current h-16 header. */
+  --pos-header-height: 4rem;
+  /* Matches the current w-72 sidebar (18rem = 288px at the default root size). */
+  --pos-sidebar-width: 18rem;
+  --pos-content-inset: var(--pos-sidebar-width);
+  --pos-content-padding-block: var(--pos-space-6);
+  --pos-content-padding-inline: var(--pos-space-4);
+}
+
+@media (min-width: 640px) {
+  [data-product="pos"] {
+    --pos-content-padding-inline: var(--pos-space-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  [data-product="pos"] {
+    --pos-content-padding-inline: var(--pos-space-8);
+  }
+}

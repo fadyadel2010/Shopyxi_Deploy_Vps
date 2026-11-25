@@ -2,9 +2,11 @@ namespace PointOfSale.API.DTOs;
 
 public class InventoryValuationDto
 {
-    public decimal TotalInventoryValue { get; set; }
+    public decimal? TotalInventoryValue { get; set; }
     public decimal WarehouseInventoryValue { get; set; }
-    public decimal InTransitValue { get; set; }
+    public decimal? InTransitValue { get; set; }
+    public bool ValuationComplete { get; set; }
+    public string ValuationBasis => "current-cost-on-hand-plus-dispatched-transit";
     public decimal InTransitQuantity { get; set; }
     public int InTransitTransferCount { get; set; }
     public int UnvaluedInTransitLines { get; set; }
@@ -17,6 +19,7 @@ public class InventoryValuationDto
 
 public class WarehouseValuationDto
 {
+    public Guid WarehouseId { get; set; }
     public string WarehouseName { get; set; } = string.Empty;
     public int ItemCount { get; set; }
     public decimal TotalValue { get; set; }
@@ -24,6 +27,8 @@ public class WarehouseValuationDto
 
 public class LowStockItemDto
 {
+    public Guid WarehouseId { get; set; }
+    public string WarehouseName { get; set; } = string.Empty;
     public string ProductName { get; set; } = string.Empty;
     public string Sku { get; set; } = string.Empty;
     public decimal CurrentStock { get; set; }

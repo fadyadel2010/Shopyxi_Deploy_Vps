@@ -9,12 +9,13 @@
  * - Forces logout if current session is revoked
  */
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '@/i18n';
 import { useAuthStore } from '@/auth/store/authStore';
 import { useSessions } from '@/auth/hooks/useAccount';
 import type { SessionDto } from '@/auth/api/accountApi';
+import { ConfirmDialog } from '@/components/feedback/ConfirmDialog';
 
 export const SessionsSection: React.FC = () => {
     const { t, direction } = useTranslation();
@@ -30,6 +31,8 @@ export const SessionsSection: React.FC = () => {
 
     const [confirmRevokeAll, setConfirmRevokeAll] = useState(false);
     const [confirmRevokeId, setConfirmRevokeId] = useState<string | null>(null);
+    const revokingRef = useRef(false);
+    const [revoking, setRevoking] = useState(false);
 
     // Helper to format date
     const formatDate = (dateStr: string) => {
@@ -48,6 +51,7 @@ export const SessionsSection: React.FC = () => {
 
     // Handle revoking a specific session
     const handleRevokeSession = async (session: SessionDto) => {
+        if (revokingRef.current || isLoading) return;
         if (session.isCurrent) {
             // CRITICAL: If revoking current session, force logout
             const confirmed = window.confirm(
@@ -65,17 +69,26 @@ export const SessionsSection: React.FC = () => {
         }
 
         // Non-current session - just revoke
-        setConfirmRevokeId(null);
-        await revokeSession(session.id);
+        revokingRef.current = true;
+        setRevoking(true);
+        try {
+            await revokeSession(session.id);
+            setConfirmRevokeId(null);
+        } finally { revokingRef.current = false; setRevoking(false); }
     };
 
     // Handle revoking all sessions except current
     const handleRevokeAllSessions = async () => {
-        setConfirmRevokeAll(false);
+        if (revokingRef.current || isLoading) return;
+        revokingRef.current = true;
+        setRevoking(true);
+        try {
         const result = await revokeAllSessions();
         if (result.success && result.revokedCount > 0) {
             // Show success feedback (handled in parent via toast)
         }
+        if (result.success) setConfirmRevokeAll(false);
+        } finally { revokingRef.current = false; setRevoking(false); }
     };
 
     // Count non-current sessions
@@ -105,7 +118,7 @@ export const SessionsSection: React.FC = () => {
                 {otherSessionsCount > 0 && (
                     <button
                         onClick={() => setConfirmRevokeAll(true)}
-                        disabled={isLoading}
+                        disabled={isLoading || revoking}
                         className="px-4 py-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
                     >
                         {t('account.sessions.revokeAll', { defaultValue: 'End All Other Sessions' })}
@@ -172,13 +185,14 @@ export const SessionsSection: React.FC = () => {
                                 <div className="flex items-center gap-2">
                                     <button
                                         onClick={() => handleRevokeSession(session)}
-                                        disabled={isLoading}
+                                        disabled={isLoading || revoking}
                                         className="px-3 py-1.5 text-sm text-white bg-red-600 hover:bg-red-700 rounded transition-colors disabled:opacity-50"
                                     >
                                         {t('common.confirm', { defaultValue: 'Confirm' })}
                                     </button>
                                     <button
                                         onClick={() => setConfirmRevokeId(null)}
+                                        disabled={isLoading || revoking}
                                         className="px-3 py-1.5 text-sm text-muted hover:text-text transition-colors"
                                     >
                                         {t('common.cancel', { defaultValue: 'Cancel' })}
@@ -187,7 +201,7 @@ export const SessionsSection: React.FC = () => {
                             ) : (
                                 <button
                                     onClick={() => setConfirmRevokeId(session.id)}
-                                    disabled={isLoading}
+                                    disabled={isLoading || revoking}
                                     className="px-3 py-1.5 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors disabled:opacity-50"
                                 >
                                     {t('account.sessions.revokeSession', { defaultValue: 'End Session' })}
@@ -206,38 +220,13 @@ export const SessionsSection: React.FC = () => {
             </div>
 
             {/* Revoke All Confirmation Modal */}
-            {confirmRevokeAll && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-                    <div className="bg-background rounded-xl shadow-2xl max-w-md w-full mx-4 p-6">
-                        <h3 className="text-lg font-semibold text-text mb-4">
-                            {t('account.sessions.revokeAllConfirm', { defaultValue: 'End All Other Sessions?' })}
-                        </h3>
-                        <p className="text-muted mb-6">
-                            {t('account.sessions.revokeAllWarning', {
-                                defaultValue: 'This will log you out from all other devices. Your current session will remain active.'
-                            })}
-                        </p>
-                        <div className="flex gap-3 justify-end">
-                            <button
-                                onClick={() => setConfirmRevokeAll(false)}
-                                className="px-4 py-2 text-muted hover:text-text transition-colors"
-                            >
-                                {t('common.cancel', { defaultValue: 'Cancel' })}
-                            </button>
-                            <button
-                                onClick={handleRevokeAllSessions}
-                                disabled={isLoading}
-                                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
-                            >
-                                {isLoading
-                                    ? t('common.loading', { defaultValue: 'Processing...' })
-                                    : t('account.sessions.revokeAll', { defaultValue: 'End All Other Sessions' })
-                                }
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+            <ConfirmDialog isOpen={confirmRevokeAll}
+                title={t('account.sessions.revokeAllConfirm')}
+                message={t('account.sessions.revokeAllWarning')}
+                confirmText={t('account.sessions.revokeAll')}
+                isLoading={isLoading || revoking}
+                onCancel={() => { if (!revokingRef.current) setConfirmRevokeAll(false); }}
+                onConfirm={handleRevokeAllSessions} />
         </div>
     );
 };

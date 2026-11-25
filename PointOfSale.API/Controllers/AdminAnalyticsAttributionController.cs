@@ -79,6 +79,8 @@ public class AdminAnalyticsAttributionController : ControllerBase
                 Content = a.Content,
                 Term = a.Term,
                 OrderValue = a.OrderValue,
+                IsPeriodRecognition = a.IsPeriodRecognition,
+                RecognizedRevenue = a.PeriodRecognizedRevenue,
                 Currency = a.Currency,
                 AttributedAt = a.AttributedAtUtc,
                 TimeToConversionMinutes = a.TimeToConversion.HasValue
@@ -117,12 +119,16 @@ public class AdminAnalyticsAttributionController : ControllerBase
             EndDate = endUtc,
             Model = model.ToString(),
             TotalRevenue = revenueBySource.Sum(r => r.TotalRevenue),
+            RecognizedRevenue = revenueBySource.Sum(r => r.RecognizedRevenue),
+            AffectedOrders = revenueBySource.Sum(r => r.AffectedOrderCount),
             TotalOrders = revenueBySource.Sum(r => r.OrderCount),
             RevenueBySource = revenueBySource.Select(r => new SourceRevenueDto
             {
                 Source = r.Source,
                 Medium = r.Medium,
                 Revenue = r.TotalRevenue,
+                RecognizedRevenue = r.RecognizedRevenue,
+                AffectedOrders = r.AffectedOrderCount,
                 Orders = r.OrderCount,
                 AverageOrderValue = r.AverageOrderValue,
                 PercentageOfTotal = revenueBySource.Sum(x => x.TotalRevenue) > 0
@@ -165,6 +171,8 @@ public class AdminAnalyticsAttributionController : ControllerBase
                 Source = c.Source,
                 Medium = c.Medium,
                 Revenue = c.TotalRevenue,
+                RecognizedRevenue = c.RecognizedRevenue,
+                AffectedOrders = c.AffectedOrderCount,
                 Orders = c.OrderCount,
                 AverageOrderValue = c.AverageOrderValue
             }).ToList()
@@ -203,6 +211,8 @@ public class AdminAnalyticsAttributionController : ControllerBase
             {
                 Model = "FirstTouch",
                 TotalRevenue = firstTouchData.Sum(r => r.TotalRevenue),
+                RecognizedRevenue = firstTouchData.Sum(r => r.RecognizedRevenue),
+                AffectedOrders = firstTouchData.Sum(r => r.AffectedOrderCount),
                 TotalOrders = firstTouchData.Sum(r => r.OrderCount),
                 TopSources = firstTouchData
                     .OrderByDescending(r => r.TotalRevenue)
@@ -212,6 +222,8 @@ public class AdminAnalyticsAttributionController : ControllerBase
                         Source = r.Source,
                         Medium = r.Medium,
                         Revenue = r.TotalRevenue,
+                        RecognizedRevenue = r.RecognizedRevenue,
+                        AffectedOrders = r.AffectedOrderCount,
                         Orders = r.OrderCount,
                         AverageOrderValue = r.AverageOrderValue,
                         PercentageOfTotal = firstTouchData.Sum(x => x.TotalRevenue) > 0
@@ -223,6 +235,8 @@ public class AdminAnalyticsAttributionController : ControllerBase
             {
                 Model = "LastTouch",
                 TotalRevenue = lastTouchData.Sum(r => r.TotalRevenue),
+                RecognizedRevenue = lastTouchData.Sum(r => r.RecognizedRevenue),
+                AffectedOrders = lastTouchData.Sum(r => r.AffectedOrderCount),
                 TotalOrders = lastTouchData.Sum(r => r.OrderCount),
                 TopSources = lastTouchData
                     .OrderByDescending(r => r.TotalRevenue)
@@ -232,6 +246,8 @@ public class AdminAnalyticsAttributionController : ControllerBase
                         Source = r.Source,
                         Medium = r.Medium,
                         Revenue = r.TotalRevenue,
+                        RecognizedRevenue = r.RecognizedRevenue,
+                        AffectedOrders = r.AffectedOrderCount,
                         Orders = r.OrderCount,
                         AverageOrderValue = r.AverageOrderValue,
                         PercentageOfTotal = lastTouchData.Sum(x => x.TotalRevenue) > 0
@@ -346,6 +362,7 @@ public class AdminAnalyticsAttributionController : ControllerBase
 
 public class OrderAttributionsResponse
 {
+    public string FinancialBasis => "journal-date-utc-period-movement";
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public string Model { get; set; } = string.Empty;
@@ -362,6 +379,8 @@ public class OrderAttributionDto
     public string? Content { get; set; }
     public string? Term { get; set; }
     public decimal OrderValue { get; set; }
+    public bool? IsPeriodRecognition { get; set; }
+    public decimal? RecognizedRevenue { get; set; }
     public string Currency { get; set; } = string.Empty;
     public DateTime AttributedAt { get; set; }
     public int? TimeToConversionMinutes { get; set; }
@@ -369,20 +388,28 @@ public class OrderAttributionDto
 
 public class RevenueSummaryResponse
 {
+    public string FinancialBasis => "journal-date-utc-period-movement";
     public string Period { get; set; } = string.Empty;
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public string Model { get; set; } = string.Empty;
     public decimal TotalRevenue { get; set; }
+    public decimal RecognizedRevenue { get; set; }
+    public decimal RevenueAdjustments => TotalRevenue - RecognizedRevenue;
+    public int AffectedOrders { get; set; }
     public int TotalOrders { get; set; }
     public List<SourceRevenueDto> RevenueBySource { get; set; } = new();
 }
 
 public class SourceRevenueDto
 {
+    public string FinancialBasis => "journal-date-utc-period-movement";
     public string Source { get; set; } = string.Empty;
     public string Medium { get; set; } = string.Empty;
     public decimal Revenue { get; set; }
+    public decimal RecognizedRevenue { get; set; }
+    public decimal RevenueAdjustments => Revenue - RecognizedRevenue;
+    public int AffectedOrders { get; set; }
     public int Orders { get; set; }
     public decimal AverageOrderValue { get; set; }
     public decimal PercentageOfTotal { get; set; }
@@ -390,6 +417,7 @@ public class SourceRevenueDto
 
 public class CampaignRoiResponse
 {
+    public string FinancialBasis => "journal-date-utc-period-movement";
     public string Period { get; set; } = string.Empty;
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
@@ -399,10 +427,14 @@ public class CampaignRoiResponse
 
 public class CampaignRoiDto
 {
+    public string FinancialBasis => "journal-date-utc-period-movement";
     public string Campaign { get; set; } = string.Empty;
     public string Source { get; set; } = string.Empty;
     public string Medium { get; set; } = string.Empty;
     public decimal Revenue { get; set; }
+    public decimal RecognizedRevenue { get; set; }
+    public decimal RevenueAdjustments => Revenue - RecognizedRevenue;
+    public int AffectedOrders { get; set; }
     public int Orders { get; set; }
     public decimal AverageOrderValue { get; set; }
 }
@@ -418,8 +450,12 @@ public class ModelComparisonResponse
 
 public class ModelSummaryDto
 {
+    public string FinancialBasis => "journal-date-utc-period-movement";
     public string Model { get; set; } = string.Empty;
     public decimal TotalRevenue { get; set; }
+    public decimal RecognizedRevenue { get; set; }
+    public decimal RevenueAdjustments => TotalRevenue - RecognizedRevenue;
+    public int AffectedOrders { get; set; }
     public int TotalOrders { get; set; }
     public List<SourceRevenueDto> TopSources { get; set; } = new();
 }

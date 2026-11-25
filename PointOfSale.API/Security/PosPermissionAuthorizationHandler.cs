@@ -11,17 +11,23 @@ public sealed class PosPermissionAuthorizationHandler
         AuthorizationHandlerContext context,
         PosPermissionRequirement requirement)
     {
-        if (!PosPermissions.All.Contains(requirement.Permission) ||
-            context.User.Identity?.IsAuthenticated != true)
+        if (HasPermission(context.User, requirement.Permission))
         {
-            return Task.CompletedTask;
+            context.Succeed(requirement);
         }
+        return Task.CompletedTask;
+    }
 
-        var roleClaims = context.User.FindAll(ClaimTypes.Role).Select(claim => claim.Value).ToArray();
-        var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var tenantId = context.User.FindFirstValue("tenant_id");
-        var sessionBinding = context.User.FindFirstValue(PosSecurityConstants.SessionBindingClaim);
-        var sqlAuthorityClaims = context.User.FindAll(PosSecurityConstants.SqlAuthorityClaim).ToArray();
+    // Shared by field-level projections; identical trust requirements to endpoint admission.
+    public static bool HasPermission(ClaimsPrincipal? user, string permission)
+    {
+        if (!PosPermissions.All.Contains(permission) || user?.Identity?.IsAuthenticated != true)
+            return false;
+        var roleClaims = user.FindAll(ClaimTypes.Role).Select(claim => claim.Value).ToArray();
+        var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+        var tenantId = user.FindFirstValue("tenant_id");
+        var sessionBinding = user.FindFirstValue(PosSecurityConstants.SessionBindingClaim);
+        var sqlAuthorityClaims = user.FindAll(PosSecurityConstants.SqlAuthorityClaim).ToArray();
 
         // These claims are minted only by the POS bearer issuer and are revalidated
         // against current SQL state by PosSessionAuthority before authorization.
@@ -33,14 +39,9 @@ public sealed class PosPermissionAuthorizationHandler
             string.IsNullOrWhiteSpace(sessionBinding) ||
             !PosRolePermissionCatalog.TryParseKnownRole(roleClaims[0], out var role))
         {
-            return Task.CompletedTask;
+            return false;
         }
 
-        if (PosRolePermissionCatalog.IsGranted(role, requirement.Permission))
-        {
-            context.Succeed(requirement);
-        }
-
-        return Task.CompletedTask;
+        return PosRolePermissionCatalog.IsGranted(role, permission);
     }
 }

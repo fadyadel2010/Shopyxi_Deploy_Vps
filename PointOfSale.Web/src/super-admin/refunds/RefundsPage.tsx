@@ -1,4 +1,6 @@
-﻿import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
+﻿import { type ReactNode, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
+import * as Dialog from '@radix-ui/react-dialog'
+import { useConfirmDialog } from '../../common/confirm/ConfirmDialogProvider'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
     ArrowUpRight,
@@ -306,7 +308,7 @@ function FiltersPanel({
     )
 }
 
-function ActionModal({
+export function ActionModal({
     title,
     description,
     confirmLabel,
@@ -333,15 +335,22 @@ function ActionModal({
     onCancel: () => void
     onConfirm: () => void
 }) {
-    const { t } = useTranslation()
+    const { t, i18n } = useTranslation()
+    const id = useId()
+    const contentRef = useRef<HTMLDivElement>(null)
+    useEffect(() => { if (isSubmitting) contentRef.current?.focus() }, [isSubmitting])
 
     return (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/55 px-4">
-            <div className="w-full max-w-xl rounded-[32px] border border-slate-200 bg-white p-6 shadow-2xl">
+        <Dialog.Root open onOpenChange={(open) => { if (!open && !isSubmitting) onCancel() }}>
+        <Dialog.Portal><div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/55 px-4">
+            <Dialog.Content ref={contentRef} dir={i18n.dir()} aria-busy={isSubmitting || undefined}
+                onPointerDownOutside={event => event.preventDefault()}
+                onEscapeKeyDown={event => { if (isSubmitting || noteValue.trim()) event.preventDefault() }}
+                className="w-full max-w-xl rounded-[32px] border border-slate-200 bg-white p-6 shadow-2xl">
                 <div className="flex items-start justify-between gap-4">
                     <div>
                         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-emerald-600">{t('superAdmin.refundsPage.actionModal.badge')}</p>
-                        <h2 className="mt-2 text-2xl font-semibold text-slate-950">{title}</h2>
+                        <Dialog.Title asChild><h2 className="mt-2 text-2xl font-semibold text-slate-950">{title}</h2></Dialog.Title>
                     </div>
 
                     <button
@@ -349,16 +358,20 @@ function ActionModal({
                         className="rounded-2xl border border-slate-200 bg-white p-3 text-slate-500 transition hover:bg-slate-50 hover:text-slate-900"
                         aria-label={t('superAdmin.refundsPage.actions.close')}
                         onClick={onCancel}
+                        disabled={isSubmitting}
                     >
                         <X className="h-5 w-5" />
                     </button>
                 </div>
 
-                <p className="mt-4 text-sm leading-7 text-slate-600">{description}</p>
+                <Dialog.Description asChild><p className="mt-4 text-sm leading-7 text-slate-600">{description}</p></Dialog.Description>
 
                 <div className="mt-5 space-y-2">
-                    <label className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{noteLabel}</label>
+                    <label htmlFor={`${id}-note`} className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{noteLabel}</label>
                     <textarea
+                        id={`${id}-note`}
+                        disabled={isSubmitting}
+                        aria-describedby={errorMessage ? `${id}-error` : undefined}
                         value={noteValue}
                         onChange={(event) => onNoteChange(event.target.value)}
                         placeholder={notePlaceholder}
@@ -368,7 +381,7 @@ function ActionModal({
                 </div>
 
                 {errorMessage ? (
-                    <div className="mt-4 rounded-[24px] border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-900">
+                    <div id={`${id}-error`} role="alert" className="mt-4 rounded-[24px] border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-900">
                         {errorMessage}
                     </div>
                 ) : null}
@@ -392,8 +405,8 @@ function ActionModal({
                         {confirmLabel}
                     </button>
                 </div>
-            </div>
-        </div>
+            </Dialog.Content>
+        </div></Dialog.Portal></Dialog.Root>
     )
 }
 
@@ -486,7 +499,7 @@ function isRefundPaid(status: SuperAdminRefundStatus): boolean {
     return status === 'Paid' || status === 'Executed' || status === 'Completed'
 }
 
-function ExecuteRefundModal({
+export function ExecuteRefundModal({
     refund,
     method,
     transactionReference,
@@ -523,14 +536,21 @@ function ExecuteRefundModal({
     const locale = i18n.resolvedLanguage || i18n.language || 'en'
     const payoutMethod = refund.payout?.method
     const methodMismatch = Boolean(payoutMethod && payoutMethod !== method)
+    const id = useId()
+    const contentRef = useRef<HTMLDivElement>(null)
+    useEffect(() => { if (isSubmitting) contentRef.current?.focus() }, [isSubmitting])
 
     return (
-        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/55 px-4">
-            <div className="w-full max-w-2xl rounded-[32px] border border-slate-200 bg-white p-6 shadow-2xl">
+        <Dialog.Root open onOpenChange={(open) => { if (!open && !isSubmitting) onCancel() }}>
+        <Dialog.Portal><div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/55 px-4">
+            <Dialog.Content ref={contentRef} dir={i18n.dir()} aria-busy={isSubmitting || undefined}
+                onPointerDownOutside={event => event.preventDefault()}
+                onEscapeKeyDown={event => { if (isSubmitting || transactionReference.trim() || notes.trim()) event.preventDefault() }}
+                className="w-full max-w-2xl rounded-[32px] border border-slate-200 bg-white p-6 shadow-2xl max-h-[calc(100dvh-2rem)] overflow-y-auto">
                 <div className="flex items-start justify-between gap-4">
                     <div>
                         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-amber-700">{t('superAdmin.refundsPage.execute.badge')}</p>
-                        <h2 className="mt-2 text-2xl font-semibold text-slate-950">{t('superAdmin.refundsPage.execute.title')}</h2>
+                        <Dialog.Title asChild><h2 className="mt-2 text-2xl font-semibold text-slate-950">{t('superAdmin.refundsPage.execute.title')}</h2></Dialog.Title>
                     </div>
 
                     <button
@@ -538,13 +558,14 @@ function ExecuteRefundModal({
                         className="rounded-2xl border border-slate-200 bg-white p-3 text-slate-500 transition hover:bg-slate-50 hover:text-slate-900"
                         aria-label={t('superAdmin.refundsPage.actions.close')}
                         onClick={onCancel}
+                        disabled={isSubmitting}
                     >
                         <X className="h-5 w-5" />
                     </button>
                 </div>
 
                 <div className="mt-5 rounded-[28px] border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-950">
-                    <p className="font-semibold">{t('superAdmin.refundsPage.execute.manualPayoutRequired')}</p>
+                    <Dialog.Description asChild><p className="font-semibold">{t('superAdmin.refundsPage.execute.manualPayoutRequired')}</p></Dialog.Description>
                     <p className="mt-2">{t('superAdmin.refundsPage.execute.sendBeforeConfirm')}</p>
                     <p className="mt-4 font-semibold">{t('superAdmin.refundsPage.execute.payoutDestination')}</p>
                     <p className="mt-2">
@@ -556,8 +577,9 @@ function ExecuteRefundModal({
 
                 <div className="mt-6 grid gap-4 md:grid-cols-2">
                     <div className="space-y-2">
-                        <label className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{t('superAdmin.refundsPage.execute.method')}</label>
+                        <label htmlFor={`${id}-method`} className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{t('superAdmin.refundsPage.execute.method')}</label>
                         <select
+                            id={`${id}-method`}
                             value={method}
                             onChange={(event) => onMethodChange(event.target.value as RefundPayoutMethod)}
                             className="w-full rounded-[24px] border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-amber-300 focus:ring-4 focus:ring-amber-100"
@@ -570,8 +592,10 @@ function ExecuteRefundModal({
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{t('superAdmin.refundsPage.execute.transactionReference')}</label>
+                        <label htmlFor={`${id}-reference`} className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{t('superAdmin.refundsPage.execute.transactionReference')}</label>
                         <input
+                            id={`${id}-reference`}
+                            aria-describedby={errorMessage ? `${id}-error` : undefined}
                             type="text"
                             value={transactionReference}
                             onChange={(event) => onTransactionReferenceChange(event.target.value)}
@@ -583,8 +607,9 @@ function ExecuteRefundModal({
                 </div>
 
                 <div className="mt-4 space-y-2">
-                    <label className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{t('superAdmin.refundsPage.execute.notes')}</label>
+                    <label htmlFor={`${id}-notes`} className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{t('superAdmin.refundsPage.execute.notes')}</label>
                     <textarea
+                        id={`${id}-notes`}
                         value={notes}
                         onChange={(event) => onNotesChange(event.target.value)}
                         placeholder={t('superAdmin.refundsPage.execute.notesPlaceholder')}
@@ -628,7 +653,7 @@ function ExecuteRefundModal({
                 ) : null}
 
                 {errorMessage ? (
-                    <div className="mt-4 rounded-[24px] border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-900">
+                    <div id={`${id}-error`} role="alert" className="mt-4 rounded-[24px] border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-900">
                         {errorMessage}
                     </div>
                 ) : null}
@@ -652,8 +677,8 @@ function ExecuteRefundModal({
                         {t('superAdmin.refundsPage.execute.title')}
                     </button>
                 </div>
-            </div>
-        </div>
+            </Dialog.Content>
+        </div></Dialog.Portal></Dialog.Root>
     )
 }
 
@@ -934,6 +959,7 @@ function AdminGuidancePanel() {
 function RefundDetailsDrawer({
     refund,
     isOpen,
+    busy = false,
     isLoading,
     isError,
     errorMessage,
@@ -952,6 +978,7 @@ function RefundDetailsDrawer({
 }: {
     refund?: SuperAdminRefundDetails
     isOpen: boolean
+    busy?: boolean
     isLoading: boolean
     isError: boolean
     errorMessage?: string | null
@@ -978,15 +1005,18 @@ function RefundDetailsDrawer({
     }
 
     return (
-        <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/45 backdrop-blur-sm">
-            <button type="button" aria-label={t('superAdmin.refundsPage.drawer.close')} className="flex-1" onClick={onClose} />
-            <aside className="relative flex h-full w-full max-w-3xl flex-col border-l border-slate-200 bg-slate-50 shadow-2xl">
+        <Dialog.Root open onOpenChange={(open) => { if (!open && !busy) onClose() }}>
+        <Dialog.Portal><div dir={i18n.dir()} className="fixed inset-0 z-50 flex justify-end bg-slate-950/45 backdrop-blur-sm">
+            <div aria-hidden="true" className="flex-1" onClick={() => { if (!busy) onClose() }} />
+            <Dialog.Content asChild aria-describedby={undefined} onPointerDownOutside={event => event.preventDefault()}
+                onEscapeKeyDown={event => { if (busy) event.preventDefault() }}>
+            <aside className="relative flex h-full w-full max-w-3xl flex-col border-s border-slate-200 bg-slate-50 shadow-2xl">
                 <div className="flex items-start justify-between gap-4 border-b border-slate-200 bg-white px-6 py-5">
                     <div>
                         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-emerald-600">{t('superAdmin.refundsPage.drawer.badge')}</p>
-                        <h2 className="mt-2 text-2xl font-semibold text-slate-950">
+                        <Dialog.Title asChild><h2 className="mt-2 text-2xl font-semibold text-slate-950">
                             {refund ? t('superAdmin.refundsPage.drawer.title', { id: refund.refundId.slice(0, 8) }) : t('superAdmin.refundsPage.drawer.loadingTitle')}
-                        </h2>
+                        </h2></Dialog.Title>
                     </div>
 
                     <button
@@ -994,6 +1024,7 @@ function RefundDetailsDrawer({
                         className="rounded-2xl border border-slate-200 bg-white p-3 text-slate-500 transition hover:bg-slate-50 hover:text-slate-900"
                         aria-label={t('superAdmin.refundsPage.actions.close')}
                         onClick={onClose}
+                        disabled={busy}
                     >
                         <X className="h-5 w-5" />
                     </button>
@@ -1545,8 +1576,8 @@ function RefundDetailsDrawer({
                         </div>
                     </div>
                 ) : null}
-            </aside>
-        </div>
+            </aside></Dialog.Content>
+        </div></Dialog.Portal></Dialog.Root>
     )
 }
 
@@ -1557,6 +1588,10 @@ export default function RefundsPage() {
     const unavailable = t('superAdmin.refundsPage.labels.unavailable')
     const [searchParams, setSearchParams] = useSearchParams()
     const queryClient = useQueryClient()
+    const { confirmAction } = useConfirmDialog()
+    const operationRef = useRef(false)
+    const operationRefundRef = useRef<SuperAdminRefundDetails | null>(null)
+    const [operationPending, setOperationPending] = useState(false)
     const filters = useMemo(() => buildFilters(searchParams), [searchParams])
     const selectedRefundId = searchParams.get('refundId')
     const [actionModal, setActionModal] = useState<'approve' | 'reject' | 'retry' | null>(null)
@@ -1724,11 +1759,10 @@ export default function RefundsPage() {
                 : result
             queryClient.setQueryData(['super-admin', 'refunds', 'details', accepted.refundId], accepted)
             queryClient.invalidateQueries({ queryKey: ['super-admin', 'refunds'] })
-            setSuccessMessage('Development refund simulation completed. No external money movement was confirmed.')
-            window.alert('Development simulation response validated. Idempotency replay applied no additional financial effect.')
+            setSuccessMessage(tr('Development refund simulation completed. No external money movement was confirmed.', 'اكتملت محاكاة الاسترداد للتطوير. لم يتم تأكيد أي حركة أموال خارجية.'))
         },
-        onError: (error) => {
-            window.alert(getErrorMessage(error, 'Development refund simulation failed.'))
+        onError: () => {
+            setDevelopmentAccountingRequeueError(tr('Development refund simulation failed.', 'فشلت محاكاة الاسترداد للتطوير.'))
         },
     })
 
@@ -1739,13 +1773,11 @@ export default function RefundsPage() {
             setDevelopmentAccountingRequeueError(null)
             setDevelopmentAccountingRequeueResult(message)
             setSuccessMessage(message)
-            window.alert(message)
         },
         onError: (error) => {
             const message = getErrorMessage(error, 'Development accounting outbox requeue failed.')
             setDevelopmentAccountingRequeueResult(null)
             setDevelopmentAccountingRequeueError(message)
-            window.alert(message)
         },
     })
 
@@ -1808,15 +1840,18 @@ export default function RefundsPage() {
         !detailsQuery.isError
             ? detailsQuery.data ?? null
             : null
+    // The frozen candidate keeps the pending dialog mounted during authority
+    // revalidation. It is never used to authorize a write.
+    const modalRefund = operationPending ? operationRefundRef.current : acceptedRefundDetails
 
     useEffect(() => {
-        if (selectedRefundId && !refundsQuery.isFetching && !currentSelectedRefund) {
+        if (!operationRef.current && selectedRefundId && !refundsQuery.isFetching && !currentSelectedRefund) {
             handleSelectRefund(null)
         }
     }, [currentSelectedRefund, refundsQuery.isFetching, selectedRefundId])
 
     useEffect(() => {
-        if (acceptedRefundDetails) {
+        if (operationRef.current || acceptedRefundDetails) {
             return
         }
 
@@ -1825,6 +1860,7 @@ export default function RefundsPage() {
     }, [acceptedRefundDetails])
 
     function handleResetFilters() {
+        if (operationRef.current) return
         setActionModal(null)
         setActionNote('')
         setActionError(null)
@@ -1845,6 +1881,7 @@ export default function RefundsPage() {
         key: 'status' | 'vendorId' | 'fromDate' | 'toDate',
         value: string,
     ) {
+        if (operationRef.current) return
         setSuccessMessage(null)
         updateParams({
             [key]: value || null,
@@ -1853,6 +1890,7 @@ export default function RefundsPage() {
     }
 
     function handleSelectRefund(refundId: string | null) {
+        if (operationRef.current) return
         setActionModal(null)
         setActionNote('')
         setActionError(null)
@@ -1931,9 +1969,13 @@ export default function RefundsPage() {
     }
 
     async function handleActionConfirm() {
-        if (!currentSelectedRefundId) {
+        if (operationRef.current || !currentSelectedRefundId) {
             return
         }
+        operationRef.current = true
+        operationRefundRef.current = acceptedRefundDetails
+        setOperationPending(true)
+        try {
 
         setActionError(null)
 
@@ -1951,7 +1993,7 @@ export default function RefundsPage() {
                 return
             }
 
-            approveMutation.mutate({
+            await approveMutation.mutateAsync({
                 refundId: currentRefund.refundId,
                 note: actionNote.trim() || undefined,
             })
@@ -1970,7 +2012,7 @@ export default function RefundsPage() {
                 return
             }
 
-            rejectMutation.mutate({
+            await rejectMutation.mutateAsync({
                 refundId: currentRefund.refundId,
                 reason,
             })
@@ -1983,17 +2025,28 @@ export default function RefundsPage() {
                 return
             }
 
-            retryMutation.mutate({
+            await retryMutation.mutateAsync({
                 refundId: currentRefund.refundId,
                 note: actionNote.trim() || undefined,
             })
         }
+        } catch {
+            setActionError(t('superAdmin.refundsPage.validation.currentRefundRequired'))
+        } finally {
+            operationRef.current = false
+            setOperationPending(false)
+            operationRefundRef.current = null
+        }
     }
 
     async function handleExecuteConfirm() {
-        if (!currentSelectedRefundId || !detailsQuery.data) {
+        if (operationRef.current || !currentSelectedRefundId || !detailsQuery.data) {
             return
         }
+        operationRef.current = true
+        operationRefundRef.current = acceptedRefundDetails
+        setOperationPending(true)
+        try {
 
         const transactionReference = executeTransactionReference.trim()
         if (!transactionReference) {
@@ -2025,7 +2078,7 @@ export default function RefundsPage() {
         }
 
         setExecuteError(null)
-        executeMutation.mutate({
+        await executeMutation.mutateAsync({
             refundId: currentRefund.refundId,
             method: executeMethod,
             transactionReference,
@@ -2033,15 +2086,31 @@ export default function RefundsPage() {
             confirmMoneySent,
             confirmMethodOverride,
         })
+        } catch {
+            setExecuteError(t('superAdmin.refundsPage.feedback.executeFailed'))
+        } finally {
+            operationRef.current = false
+            setOperationPending(false)
+            operationRefundRef.current = null
+        }
     }
 
     async function handleDevelopmentSimulation() {
+        if (!import.meta.env.DEV || operationRef.current) return
+        operationRef.current = true
+        operationRefundRef.current = acceptedRefundDetails
+        setOperationPending(true)
+        try {
+        await confirmAction({
+            title: tr('Development simulation', 'محاكاة التطوير'),
+            description: tr('Run or replay the Development-only refund simulation? No external money movement will be confirmed.', 'هل تريد تشغيل أو إعادة محاكاة الاسترداد للتطوير فقط؟ لن يتم تأكيد حركة أموال خارجية.'),
+            awaitAction: true,
+            onConfirm: async () => {
         let currentRefund: SuperAdminRefundDetails
         try {
             currentRefund = await requireCurrentRefundMutationAuthority()
         } catch (error) {
-            window.alert(getErrorMessage(error, t('superAdmin.refundsPage.validation.currentRefundRequired')))
-            return
+            throw error
         }
 
         const isSimulationReplay = isRefundPaid(currentRefund.status)
@@ -2051,42 +2120,58 @@ export default function RefundsPage() {
             || !isRefundAwaitingPayout(currentRefund.status)
             || !['CashOnDeliveryDebtReduction', 'OnlineBeforePayout'].includes(currentRefund.financialPreview.executionPath)
         )) {
-            window.alert(t('superAdmin.refundsPage.validation.currentRefundRequired'))
-            return
+            throw new Error(t('superAdmin.refundsPage.validation.currentRefundRequired'))
         }
 
-        if (!window.confirm(
-            isSimulationReplay
-                ? 'Replay the Development simulation to verify idempotency? No financial effect will be applied again.'
-                : 'Run the Development-only refund simulation? No external money movement will be confirmed.',
-        )) {
-            return
-        }
-
-        developmentSimulationMutation.mutate({
+        await developmentSimulationMutation.mutateAsync({
             refundId: currentRefund.refundId,
             executionPath: currentRefund.financialPreview.executionPath,
         })
+            },
+        })
+        } catch {
+            setDevelopmentAccountingRequeueError(t('superAdmin.refundsPage.validation.currentRefundRequired'))
+        } finally {
+            operationRef.current = false
+            setOperationPending(false)
+            operationRefundRef.current = null
+        }
     }
 
-    function handleDevelopmentAccountingRequeue() {
+    async function handleDevelopmentAccountingRequeue() {
         if (
             !import.meta.env.DEV
+            || operationRef.current
             || currentSelectedRefundId?.toLowerCase() !== GATE3R_REFUND_ID
             || developmentAccountingRequeueMutation.isPending
         ) {
             return
         }
 
-        if (!window.confirm(
-            `Development only: requeue accounting outbox ${GATE3R_ACCOUNTING_OUTBOX_MESSAGE_ID} for the normal worker?`,
-        )) {
-            return
-        }
-
+        operationRef.current = true
+        operationRefundRef.current = acceptedRefundDetails
+        setOperationPending(true)
+        try {
+        await confirmAction({
+            title: tr('Development only', 'للتطوير فقط'),
+            description: tr(`Development only: requeue accounting outbox ${GATE3R_ACCOUNTING_OUTBOX_MESSAGE_ID} for the normal worker?`, `للتطوير فقط: هل تريد إعادة وضع الرسالة ${GATE3R_ACCOUNTING_OUTBOX_MESSAGE_ID} في قائمة المحاسبة؟`),
+            awaitAction: true,
+            onConfirm: async () => {
+        // Revalidate after the user decides; the selected id is not authority.
+        const currentRefund = await requireCurrentRefundMutationAuthority()
+        if (currentRefund.refundId.toLowerCase() !== GATE3R_REFUND_ID) throw new Error('Development target changed')
         setDevelopmentAccountingRequeueResult(null)
         setDevelopmentAccountingRequeueError(null)
-        developmentAccountingRequeueMutation.mutate()
+        await developmentAccountingRequeueMutation.mutateAsync()
+            },
+        })
+        } catch {
+            setDevelopmentAccountingRequeueError(t('superAdmin.refundsPage.validation.currentRefundRequired'))
+        } finally {
+            operationRef.current = false
+            setOperationPending(false)
+            operationRefundRef.current = null
+        }
     }
 
     if (refundsQuery.isError && !refundsQuery.data) {
@@ -2472,8 +2557,9 @@ export default function RefundsPage() {
             </div>
 
             <RefundDetailsDrawer
-                refund={acceptedRefundDetails ?? undefined}
-                isOpen={Boolean(currentSelectedRefundId)}
+                refund={modalRefund ?? undefined}
+                isOpen={Boolean(currentSelectedRefundId || operationPending)}
+                busy={operationPending}
                 isLoading={detailsQuery.isLoading}
                 isError={detailsQuery.isError}
                 errorMessage={
@@ -2495,7 +2581,7 @@ export default function RefundsPage() {
                 onRetryExecution={() => openActionModal('retry')}
             />
 
-            {actionModal && currentSelectedRefundId ? (
+            {actionModal && (currentSelectedRefundId || operationPending) ? (
                 <ActionModal
                     title={
                         actionModal === 'approve'
@@ -2539,9 +2625,10 @@ export default function RefundsPage() {
                               : t('superAdmin.refundsPage.actionModal.placeholders.retry')
                     }
                     onNoteChange={setActionNote}
-                    isSubmitting={currentActionIsSubmitting}
+                    isSubmitting={operationPending || currentActionIsSubmitting}
                     errorMessage={currentActionError}
                     onCancel={() => {
+                        if (operationRef.current) return
                         setActionModal(null)
                         setActionError(null)
                     }}
@@ -2549,15 +2636,15 @@ export default function RefundsPage() {
                 />
             ) : null}
 
-            {executeModalOpen && acceptedRefundDetails ? (
+            {executeModalOpen && modalRefund ? (
                 <ExecuteRefundModal
-                    refund={acceptedRefundDetails}
+                    refund={modalRefund}
                     method={executeMethod}
                     transactionReference={executeTransactionReference}
                     notes={executeNotes}
                     confirmMoneySent={confirmMoneySent}
                     confirmMethodOverride={confirmMethodOverride}
-                    isSubmitting={executeMutation.isPending}
+                    isSubmitting={operationPending || executeMutation.isPending}
                     errorMessage={executeError}
                     onMethodChange={setExecuteMethod}
                     onTransactionReferenceChange={setExecuteTransactionReference}
@@ -2565,6 +2652,7 @@ export default function RefundsPage() {
                     onConfirmMoneySentChange={setConfirmMoneySent}
                     onConfirmMethodOverrideChange={setConfirmMethodOverride}
                     onCancel={() => {
+                        if (operationRef.current) return
                         setExecuteModalOpen(false)
                         setConfirmMoneySent(false)
                         setExecuteError(null)

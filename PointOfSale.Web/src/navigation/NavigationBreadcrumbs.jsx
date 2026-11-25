@@ -3,6 +3,7 @@ import { matchRoutes, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useRTL } from '../hooks/useRTL'
 import { AdminRouteContext, useSmartNavigation } from './SmartNavigationContext'
+import { resolveBreadcrumbContext } from './navigationPresentation'
 import { resolveStorefrontScreen, StorefrontBreadcrumbs } from '../modules/storefront/informationArchitecture'
 
 export default function NavigationBreadcrumbs() {
@@ -14,21 +15,37 @@ export default function NavigationBreadcrumbs() {
     const existing = resolveStorefrontScreen(location.pathname, location.search)
     const ownsBreadcrumb = matchRoutes(routes, location)?.some(match => match.route.handle?.ownsNavigationBreadcrumb)
         || (existing && location.pathname === '/settings')
-    // Legacy aliases render the same guarded screens; resolve their presentation
-    // through the canonical navigation entry, never through a new permission.
-    const canonicalPath = /^\/admin\/commercehub\/(earnings|payments)$/.test(location.pathname)
-        ? location.pathname.replace('/admin/commercehub/', '/commercehub/') : location.pathname
-    const entry = entries.find(value => value.to.pathname === canonicalPath && (!value.to.search || value.to.search === location.search))
-    const title = !existing && entry ? `${entry.labels[language]} | ${entry.modules[language]}` : null
+    const context = existing || ownsBreadcrumb
+        ? null
+        : resolveBreadcrumbContext(entries, location.pathname, location.search)
+    const trail = context
+        ? context.kind === 'parent'
+            ? [...context.entry.breadcrumbs[language], t(context.currentKey)]
+            : context.entry.breadcrumbs[language]
+        : []
+    const title = !context
+        ? null
+        : context.kind === 'parent'
+            ? `${t(context.currentKey)} | ${context.entry.modules[language]}`
+            : `${context.entry.labels[language]} | ${context.entry.modules[language]}`
     useEffect(() => {
         if (!title) return
         const previous = document.title
         document.title = title
         return () => { document.title = previous }
     }, [title])
-    if (ownsBreadcrumb || !entry) return null
-    if (existing) return <StorefrontBreadcrumbs className="mb-3" />
-    return <nav aria-label={t('smartNavigation.breadcrumb')} className="mb-3 text-xs text-gray-500">
-        <bdi>{entry.modules[language]}</bdi>{entry.breadcrumbs[language].map((label, index) => <span key={index}> / <bdi aria-current={index === entry.breadcrumbs[language].length - 1 ? 'page' : undefined}>{label}</bdi></span>)}
+    if (ownsBreadcrumb) return null
+    if (existing) return <StorefrontBreadcrumbs className="pos-shell__storefront-breadcrumbs" />
+    if (!context) return null
+    return <nav aria-label={t('smartNavigation.breadcrumb')} className="pos-shell__breadcrumbs">
+        <ol className="pos-shell__breadcrumb-list">
+            <li className="pos-shell__breadcrumb-item"><bdi>{context.entry.modules[language]}</bdi></li>
+            {trail.map((label, index) => <li key={`${label}-${index}`} className="pos-shell__breadcrumb-item" data-current={index === trail.length - 1 ? 'true' : undefined}>
+                <span aria-hidden="true" className="pos-shell__breadcrumb-separator"> / </span>
+                {index === trail.length - 1
+                    ? <bdi aria-current="page">{label}</bdi>
+                    : <bdi>{label}</bdi>}
+            </li>)}
+        </ol>
     </nav>
 }

@@ -98,8 +98,12 @@ public class SourceRevenueSummary
     public string Source { get; set; } = string.Empty;
     public string Medium { get; set; } = string.Empty;
     public decimal TotalRevenue { get; set; }
+    public decimal RecognizedRevenue { get; set; }
+    public decimal RevenueAdjustments => TotalRevenue - RecognizedRevenue;
     public int OrderCount { get; set; }
-    public decimal AverageOrderValue => OrderCount > 0 ? TotalRevenue / OrderCount : 0;
+    public int AffectedOrderCount { get; set; }
+    public string FinancialBasis => "journal-date-utc-period-movement";
+    public decimal AverageOrderValue => OrderCount > 0 ? RecognizedRevenue / OrderCount : 0;
 }
 
 /// <summary>
@@ -111,6 +115,10 @@ public class CampaignRevenueSummary
     public string Source { get; set; } = string.Empty;
     public string Medium { get; set; } = string.Empty;
     public decimal TotalRevenue { get; set; }
+    public decimal RecognizedRevenue { get; set; }
+    public decimal RevenueAdjustments => TotalRevenue - RecognizedRevenue;
     public int OrderCount { get; set; }
-    public decimal AverageOrderValue => OrderCount > 0 ? TotalRevenue / OrderCount : 0;
+    public int AffectedOrderCount { get; set; }
+    public string FinancialBasis => "journal-date-utc-period-movement";
+    public decimal AverageOrderValue => OrderCount > 0 ? RecognizedRevenue / OrderCount : 0;
 }

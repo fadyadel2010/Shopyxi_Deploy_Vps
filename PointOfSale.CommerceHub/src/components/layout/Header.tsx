@@ -55,7 +55,7 @@ export const Header = () => {
       <div className="container py-3">
         <div className="surface-panel grid gap-3 px-4 py-4 md:grid-cols-[auto_minmax(0,1fr)_auto] md:items-center md:gap-6 md:px-5">
           <div className="flex items-center justify-between gap-3">
-            <Link to="/" aria-label={`${brand.fullName} home`} className="shrink-0">
+            <Link to="/" aria-label={`${brand.fullName} ${t("Home")}`} className="shrink-0">
               <Logo />
             </Link>
 

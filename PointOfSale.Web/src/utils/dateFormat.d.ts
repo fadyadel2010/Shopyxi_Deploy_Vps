@@ -9,5 +9,6 @@ export function formatNumber(value: unknown, locale?: string, options?: Intl.Num
 export const formatInteger: typeof formatNumber;
 export const formatCompactNumber: typeof formatNumber;
 export function formatCurrency(value: unknown, currency?: string, locale?: string, options?: Intl.NumberFormatOptions): string;
+export const UNAVAILABLE_CURRENCY_VALUE: '—';
 export const formatCompactCurrency: typeof formatCurrency;
 export const formatSignedCurrency: typeof formatCurrency;

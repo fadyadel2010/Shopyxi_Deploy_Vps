@@ -1,0 +1,12 @@
+/*
+ * SHOPYXI POS design system token entry point.
+ *
+ * Import order matters: primitives define raw values, semantic tokens assign
+ * product meaning, and component/layout tokens consume the semantic layer.
+ * Every declaration is scoped to [data-product="pos"].
+ */
+
+@import './pos-primitives.css';
+@import './pos-semantic.css';
+@import './pos-components.css';
+@import './pos-layout.css';

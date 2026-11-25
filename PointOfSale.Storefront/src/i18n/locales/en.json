@@ -1,4 +1,12 @@
 {
+    "gallery": {
+        "title": "{{product}} media gallery",
+        "itemCount": "Item {{current}} of {{total}}",
+        "videoUnavailable": "Video preview unavailable",
+        "previous": "Previous media",
+        "next": "Next media",
+        "view": "View {{label}}"
+    },
     "landing": {
         "referralBanner": "You're browsing via a partner referral",
         "activeJourneyReferralBanner": "Your active cart keeps its original partner referral",
@@ -10,11 +18,13 @@
     },
     "common": {
         "loading": "Loading...",
+        "processing": "Processing...",
         "error": "Error",
         "retry": "Retry",
         "cancel": "Cancel",
         "save": "Save",
         "delete": "Delete",
+        "remove": "Remove",
         "edit": "Edit",
         "close": "Close",
         "search": "Search",
@@ -34,7 +44,12 @@
         "yes": "Yes",
         "no": "No",
         "notAvailable": "N/A",
-        "dismiss": "Dismiss"
+        "dismiss": "Dismiss",
+        "store": "Store",
+        "backToStore": "Back to Store",
+        "confirm": "Confirm",
+        "continue": "Continue",
+        "sending": "Sending..."
     },
     "header": {
         "menu": "Menu",
@@ -79,7 +94,8 @@
         "unavailable": "Search service unavailable",
         "minChars": "Enter at least 2 characters",
         "results": "{count} results",
-        "pressEnter": "Press Enter to search"
+        "pressEnter": "Press Enter to search",
+        "suggestions": "Search suggestions"
     },
     "cart": {
         "title": "Shopping Cart",
@@ -363,6 +379,9 @@
                 "removalFailed": "Proof removal failed. Please retry."
             }
         },
+        "paymentError": "Payment Configuration Error",
+        "contactSupport": "Please contact support if this issue persists.",
+        "manualWalletUnavailable": "Manual wallet options are unavailable. Please choose another payment method or retry later.",
         "paymobPayment": "Paymob Payment",
         "paymobDescription": "Pay securely with Paymob",
         "orderNumber": "Order",
@@ -669,6 +688,7 @@
             "paymentMethod": "Payment",
             "total": "Total",
             "standard": "Standard Delivery",
+            "cancellationReason": "Cancellation Reason",
             "status": {
                 "pending": "Pending",
                 "confirmed": "Confirmed",
@@ -699,7 +719,10 @@
             "confirmPassword": "Confirm Password",
             "passwordChanged": "Password changed successfully. You have been logged out from all devices.",
             "passwordChangeFailed": "Failed to change password",
-            "passwordRequirements": "Password must be at least 8 characters with one uppercase, one lowercase, and one number"
+            "passwordRequirements": "Password must be at least 8 characters with one uppercase, one lowercase, and one number",
+            "passwordChangeWarning": "Changing your password will log you out from all devices. You will need to log in again on all your devices.",
+            "socialLoginOnly": "This account uses {provider} login.",
+            "socialLoginInfo": "Your account uses {provider} for authentication. Password management is handled by your social login provider."
         },
         "sessions": {
             "title": "Sessions",
@@ -709,7 +732,11 @@
             "revokeAll": "End All Other Sessions",
             "revokedSuccess": "Session ended successfully",
             "revokedAllSuccess": "Logged out from {count} device(s)",
-            "noOtherSessions": "No other active sessions"
+            "noOtherSessions": "No other active sessions",
+            "revokeCurrentWarning": "Revoking your current session will log you out immediately. Continue?",
+            "revokeAllConfirm": "End All Other Sessions?",
+            "revokeAllWarning": "This will log you out from all other devices. Your current session will remain active.",
+            "unknownDevice": "Unknown Device"
         },
         "status": {
             "active": "Active",
@@ -861,7 +888,9 @@
             "googleNotLoaded": "Google Sign-In is not available. Please try again later.",
             "googleFailed": "Google Sign-In failed. Please try again.",
             "facebookNotLoaded": "Facebook Login is not available. Please try again later.",
-            "facebookFailed": "Facebook Login failed. Please try again."
+            "facebookFailed": "Facebook Login failed. Please try again.",
+            "googleNotConfigured": "Google Sign-In is not configured. Please contact support.",
+            "facebookNotConfigured": "Facebook Login is not configured. Please contact support."
         },
         "errors": {
             "INVALID_LOGIN_STATE": "This sign-in attempt expired or did not match this browser. Start again.",
@@ -895,10 +924,13 @@
             "NETWORK_ERROR": "Network error. Please check your connection.",
             "UNKNOWN_ERROR": "Something went wrong. Please try again.",
             "retryAfter": "Please try again in {seconds} seconds.",
-            "securityAlert": "For your security, please log in again."
+            "securityAlert": "For your security, please log in again.",
+            "passwordMismatch": "Passwords do not match"
         },
         "guard": {
-            "checking": "Verifying authentication..."
+            "checking": "Verifying authentication...",
+            "degradedTitle": "We are verifying your session",
+            "degradedMessage": "Sensitive actions stay paused until we can confirm your account safely."
         },
         "reconnecting": "Reconnecting...",
         "loading": "Loading..."
@@ -946,7 +978,14 @@
         "onSaleOnly": "On sale",
         "clearAll": "Clear all",
         "apply": "Apply",
-        "removeFilter": "Remove filter"
+        "removeFilter": "Remove filter",
+        "noResults": "No products found",
+        "tryDifferent": "Try adjusting your filters or clearing them."
+    },
+    "affiliate": {
+        "modeActive": "Affiliate Store - Curated Collection",
+        "modeTooltip": "You are browsing a curated collection of affiliate products",
+        "storeBadge": "Affiliate Store"
     },
     "sort": {
         "sortBy": "Sort by",
@@ -971,6 +1010,7 @@
         "open": "Open chat",
         "close": "Close",
         "minimize": "Minimize",
+        "minimized": "Chat with us",
         "clear": "Clear chat",
         "status": {
             "online": "Online",

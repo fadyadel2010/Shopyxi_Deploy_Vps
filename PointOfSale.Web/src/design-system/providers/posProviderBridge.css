@@ -1,0 +1,239 @@
+/*
+ * Token bridge for provider-level overlays. These selectors only apply inside
+ * surfaces that explicitly opt into the POS product attribute, so Super Admin,
+ * Affiliate, and Storefront overlays keep their existing styling.
+ */
+
+[data-product="pos"].pos-confirm-scrim {
+  background-color: var(--pos-dialog-overlay);
+  --pos-confirm-action-bg: var(--pos-button-primary-bg);
+  --pos-confirm-action-hover: var(--pos-button-primary-bg-hover);
+  --pos-confirm-tone-bg: var(--pos-color-action-primary-subtle);
+  --pos-confirm-tone-text: var(--pos-color-action-primary);
+}
+
+[data-product="pos"].pos-confirm-scrim[data-tone="danger"] {
+  --pos-confirm-action-bg: var(--pos-button-danger-bg);
+  --pos-confirm-action-hover: var(--pos-button-danger-bg-hover);
+  --pos-confirm-tone-bg: var(--pos-color-danger-subtle);
+  --pos-confirm-tone-text: var(--pos-color-danger-text);
+}
+
+[data-product="pos"].pos-confirm-scrim[data-tone="warning"] {
+  --pos-confirm-action-bg: var(--pos-color-warning);
+  --pos-confirm-action-hover: var(--pos-color-warning-hover);
+  --pos-confirm-tone-bg: var(--pos-color-warning-subtle);
+  --pos-confirm-tone-text: var(--pos-color-warning-text);
+}
+
+[data-product="pos"].pos-confirm-scrim[data-tone="info"] {
+  --pos-confirm-action-bg: var(--pos-color-info);
+  --pos-confirm-action-hover: var(--pos-color-info-hover);
+  --pos-confirm-tone-bg: var(--pos-color-info-subtle);
+  --pos-confirm-tone-text: var(--pos-color-info-text);
+}
+
+[data-product="pos"].pos-confirm-scrim .pos-confirm-tone {
+  background-color: var(--pos-confirm-tone-bg);
+  color: var(--pos-confirm-tone-text);
+}
+
+[data-product="pos"] .pos-confirm-panel {
+  background-color: var(--pos-dialog-bg);
+  border: var(--pos-border-width) solid var(--pos-dialog-border);
+  border-radius: var(--pos-dialog-radius);
+  box-shadow: var(--pos-dialog-shadow);
+  color: var(--pos-dialog-body);
+  font-family: var(--pos-font-family-ui);
+}
+
+[data-product="pos"] .pos-confirm-title {
+  color: var(--pos-dialog-title);
+  font-family: var(--pos-font-family-ui);
+}
+
+[data-product="pos"] .pos-confirm-description {
+  color: var(--pos-dialog-body);
+}
+
+[data-product="pos"] .pos-confirm-close {
+  color: var(--pos-color-text-muted);
+}
+
+[data-product="pos"] .pos-confirm-close:hover:not(:disabled) {
+  color: var(--pos-color-text-primary);
+}
+
+[data-product="pos"] .pos-confirm-close:focus-visible,
+[data-product="pos"] .pos-confirm-cancel:focus-visible,
+[data-product="pos"] .pos-confirm-confirm:focus-visible {
+  outline: var(--pos-focus-ring-width) solid var(--pos-color-focus-ring);
+  outline-offset: var(--pos-focus-ring-offset);
+}
+
+[data-product="pos"] .pos-confirm-cancel {
+  border-color: var(--pos-button-secondary-border);
+  border-radius: var(--pos-button-radius);
+  color: var(--pos-color-text-primary);
+  font-family: var(--pos-font-family-ui);
+}
+
+[data-product="pos"] .pos-confirm-cancel:hover:not(:disabled) {
+  background-color: var(--pos-color-surface-subtle);
+}
+
+[data-product="pos"] .pos-confirm-confirm {
+  background-color: var(--pos-confirm-action-bg);
+  color: var(--pos-button-primary-text);
+  border-radius: var(--pos-button-radius);
+  font-family: var(--pos-font-family-ui);
+}
+
+[data-product="pos"] .pos-confirm-confirm:hover:not(:disabled) {
+  background-color: var(--pos-confirm-action-hover);
+}
+
+[data-product="pos"] .pos-confirm-confirm:disabled {
+  background-color: var(--pos-button-primary-disabled-bg);
+  color: var(--pos-button-primary-disabled-text);
+}
+
+[data-product="pos"] .pos-confirm-input {
+  background-color: var(--pos-input-bg);
+  color: var(--pos-input-text);
+  border-color: var(--pos-input-border);
+  border-radius: var(--pos-input-radius);
+  font-family: var(--pos-font-family-ui);
+}
+
+[data-product="pos"] .pos-confirm-input:focus-visible {
+  outline: var(--pos-focus-ring-width) solid var(--pos-input-focus-ring);
+  outline-offset: var(--pos-focus-ring-offset);
+}
+
+/*
+ * The shared host is outside [data-product="pos"] and has no token inheritance.
+ * Fallbacks here mirror the existing layout tokens exactly; toast descendants
+ * still resolve the real tokens on their own POS surface. No provider changes.
+ * Non-POS-only hosts retain their original geometry and z-50 behavior.
+ */
+.fixed:has(> [data-product="pos"] > .pos-toast) {
+  inset: auto;
+  inset-block-start: calc(var(--pos-header-height, 4rem) + var(--pos-space-4, 1rem) + var(--pos-border-width, 1px));
+  inset-inline: var(--pos-content-padding-inline, 1rem);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  max-block-size: calc(100dvh - var(--pos-header-height, 4rem) - var(--pos-space-8, 2rem) - var(--pos-border-width, 1px));
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.fixed:has(> [data-product="pos"] > .pos-toast[dir="rtl"]) {
+  direction: rtl;
+}
+
+.fixed:has(> [data-product="pos"] > .pos-toast) > [data-product="pos"] {
+  flex-shrink: 0;
+  inline-size: max-content;
+  min-inline-size: min(300px, 100%);
+  max-inline-size: 100%;
+}
+
+@media (min-width: 640px) {
+  .fixed:has(> [data-product="pos"] > .pos-toast) {
+    inset-inline: var(--pos-content-padding-inline, 1.5rem);
+  }
+}
+
+@media (min-width: 1024px) {
+  .fixed:has(> [data-product="pos"] > .pos-toast) {
+    inset-inline-start: calc(var(--pos-sidebar-width, 18rem) + var(--pos-content-padding-inline, 2rem));
+    inset-inline-end: var(--pos-content-padding-inline, 2rem);
+  }
+}
+
+[data-product="pos"] .pos-toast {
+  display: flex;
+  align-items: center;
+  gap: var(--pos-space-3);
+  box-sizing: border-box;
+  min-inline-size: min(300px, 100%);
+  max-inline-size: min(28rem, 100%);
+  padding-block: var(--pos-space-3);
+  padding-inline: var(--pos-space-6);
+  border-radius: var(--pos-toast-radius);
+  box-shadow: var(--pos-toast-shadow);
+  color: var(--pos-toast-text);
+  font-family: var(--pos-font-family-ui);
+  font-size: var(--pos-font-size-body);
+  line-height: var(--pos-line-height-body);
+  font-weight: var(--pos-font-weight-label);
+  pointer-events: auto;
+  /* Keep the existing entrance duration/easing, but not a viewport-escaping
+     horizontal transform. Dismissal timing and interactions are untouched. */
+  animation-name: pos-toast-enter;
+}
+
+@keyframes pos-toast-enter {
+  from {
+    opacity: 0;
+  }
+}
+
+[data-product="pos"] .pos-toast--success {
+  background-color: var(--pos-toast-success-bg);
+}
+
+[data-product="pos"] .pos-toast--error {
+  background-color: var(--pos-toast-danger-bg);
+}
+
+[data-product="pos"] .pos-toast--warning {
+  background-color: var(--pos-toast-warning-bg);
+}
+
+[data-product="pos"] .pos-toast--info {
+  background-color: var(--pos-toast-info-bg);
+}
+
+[data-product="pos"] .pos-toast__icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+[data-product="pos"] .pos-toast__message {
+  flex: 1;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+[data-product="pos"] .pos-toast__dismiss {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+[data-product="pos"] .pos-toast__close-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+[data-product="pos"] .pos-toast__dismiss:hover {
+  opacity: 0.8;
+}
+
+[data-product="pos"] .pos-toast__dismiss:focus-visible {
+  outline: var(--pos-focus-ring-width) solid var(--pos-toast-text);
+  outline-offset: var(--pos-focus-ring-offset);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-product="pos"] .pos-toast {
+    animation: none;
+  }
+}

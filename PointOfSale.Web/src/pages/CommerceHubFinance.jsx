@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import {
     AlertTriangle,
@@ -187,6 +187,8 @@ export default function CommerceHubFinance() {
     })
     const [statementPage, setStatementPage] = useState(1)
     const [isDownloadingCsv, setIsDownloadingCsv] = useState(false)
+    const downloadingRef = useRef(false)
+    const [exportError, setExportError] = useState('')
 
     const dashboardQuery = useQuery({
         queryKey: [...vendorSessionScope, 'commercehub-finance', 'dashboard'],
@@ -339,6 +341,9 @@ export default function CommerceHubFinance() {
     }
 
     async function handleDownloadCsv() {
+        if (downloadingRef.current) return
+        downloadingRef.current = true
+        setExportError('')
         setIsDownloadingCsv(true)
 
         try {
@@ -358,8 +363,9 @@ export default function CommerceHubFinance() {
             window.URL.revokeObjectURL(downloadUrl)
         } catch (error) {
             console.error('Failed to download CommerceHub finance CSV', error)
-            window.alert(t('CommerceHubFinance.actions.downloadCsvError'))
+            setExportError(t('CommerceHubFinance.actions.downloadCsvError'))
         } finally {
+            downloadingRef.current = false
             setIsDownloadingCsv(false)
         }
     }
@@ -395,6 +401,7 @@ export default function CommerceHubFinance() {
 
     return (
         <div dir={dir} className="space-y-6">
+            {exportError && <p role="alert" className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-rose-900">{exportError}</p>}
             <section className="overflow-hidden rounded-[36px] border border-slate-200 bg-white shadow-[0_36px_100px_-56px_rgba(15,23,42,0.45)]">
                 <div className="relative overflow-hidden px-6 py-6 sm:px-8 sm:py-8">
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.18),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(14,165,233,0.12),_transparent_24%)]" />

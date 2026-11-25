@@ -16,7 +16,7 @@ import { ChevronUp, ChevronDown, Target } from 'lucide-react'
 import { useSettings } from '../../../../contexts/SettingsContext'
 
 export default function CampaignPerformanceTable({ data, loading }) {
-    const { t } = useTranslation()
+    const { t, i18n } = useTranslation()
     const { formatCurrency } = useSettings()
     const [sortField, setSortField] = useState('revenue')
     const [sortDir, setSortDir] = useState('desc')
@@ -43,7 +43,8 @@ export default function CampaignPerformanceTable({ data, loading }) {
         )
     }
 
-    const campaigns = data?.campaigns || []
+    if (!data) return null
+    const campaigns = data.campaigns
 
     if (campaigns.length === 0) {
         return (
@@ -70,7 +71,10 @@ export default function CampaignPerformanceTable({ data, loading }) {
     const sortedCampaigns = [...campaigns].sort((a, b) => {
         const aVal = a[sortField] || 0
         const bVal = b[sortField] || 0
-        return sortDir === 'desc' ? bVal - aVal : aVal - bVal
+        const comparison = sortField === 'campaign'
+            ? String(aVal).localeCompare(String(bVal), i18n.language)
+            : aVal - bVal
+        return sortDir === 'desc' ? -comparison : comparison
     })
 
     const handleSort = (field) => {
@@ -85,8 +89,8 @@ export default function CampaignPerformanceTable({ data, loading }) {
     const SortIcon = ({ field }) => {
         if (sortField !== field) return null
         return sortDir === 'desc'
-            ? <ChevronDown size={14} className="inline ml-1" />
-            : <ChevronUp size={14} className="inline ml-1" />
+            ? <ChevronDown aria-hidden="true" size={14} className="inline ms-1" />
+            : <ChevronUp aria-hidden="true" size={14} className="inline ms-1" />
     }
 
     const columns = [
@@ -113,11 +117,14 @@ export default function CampaignPerformanceTable({ data, loading }) {
                             {columns.map(col => (
                                 <th
                                     key={col.key}
-                                    className={`px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider ${col.align === 'right' ? 'text-right' : 'text-left'} ${col.sortable ? 'cursor-pointer hover:text-gray-700' : ''}`}
-                                    onClick={() => col.sortable && handleSort(col.key)}
+                                    scope="col"
+                                    aria-sort={col.sortable ? sortField === col.key ? sortDir === 'desc' ? 'descending' : 'ascending' : 'none' : undefined}
+                                    className={`px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider ${col.align === 'right' ? 'text-end' : 'text-start'} ${col.sortable ? 'cursor-pointer hover:text-gray-700' : ''}`}
                                 >
-                                    {col.label}
-                                    {col.sortable && <SortIcon field={col.key} />}
+                                    {col.sortable ? <button type="button" onClick={() => handleSort(col.key)}
+                                        className="rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-500">
+                                        {col.label}<SortIcon field={col.key} />
+                                    </button> : col.label}
                                 </th>
                             ))}
                         </tr>

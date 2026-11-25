@@ -1,21 +1,30 @@
+import { forwardRef } from 'react'
 import { CircleHelp } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { Badge, Button } from '../../design-system/primitives'
 
-export default function HelpButton({ onClick, hasArticle = false }) {
+const HelpButton = forwardRef(function HelpButton({ onClick, hasArticle = false }, ref) {
     const { t } = useTranslation()
 
     return (
-        <button
+        <Button
+            ref={ref}
             type="button"
+            variant="secondary"
+            size="sm"
             onClick={onClick}
-            className="inline-flex items-center gap-2 rounded-xl border border-indigo-200 bg-white px-4 py-2 text-sm font-semibold text-indigo-700 shadow-sm transition-colors hover:border-indigo-300 hover:bg-indigo-50"
+            className="pos-help-button"
             title={hasArticle ? t('common.help', 'Help') : t('common.helpUnavailable', 'Help article coming soon')}
+            leadingIcon={<CircleHelp size={16} />}
         >
-            <CircleHelp className="h-4 w-4" />
-            <span>{t('common.help', 'Help')}</span>
-            <span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${hasArticle ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
-                {hasArticle ? t('common.available', 'Available') : t('common.soon', 'Soon')}
+            <span className="pos-help-button__label">
+                <span>{t('common.help', 'Help')}</span>
+                <Badge variant={hasArticle ? 'success' : 'warning'} size="sm">
+                    {hasArticle ? t('common.available', 'Available') : t('common.soon', 'Soon')}
+                </Badge>
             </span>
-        </button>
+        </Button>
     )
-}
+})
+
+export default HelpButton

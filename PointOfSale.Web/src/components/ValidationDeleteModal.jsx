@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import api from '../services/api'
+import * as Dialog from '@radix-ui/react-dialog'
 
 const ENDPOINTS = {
     product: '/products',
@@ -68,6 +69,12 @@ export default function ValidationDeleteModal({
     const [errorCode, setErrorCode] = useState('')
     const [requiresRefresh, setRequiresRefresh] = useState(false)
     const mutationInFlightRef = useRef(false)
+    const openerRef = useRef(null)
+    const dialogRef = useRef(null)
+
+    useEffect(() => {
+        if (isOpen && loading) dialogRef.current?.focus()
+    }, [isOpen, loading])
 
     useEffect(() => {
         if (!isOpen || !entityId) {
@@ -81,7 +88,6 @@ export default function ValidationDeleteModal({
         setValidationReasons([])
         setErrorCode('')
         setRequiresRefresh(false)
-        mutationInFlightRef.current = false
 
         void (async () => {
             try {
@@ -138,18 +144,7 @@ export default function ValidationDeleteModal({
         }
     }, [isOpen, entityId, entityType, expectedVersion, language, t])
 
-    useEffect(() => {
-        if (!isOpen || loading) return undefined
-
-        const handleEscape = (event) => {
-            if (event.key === 'Escape') {
-                onClose?.()
-            }
-        }
-
-        window.addEventListener('keydown', handleEscape)
-        return () => window.removeEventListener('keydown', handleEscape)
-    }, [isOpen, loading, onClose])
+    const requestClose = () => { if (!mutationInFlightRef.current) onClose?.() }
 
     const applyMutationError = (error, operation) => {
         const status = error?.response?.status
@@ -185,7 +180,7 @@ export default function ValidationDeleteModal({
     }
 
     const handleDelete = async () => {
-        if (mutationInFlightRef.current || !canDelete) return
+        if (mutationInFlightRef.current || checking || !canDelete) return
 
         mutationInFlightRef.current = true
         setLoading(true)
@@ -205,7 +200,7 @@ export default function ValidationDeleteModal({
     }
 
     const handleDeactivate = async () => {
-        if (mutationInFlightRef.current || requiresRefresh) return
+        if (mutationInFlightRef.current || checking || requiresRefresh) return
 
         mutationInFlightRef.current = true
         setLoading(true)
@@ -236,18 +231,24 @@ export default function ValidationDeleteModal({
     const showDeactivateOption = entityType === 'product' && !canDelete && !requiresRefresh
 
     return (
+        <Dialog.Root open onOpenChange={(open) => { if (!open && !mutationInFlightRef.current) onClose?.() }}>
+        <Dialog.Portal>
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" dir={i18n.dir()}>
-            <div
+            <Dialog.Content
+                ref={dialogRef}
                 className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6"
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="validation-delete-title"
-                aria-describedby="validation-delete-description"
+                aria-busy={loading || checking || undefined}
+                dir={i18n.dir()}
+                onPointerDownOutside={(event) => event.preventDefault()}
+                onEscapeKeyDown={(event) => { if (mutationInFlightRef.current) event.preventDefault() }}
+                onOpenAutoFocus={() => { openerRef.current = document.activeElement }}
+                onCloseAutoFocus={(event) => { event.preventDefault(); openerRef.current?.focus() }}
             >
                 {checking ? (
-                    <div className="text-center py-8">
+                    <div className="text-center py-8" role="status">
+                        <Dialog.Title asChild><h3 className="sr-only">{t('common.delete')}</h3></Dialog.Title>
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-4"></div>
-                        <p className="text-gray-600">{t('common.loading')}</p>
+                        <Dialog.Description asChild><p className="text-gray-600">{t('common.loading')}</p></Dialog.Description>
                     </div>
                 ) : canDelete ? (
                     <>
@@ -258,14 +259,14 @@ export default function ValidationDeleteModal({
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                 </svg>
                             </div>
-                            <h3 id="validation-delete-title" className="text-lg font-medium text-gray-900 mb-2">{t('common.delete')}</h3>
-                            <p id="validation-delete-description" className="text-gray-600">
+                            <Dialog.Title asChild><h3 className="text-lg font-medium text-gray-900 mb-2">{t('common.delete')}</h3></Dialog.Title>
+                            <Dialog.Description asChild><p className="text-gray-600">
                                 {t('common.deleteConfirm', { item: entityName })}
-                            </p>
+                            </p></Dialog.Description>
                         </div>
                         <div className="flex justify-end gap-3">
                             <button
-                                onClick={onClose}
+                                onClick={requestClose}
                                 disabled={loading}
                                 autoFocus
                                 type="button"
@@ -292,12 +293,12 @@ export default function ValidationDeleteModal({
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                                 </svg>
                             </div>
-                            <h3 id="validation-delete-title" className="text-lg font-medium text-gray-900 mb-2">
+                            <Dialog.Title asChild><h3 className="text-lg font-medium text-gray-900 mb-2">
                                 {t('common.cannotDelete')}
-                            </h3>
-                            <p id="validation-delete-description" className="text-gray-600 text-sm mb-4" role="alert">
+                            </h3></Dialog.Title>
+                            <Dialog.Description asChild><p className="text-gray-600 text-sm mb-4" role="alert">
                                 {validationMessage}
-                            </p>
+                            </p></Dialog.Description>
                             {validationReasons.length > 0 && (
                                 <ul className="text-start text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4 space-y-1 list-disc ps-6">
                                     {validationReasons.map((reason, index) => (
@@ -322,7 +323,8 @@ export default function ValidationDeleteModal({
                         </div>
                         <div className="flex justify-end gap-3">
                             <button
-                                onClick={onClose}
+                                onClick={requestClose}
+                                disabled={loading}
                                 autoFocus
                                 type="button"
                                 className="btn-secondary"
@@ -342,7 +344,9 @@ export default function ValidationDeleteModal({
                         </div>
                     </>
                 )}
-            </div>
+            </Dialog.Content>
         </div>
+        </Dialog.Portal>
+        </Dialog.Root>
     )
 }

@@ -344,6 +344,14 @@ export interface SuperAdminFinancialDashboardFilter {
 }
 
 export interface SuperAdminFinancialOverview {
+    snapshotBoundaryUtc?: string
+    dataFreshness?: {
+        source: string
+        lastUpdatedAtUtc?: string | null
+        snapshotBoundaryUtc: string
+        isValid: boolean
+        hasPendingJobs: boolean
+    }
     fromDateUtc: string
     toDateUtc: string
     currency: string
@@ -537,6 +545,10 @@ export interface SuperAdminFinancialIntegrityIssue {
 }
 
 export interface SuperAdminFinancialIntegrityCheck {
+    includesGlobalLedgerChecks?: boolean
+    checkedOrderCount?: number
+    checkedRefundCount?: number
+    checkedLedgerEntryCount?: number
     status: string
     executedAtUtc: string
     scopeDescription: string

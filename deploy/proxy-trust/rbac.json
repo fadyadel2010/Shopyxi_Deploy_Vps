@@ -1,0 +1,25 @@
+{
+  "apiVersion": "v1",
+  "kind": "List",
+  "items": [
+    {"apiVersion":"v1","kind":"ServiceAccount","metadata":{"name":"shopixy-proxy-trust-reconciler","namespace":"shopixy-app"},"automountServiceAccountToken":false},
+    {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"Role","metadata":{"name":"shopixy-proxy-trust-read-v1","namespace":"kube-system"},"rules":[
+      {"apiGroups":[""],"resources":["services"],"resourceNames":["traefik"],"verbs":["get"]},
+      {"apiGroups":["apps"],"resources":["deployments"],"resourceNames":["traefik"],"verbs":["get"]},
+      {"apiGroups":["discovery.k8s.io"],"resources":["endpointslices"],"verbs":["list"]},
+      {"apiGroups":[""],"resources":["pods"],"verbs":["get"]},
+      {"apiGroups":["apps"],"resources":["replicasets"],"verbs":["get"]}
+    ]},
+    {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"Role","metadata":{"name":"shopixy-proxy-trust-read-write-v1","namespace":"shopixy-app"},"rules":[
+      {"apiGroups":[""],"resources":["services"],"resourceNames":["shopixy-web","shopixy-storefront","shopixy-commercehub"],"verbs":["get"]},
+      {"apiGroups":["apps"],"resources":["deployments"],"resourceNames":["shopixy-web","shopixy-storefront","shopixy-commercehub"],"verbs":["get"]},
+      {"apiGroups":["discovery.k8s.io"],"resources":["endpointslices"],"verbs":["list"]},
+      {"apiGroups":[""],"resources":["pods"],"verbs":["get"]},
+      {"apiGroups":["apps"],"resources":["replicasets"],"verbs":["get"]},
+      {"apiGroups":[""],"resources":["configmaps"],"resourceNames":["shopixy-proxy-trust-peers-v1"],"verbs":["get","patch"]}
+    ]},
+    {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"RoleBinding","metadata":{"name":"shopixy-proxy-trust-read-v1","namespace":"kube-system"},"roleRef":{"apiGroup":"rbac.authorization.k8s.io","kind":"Role","name":"shopixy-proxy-trust-read-v1"},"subjects":[{"kind":"ServiceAccount","name":"shopixy-proxy-trust-reconciler","namespace":"shopixy-app"}]},
+    {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"RoleBinding","metadata":{"name":"shopixy-proxy-trust-read-write-v1","namespace":"shopixy-app"},"roleRef":{"apiGroup":"rbac.authorization.k8s.io","kind":"Role","name":"shopixy-proxy-trust-read-write-v1"},"subjects":[{"kind":"ServiceAccount","name":"shopixy-proxy-trust-reconciler","namespace":"shopixy-app"}]},
+    {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"Role","metadata":{"name":"shopixy-proxy-trust-consume-v1","namespace":"shopixy-app"},"rules":[{"apiGroups":[""],"resources":["configmaps"],"resourceNames":["shopixy-proxy-trust-peers-v1"],"verbs":["get"]}]}
+  ]
+}

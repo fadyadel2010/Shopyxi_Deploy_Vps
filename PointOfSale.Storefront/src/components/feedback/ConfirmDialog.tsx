@@ -10,8 +10,10 @@
  * - Focus restored on close
  */
 
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useId, useRef, useState, useCallback } from 'react';
 import { Button } from '@/components/common';
+import { useTranslation } from '@/i18n';
+import { useFocusTrap, useBodyScrollLock } from '@/hooks/useScrollPosition';
 
 interface ConfirmDialogProps {
     /** Whether the dialog is open */
@@ -29,7 +31,7 @@ interface ConfirmDialogProps {
     /** Whether confirming is in progress */
     isLoading?: boolean;
     /** Confirm callback */
-    onConfirm: () => void;
+    onConfirm: () => void | Promise<void>;
     /** Cancel callback */
     onCancel: () => void;
 }
@@ -41,76 +43,51 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
     isOpen,
     title,
     message,
-    confirmText = 'Confirm',
-    cancelText = 'Cancel',
+    confirmText,
+    cancelText,
     confirmVariant = 'primary',
     isLoading = false,
     onConfirm,
     onCancel,
 }) => {
     const dialogRef = useRef<HTMLDivElement>(null);
-    const previouslyFocusedRef = useRef<HTMLElement | null>(null);
-
-    // Store previously focused element when opening
+    const { t, direction } = useTranslation();
+    const id = useId();
+    const activationRef = useRef(false);
+    const [localPending, setLocalPending] = useState(false);
+    const pending = isLoading || localPending;
+    useFocusTrap(dialogRef, isOpen);
+    useBodyScrollLock(isOpen);
     useEffect(() => {
-        if (isOpen) {
-            previouslyFocusedRef.current = document.activeElement as HTMLElement;
+        if (isOpen && pending) dialogRef.current?.focus();
+    }, [isOpen, pending]);
+    const handleConfirm = async () => {
+        if (pending || activationRef.current) return;
+        activationRef.current = true;
+        setLocalPending(true);
+        try { await onConfirm(); } finally {
+            activationRef.current = false;
+            setLocalPending(false);
         }
-    }, [isOpen]);
-
-    // Focus trap and keyboard handling
+    };
     useEffect(() => {
-        if (!isOpen || !dialogRef.current) return;
-
-        const dialog = dialogRef.current;
-        const focusableElements = dialog.querySelectorAll<HTMLElement>(
-            'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-        );
-        const firstElement = focusableElements[0];
-        const lastElement = focusableElements[focusableElements.length - 1];
-
-        // Focus first focusable element
-        firstElement?.focus();
-
-        const handleKeyDown = (e: KeyboardEvent) => {
-            // ESC key closes dialog
-            if (e.key === 'Escape' && !isLoading) {
-                e.preventDefault();
+        if (!isOpen) return;
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape' && !pending && !activationRef.current) {
+                event.preventDefault();
                 onCancel();
-                return;
-            }
-
-            // Tab key trap
-            if (e.key === 'Tab') {
-                if (e.shiftKey) {
-                    if (document.activeElement === firstElement) {
-                        e.preventDefault();
-                        lastElement?.focus();
-                    }
-                } else {
-                    if (document.activeElement === lastElement) {
-                        e.preventDefault();
-                        firstElement?.focus();
-                    }
-                }
             }
         };
-
         document.addEventListener('keydown', handleKeyDown);
-
-        return () => {
-            document.removeEventListener('keydown', handleKeyDown);
-            // Restore focus to previously focused element
-            previouslyFocusedRef.current?.focus();
-        };
-    }, [isOpen, isLoading, onCancel]);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [isOpen, pending, onCancel]);
 
     // Stable cancel handler for backdrop click
     const handleBackdropClick = useCallback(() => {
-        if (!isLoading) {
+        if (!pending && !activationRef.current) {
             onCancel();
         }
-    }, [isLoading, onCancel]);
+    }, [pending, onCancel]);
 
     if (!isOpen) {
         return null;
@@ -129,26 +106,30 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
             <div
                 className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4"
                 role="dialog"
+                dir={direction}
+                aria-busy={pending || undefined}
                 aria-modal="true"
-                aria-labelledby="confirm-dialog-title"
-                aria-describedby="confirm-dialog-message"
+                aria-labelledby={`${id}-title`}
+                aria-describedby={`${id}-message`}
+                onClick={event => { if (event.target === event.currentTarget) handleBackdropClick(); }}
             >
                 <div
                     ref={dialogRef}
+                    tabIndex={-1}
                     className="bg-background rounded-t-xl sm:rounded-xl shadow-xl w-full max-w-sm animate-slide-in-up sm:animate-scale-in motion-reduce:animate-none"
                     onClick={(e) => e.stopPropagation()}
                 >
                     <div className="p-6">
                         {/* Title */}
                         <h3
-                            id="confirm-dialog-title"
+                            id={`${id}-title`}
                             className="text-lg font-semibold text-text mb-2"
                         >
                             {title}
                         </h3>
 
                         {/* Message */}
-                        <p id="confirm-dialog-message" className="text-muted text-sm mb-6">
+                        <p id={`${id}-message`} className="text-muted text-sm mb-6">
                             {message}
                         </p>
 
@@ -158,19 +139,19 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
                                 variant="secondary"
                                 size="md"
                                 fullWidth
-                                onClick={onCancel}
-                                disabled={isLoading}
+                                onClick={handleBackdropClick}
+                                disabled={pending}
                             >
-                                {cancelText}
+                                {cancelText || t('common.cancel')}
                             </Button>
                             <Button
                                 variant={confirmVariant}
                                 size="md"
                                 fullWidth
-                                onClick={onConfirm}
-                                loading={isLoading}
+                                onClick={handleConfirm}
+                                loading={pending}
                             >
-                                {confirmText}
+                                {confirmText || t('common.confirm')}
                             </Button>
                         </div>
                     </div>
@@ -182,4 +163,3 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
         </>
     );
 };
-

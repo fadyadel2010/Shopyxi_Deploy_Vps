@@ -63,7 +63,7 @@ public class AdminInventoryService : IAdminInventoryService
 
         // PHASE 11.5: Query ProductVariantStocks (the source of truth for inventory)
         // NOT WarehouseStock (legacy)
-        var queryBuilder = _context.Set<ProductVariantStock>()
+        var queryBuilder = PointOfSale.Infrastructure.Inventory.InventoryReportingReader.EligiblePositions(_context, tenantId)
             .Include(pvs => pvs.Variant)
                 .ThenInclude(v => v.Product)
             .Include(pvs => pvs.Warehouse)
@@ -97,7 +97,7 @@ public class AdminInventoryService : IAdminInventoryService
 
         if (query.LowStockOnly == true)
         {
-            queryBuilder = queryBuilder.Where(pvs => pvs.Quantity <= pvs.Variant.Product.MinimumStockLevel);
+            queryBuilder = queryBuilder.Where(pvs => pvs.Quantity - pvs.ReservedQuantity <= pvs.Variant.Product.LowStockThreshold);
         }
 
         // Get total count
@@ -127,8 +127,8 @@ public class AdminInventoryService : IAdminInventoryService
                 Quantity = pvs.Quantity,
                 ReservedQuantity = pvs.ReservedQuantity,
                 AvailableQuantity = pvs.Quantity - pvs.ReservedQuantity,
-                MinimumStockLevel = pvs.Variant.Product.MinimumStockLevel,
-                IsLowStock = pvs.Quantity <= pvs.Variant.Product.MinimumStockLevel
+                MinimumStockLevel = pvs.Variant.Product.LowStockThreshold,
+                IsLowStock = pvs.Quantity - pvs.ReservedQuantity <= pvs.Variant.Product.LowStockThreshold
             })
             .ToListAsync(cancellationToken);
 

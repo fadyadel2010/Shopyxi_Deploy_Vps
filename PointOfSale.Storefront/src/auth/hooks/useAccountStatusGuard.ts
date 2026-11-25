@@ -13,8 +13,12 @@
 
 import { useCallback, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from '@/i18n';
 import { useAuthStore } from '../store/authStore';
 import { useAccount } from './useAccount';
+
+/** Stable translation key for the account-deactivation guard message. */
+export const ACCOUNT_DEACTIVATED_MESSAGE_KEY = 'auth.errors.ACCOUNT_DEACTIVATED';
 
 interface UseAccountStatusGuardOptions {
     // Check interval in milliseconds (default: 60000 = 1 minute)
@@ -34,6 +38,7 @@ export function useAccountStatusGuard(options: UseAccountStatusGuardOptions = {}
     } = options;
 
     const navigate = useNavigate();
+    const { t } = useTranslation();
     const { status, logout } = useAuthStore();
     const { loadAccountStatus, accountStatus } = useAccount();
     const checkingRef = useRef(false);
@@ -60,13 +65,14 @@ export function useAccountStatusGuard(options: UseAccountStatusGuardOptions = {}
             logout().then(() => {
                 navigate('/login', {
                     state: {
-                        message: 'Your account has been disabled. Please contact support.',
+                        message: t(ACCOUNT_DEACTIVATED_MESSAGE_KEY),
+                        messageKey: ACCOUNT_DEACTIVATED_MESSAGE_KEY,
                         type: 'error'
                     }
                 });
             });
         }
-    }, [accountStatus, logout, navigate]);
+    }, [accountStatus, logout, navigate, t]);
 
     // Initial check on mount
     useEffect(() => {

@@ -6,6 +6,8 @@ import { useAuthStore } from '../store/authStore'
 import { storeConfigService } from '../modules/storefront/services'
 import { useSettings } from '../contexts/SettingsContext'
 import { canManageStorefrontSettings } from '../auth/storefrontAdminAuthority'
+import { Badge, Button, Card } from '../design-system/primitives'
+import { useRTL } from '../hooks/useRTL'
 
 /**
  * Storefront Status Card Component
@@ -19,13 +21,12 @@ import { canManageStorefrontSettings } from '../auth/storefrontAdminAuthority'
  * - Quick link to open storefront
  */
 
-export default function StorefrontStatusCard() {
-    const { t, i18n } = useTranslation()
+export default function StorefrontStatusCard({ presentation } = {}) {
+    const { t } = useTranslation()
     const navigate = useNavigate()
     const { user } = useAuthStore()
     const { settings } = useSettings()
-    const isRTL = i18n.language === 'ar'
-    const dir = isRTL ? 'rtl' : 'ltr'
+    const { dir } = useRTL()
     const tenantId = user?.tenantId
     const canManage = canManageStorefrontSettings(user)
 
@@ -133,6 +134,34 @@ export default function StorefrontStatusCard() {
 
     const goToSettings = () => {
         navigate('/storefront/status')
+    }
+
+    if (presentation === 'dashboard') {
+        const config = storeConfig ? getStatusConfig(storeConfig.storefrontStatus) : null
+        return (
+            <Card as="section" className="pos-dashboard__panel" aria-busy={loading || undefined}>
+                <div className="pos-dashboard__section-heading">
+                    <h2>{t('storefront.onlineStore', 'Online Store')}</h2>
+                    {config ? <Badge variant={storeConfig.storefrontStatus === 'live' ? 'success' : storeConfig.storefrontStatus === 'disabled' ? 'danger' : 'warning'}>{config.label}</Badge> : null}
+                </div>
+                {loading ? <p role="status">{t('common.loading')}</p> : error || !storeConfig ? (
+                    <div className={error ? 'pos-dashboard__error' : ''} role="status">
+                        <p>{error || t('storefront.notConfigured', 'Not configured')}</p>
+                        {error ? <Button variant="secondary" onClick={fetchStoreConfig}>{t('common.retry')}</Button> : canManage ? <Button variant="secondary" onClick={goToSettings}>{t('storefront.setupNow', 'Set up now')}</Button> : null}
+                    </div>
+                ) : (
+                    <>
+                        <p><strong><bdi>{storeConfig.storeName}</bdi></strong></p>
+                        {storeConfig.storefrontStatus !== 'live' ? <p className="pos-dashboard__caption">{config.description}</p> : null}
+                        <div className="pos-dashboard__actions">
+                            <Button variant="secondary" onClick={openStorefront} disabled={!settings.storefrontUrl}>{t('storefront.viewStore', 'View Store')}</Button>
+                            {canManage ? <Button variant="secondary" onClick={goToSettings}>{t('storefront.manage', 'Manage')}</Button> : null}
+                            <Button variant="ghost" onClick={fetchStoreConfig}>{t('storefront.refreshStatus', 'Refresh status')}</Button>
+                        </div>
+                    </>
+                )}
+            </Card>
+        )
     }
 
     if (loading) {

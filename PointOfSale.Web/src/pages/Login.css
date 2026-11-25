@@ -1,0 +1,476 @@
+/*
+ * SHOPYXI POS — Login only. Existing tokens and primitives; no global styles.
+ * The document owns direction. Symmetric credential padding keeps Arabic,
+ * Latin and revealed password text clear of both adornments in either locale.
+ */
+
+[data-product="pos"].pos-login {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 44fr) minmax(0, 56fr);
+  min-block-size: 100vh;
+  min-block-size: 100dvh;
+  background-color: var(--pos-color-bg-canvas);
+  color: var(--pos-color-text-primary);
+  font-family: var(--pos-font-family-ui);
+}
+
+/* Reference-led split. Only the ink background is clipped; content and
+   keyboard focus remain unobscured in both directions. */
+[data-product="pos"] .pos-login__brand {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-block: var(--pos-space-16);
+  padding-inline: var(--pos-space-12) calc(var(--pos-space-16) + var(--pos-space-4));
+  color: var(--pos-color-text-inverse);
+}
+
+[data-product="pos"] .pos-login__brand::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background-color: var(--pos-color-surface-inverse);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 5rem) 100%, 0 100%);
+}
+
+[data-product="pos"] .pos-login__brand:dir(rtl)::before {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 5rem 100%);
+}
+
+[data-product="pos"] .pos-login__brand-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pos-space-12);
+  inline-size: 100%;
+  max-inline-size: 32rem;
+  min-inline-size: 0;
+  text-align: start;
+}
+
+[data-product="pos"] .pos-login__brand-identity {
+  display: flex;
+  align-items: center;
+  gap: var(--pos-space-4);
+  inline-size: 100%;
+  max-inline-size: 100%;
+  padding: var(--pos-space-4);
+  border-radius: var(--pos-radius-card);
+  background-color: var(--pos-color-surface);
+}
+
+[data-product="pos"] .pos-login__brand-plate {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+[data-product="pos"] .pos-login__brand picture {
+  display: contents;
+}
+
+[data-product="pos"] .pos-login__brand-logo {
+  display: block;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  block-size: auto;
+}
+
+[data-product="pos"] .pos-login__wordmark {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: var(--pos-space-1);
+  margin: 0;
+}
+
+[data-product="pos"] .pos-login__wordmark .pos-login__wordmark-name {
+  display: none;
+}
+
+[data-product="pos"] .pos-login__wordmark-qualifier {
+  display: inline-flex;
+  padding: var(--pos-space-2) var(--pos-space-3);
+  border-radius: var(--pos-radius-control);
+  background-color: var(--pos-badge-brand-bg);
+  color: var(--pos-badge-brand-text);
+  font-size: var(--pos-font-size-section-title);
+  line-height: var(--pos-line-height-section-title);
+  font-weight: var(--pos-font-weight-body-strong);
+}
+
+[data-product="pos"] .pos-login__brand-story {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pos-space-16);
+}
+
+[data-product="pos"] .pos-login__tagline {
+  max-inline-size: 16ch;
+  margin: 0;
+  font-size: var(--pos-font-size-display);
+  line-height: var(--pos-line-height-display);
+  font-weight: var(--pos-font-weight-display);
+  letter-spacing: var(--pos-letter-spacing-body);
+  white-space: pre-line;
+}
+
+[data-product="pos"] .pos-login__brand-description {
+  max-inline-size: 36ch;
+  margin: var(--pos-space-4) 0 0;
+  font-size: var(--pos-font-size-section-title);
+  line-height: var(--pos-line-height-section-title);
+  font-weight: var(--pos-font-weight-body);
+}
+
+[data-product="pos"] .pos-login__proof {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--pos-space-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+[data-product="pos"] .pos-login__proof-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--pos-space-3);
+  font-size: var(--pos-font-size-body);
+  line-height: var(--pos-line-height-body);
+  font-weight: var(--pos-font-weight-body);
+  text-align: center;
+}
+
+[data-product="pos"] .pos-login__proof-item > svg {
+  flex-shrink: 0;
+}
+
+/* A substantial elevated form sheet, with a separate language toolbar. */
+[data-product="pos"] .pos-login__panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--pos-space-8);
+  min-inline-size: 0;
+  padding-block: var(--pos-space-8) var(--pos-space-16);
+  padding-inline: var(--pos-space-10);
+  background-color: var(--pos-color-bg-canvas);
+}
+
+[data-product="pos"] .pos-login__language {
+  display: flex;
+  justify-content: flex-end;
+  align-self: stretch;
+}
+
+[data-product="pos"] .pos-login__language .pos-button {
+  min-block-size: calc(var(--pos-space-10) + var(--pos-space-1));
+  border: var(--pos-border-width) solid var(--pos-color-border-strong);
+  border-radius: var(--pos-radius-modal);
+  background-color: var(--pos-color-surface);
+}
+
+[data-product="pos"].pos-login .pos-login__card {
+  inline-size: 100%;
+  max-inline-size: 38rem;
+  margin-block: auto;
+  padding: var(--pos-space-12);
+  border: var(--pos-border-width) solid var(--pos-card-border);
+  border-radius: var(--pos-radius-modal);
+  background-color: var(--pos-color-surface);
+  box-shadow: var(--pos-shadow-lg);
+}
+
+[data-product="pos"] .pos-login__header {
+  margin-block-end: var(--pos-space-8);
+  text-align: center;
+}
+
+[data-product="pos"] .pos-login__title {
+  margin: 0;
+  color: var(--pos-color-text-primary);
+  font-size: var(--pos-font-size-display);
+  line-height: var(--pos-line-height-display);
+  font-weight: var(--pos-font-weight-display);
+  letter-spacing: var(--pos-letter-spacing-body);
+}
+
+[data-product="pos"] .pos-login__subtitle {
+  margin: 0;
+  margin-block-start: var(--pos-space-2);
+  color: var(--pos-color-text-secondary);
+  font-size: var(--pos-font-size-body);
+  line-height: var(--pos-line-height-body);
+  font-weight: var(--pos-font-weight-body);
+}
+
+[data-product="pos"] .pos-login__alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--pos-space-3);
+  margin-block-end: var(--pos-space-6);
+  padding: var(--pos-space-3) var(--pos-space-4);
+  border: var(--pos-border-width) solid var(--pos-color-danger-border);
+  border-radius: var(--pos-radius-control);
+  background-color: var(--pos-color-danger-subtle);
+  color: var(--pos-color-danger-text);
+  font-size: var(--pos-font-size-body);
+  line-height: var(--pos-line-height-body);
+}
+
+[data-product="pos"] .pos-login__alert:focus-visible {
+  outline: var(--pos-focus-ring-width) solid var(--pos-color-focus-ring);
+  outline-offset: var(--pos-focus-ring-offset);
+}
+
+[data-product="pos"] .pos-login__alert > svg {
+  flex-shrink: 0;
+  margin-block-start: calc(var(--pos-space-1) / 2);
+}
+
+[data-product="pos"] .pos-login__alert > span {
+  overflow-wrap: anywhere;
+}
+
+[data-product="pos"] .pos-login__form {
+  display: grid;
+  gap: var(--pos-space-6);
+}
+
+[data-product="pos"] .pos-login__form .pos-field {
+  gap: var(--pos-space-2);
+}
+
+[data-product="pos"] .pos-login__form .pos-field__label {
+  color: var(--pos-color-text-primary);
+  font-size: var(--pos-font-size-section-title);
+  line-height: var(--pos-line-height-section-title);
+  font-weight: var(--pos-font-weight-body-strong);
+}
+
+[data-product="pos"] .pos-login__form .pos-input {
+  min-block-size: var(--pos-space-16);
+  padding-inline: calc(var(--pos-space-12) + var(--pos-space-2));
+  border-radius: var(--pos-radius-card);
+}
+
+[data-product="pos"] .pos-login__credential,
+[data-product="pos"] .pos-login__password {
+  position: relative;
+}
+
+[data-product="pos"] .pos-login__input-icon {
+  position: absolute;
+  inset-block-end: calc((var(--pos-space-16) - var(--pos-space-5)) / 2);
+  inset-inline-start: var(--pos-space-4);
+  color: var(--pos-color-text-secondary);
+  pointer-events: none;
+}
+
+[data-product="pos"] .pos-login__password-toggle {
+  position: absolute;
+  inset-block-end: calc((var(--pos-space-16) - var(--pos-space-10) - var(--pos-space-1)) / 2);
+  inset-inline-end: calc(var(--pos-space-3) / 2);
+  inline-size: calc(var(--pos-space-10) + var(--pos-space-1));
+  block-size: calc(var(--pos-space-10) + var(--pos-space-1));
+}
+
+[data-product="pos"] .pos-login__submit {
+  min-block-size: var(--pos-space-16);
+  border-radius: var(--pos-radius-card);
+  margin-block-start: var(--pos-space-2);
+  font-size: var(--pos-font-size-section-title);
+  line-height: var(--pos-line-height-section-title);
+  font-weight: var(--pos-font-weight-body-strong);
+}
+
+[data-product="pos"] .pos-login__submit:dir(rtl) .pos-button__icon {
+  transform: scaleX(-1);
+}
+
+[data-product="pos"] .pos-login__prompt {
+  margin: var(--pos-space-6) 0 0;
+  color: var(--pos-color-text-secondary);
+  font-size: var(--pos-font-size-body);
+  line-height: var(--pos-line-height-body);
+  text-align: center;
+}
+
+[data-product="pos"] .pos-login__prompt a {
+  color: var(--pos-color-action-primary-hover);
+  font-weight: var(--pos-font-weight-body-strong);
+  text-decoration: underline;
+  text-underline-offset: var(--pos-space-1);
+  border-radius: var(--pos-radius-xs);
+}
+
+[data-product="pos"] .pos-login__prompt a:hover {
+  color: var(--pos-color-action-primary-active);
+}
+
+[data-product="pos"] .pos-login__prompt a:focus-visible {
+  outline: var(--pos-focus-ring-width) solid var(--pos-color-focus-ring);
+  outline-offset: var(--pos-focus-ring-offset);
+}
+
+[data-product="pos"] .pos-login__secure {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--pos-space-2);
+  margin: var(--pos-space-6) 0 0;
+  color: var(--pos-color-text-secondary);
+  font-size: var(--pos-font-size-body);
+  line-height: var(--pos-line-height-body);
+  text-align: center;
+}
+
+[data-product="pos"] .pos-login__secure::before,
+[data-product="pos"] .pos-login__secure::after {
+  content: "";
+  flex: 1;
+  border-block-start: var(--pos-border-width) solid var(--pos-color-border-subtle);
+}
+
+[data-product="pos"] .pos-login__secure > svg {
+  flex-shrink: 0;
+}
+
+/* Compact identity and language share a header, in source/keyboard order.
+   The official symbol is selected by <picture>, not reconstructed in CSS. */
+@media (width < 1024px) {
+  [data-product="pos"].pos-login {
+    display: block;
+    padding: 0;
+    background-color: var(--pos-color-bg-canvas);
+  }
+
+  [data-product="pos"] .pos-login__brand {
+    min-block-size: 6rem;
+    padding-block: var(--pos-space-6);
+    padding-inline: var(--pos-space-8) calc(var(--pos-space-16) * 2);
+    border-block-end: var(--pos-border-width) solid var(--pos-color-border-subtle);
+    border-radius: 0;
+    background-color: var(--pos-color-surface);
+  }
+
+  [data-product="pos"] .pos-login__brand-content {
+    gap: 0;
+    max-inline-size: none;
+  }
+
+  [data-product="pos"] .pos-login__brand::before {
+    display: none;
+  }
+
+  [data-product="pos"] .pos-login__brand-identity {
+    gap: var(--pos-space-3);
+    inline-size: fit-content;
+    padding: 0;
+    background-color: transparent;
+  }
+
+  [data-product="pos"] .pos-login__brand-plate {
+    flex: none;
+  }
+
+  [data-product="pos"] .pos-login__brand-logo {
+    inline-size: calc(var(--pos-space-10) + var(--pos-space-1));
+    max-inline-size: none;
+    block-size: calc(var(--pos-space-10) + var(--pos-space-1));
+  }
+
+  [data-product="pos"] .pos-login__wordmark {
+    gap: 0;
+  }
+
+  [data-product="pos"] .pos-login__wordmark .pos-login__wordmark-name {
+    display: block;
+    color: var(--pos-color-text-primary);
+    font-size: var(--pos-font-size-section-title);
+    line-height: var(--pos-line-height-section-title);
+    font-weight: var(--pos-font-weight-section-title);
+    letter-spacing: var(--pos-letter-spacing-body);
+  }
+
+  [data-product="pos"] .pos-login__wordmark-qualifier {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background-color: transparent;
+    color: var(--pos-color-text-secondary);
+    font-size: var(--pos-font-size-caption);
+    line-height: var(--pos-line-height-caption);
+  }
+
+  [data-product="pos"] .pos-login__brand-story {
+    display: none;
+  }
+
+  [data-product="pos"] .pos-login__language {
+    position: absolute;
+    inset-block-start: calc((6rem - var(--pos-space-10) - var(--pos-space-1)) / 2);
+    inset-inline-end: var(--pos-space-8);
+  }
+
+  [data-product="pos"] .pos-login__panel {
+    justify-content: center;
+    min-block-size: calc(100dvh - 6rem);
+    padding: var(--pos-space-12) var(--pos-space-8);
+    background-color: var(--pos-color-bg-canvas);
+  }
+
+  [data-product="pos"].pos-login .pos-login__card {
+    max-inline-size: 38rem;
+    margin: 0;
+    padding: var(--pos-space-10);
+    border: var(--pos-border-width) solid var(--pos-card-border);
+    border-radius: var(--pos-radius-modal);
+    box-shadow: var(--pos-shadow-lg);
+  }
+}
+
+/* Mobile is a focused sign-in surface, not a tall decorative brand band. */
+@media (width < 768px) {
+  [data-product="pos"].pos-login {
+    background-color: var(--pos-color-surface);
+  }
+
+  [data-product="pos"] .pos-login__brand {
+    padding-inline-start: var(--pos-space-6);
+  }
+
+  [data-product="pos"] .pos-login__language {
+    inset-inline-end: var(--pos-space-6);
+  }
+
+  [data-product="pos"] .pos-login__panel {
+    justify-content: flex-start;
+    padding-block: var(--pos-space-10) calc(var(--pos-space-6) + env(safe-area-inset-bottom, 0px));
+    padding-inline: var(--pos-space-6);
+    background-color: var(--pos-color-surface);
+  }
+
+  [data-product="pos"].pos-login .pos-login__card {
+    max-inline-size: 28rem;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  [data-product="pos"] .pos-login__title {
+    font-size: var(--pos-font-size-page-title);
+    line-height: var(--pos-line-height-page-title);
+    font-weight: var(--pos-font-weight-page-title);
+  }
+
+  [data-product="pos"] .pos-login__form .pos-field__label {
+    font-size: var(--pos-font-size-body-strong);
+    line-height: var(--pos-line-height-body-strong);
+  }
+}

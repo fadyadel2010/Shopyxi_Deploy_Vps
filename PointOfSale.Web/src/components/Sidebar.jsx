@@ -1,17 +1,35 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
     Activity,
+    Banknote,
     BarChart3,
+    BookOpen,
     Bot,
-    Target,
+    Briefcase,
+    Building2,
+    CalendarDays,
+    ClipboardList,
+    Coins,
+    CreditCard,
+    Database,
+    Factory,
+    FilePen,
     FileText,
     Files,
+    Flag,
+    Folder,
+    FolderOpen,
+    Globe,
+    Handshake,
     History,
     Home,
+    Hourglass,
+    Landmark,
     LayoutDashboard,
     LayoutTemplate,
+    ListTree,
     Navigation as NavigationIcon,
     Paintbrush,
     Palette,
@@ -20,16 +38,27 @@ import {
     PanelsTopLeft,
     PanelTop,
     Package,
-    CreditCard,
-    Tag,
-    Truck,
-    Shield,
+    Plus,
+    ReceiptText,
+    RefreshCw,
+    Ruler,
+    ScrollText,
     Settings,
+    Shield,
     ShoppingBag,
     ShoppingBasket,
     Store,
-    Globe,
+    Tags,
+    Target,
+    TrendingUp,
+    TriangleAlert,
+    Truck,
+    Undo2,
+    UserRound,
+    Users,
+    X,
 } from 'lucide-react'
+import standaloneSymbol from '../assets/brand/SHOPYXI_standalone_symbol.svg'
 import { useAuthStore } from '../store/authStore'
 import { useRTL } from '../hooks/useRTL'
 import { isServiceMarketplaceWorkflowActor } from '../marketplace/authority'
@@ -37,6 +66,17 @@ import { canAccessCommerceHubVendorNavigationCapability } from '../auth/posVendo
 import { hasPosPermission } from '../auth/posPermissions'
 import { useSmartNavigation } from '../navigation/SmartNavigationContext'
 import { SidebarFavorites } from '../navigation/SidebarFavorites'
+import { Dialog, IconButton } from '../design-system/primitives'
+import {
+    navigationEntryApplication,
+    resolveApplicationFromLocation,
+    scopeMenuToApplication,
+} from '../navigation/applicationNavigation'
+import {
+    dynamicParentPathname,
+    findFirstMenuMatch,
+    menuDestinationMatches,
+} from '../navigation/navigationPresentation'
 import {
     STOREFRONT_PRODUCT_NAVIGATION,
     STOREFRONT_SIDEBAR_STATE_KEY,
@@ -72,7 +112,7 @@ const STOREFRONT_ICONS = {
     PanelTop,
     Package,
     CreditCard,
-    Tag,
+    Tag: Tags,
     Truck,
     Shield,
     Settings,
@@ -81,6 +121,69 @@ const STOREFRONT_ICONS = {
     Store,
     Globe,
 }
+
+// Legacy emoji tokens remain stable identifiers in the menu contract; every
+// rendered navigation icon is an approved Lucide component.
+const LEGACY_ICON_COMPONENTS = {
+    '📊': BarChart3,
+    '🗄️': Database,
+    '👥': Users,
+    '🏢': Building2,
+    '👤': UserRound,
+    '📑': ListTree,
+    '📏': Ruler,
+    '🏭': Factory,
+    '🏦': Landmark,
+    '🏷️': Tags,
+    '💼': Briefcase,
+    '📂': FolderOpen,
+    '🏁': Flag,
+    '💵': Banknote,
+    '📦': Package,
+    '🔄': RefreshCw,
+    '💳': CreditCard,
+    '↩️': Undo2,
+    '➕': Plus,
+    '💰': Coins,
+    '📅': CalendarDays,
+    '🧾': ReceiptText,
+    '⏳': Hourglass,
+    '📖': BookOpen,
+    '💸': Banknote,
+    '⚙️': Settings,
+    '⚠️': TriangleAlert,
+    '📋': ClipboardList,
+    '📈': TrendingUp,
+    '📁': Folder,
+    '📄': FileText,
+    '🤝': Handshake,
+    '🏪': Store,
+    '📝': FilePen,
+    '📜': ScrollText,
+    '🔒': Shield,
+}
+
+const DESKTOP_QUERY = '(min-width: 1024px)'
+
+const subscribeDesktop = (onChange) => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+        return () => {}
+    }
+    const query = window.matchMedia(DESKTOP_QUERY)
+    if (typeof query.addEventListener === 'function') {
+        query.addEventListener('change', onChange)
+        return () => query.removeEventListener('change', onChange)
+    }
+    query.addListener?.(onChange)
+    return () => query.removeListener?.(onChange)
+}
+
+const getDesktopSnapshot = () => typeof window !== 'undefined' && typeof window.matchMedia === 'function'
+    ? window.matchMedia(DESKTOP_QUERY).matches
+    : true
+
+// jsdom has no matchMedia; the desktop rail is the safe non-portal default.
+const useIsDesktop = () => useSyncExternalStore(subscribeDesktop, getDesktopSnapshot, () => true)
 
 const readExpandedMenus = (scope) => {
     try {
@@ -92,10 +195,12 @@ const readExpandedMenus = (scope) => {
     }
 }
 
-export default function Sidebar({ isOpen, onClose }) {
+export default function Sidebar({ isOpen, onClose, restoreFocusRef }) {
     const user = useAuthStore((state) => state.user)
     const scope = sidebarActorScope(user)
-    return <SidebarContent key={scope || 'anonymous'} isOpen={isOpen} onClose={onClose} scope={scope} />
+    const isDesktop = useIsDesktop()
+    return <SidebarContent key={scope || 'anonymous'} isOpen={isOpen} onClose={onClose} scope={scope}
+        isDesktop={isDesktop} restoreFocusRef={restoreFocusRef} />
 }
 
 // The existing menu remains the single presentation/permission metadata source.
@@ -347,31 +452,14 @@ export function buildAdminMenu(t, user) {
     ]
 }
 
-function SidebarContent({ isOpen, onClose, scope }) {
-    const { t } = useTranslation()
-    const { user } = useAuthStore()
-    const location = useLocation()
-    const navigation = useSmartNavigation()
-    const [expandedMenus, setExpandedMenus] = useState(() => readExpandedMenus(scope))
-    const { dir, isRTL } = useRTL()
-    const menuItems = buildAdminMenu(t, user)
-    const toggleMenu = (menuKey) => setExpandedMenus(prev => ({ ...prev, [menuKey]: !prev[menuKey] }))
-    const isActive = (path) => {
-        const [pathname, search] = path.split('?')
-        return location.pathname === pathname && (!search || location.search === `?${search}`)
-    }
-    const activeStorefrontScreenId = resolveStorefrontScreen(location.pathname, location.search)?.id || null
-    const renderIcon = (icon, size = 20) => {
-        const Icon = STOREFRONT_ICONS[icon]
-        return Icon ? <Icon aria-hidden="true" size={size} /> : <span aria-hidden="true">{icon}</span>
-    }
-    // Filter the navigation tree using backend-derived permissions/capabilities.
-    // Constitutional law (ONLINE_STORE_CANONICAL_BLUEPRINT.md §17 Law 16):
-    //   The Storefront product must never disappear. When capability-based
-    //   filtering removes all children of a Storefront-product section, a
-    //   placeholder is rendered instead of collapsing the section entirely.
-    const STOREFRONT_PRODUCT_KEYS = new Set(['storefront', 'storefront-design', 'operations'])
+// Filter the navigation tree using backend-derived permissions/capabilities.
+// Constitutional law (ONLINE_STORE_CANONICAL_BLUEPRINT.md §17 Law 16):
+//   The Storefront product must never disappear. When capability-based
+//   filtering removes all children of a Storefront-product section, a
+//   placeholder is rendered instead of collapsing the section entirely.
+const STOREFRONT_PRODUCT_KEYS = new Set(['storefront', 'storefront-design', 'operations'])
 
+export function filterAdminMenu(menuItems, { t, user }) {
     const createStorefrontAccessPlaceholder = (item) => ({
         ...item,
         children: [{
@@ -417,17 +505,53 @@ function SidebarContent({ isOpen, onClose, scope }) {
         return { ...item, children }
     }
 
-    const filteredMenuItems = menuItems.map(filterMenuNode).filter(Boolean)
+    return menuItems.map(filterMenuNode).filter(Boolean)
+}
 
-    const isMenuNodeActive = (node) => {
+function SidebarContent({ isOpen, onClose, scope, isDesktop, restoreFocusRef }) {
+    const { t } = useTranslation()
+    const { user } = useAuthStore()
+    const location = useLocation()
+    const navigation = useSmartNavigation()
+    const [expandedMenus, setExpandedMenus] = useState(() => readExpandedMenus(scope))
+    const { dir } = useRTL()
+    const drawerCloseRef = useRef(null)
+    const activeApplicationId = resolveApplicationFromLocation(location.pathname, location.search)
+    // Application switching lives in the Top Header. The Sidebar only presents
+    // the navigation owned by the application of the committed route.
+    const menuItems = scopeMenuToApplication(buildAdminMenu(t, user), activeApplicationId)
+    const toggleMenu = (menuKey) => setExpandedMenus(prev => ({ ...prev, [menuKey]: !prev[menuKey] }))
+    const activeStorefrontScreenId = resolveStorefrontScreen(location.pathname, location.search)?.id || null
+    const renderIcon = (icon, size = 18) => {
+        const Icon = STOREFRONT_ICONS[icon] || LEGACY_ICON_COMPONENTS[icon] || Package
+        return <Icon aria-hidden="true" size={size} />
+    }
+    const filteredMenuItems = filterAdminMenu(menuItems, { t, user })
+    const scopedNavigation = navigation ? {
+        ...navigation,
+        entries: navigation.entries.filter(entry => navigationEntryApplication(entry) === activeApplicationId),
+    } : null
+
+    const isDestinationNode = (node) => {
+        if (node.children || node.placeholder) {
+            return false
+        }
         if (node.screenIds) {
             return isStorefrontNodeActive(node, activeStorefrontScreenId)
         }
-        if (node.path && isActive(node.path)) {
-            return true
-        }
-        return node.children?.some(isMenuNodeActive) || false
+        return Boolean(node.path) && menuDestinationMatches(node.path, location.pathname, location.search)
     }
+
+    // Factory tree order is the registry order, so the first eligible occurrence
+    // is the canonical current destination for aria-current and active styling.
+    const currentMatch = findFirstMenuMatch(filteredMenuItems, isDestinationNode)
+    const parentContextPath = currentMatch ? null : dynamicParentPathname(location.pathname)
+    const contextMatch = parentContextPath
+        ? findFirstMenuMatch(filteredMenuItems, node => !node.children && !node.placeholder && node.path === parentContextPath)
+        : null
+    const activeLeaf = currentMatch?.node || null
+    const contextLeaf = contextMatch?.node || null
+    const activeAncestors = currentMatch?.ancestors || contextMatch?.ancestors || []
 
     useEffect(() => {
         if (!scope) return
@@ -448,7 +572,7 @@ function SidebarContent({ isOpen, onClose, scope }) {
             const expandActiveNodes = (items) => {
                 items.forEach((item) => {
                     if (!item.children) return
-                    if (isMenuNodeActive(item) && !nextValue[item.key]) {
+                    if (activeAncestors.includes(item) && !nextValue[item.key]) {
                         nextValue[item.key] = true
                         hasChanges = true
                     }
@@ -462,8 +586,17 @@ function SidebarContent({ isOpen, onClose, scope }) {
         })
     }, [location.pathname, location.search, user])
 
+    const previousDesktopRef = useRef(isDesktop)
+    useEffect(() => {
+        const becameDesktop = isDesktop && !previousDesktopRef.current
+        previousDesktopRef.current = isDesktop
+        if (becameDesktop && isOpen) onClose?.()
+    }, [isDesktop, isOpen, onClose])
+
     const renderNestedNode = (node, depth = 1) => {
-        const active = isMenuNodeActive(node)
+        const leafActive = node === activeLeaf
+        const leafContext = node === contextLeaf
+        const branchActive = activeAncestors.includes(node)
 
         if (node.children) {
             const submenuId = `sidebar-submenu-${node.key}`
@@ -474,19 +607,19 @@ function SidebarContent({ isOpen, onClose, scope }) {
                         aria-controls={submenuId}
                         aria-expanded={Boolean(expandedMenus[node.key])}
                         onClick={() => toggleMenu(node.key)}
-                        className={`flex w-full items-center justify-between rounded-lg px-4 py-2.5 text-sm transition-all duration-200 ${active ? 'bg-white/15 text-white' : 'text-indigo-50 hover:bg-indigo-500/30'}`}
+                        className={`pos-sidebar__item pos-sidebar__item--branch${branchActive ? ' pos-sidebar__item--context' : ''}`}
                     >
-                        <span className="flex items-center gap-3">
-                            {renderIcon(node.icon, 18)}
-                            <span className="font-medium">{node.label}</span>
+                        <span className="pos-sidebar__item-leading">
+                            {renderIcon(node.icon, depth > 1 ? 16 : 18)}
+                            <span className="pos-sidebar__label">{node.label}</span>
                         </span>
-                        <svg aria-hidden="true" className={`h-4 w-4 transition-transform ${expandedMenus[node.key] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg aria-hidden="true" className={`pos-sidebar__chevron${expandedMenus[node.key] ? ' pos-sidebar__chevron--expanded' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
                     <div id={submenuId} inert={expandedMenus[node.key] ? undefined : ''} className={`grid transition-[grid-template-rows,opacity] duration-300 ${expandedMenus[node.key] ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
                         <div className="min-h-0 overflow-hidden">
-                            <div className={`mt-1 space-y-1 ${isRTL ? 'pr-4' : 'pl-4'}`}>
+                            <div className="pos-sidebar__children">
                                 {node.children.map((child) => renderNestedNode(child, depth + 1))}
                             </div>
                         </div>
@@ -497,14 +630,15 @@ function SidebarContent({ isOpen, onClose, scope }) {
 
         if (node.placeholder) {
             return (
-                <div
+                <button
                     key={node.path || node.key}
+                    type="button"
                     onClick={node.onClick}
-                    className="flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm cursor-pointer text-indigo-200 hover:bg-indigo-500/30 transition-all duration-200"
+                    className="pos-sidebar__item pos-sidebar__item--placeholder"
                 >
                     {renderIcon(node.icon, depth > 1 ? 16 : 18)}
-                    <span>{node.label}</span>
-                </div>
+                    <span className="pos-sidebar__label">{node.label}</span>
+                </button>
             )
         }
 
@@ -512,123 +646,130 @@ function SidebarContent({ isOpen, onClose, scope }) {
             <Link
                 key={node.path}
                 to={node.path}
-                aria-current={active ? 'page' : undefined}
+                aria-current={leafActive ? 'page' : undefined}
                 onClick={onClose}
-                className={`flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm transition-all duration-200 ${active ? 'bg-white font-medium text-indigo-700 shadow-md' : 'text-indigo-50 hover:bg-indigo-500/30'}`}
+                className={`pos-sidebar__item pos-sidebar__item--leaf${leafActive ? ' pos-sidebar__item--active' : ''}${leafContext ? ' pos-sidebar__item--context' : ''}`}
             >
                 {renderIcon(node.icon, depth > 1 ? 16 : 18)}
-                <span>{node.label}</span>
+                <span className="pos-sidebar__label">{node.label}</span>
             </Link>
         )
     }
 
-    return (
-        <>
-            {/* Mobile Overlay */}
-            {isOpen && (
-                <div
-                    className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-                    onClick={onClose}
-                />
-            )}
-
-            {/* Sidebar */}
-            <aside
-                className={`fixed top-0 ${isRTL ? 'right-0' : 'left-0'} h-full bg-gradient-to-b from-indigo-600 to-indigo-800 text-white w-72 transform transition-transform duration-300 ease-in-out z-50 ${isOpen ? 'translate-x-0' : isRTL ? 'translate-x-full' : '-translate-x-full'
-                    } lg:translate-x-0 shadow-2xl overflow-y-auto`}
-                dir={dir}
-            >
-                {/* Sidebar Header */}
-                <div className="p-6 border-b border-indigo-500/30">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg">
-                                <span className="text-2xl">🏪</span>
-                            </div>
+    const navigationTree = (
+        <nav aria-label={t('nav.mainNavigation', 'Main navigation')} className="pos-sidebar__nav">
+            <div className="pos-sidebar__nav-inner">
+                {scopedNavigation && <SidebarFavorites navigation={scopedNavigation} onNavigate={onClose}
+                    activePathname={location.pathname} activeSearch={location.search} />}
+                {filteredMenuItems.map((item) => (
+                    <div key={item.key}>
+                        {item.children ? (
                             <div>
-                                <h2 className="text-xl font-bold">{t('app.name')}</h2>
-                                <p className="text-xs text-indigo-200">{t('app.subtitle')}</p>
-                            </div>
-                        </div>
-                        <button
-                            type="button"
-                            aria-label={t('common.close', 'Close navigation')}
-                            onClick={onClose}
-                            className="lg:hidden text-white hover:bg-indigo-500/30 rounded-lg p-2 transition-colors"
-                        >
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-
-                {/* Navigation Menu */}
-                <nav aria-label={t('nav.mainNavigation', 'Main navigation')} className="p-4 space-y-1">
-                    {navigation && <SidebarFavorites navigation={navigation} onNavigate={onClose} />}
-                    {filteredMenuItems.map((item) => (
-                        <div key={item.key}>
-                            {item.children ? (
-                                // Menu with children (expandable)
-                                <div>
-                                    <button
-                                        type="button"
-                                        aria-controls={`sidebar-submenu-${item.key}`}
-                                        aria-expanded={Boolean(expandedMenus[item.key])}
-                                        onClick={() => toggleMenu(item.key)}
-                                        className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all duration-200 group ${isMenuNodeActive(item)
-                                            ? 'bg-white/15 text-white'
-                                            : 'hover:bg-indigo-500/30'
-                                            }`}
+                                <button
+                                    type="button"
+                                    aria-controls={`sidebar-submenu-${item.key}`}
+                                    aria-expanded={Boolean(expandedMenus[item.key])}
+                                    onClick={() => toggleMenu(item.key)}
+                                    className={`pos-sidebar__item pos-sidebar__item--branch${activeAncestors.includes(item) ? ' pos-sidebar__item--context' : ''}`}
+                                >
+                                    <span className="pos-sidebar__item-leading">
+                                        {renderIcon(item.icon)}
+                                        <span className="pos-sidebar__label">{item.label}</span>
+                                    </span>
+                                    <svg
+                                        aria-hidden="true"
+                                        className={`pos-sidebar__chevron${expandedMenus[item.key] ? ' pos-sidebar__chevron--expanded' : ''}`}
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
                                     >
-                                        <div className="flex items-center gap-3">
-                                            <span className="text-xl">{renderIcon(item.icon)}</span>
-                                            <span className="font-medium">{item.label}</span>
-                                        </div>
-                                        <svg
-                                            className={`w-5 h-5 transition-transform duration-200 ${expandedMenus[item.key] ? 'rotate-180' : ''
-                                                }`}
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                        </svg>
-                                    </button>
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
 
-                                    {/* Submenu */}
-                                    <div
-                                        id={`sidebar-submenu-${item.key}`}
-                                        inert={expandedMenus[item.key] ? undefined : ''}
-                                        className={`grid transition-[grid-template-rows,opacity] duration-300 ${expandedMenus[item.key] ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-                                            }`}
-                                    >
-                                        <div className="min-h-0 overflow-hidden">
-                                            <div className={`space-y-1 ${expandedMenus[item.key] ? 'mt-1' : ''} ${isRTL ? 'pr-4' : 'pl-4'}`}>
-                                                {item.children.map((child) => renderNestedNode(child))}
-                                            </div>
+                                {/* Submenu */}
+                                <div
+                                    id={`sidebar-submenu-${item.key}`}
+                                    inert={expandedMenus[item.key] ? undefined : ''}
+                                    className={`grid transition-[grid-template-rows,opacity] duration-300 ${expandedMenus[item.key] ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
+                                >
+                                    <div className="min-h-0 overflow-hidden">
+                                        <div className="pos-sidebar__children">
+                                            {item.children.map((child) => renderNestedNode(child))}
                                         </div>
                                     </div>
                                 </div>
-                            ) : (
-                                // Single menu item (no children)
-                                <Link
-                                    to={item.path}
-                                    aria-current={isMenuNodeActive(item) ? 'page' : undefined}
-                                    onClick={onClose}
-                                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${isMenuNodeActive(item)
-                                        ? 'bg-white text-indigo-700 shadow-md font-medium'
-                                        : 'hover:bg-indigo-500/30'
-                                        }`}
-                                >
-                                    <span className="text-xl">{renderIcon(item.icon)}</span>
-                                    <span className="font-medium">{item.label}</span>
-                                </Link>
-                            )}
-                        </div>
-                    ))}
-                </nav>
+                            </div>
+                        ) : (
+                            // Single menu item (no children)
+                            <Link
+                                to={item.path}
+                                aria-current={item === activeLeaf ? 'page' : undefined}
+                                onClick={onClose}
+                                className={`pos-sidebar__item pos-sidebar__item--leaf${item === activeLeaf ? ' pos-sidebar__item--active' : ''}${item === contextLeaf ? ' pos-sidebar__item--context' : ''}`}
+                            >
+                                {renderIcon(item.icon)}
+                                <span className="pos-sidebar__label">{item.label}</span>
+                            </Link>
+                        )}
+                    </div>
+                ))}
+            </div>
+        </nav>
+    )
+
+    const identity = (
+        <div className="pos-sidebar__identity" dir={dir}>
+            <div className="pos-sidebar__brand">
+                <span className="pos-sidebar__symbol-plate">
+                    <img src={standaloneSymbol} alt="" width="28" height="28" />
+                </span>
+                <span className="pos-sidebar__brand-text">
+                    <span className="pos-sidebar__brand-name">
+                        <bdi dir="ltr" lang="en">{t('login.brandName')}</bdi>
+                    </span>
+                    <span className="pos-sidebar__brand-qualifier">
+                        <bdi dir="ltr" lang="en">{t('login.productQualifier')}</bdi>
+                    </span>
+                    <span className="pos-sidebar__subtitle">{t('app.subtitle')}</span>
+                </span>
+            </div>
+            {!isDesktop ? (
+                <IconButton
+                    ref={drawerCloseRef}
+                    label={t('common.close', 'Close navigation')}
+                    icon={<X />}
+                    size="sm"
+                    className="pos-sidebar__close"
+                    onClick={onClose}
+                />
+            ) : null}
+        </div>
+    )
+
+    if (isDesktop) {
+        return (
+            <aside className="pos-sidebar" dir={dir}>
+                {identity}
+                {navigationTree}
             </aside>
-        </>
+        )
+    }
+
+    return (
+        <Dialog
+            open={Boolean(isOpen)}
+            onOpenChange={(next) => { if (!next) onClose?.() }}
+            title={t('nav.mainNavigation', 'Main navigation')}
+            showClose={false}
+            closeOnOverlayClick
+            closeOnEscape
+            initialFocusRef={drawerCloseRef}
+            restoreFocusRef={restoreFocusRef}
+            className="pos-shell-drawer"
+        >
+            {identity}
+            {navigationTree}
+        </Dialog>
     )
 }

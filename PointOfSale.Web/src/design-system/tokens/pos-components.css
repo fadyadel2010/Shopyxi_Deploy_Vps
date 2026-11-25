@@ -1,0 +1,152 @@
+/*
+ * SHOPYXI POS design system - component-ready tokens.
+ *
+ * Component tokens describe role-specific states for future shared
+ * primitives. They must reference semantic or primitive tokens, never raw
+ * color literals.
+ *
+ * Scope: [data-product="pos"] only. No :root, html, or body declarations.
+ */
+
+[data-product="pos"] {
+  /* Button states. */
+  --pos-button-radius: var(--pos-radius-control);
+  --pos-button-primary-bg: var(--pos-color-action-primary);
+  --pos-button-primary-bg-hover: var(--pos-color-action-primary-hover);
+  --pos-button-primary-bg-active: var(--pos-color-action-primary-active);
+  --pos-button-primary-text: var(--pos-color-action-primary-text);
+  --pos-button-primary-disabled-bg: var(--pos-neutral-200);
+  --pos-button-primary-disabled-text: var(--pos-neutral-600);
+  --pos-button-secondary-bg: var(--pos-color-surface);
+  --pos-button-secondary-bg-hover: var(--pos-neutral-100);
+  --pos-button-secondary-bg-active: var(--pos-neutral-200);
+  --pos-button-secondary-text: var(--pos-color-text-primary);
+  --pos-button-secondary-border: var(--pos-color-border-strong);
+  --pos-button-secondary-border-hover: var(--pos-neutral-600);
+  --pos-button-secondary-disabled-bg: var(--pos-neutral-100);
+  --pos-button-secondary-disabled-text: var(--pos-neutral-600);
+  --pos-button-danger-bg: var(--pos-color-action-danger);
+  --pos-button-danger-bg-hover: var(--pos-color-action-danger-hover);
+  --pos-button-danger-bg-active: var(--pos-color-action-danger-active);
+  --pos-button-danger-text: var(--pos-color-action-danger-text);
+  --pos-button-ghost-text: var(--pos-color-text-secondary);
+  --pos-button-ghost-text-hover: var(--pos-color-text-primary);
+  --pos-button-ghost-bg-hover: var(--pos-neutral-100);
+  --pos-button-ghost-bg-active: var(--pos-neutral-200);
+  --pos-button-focus-ring: var(--pos-color-focus-ring);
+
+  /* Input states. */
+  --pos-input-radius: var(--pos-radius-control);
+  --pos-input-bg: var(--pos-color-surface);
+  --pos-input-text: var(--pos-color-text-primary);
+  --pos-input-placeholder: var(--pos-color-text-placeholder);
+  --pos-input-border: var(--pos-color-border-strong);
+  --pos-input-border-hover: var(--pos-neutral-600);
+  --pos-input-border-focus: var(--pos-color-action-primary);
+  --pos-input-border-invalid: var(--pos-color-danger);
+  --pos-input-focus-ring: var(--pos-color-focus-ring);
+  --pos-input-invalid-ring: var(--pos-color-danger);
+  --pos-input-disabled-bg: var(--pos-neutral-50);
+  --pos-input-disabled-text: var(--pos-color-text-disabled);
+  --pos-input-label: var(--pos-color-text-secondary);
+  --pos-input-help: var(--pos-color-text-muted);
+  --pos-input-error: var(--pos-color-danger);
+
+  /* Card surfaces. */
+  --pos-card-bg: var(--pos-color-surface);
+  --pos-card-border: var(--pos-color-border-subtle);
+  --pos-card-radius: var(--pos-radius-card);
+  --pos-card-shadow: var(--pos-shadow-sm);
+  --pos-card-padding: var(--pos-space-6);
+
+  /* Navigation header surfaces. */
+  --pos-nav-bg: var(--pos-color-surface);
+  --pos-nav-border: var(--pos-color-border-subtle);
+  --pos-nav-text: var(--pos-color-text-primary);
+  --pos-nav-text-muted: var(--pos-color-text-secondary);
+  --pos-nav-icon: var(--pos-color-text-secondary);
+  --pos-nav-icon-hover-bg: var(--pos-neutral-100);
+  --pos-nav-icon-hover-text: var(--pos-color-text-primary);
+
+  /* Sidebar surfaces and states. */
+  --pos-sidebar-bg: var(--pos-neutral-900);
+  --pos-sidebar-border: var(--pos-neutral-800);
+  --pos-sidebar-text: var(--pos-neutral-300);
+  --pos-sidebar-text-muted: var(--pos-neutral-400);
+  --pos-sidebar-section-label: var(--pos-neutral-400);
+  --pos-sidebar-item-hover-bg: var(--pos-neutral-800);
+  --pos-sidebar-item-active-bg: var(--pos-neutral-800);
+  --pos-sidebar-item-active-text: var(--pos-neutral-0);
+  --pos-sidebar-item-active-indicator: var(--pos-blue-400);
+  --pos-sidebar-badge-bg: var(--pos-blue-700);
+  --pos-sidebar-badge-text: var(--pos-neutral-0);
+  --pos-sidebar-focus-ring: var(--pos-blue-300);
+
+  /* Table surfaces and states. */
+  --pos-table-bg: var(--pos-color-surface);
+  --pos-table-header-bg: var(--pos-neutral-50);
+  --pos-table-header-text: var(--pos-color-text-secondary);
+  --pos-table-row-hover-bg: var(--pos-neutral-50);
+  --pos-table-row-selected-bg: var(--pos-blue-50);
+  --pos-table-border: var(--pos-color-border-subtle);
+  --pos-table-text: var(--pos-color-text-primary);
+  --pos-table-text-muted: var(--pos-color-text-muted);
+
+  /* Dialog surfaces. */
+  --pos-dialog-overlay: var(--pos-color-overlay);
+  --pos-dialog-bg: var(--pos-color-surface-elevated);
+  --pos-dialog-border: var(--pos-color-border-subtle);
+  --pos-dialog-radius: var(--pos-radius-modal);
+  --pos-dialog-shadow: var(--pos-shadow-lg);
+  --pos-dialog-title: var(--pos-color-text-primary);
+  --pos-dialog-body: var(--pos-color-text-secondary);
+  --pos-dialog-z: var(--pos-z-scale-dialog);
+
+  /* Toast surfaces. */
+  --pos-toast-text: var(--pos-color-text-inverse);
+  --pos-toast-info-bg: var(--pos-color-info);
+  --pos-toast-success-bg: var(--pos-color-success);
+  --pos-toast-warning-bg: var(--pos-color-warning);
+  --pos-toast-danger-bg: var(--pos-color-danger);
+  --pos-toast-radius: var(--pos-radius-card);
+  --pos-toast-shadow: var(--pos-shadow-md);
+  --pos-toast-z: var(--pos-z-scale-toast);
+
+  /* Tabs states. */
+  --pos-tabs-border: var(--pos-color-border-subtle);
+  --pos-tabs-trigger-text: var(--pos-color-text-secondary);
+  --pos-tabs-trigger-text-hover: var(--pos-color-text-primary);
+  --pos-tabs-trigger-text-selected: var(--pos-color-action-primary);
+  --pos-tabs-trigger-disabled-text: var(--pos-color-text-disabled);
+  --pos-tabs-trigger-hover-bg: var(--pos-neutral-100);
+  --pos-tabs-indicator: var(--pos-color-action-primary);
+  --pos-tabs-focus-ring: var(--pos-color-focus-ring);
+
+  /* Tooltip surfaces. */
+  --pos-tooltip-bg: var(--pos-color-surface-inverse);
+  --pos-tooltip-text: var(--pos-color-text-inverse);
+  --pos-tooltip-radius: var(--pos-radius-control);
+  --pos-tooltip-shadow: var(--pos-shadow-md);
+  --pos-tooltip-z: var(--pos-z-scale-tooltip);
+
+  /* Badge and status states. */
+  --pos-badge-radius: var(--pos-radius-pill);
+  --pos-badge-neutral-bg: var(--pos-neutral-100);
+  --pos-badge-neutral-text: var(--pos-neutral-700);
+  --pos-badge-neutral-border: var(--pos-neutral-200);
+  --pos-badge-brand-bg: var(--pos-blue-50);
+  --pos-badge-brand-text: var(--pos-blue-800);
+  --pos-badge-brand-border: var(--pos-blue-200);
+  --pos-badge-success-bg: var(--pos-color-success-subtle);
+  --pos-badge-success-text: var(--pos-color-success-text);
+  --pos-badge-success-border: var(--pos-color-success-border);
+  --pos-badge-warning-bg: var(--pos-color-warning-subtle);
+  --pos-badge-warning-text: var(--pos-color-warning-text);
+  --pos-badge-warning-border: var(--pos-color-warning-border);
+  --pos-badge-danger-bg: var(--pos-color-danger-subtle);
+  --pos-badge-danger-text: var(--pos-color-danger-text);
+  --pos-badge-danger-border: var(--pos-color-danger-border);
+  --pos-badge-info-bg: var(--pos-color-info-subtle);
+  --pos-badge-info-text: var(--pos-color-info-text);
+  --pos-badge-info-border: var(--pos-color-info-border);
+}

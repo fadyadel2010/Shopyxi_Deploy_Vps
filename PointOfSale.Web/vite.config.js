@@ -9,7 +9,7 @@ var adminCsp = [
     "font-src 'self' https://fonts.gstatic.com data:",
     "img-src 'self' data: blob: https:",
     "connect-src 'self' https: ws: wss:",
-    "frame-src 'self' https: http://*.localhost:5174",
+    "frame-src 'self' https:",
     "object-src 'none'",
     "base-uri 'self'",
     "frame-ancestors 'none'",
@@ -21,13 +21,17 @@ export default defineConfig(function (_a) {
     var apiTarget = loadEnv(mode, process.cwd()).VITE_DEV_API_TARGET || 'http://localhost:5010';
     // Local merchant storefront media is cross-origin in the affiliate portal.
     // Production/preview retain HTTPS-only remote image sources.
-    var developmentCsp = adminCsp.replace("img-src 'self' data: blob: https:", "img-src 'self' data: blob: https: http://*.localhost:5174");
+    var developmentCsp = adminCsp
+        .replace("img-src 'self' data: blob: https:", "img-src 'self' data: blob: https: http://*.localhost:5174")
+        .replace("frame-src 'self' https:", "frame-src 'self' https: http://*.localhost:5174");
     return {
         plugins: [react(), {
                 name: 'local-merchant-media-csp',
                 transformIndexHtml: function (html, context) {
                     return context.server
-                        ? html.replace("img-src 'self' data: blob: https:", "img-src 'self' data: blob: https: http://*.localhost:5174")
+                            ? html
+                                .replace("img-src 'self' data: blob: https:", "img-src 'self' data: blob: https: http://*.localhost:5174")
+                                .replace("frame-src 'self' https:", "frame-src 'self' https: http://*.localhost:5174")
                         : html;
                 },
             }],

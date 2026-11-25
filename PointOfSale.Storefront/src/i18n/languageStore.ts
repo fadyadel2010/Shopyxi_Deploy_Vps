@@ -232,7 +232,13 @@ export function t(
         translation = getNestedValue(translations.en, key);
     }
 
-    // If still not found, return the key
+    // If still not found, fall back to the caller-supplied default (missing-key
+    // only), then to the key itself as the final resort.
+    if (!translation) {
+        const fallback = params?.defaultValue;
+        translation = typeof fallback === 'string' && fallback.trim() ? fallback : undefined;
+    }
+
     if (!translation) {
         console.warn(`[i18n] Missing translation: ${key}`);
         return key;

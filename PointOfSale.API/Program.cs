@@ -142,48 +142,21 @@ builder.Logging.AddConsole(options =>
 // DOMAIN-2A: X-Forwarded-Host added per DOMAIN-1.6 Section 3.1 and DOMAIN-1 Architecture Law #11.
 // This ensures Request.Host reflects the true customer domain behind Caddy/NGINX/Cloudflare.
 // X-Forwarded-For and X-Forwarded-Proto remain unchanged — no proxy behavior invented.
-builder.Services.Configure<ForwardedHeadersOptions>(options =>
-{
-    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost;
-    
-    // Clear default networks/proxies and configure based on your infrastructure
-    options.KnownIPNetworks.Clear();
-    options.KnownProxies.Clear();
-    
-    // Caddy is deployed as a loopback reverse proxy in the supported topology.
-    // Keeping these entries in every environment prevents an empty allowlist
-    // from becoming a trust-all configuration on affected framework versions.
-    options.KnownProxies.Add(System.Net.IPAddress.Loopback);
-    options.KnownProxies.Add(System.Net.IPAddress.IPv6Loopback);
-    
-    // In production, configure known proxy IPs from configuration
-    var knownProxiesConfig = builder.Configuration.GetSection("ForwardedHeaders:KnownProxies").Get<string[]>();
-    if (knownProxiesConfig != null)
-    {
-        foreach (var proxyIp in knownProxiesConfig)
-        {
-            if (System.Net.IPAddress.TryParse(proxyIp, out var ipAddress))
-            {
-                options.KnownProxies.Add(ipAddress);
-            }
-        }
-    }
-    
-    // Limit to 1 proxy hop for security (adjust based on your infrastructure)
-    options.ForwardLimit = 1;
-});
+PointOfSale.API.Configuration.LoopbackForwardedHeadersPolicy.Register(builder.Services, builder.Configuration);
 
 // Add services to the container
 startupStage = "services";
 builder.Services.AddScoped<ApiRequestNormalizationFilter>();
 builder.Services.AddScoped<ApiErrorResponseNormalizationFilter>();
 builder.Services.AddScoped<PreventEntityExposureFilter>();
+builder.Services.AddScoped<FinancialCostResponseFilter>();
 builder.Services.AddScoped<WebhookContentTypeValidationFilter>();
 
 builder.Services.AddControllers(options =>
     {
         options.Filters.AddService<ApiRequestNormalizationFilter>();
         options.Filters.AddService<PreventEntityExposureFilter>();
+        options.Filters.AddService<FinancialCostResponseFilter>(order: 1000);
         options.Filters.AddService<ApiErrorResponseNormalizationFilter>();
         options.Conventions.Add(new PosPermissionApplicationModelConvention());
     })

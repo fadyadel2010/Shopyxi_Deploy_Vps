@@ -100,27 +100,10 @@ public class SettingsController : ControllerBase
             var dict = await LoadActiveTenantSettingsDictionaryAsync(tenantId);
             
             // Tenant.Currency is the authority; settings are derived display state.
-            var fallbackCurrency = FinancialCurrencyGuard.RequireCurrency(
+            var currencyCode = FinancialCurrencyGuard.RequireEgpCurrency(
                 tenant.Currency,
                 "tenant.currency",
                 $"tenantId:{tenantId:D};controller:SettingsController.GetSettings");
-
-            var currencyCode = fallbackCurrency;
-            try
-            {
-                currencyCode = ResolveStoredSettingsCurrencyCode(
-                    GetValue(dict, "Tax.CurrencyCode", fallbackCurrency),
-                    fallbackCurrency);
-            }
-            catch (Exception ex) when (ex is FinancialCurrencyMissingException or FinancialCurrencyInvalidException)
-            {
-                // Legacy settings value failed validation; fall back to Tenant.Currency authority.
-                _logger.LogWarning(
-                    ex,
-                    "Stored currency code failed validation, using fallback | TenantId: {TenantId} | Fallback: {Fallback}",
-                    tenantId,
-                    fallbackCurrency);
-            }
 
             var dto = new SettingsDto
             {
@@ -131,7 +114,7 @@ public class SettingsController : ControllerBase
                 CompanyLogo = GetValue(dict, "Company.Logo", null),
 
                 CurrencyCode = currencyCode,
-                CurrencySymbol = ResolveDisplayCurrencySymbol(GetValue(dict, "Tax.CurrencySymbol", string.Empty), currencyCode),
+                CurrencySymbol = ResolveDisplayCurrencySymbol(null, currencyCode),
                 StorefrontUrl = ResolveStorefrontUrl(new Tenant
                 {
                     Id = tenantId,

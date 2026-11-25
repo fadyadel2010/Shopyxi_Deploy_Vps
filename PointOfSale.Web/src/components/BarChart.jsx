@@ -1,10 +1,12 @@
 import { useEffect, useRef } from 'react'
+import { formatNumber } from '../utils/dateFormat'
+const defaultFormatValue = value => formatNumber(value, undefined, { maximumFractionDigits: 0 })
 
 /**
  * Simple Bar Chart Component
  * A lightweight chart component without external dependencies
  */
-export default function BarChart({ data, height = 200, color = '#10b981' }) {
+export default function BarChart({ data, height = 200, color = '#10b981', formatValue = defaultFormatValue }) {
     const canvasRef = useRef(null)
 
     useEffect(() => {
@@ -56,7 +58,7 @@ export default function BarChart({ data, height = 200, color = '#10b981' }) {
             ctx.fillStyle = '#6b7280'
             ctx.font = '11px sans-serif'
             ctx.textAlign = 'right'
-            ctx.fillText(`$${value.toFixed(0)}`, padding.left - 10, y + 4)
+            ctx.fillText(formatValue(value), padding.left - 10, y + 4)
         }
 
         // Draw bars
@@ -86,7 +88,7 @@ export default function BarChart({ data, height = 200, color = '#10b981' }) {
                 ctx.fillStyle = '#374151'
                 ctx.font = 'bold 11px sans-serif'
                 ctx.textAlign = 'center'
-                ctx.fillText(`$${itemValue.toFixed(0)}`, x + barWidth / 2, y - 5)
+                ctx.fillText(formatValue(itemValue), x + barWidth / 2, y - 5)
             }
 
             // Draw label
@@ -100,7 +102,7 @@ export default function BarChart({ data, height = 200, color = '#10b981' }) {
             ctx.restore()
         })
 
-    }, [data, height, color])
+    }, [data, height, color, formatValue])
 
     return (
         <canvas

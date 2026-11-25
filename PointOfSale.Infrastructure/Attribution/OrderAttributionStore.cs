@@ -235,7 +235,8 @@ public class OrderAttributionStore : IOrderAttributionStore
                 startUtc,
                 endUtc,
                 cancellationToken);
-            var purchaseOrderIds = commerce.PurchaseOrderIds.Distinct().ToArray();
+            // Include refund-only orders as period adjustments, not just new sales.
+            var purchaseOrderIds = commerce.NetRevenueByOrder.Keys.Distinct().ToArray();
             if (purchaseOrderIds.Length == 0)
             {
                 return new OrderAttributionPage([], 0);
@@ -284,6 +285,9 @@ public class OrderAttributionStore : IOrderAttributionStore
                 {
                     var attribution = MapToAttribution(document);
                     attribution.OrderValue = commerce.NetRevenueByOrder.GetValueOrDefault(document.OrderId, 0m);
+                    attribution.IsPeriodRecognition = commerce.PurchaseOrderIds.Contains(document.OrderId);
+                    attribution.PeriodRecognizedRevenue = commerce.RecognizedRevenueByOrder.GetValueOrDefault(document.OrderId, 0m);
+                    attribution.Currency = commerce.CurrencyCode;
                     return attribution;
                 })
                 .ToList();
@@ -322,7 +326,9 @@ public class OrderAttributionStore : IOrderAttributionStore
                     Source = group.Key.Source,
                     Medium = group.Key.Medium,
                     TotalRevenue = group.Sum(x => x.OrderValue),
-                    OrderCount = group.Select(x => x.OrderId).Distinct().Count()
+                    RecognizedRevenue = group.Sum(x => x.PeriodRecognizedRevenue ?? 0m),
+                    OrderCount = group.Where(x => x.IsPeriodRecognition == true).Select(x => x.OrderId).Distinct().Count(),
+                    AffectedOrderCount = group.Select(x => x.OrderId).Distinct().Count()
                 })
                 .OrderByDescending(x => x.TotalRevenue)
                 .ToList();
@@ -362,7 +368,9 @@ public class OrderAttributionStore : IOrderAttributionStore
                     Source = group.Key.Source,
                     Medium = group.Key.Medium,
                     TotalRevenue = group.Sum(x => x.OrderValue),
-                    OrderCount = group.Select(x => x.OrderId).Distinct().Count()
+                    RecognizedRevenue = group.Sum(x => x.PeriodRecognizedRevenue ?? 0m),
+                    OrderCount = group.Where(x => x.IsPeriodRecognition == true).Select(x => x.OrderId).Distinct().Count(),
+                    AffectedOrderCount = group.Select(x => x.OrderId).Distinct().Count()
                 })
                 .OrderByDescending(x => x.TotalRevenue)
                 .ToList();
@@ -430,7 +438,11 @@ public class OrderAttributionStore : IOrderAttributionStore
             [attribution.OrderId],
             asOfUtc,
             cancellationToken);
-        attribution.OrderValue = revenue.GetValueOrDefault(attribution.OrderId, 0m);
+        if (!revenue.TryGetValue(attribution.OrderId, out var value))
+            throw new InvalidOperationException("Attribution has no matching tenant-scoped commerce order.");
+        attribution.OrderValue = value;
+        attribution.Currency = PointOfSale.Core.Financial.FinancialCurrencyGuard.RequireEgpCurrency(
+            attribution.Currency, "attribution.currency", "lifetime-attribution-read");
         return attribution;
     }
 

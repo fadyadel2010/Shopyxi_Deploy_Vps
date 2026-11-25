@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PointOfSale.API.Services.CommerceHub.Finance;
 using PointOfSale.Core.Entities.CommerceHubFinance;
 using PointOfSale.Core.Enums;
 using PointOfSale.Core.Enums.CommerceHubFinance;
@@ -222,15 +223,10 @@ public sealed class CommerceHubDailyFinancialAggregateService : ICommerceHubDail
         var aggregateMap = InitializeBaseCurrencyRows(fromDateUtc, toDateUtc, snapshotBoundaryUtc, calculatedAtUtc);
 
         var orderCommissionRows = await (
-                from transaction in _dbContext.CommerceHubFinancialTransactions.AsNoTracking()
+                from transaction in CommerceHubRecognizedOrderQuery.Build(_dbContext, snapshotBoundaryUtc)
                 join subOrder in _dbContext.CommerceHubSubOrders.AsNoTracking() on transaction.ReferenceId equals subOrder.Id
                 join marketplaceOrder in _dbContext.CommerceHubMarketplaceOrders.AsNoTracking() on subOrder.MarketplaceOrderId equals marketplaceOrder.Id
-                where transaction.EntityType == CommerceHubFinancialEntityType.Platform
-                      && transaction.EntityId == null
-                      && transaction.ReferenceType == CommerceHubFinancialReferenceType.Order
-                      && transaction.TransactionType == CommerceHubFinancialTransactionType.Commission
-                      && transaction.Direction == CommerceHubFinancialTransactionDirection.Credit
-                      && !subOrder.IsDeleted
+                where !subOrder.IsDeleted
                       && !marketplaceOrder.IsDeleted
                       && transaction.CreatedAtUtc >= windowStartUtc
                       && transaction.CreatedAtUtc < windowEndExclusiveUtc
@@ -384,7 +380,9 @@ public sealed class CommerceHubDailyFinancialAggregateService : ICommerceHubDail
             row.LastValidatedAtUtc = calculatedAtUtc;
             row.ValidationError = null;
 
-            row.PromoCost = RoundCurrency(Math.Max(0m, row.PromoCost - row.PromoReversalAmount));
+            // A refund on a later day legitimately produces negative net promo
+            // expense for that day. Clamping loses the reversal across a window.
+            row.PromoCost = RoundCurrency(row.PromoCost - row.PromoReversalAmount);
             row.NetRevenue = RoundCurrency(row.GrossCommission - row.PromoCost - row.RefundImpactOnRevenue);
 
             var exchangeRateToBase = ResolveExchangeRateToBase(row.CurrencyCode, row.BaseCurrencyCode);

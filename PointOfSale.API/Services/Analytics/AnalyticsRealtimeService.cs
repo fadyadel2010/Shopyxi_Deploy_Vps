@@ -51,12 +51,12 @@ public class AnalyticsRealtimeService : IAnalyticsRealtimeService
                 dashboard.EventCountsByType[eventType.ToString()] = count;
             }
 
-            var commerce = await _authorityReader.GetCommerceSnapshotAsync(
+            var activity = await _authorityReader.GetRecognizedOrderActivityAsync(
                 tenantId,
                 hourStart,
                 now,
                 cancellationToken);
-            dashboard.EventCountsByType[nameof(AnalyticsEventType.PurchaseCompleted)] = commerce.PurchaseCount;
+            dashboard.EventCountsByType[nameof(AnalyticsEventType.PurchaseCompleted)] = activity.Count;
 
             // Populate specific metrics
             dashboard.PageViewsThisHour = dashboard.EventCountsByType.GetValueOrDefault("PageView", 0);
@@ -72,11 +72,11 @@ public class AnalyticsRealtimeService : IAnalyticsRealtimeService
             }
 
             // Get active users (approximate from session counters)
-            dashboard.ActiveUsersLast5Min = await GetActiveSessionCountAsync(tenantId, cancellationToken);
+            dashboard.ActiveUsersLast5Min = await GetActiveSessionCountAsync(tenantId, now, cancellationToken);
 
             // Get recent events
             var recentEvents = await _hotStore.GetRecentEventsAsync(tenantId, null, 20, cancellationToken);
-            dashboard.RecentEvents = recentEvents.Select(e => new RecentEventSummary
+            dashboard.RecentEvents = recentEvents.Where(e => e.OccurredAtUtc < now).Select(e => new RecentEventSummary
             {
                 EventId = e.EventId,
                 EventType = e.Type.ToString(),
@@ -98,6 +98,7 @@ public class AnalyticsRealtimeService : IAnalyticsRealtimeService
             _logger.LogWarning(ex,
                 "[Analytics Realtime] Dashboard generation failed | TenantId: {TenantId}",
                 tenantId);
+            throw; // Failure is not a successful zero/partial financial result.
         }
 
         return dashboard;
@@ -117,12 +118,12 @@ public class AnalyticsRealtimeService : IAnalyticsRealtimeService
             funnel.ProductViews = await GetCounterValueAsync(tenantId, "productview", hourStart, cancellationToken);
             funnel.AddToCarts = await GetCounterValueAsync(tenantId, "addtocart", hourStart, cancellationToken);
             funnel.BeginCheckouts = await GetCounterValueAsync(tenantId, "begincheckout", hourStart, cancellationToken);
-            var commerce = await _authorityReader.GetCommerceSnapshotAsync(
+            var activity = await _authorityReader.GetRecognizedOrderActivityAsync(
                 tenantId,
                 hourStart,
                 now,
                 cancellationToken);
-            funnel.Purchases = commerce.PurchaseCount;
+            funnel.Purchases = activity.Count;
 
             _logger.LogDebug(
                 "[Analytics Realtime] Funnel generated | TenantId: {TenantId} | Conversion: {Conversion}%",
@@ -134,6 +135,7 @@ public class AnalyticsRealtimeService : IAnalyticsRealtimeService
             _logger.LogWarning(ex,
                 "[Analytics Realtime] Funnel generation failed | TenantId: {TenantId}",
                 tenantId);
+            throw;
         }
 
         return funnel;
@@ -154,7 +156,7 @@ public class AnalyticsRealtimeService : IAnalyticsRealtimeService
             _logger.LogWarning(ex,
                 "[Analytics Realtime] Get recent events failed | TenantId: {TenantId}",
                 tenantId);
-            return new List<AnalyticsEvent>();
+            throw;
         }
     }
 
@@ -176,12 +178,13 @@ public class AnalyticsRealtimeService : IAnalyticsRealtimeService
         }
         catch
         {
-            return 0;
+            throw;
         }
     }
 
     private async Task<int> GetActiveSessionCountAsync(
         Guid tenantId,
+        DateTime windowEndUtc,
         CancellationToken cancellationToken)
     {
         // This is an approximate count based on recent events
@@ -189,10 +192,10 @@ public class AnalyticsRealtimeService : IAnalyticsRealtimeService
         try
         {
             var recentEvents = await _hotStore.GetRecentEventsAsync(tenantId, null, 100, cancellationToken);
-            var fiveMinutesAgo = DateTime.UtcNow.AddMinutes(-5);
+            var fiveMinutesAgo = windowEndUtc.AddMinutes(-5);
             
             var activeSessions = recentEvents
-                .Where(e => e.OccurredAtUtc >= fiveMinutesAgo)
+                .Where(e => e.OccurredAtUtc >= fiveMinutesAgo && e.OccurredAtUtc < windowEndUtc)
                 .Select(e => e.Actor?.SessionId)
                 .Where(s => !string.IsNullOrEmpty(s))
                 .Distinct()
@@ -202,7 +205,7 @@ public class AnalyticsRealtimeService : IAnalyticsRealtimeService
         }
         catch
         {
-            return 0;
+            throw;
         }
     }
 }

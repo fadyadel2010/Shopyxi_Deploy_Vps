@@ -10,6 +10,9 @@ public sealed class ProductAuthoringValidator : IProductAuthoringValidator
         CancellationToken cancellationToken = default)
     {
         var errors = new List<ProductAuthoringValidationError>();
+        if (command.Inventory.LowStockThreshold < 0)
+            errors.Add(new ProductAuthoringValidationError(
+                "PRODUCT_LOW_STOCK_THRESHOLD_INVALID", "lowStockThreshold", "Low stock threshold cannot be negative."));
 
         if (!Enum.IsDefined(command.Publication.PublishStatus))
         {

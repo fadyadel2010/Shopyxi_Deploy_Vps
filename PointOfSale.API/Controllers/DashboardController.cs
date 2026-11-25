@@ -2,11 +2,16 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using PointOfSale.Core.Entities;
 using PointOfSale.Core.Entities.Accounting;
 using PointOfSale.Core.Enums;
 using PointOfSale.Core.Interfaces;
 using PointOfSale.Core.Interfaces.Accounting;
 using PointOfSale.Infrastructure.Data;
+using PointOfSale.Infrastructure.Inventory;
+using PointOfSale.API.Security;
+using PointOfSale.Core.Security;
+using PointOfSale.Infrastructure.Accounting;
 
 namespace PointOfSale.API.Controllers;
 
@@ -18,7 +23,6 @@ public class DashboardController : ControllerBase
     private static readonly TimeSpan AggregateCacheTtl = TimeSpan.FromSeconds(45);
     private static readonly TimeSpan RecentSalesCacheTtl = TimeSpan.FromSeconds(15);
     private const int MaxDashboardItems = 50;
-    private const decimal DefaultLowStockThreshold = 10m;
 
     private readonly ApplicationDbContext _context;
     private readonly ITenantContext _tenantContext;
@@ -61,77 +65,19 @@ public class DashboardController : ControllerBase
                 async ct =>
                 {
                     var todayStart = DateTime.SpecifyKind(DateTime.UtcNow.Date, DateTimeKind.Utc);
-                    var tomorrowStart = todayStart.AddDays(1);
-                    var yesterdayStart = todayStart.AddDays(-1);
-                    var weekStart = todayStart.AddDays(-(int)todayStart.DayOfWeek);
-                    var monthStart = new DateTime(todayStart.Year, todayStart.Month, 1, 0, 0, 0, DateTimeKind.Utc);
-                    var yearStart = new DateTime(todayStart.Year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-                    var revenueEntries = _context.LedgerEntries
-                        .AsNoTracking()
-                        .Where(entry => entry.TenantId == tenantId)
-                        .Where(entry =>
-                            entry.JournalEntry.Status == JournalStatus.Posted ||
-                            entry.JournalEntry.Status == JournalStatus.Reversed)
-                        .Where(entry => entry.Account.AccountCode == AccountCodes.PosSales);
-
-                    var salesSnapshot = await revenueEntries
-                        .GroupBy(_ => 1)
-                        .Select(group => new SalesAggregateRow
-                        {
-                            TodaySales = group.Sum(entry =>
-                                entry.JournalEntry.JournalDate >= todayStart && entry.JournalEntry.JournalDate < tomorrowStart
-                                    ? entry.CreditAmount - entry.DebitAmount
-                                    : 0m),
-                            YesterdaySales = group.Sum(entry =>
-                                entry.JournalEntry.JournalDate >= yesterdayStart && entry.JournalEntry.JournalDate < todayStart
-                                    ? entry.CreditAmount - entry.DebitAmount
-                                    : 0m),
-                            WeekSales = group.Sum(entry =>
-                                entry.JournalEntry.JournalDate >= weekStart
-                                    ? entry.CreditAmount - entry.DebitAmount
-                                    : 0m),
-                            MonthSales = group.Sum(entry =>
-                                entry.JournalEntry.JournalDate >= monthStart
-                                    ? entry.CreditAmount - entry.DebitAmount
-                                    : 0m),
-                            YearSales = group.Sum(entry =>
-                                entry.JournalEntry.JournalDate >= yearStart
-                                    ? entry.CreditAmount - entry.DebitAmount
-                                    : 0m),
-                            TotalRevenue = group.Sum(entry => entry.CreditAmount - entry.DebitAmount)
-                        })
-                        .SingleOrDefaultAsync(ct)
-                        ?? new SalesAggregateRow();
-
-                    salesSnapshot.TodayTransactionCount = await _context.JournalEntries
-                        .AsNoTracking()
-                        .Where(journal => journal.TenantId == tenantId)
-                        .Where(journal =>
-                            journal.Status == JournalStatus.Posted ||
-                            journal.Status == JournalStatus.Reversed)
-                        .Where(journal => journal.SourceType == "SalesInvoice")
-                        .Where(journal => journal.JournalDate >= todayStart && journal.JournalDate < tomorrowStart)
-                        .CountAsync(ct);
+                    var canViewFinance = PosPermissionAuthorizationHandler.HasPermission(User, PosPermissions.FinanceView);
+                    var currencyCode = canViewFinance
+                        ? await PointOfSale.Infrastructure.Accounting.FinancialReportingCurrency.RequireTenantAsync(_context, tenantId, ct) : null;
+                    var salesSnapshot = canViewFinance
+                        ? await PosSalesReportingReader.ReadAsync(_context, tenantId, todayStart, ct) : new PosSalesSnapshot();
 
                     var totalProducts = await _context.Products
                         .AsNoTracking()
-                        .Where(product => product.TenantId == tenantId)
+                        .Where(product => product.TenantId == tenantId && !product.IsDeleted)
                         .CountAsync(ct);
 
-                    var lowStockQuery = _context.ProductVariantStocks
-                        .AsNoTracking()
-                        .Where(stock => stock.TenantId == tenantId)
-                        .Where(stock => stock.Warehouse.IsActive && !stock.Warehouse.IsDeleted)
-                        .Where(stock => stock.Variant.IsActive && !stock.Variant.IsDeleted)
-                        .Where(stock => stock.Variant.Product != null &&
-                                        stock.Variant.Product.IsActive &&
-                                        !stock.Variant.Product.IsDeleted &&
-                                        stock.Variant.Product.TrackStock)
-                        .Where(stock => stock.Quantity - stock.ReservedQuantity <=
-                                        (stock.Variant.Product.LowStockThreshold > 0
-                                            ? stock.Variant.Product.LowStockThreshold
-                                            : DefaultLowStockThreshold));
+                    var lowStockQuery = InventoryReportingReader.LowStockPositions(_context, tenantId);
 
                     if (warehouseId.HasValue)
                     {
@@ -142,58 +88,50 @@ public class DashboardController : ControllerBase
 
                     var totalCustomers = await _context.Customers
                         .AsNoTracking()
-                        .Where(customer => customer.TenantId == tenantId)
+                        .Where(customer => customer.TenantId == tenantId && !customer.IsDeleted)
                         .CountAsync(ct);
 
-                    var outstandingReceivables = await _context.AccountLedgers
+                    var outstandingReceivables = canViewFinance ? await _context.AccountLedgers
                         .AsNoTracking()
                         .Where(entry =>
                             entry.TenantId == tenantId &&
                             entry.PartyType == PartyType.Customer)
                         .SumAsync(
                             entry => (decimal?)(entry.DebitAmount - entry.CreditAmount),
-                            ct) ?? 0m;
+                            ct) ?? 0m : 0m;
 
-                    var outstandingPayables = await _context.AccountLedgers
+                    var outstandingPayables = canViewFinance ? await _context.AccountLedgers
                         .AsNoTracking()
                         .Where(entry =>
                             entry.TenantId == tenantId &&
                             entry.PartyType == PartyType.Supplier)
                         .SumAsync(
                             entry => (decimal?)(entry.CreditAmount - entry.DebitAmount),
-                            ct) ?? 0m;
+                            ct) ?? 0m : 0m;
 
-                    var inventoryValue = await _context.ProductVariantStocks
-                        .AsNoTracking()
-                        .Where(stock => stock.TenantId == tenantId)
-                        .Where(stock => stock.Warehouse.IsActive && !stock.Warehouse.IsDeleted)
-                        .Where(stock => stock.Variant.IsActive && !stock.Variant.IsDeleted)
-                        .Where(stock => stock.Variant.Product != null &&
-                                        stock.Variant.Product.IsActive &&
-                                        !stock.Variant.Product.IsDeleted &&
-                                        stock.Variant.Product.TrackStock)
-                        .SumAsync(stock => (decimal?)((stock.Quantity + stock.DamagedQuantity) * stock.Variant.CostPrice), ct)
-                        ?? 0m;
-
-                    var salesChange = salesSnapshot.YesterdaySales > 0m
-                        ? ((salesSnapshot.TodaySales - salesSnapshot.YesterdaySales) / salesSnapshot.YesterdaySales) * 100m
-                        : 0m;
+                    var valuation = canViewFinance
+                        ? await InventoryReportingReader.ReadValuationAsync(_context, tenantId, ct) : null;
 
                     return new DashboardStatsResponse
                     {
-                        TodaySales = salesSnapshot.TodaySales,
-                        SalesChangePercentage = decimal.Round(salesChange, 2, MidpointRounding.AwayFromZero),
+                        FinancialSummaryAvailable = canViewFinance,
+                        CurrencyCode = currencyCode,
+                        TodaySales = canViewFinance ? salesSnapshot.TodaySales : null,
+                        SalesChangePercentage = canViewFinance ? salesSnapshot.SalesChangePercentage : null,
                         TotalProducts = totalProducts,
                         LowStockCount = lowStockCount,
                         TotalCustomers = totalCustomers,
-                        WeekSales = salesSnapshot.WeekSales,
-                        MonthSales = salesSnapshot.MonthSales,
-                        YearSales = salesSnapshot.YearSales,
-                        TotalRevenue = salesSnapshot.TotalRevenue,
-                        OutstandingReceivables = outstandingReceivables,
-                        OutstandingPayables = outstandingPayables,
-                        TodayTransactionCount = salesSnapshot.TodayTransactionCount,
-                        InventoryValue = inventoryValue
+                        WeekSales = canViewFinance ? salesSnapshot.WeekSales : null,
+                        MonthSales = canViewFinance ? salesSnapshot.MonthSales : null,
+                        YearSales = canViewFinance ? salesSnapshot.YearSales : null,
+                        TotalRevenue = canViewFinance ? salesSnapshot.TotalRevenue : null,
+                        OutstandingReceivables = canViewFinance ? outstandingReceivables : null,
+                        OutstandingPayables = canViewFinance ? outstandingPayables : null,
+                        TodayTransactionCount = canViewFinance ? salesSnapshot.TodayTransactionCount : null,
+                        InventoryValue = valuation?.TotalOwnedValue,
+                        WarehouseInventoryValue = valuation?.WarehouseValue,
+                        InTransitInventoryValue = valuation?.InTransitValue,
+                        InventoryValuationComplete = valuation?.IsComplete
                     };
                 },
                 cancellationToken);
@@ -219,6 +157,7 @@ public class DashboardController : ControllerBase
         {
             var tenantId = TenantId;
             var normalizedPeriod = NormalizeTrendPeriod(period);
+            await PointOfSale.Infrastructure.Accounting.FinancialReportingCurrency.RequireTenantAsync(_context, tenantId, cancellationToken);
             var cacheKey = BuildCacheKey(tenantId, "sales-trend", normalizedPeriod);
 
             var response = await GetOrCreateAsync(
@@ -237,7 +176,7 @@ public class DashboardController : ControllerBase
                         var monthlyRows = await BuildPostedRevenueQuery(tenantId)
                             .AsNoTracking()
                             .Where(entry => entry.JournalEntry.JournalDate >= firstMonthStart &&
-                                            entry.JournalEntry.JournalDate < nextMonthStart)
+                                            entry.JournalEntry.JournalDate < todayStart.AddDays(1))
                             .GroupBy(entry => new
                             {
                                 entry.JournalEntry.JournalDate.Year,
@@ -332,6 +271,7 @@ public class DashboardController : ControllerBase
         {
             var tenantId = TenantId;
             var normalizedPeriod = NormalizeAggregatePeriod(period);
+            await PointOfSale.Infrastructure.Accounting.FinancialReportingCurrency.RequireTenantAsync(_context, tenantId, cancellationToken);
             var cappedLimit = ClampLimit(limit);
             var cacheKey = BuildCacheKey(tenantId, "top-products", normalizedPeriod, cappedLimit.ToString());
 
@@ -341,13 +281,14 @@ public class DashboardController : ControllerBase
                 async ct =>
                 {
                     var startDate = ResolveAggregatePeriodStart(normalizedPeriod);
+                    var endDate = DateTime.SpecifyKind(DateTime.UtcNow.Date.AddDays(1), DateTimeKind.Utc);
 
                     return await _context.SalesInvoiceItems
                         .AsNoTracking()
-                        .Where(item => item.SalesInvoice.TenantId == tenantId)
-                        .Where(item => item.Product != null && !item.Product.IsDeleted)
+                        .Where(item => !item.IsDeleted && item.SalesInvoice.TenantId == tenantId && !item.SalesInvoice.IsDeleted)
+                        .Where(item => item.Product != null && item.Product.TenantId == tenantId && !item.Product.IsDeleted)
                         .Where(item => item.SalesInvoice.Status != InvoiceStatus.Cancelled)
-                        .Where(item => item.SalesInvoice.InvoiceDate >= startDate)
+                        .Where(item => item.SalesInvoice.InvoiceDate >= startDate && item.SalesInvoice.InvoiceDate < endDate)
                         .GroupBy(item => new { item.ProductId, ProductName = item.Product.Name, item.Product.SKU })
                         .Select(group => new TopProductResponse
                         {
@@ -393,23 +334,7 @@ public class DashboardController : ControllerBase
                 RecentSalesCacheTtl,
                 async ct =>
                 {
-                    return await _context.SalesInvoices
-                        .AsNoTracking()
-                        .Where(invoice => invoice.TenantId == tenantId)
-                        .Where(invoice => invoice.Status != InvoiceStatus.Cancelled)
-                        .OrderByDescending(invoice => invoice.InvoiceDate)
-                        .ThenByDescending(invoice => invoice.Id)
-                        .Take(cappedLimit)
-                        .Select(invoice => new RecentSaleResponse
-                        {
-                            Id = invoice.Id,
-                            InvoiceNumber = invoice.InvoiceNumber,
-                            CustomerName = invoice.Customer != null ? invoice.Customer.Name : "Walk-in Customer",
-                            TotalAmount = invoice.TotalAmount,
-                            InvoiceDate = invoice.InvoiceDate,
-                            Status = invoice.Status.ToString(),
-                            PaidAmount = invoice.PaidAmount
-                        })
+                    return await BuildRecentSalesQuery(_context.SalesInvoices, tenantId, cappedLimit)
                         .ToListAsync(ct);
                 },
                 cancellationToken);
@@ -422,6 +347,29 @@ public class DashboardController : ControllerBase
             return StatusCode(500, new { message = "Error fetching recent sales" });
         }
     }
+
+    // Keep the endpoint's real query available for provider translation tests.
+    // It does not connect to a database until the caller enumerates it.
+    internal static IQueryable<RecentSaleResponse> BuildRecentSalesQuery(
+        IQueryable<SalesInvoice> invoices, Guid tenantId, int limit) =>
+        invoices.AsNoTracking()
+            .Where(invoice => invoice.TenantId == tenantId && !invoice.IsDeleted)
+            .Where(invoice => invoice.Status != InvoiceStatus.Cancelled)
+            .OrderByDescending(invoice => invoice.InvoiceDate)
+            .ThenByDescending(invoice => invoice.Id)
+            .Take(ClampLimit(limit))
+            .Select(invoice => new RecentSaleResponse
+            {
+                Id = invoice.Id,
+                InvoiceNumber = invoice.InvoiceNumber,
+                CustomerName = invoice.Customer != null && invoice.Customer.TenantId == tenantId && !invoice.Customer.IsDeleted
+                    ? invoice.Customer.Name : null,
+                IsWalkInCustomer = invoice.CustomerId == null,
+                TotalAmount = invoice.TotalAmount,
+                InvoiceDate = invoice.InvoiceDate,
+                Status = invoice.Status.ToString(),
+                PaidAmount = invoice.PaidAmount
+            });
 
     /// <summary>
     /// Get low stock items.
@@ -447,19 +395,7 @@ public class DashboardController : ControllerBase
                 AggregateCacheTtl,
                 async ct =>
                 {
-                    var query = _context.ProductVariantStocks
-                        .AsNoTracking()
-                        .Where(stock => stock.TenantId == tenantId)
-                        .Where(stock => stock.Warehouse.IsActive && !stock.Warehouse.IsDeleted)
-                        .Where(stock => stock.Variant.IsActive && !stock.Variant.IsDeleted)
-                        .Where(stock => stock.Variant.Product != null &&
-                                        stock.Variant.Product.IsActive &&
-                                        !stock.Variant.Product.IsDeleted &&
-                                        stock.Variant.Product.TrackStock)
-                        .Where(stock => stock.Quantity - stock.ReservedQuantity <=
-                                        (stock.Variant.Product.LowStockThreshold > 0
-                                            ? stock.Variant.Product.LowStockThreshold
-                                            : DefaultLowStockThreshold));
+                    var query = InventoryReportingReader.LowStockPositions(_context, tenantId);
 
                     if (warehouseId.HasValue)
                     {
@@ -467,7 +403,7 @@ public class DashboardController : ControllerBase
                     }
 
                     return await query
-                        .OrderBy(stock => stock.Quantity)
+                        .OrderBy(stock => stock.Quantity - stock.ReservedQuantity)
                         .ThenBy(stock => stock.Variant.Product.Name)
                         .ThenBy(stock => stock.Variant.ProductId)
                         .ThenBy(stock => stock.VariantId)
@@ -480,7 +416,7 @@ public class DashboardController : ControllerBase
                             WarehouseName = stock.Warehouse.Name,
                             CurrentStock = stock.Quantity - stock.ReservedQuantity,
                             ReorderPoint = stock.Variant.Product.LowStockThreshold,
-                            Status = stock.Quantity == 0m ? "Out of Stock" : "Low Stock"
+                            Status = stock.Quantity - stock.ReservedQuantity <= 0m ? "Out of Stock" : "Low Stock"
                         })
                         .ToListAsync(ct);
                 },
@@ -507,6 +443,7 @@ public class DashboardController : ControllerBase
         {
             var tenantId = TenantId;
             var normalizedPeriod = NormalizeAggregatePeriod(period);
+            await PointOfSale.Infrastructure.Accounting.FinancialReportingCurrency.RequireTenantAsync(_context, tenantId, cancellationToken);
             var cacheKey = BuildCacheKey(tenantId, "category-sales", normalizedPeriod);
 
             var response = await GetOrCreateAsync(
@@ -515,22 +452,27 @@ public class DashboardController : ControllerBase
                 async ct =>
                 {
                     var startDate = ResolveAggregatePeriodStart(normalizedPeriod);
+                    var endDate = DateTime.SpecifyKind(DateTime.UtcNow.Date.AddDays(1), DateTimeKind.Utc);
 
                     return await _context.SalesInvoiceItems
                         .AsNoTracking()
-                        .Where(item => item.SalesInvoice.TenantId == tenantId)
-                        .Where(item => item.Product != null && !item.Product.IsDeleted)
+                        .Where(item => !item.IsDeleted && item.SalesInvoice.TenantId == tenantId && !item.SalesInvoice.IsDeleted)
+                        .Where(item => item.Product != null && item.Product.TenantId == tenantId && !item.Product.IsDeleted)
                         .Where(item => item.SalesInvoice.Status != InvoiceStatus.Cancelled)
-                        .Where(item => item.SalesInvoice.InvoiceDate >= startDate)
+                        .Where(item => item.SalesInvoice.InvoiceDate >= startDate && item.SalesInvoice.InvoiceDate < endDate)
                         .GroupBy(item => new
                         {
-                            item.Product.CategoryId,
-                            CategoryName = item.Product.Category != null ? item.Product.Category.Name : "Uncategorized"
+                            CategoryId = item.Product.Category != null && item.Product.Category.TenantId == tenantId && !item.Product.Category.IsDeleted
+                                ? item.Product.CategoryId : Guid.Empty,
+                            CategoryName = item.Product.Category != null && item.Product.Category.TenantId == tenantId && !item.Product.Category.IsDeleted
+                                ? item.Product.Category.Name : string.Empty,
+                            IsUncategorized = item.Product.Category == null || item.Product.Category.TenantId != tenantId || item.Product.Category.IsDeleted
                         })
                         .Select(group => new CategorySalesResponse
                         {
                             CategoryId = group.Key.CategoryId,
                             CategoryName = group.Key.CategoryName,
+                            IsUncategorized = group.Key.IsUncategorized,
                             TotalRevenue = group.Sum(item => item.TotalAmount),
                             ItemsSold = group.Sum(item => item.Quantity)
                         })
@@ -561,6 +503,7 @@ public class DashboardController : ControllerBase
         {
             var tenantId = TenantId;
             var normalizedPeriod = NormalizeAggregatePeriod(period);
+            await PointOfSale.Infrastructure.Accounting.FinancialReportingCurrency.RequireTenantAsync(_context, tenantId, cancellationToken);
             var cacheKey = BuildCacheKey(tenantId, "payment-methods", normalizedPeriod);
 
             var response = await GetOrCreateAsync(
@@ -569,12 +512,13 @@ public class DashboardController : ControllerBase
                 async ct =>
                 {
                     var startDate = ResolveAggregatePeriodStart(normalizedPeriod);
+                    var endDate = DateTime.SpecifyKind(DateTime.UtcNow.Date.AddDays(1), DateTimeKind.Utc);
 
                     return await _context.SalesInvoicePayments
                         .AsNoTracking()
-                        .Where(payment => payment.SalesInvoice.TenantId == tenantId)
+                        .Where(payment => !payment.IsDeleted && payment.SalesInvoice.TenantId == tenantId && !payment.SalesInvoice.IsDeleted)
                         .Where(payment => payment.SalesInvoice.Status != InvoiceStatus.Cancelled)
-                        .Where(payment => payment.PaymentDate >= startDate)
+                        .Where(payment => payment.PaymentDate >= startDate && payment.PaymentDate < endDate)
                         .GroupBy(payment => payment.PaymentMethod)
                         .Select(group => new PaymentMethodBreakdownResponse
                         {
@@ -608,12 +552,7 @@ public class DashboardController : ControllerBase
     }
 
     private IQueryable<LedgerEntry> BuildPostedRevenueQuery(Guid tenantId) =>
-        _context.LedgerEntries
-            .Where(entry => entry.TenantId == tenantId)
-            .Where(entry =>
-                entry.JournalEntry.Status == JournalStatus.Posted ||
-                entry.JournalEntry.Status == JournalStatus.Reversed)
-            .Where(entry => entry.Account.AccountCode == AccountCodes.PosSales);
+        PosSalesReportingReader.RevenueEntries(_context, tenantId);
 
     private static string BuildCacheKey(Guid tenantId, params string[] parts)
     {
@@ -659,17 +598,6 @@ public class DashboardController : ControllerBase
         };
     }
 
-    private sealed class SalesAggregateRow
-    {
-        public decimal TodaySales { get; init; }
-        public decimal YesterdaySales { get; init; }
-        public decimal WeekSales { get; init; }
-        public decimal MonthSales { get; init; }
-        public decimal YearSales { get; init; }
-        public decimal TotalRevenue { get; init; }
-        public int TodayTransactionCount { get; set; }
-    }
-
     private sealed class DailySalesAmountRow
     {
         public DateTime Date { get; init; }
@@ -688,19 +616,26 @@ public class DashboardController : ControllerBase
 
 public class DashboardStatsResponse
 {
-    public decimal TodaySales { get; set; }
-    public decimal SalesChangePercentage { get; set; }
+    public bool FinancialSummaryAvailable { get; set; }
+    public string? CurrencyCode { get; set; }
+    public string FinancialBasis => "journal-date-utc-period-movement";
+    public DateTime GeneratedAtUtc { get; set; } = DateTime.UtcNow;
+    public decimal? TodaySales { get; set; }
+    public decimal? SalesChangePercentage { get; set; }
     public int TotalProducts { get; set; }
     public int LowStockCount { get; set; }
     public int TotalCustomers { get; set; }
-    public decimal WeekSales { get; set; }
-    public decimal MonthSales { get; set; }
-    public decimal YearSales { get; set; }
-    public decimal TotalRevenue { get; set; }
-    public decimal OutstandingReceivables { get; set; }
-    public decimal OutstandingPayables { get; set; }
-    public int TodayTransactionCount { get; set; }
-    public decimal InventoryValue { get; set; }
+    public decimal? WeekSales { get; set; }
+    public decimal? MonthSales { get; set; }
+    public decimal? YearSales { get; set; }
+    public decimal? TotalRevenue { get; set; }
+    public decimal? OutstandingReceivables { get; set; }
+    public decimal? OutstandingPayables { get; set; }
+    public int? TodayTransactionCount { get; set; }
+    public decimal? InventoryValue { get; set; }
+    public decimal? WarehouseInventoryValue { get; set; }
+    public decimal? InTransitInventoryValue { get; set; }
+    public bool? InventoryValuationComplete { get; set; }
 }
 
 public class SalesTrendResponse
@@ -728,7 +663,19 @@ public class RecentSaleResponse
 {
     public Guid Id { get; set; }
     public string InvoiceNumber { get; set; } = string.Empty;
-    public string CustomerName { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Associated customer display name. Null when no customer name is available; the
+    /// client decides how to localize or represent the absence.
+    /// </summary>
+    public string? CustomerName { get; set; }
+
+    /// <summary>
+    /// True only when the invoice has no customer association (nullable customer foreign key).
+    /// The client localizes the walk-in label; no display language is chosen server-side.
+    /// </summary>
+    public bool IsWalkInCustomer { get; set; }
+
     public decimal TotalAmount { get; set; }
     public DateTime InvoiceDate { get; set; }
     public string Status { get; set; } = string.Empty;
@@ -750,6 +697,7 @@ public class CategorySalesResponse
 {
     public Guid CategoryId { get; set; }
     public string CategoryName { get; set; } = string.Empty;
+    public bool IsUncategorized { get; set; }
     public decimal TotalRevenue { get; set; }
     public decimal ItemsSold { get; set; }
 }

@@ -1,0 +1,23 @@
+[data-product="pos"] .pos-card {
+  background-color: var(--pos-card-bg);
+  border: var(--pos-border-width) solid var(--pos-card-border);
+  border-radius: var(--pos-card-radius);
+  box-shadow: var(--pos-card-shadow);
+  color: var(--pos-color-text-primary);
+}
+
+[data-product="pos"] .pos-card--padding-none {
+  padding: 0;
+}
+
+[data-product="pos"] .pos-card--padding-sm {
+  padding: var(--pos-space-4);
+}
+
+[data-product="pos"] .pos-card--padding-md {
+  padding: var(--pos-card-padding);
+}
+
+[data-product="pos"] .pos-card--padding-lg {
+  padding: var(--pos-space-8);
+}

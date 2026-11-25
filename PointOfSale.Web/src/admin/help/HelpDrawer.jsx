@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
-import { LoaderCircle, Sparkles, X } from 'lucide-react'
+import { LoaderCircle, Sparkles } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import api from '../../services/api'
+import { Button, Dialog } from '../../design-system/primitives'
 
 const articleLoaders = {
     dashboard: () => import('./helpArticles/dashboard.md?raw'),
@@ -120,6 +121,32 @@ Assuming every page is documented in phase 1.
 
 function escapeRegExp(value) {
     return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+// Reorder parsed top-level sections, never Markdown strings. Unknown structures
+// are left intact; the original content also remains the assistant's payload.
+export function localeFirstHelpSections({ locale } = {}) {
+    return (tree) => {
+        if (!locale?.startsWith('ar')) return
+        const nodes = tree.children
+        const headings = nodes.filter(node => node.type === 'heading' && node.depth === 2)
+        const label = node => node.children?.length === 1 && node.children[0].type === 'text'
+            ? node.children[0].value : null
+        if (headings.length !== 2 || label(headings[0]) !== 'English' || label(headings[1]) !== 'العربية') return
+        const english = nodes.indexOf(headings[0])
+        const arabic = nodes.indexOf(headings[1])
+        const separators = nodes.filter(node => node.type === 'thematicBreak')
+        // One shared title, two complete sections, one separator between them.
+        if (english !== 1 || nodes[0].type !== 'heading' || nodes[0].depth !== 1
+            || separators.length !== 1 || nodes[arabic - 1] !== separators[0]
+            || arabic <= english + 2 || arabic === nodes.length - 1) return
+        tree.children = [
+            ...nodes.slice(0, english),
+            ...nodes.slice(arabic),
+            separators[0],
+            ...nodes.slice(english, arabic - 1),
+        ]
+    }
 }
 
 function extractSectionContent(markdown, heading) {
@@ -285,7 +312,7 @@ function buildUiContext({ articleKey, pathname, pageDescription, hasArticle, que
     )
 }
 
-export default function HelpDrawer({ isOpen, onClose, articleKey, pathname }) {
+export default function HelpDrawer({ isOpen, onClose, articleKey, pathname, restoreFocusRef }) {
     const { t, i18n } = useTranslation()
     const [content, setContent] = useState('')
     const [isLoading, setIsLoading] = useState(false)
@@ -295,6 +322,10 @@ export default function HelpDrawer({ isOpen, onClose, articleKey, pathname }) {
     const [assistantError, setAssistantError] = useState('')
     const [isAskingAssistant, setIsAskingAssistant] = useState(false)
     const isRTL = i18n.language === 'ar'
+    const markdownPlugins = useMemo(
+        () => [[localeFirstHelpSections, { locale: i18n.resolvedLanguage || i18n.language }]],
+        [i18n.resolvedLanguage, i18n.language]
+    )
 
     const resolvedTitle = useMemo(() => {
         if (articleKey) {
@@ -313,21 +344,6 @@ export default function HelpDrawer({ isOpen, onClose, articleKey, pathname }) {
         () => getModuleName(articleKey, pathname),
         [articleKey, pathname]
     )
-
-    useEffect(() => {
-        if (!isOpen) {
-            return undefined
-        }
-
-        const handleKeydown = (event) => {
-            if (event.key === 'Escape') {
-                onClose()
-            }
-        }
-
-        window.addEventListener('keydown', handleKeydown)
-        return () => window.removeEventListener('keydown', handleKeydown)
-    }, [isOpen, onClose])
 
     useEffect(() => {
         let isCancelled = false
@@ -426,139 +442,123 @@ export default function HelpDrawer({ isOpen, onClose, articleKey, pathname }) {
     }
 
     return (
-        <>
-            <div
-                className={`fixed inset-0 z-40 bg-slate-950/40 transition-opacity duration-300 ${isOpen ? 'opacity-100 pointer-events-auto' : 'pointer-events-none opacity-0'}`}
-                onClick={onClose}
-            />
-
-            <aside
-                className={`fixed right-0 top-0 z-50 flex h-full w-full max-w-2xl transform flex-col border-l border-slate-200 bg-white shadow-2xl transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
-                aria-hidden={!isOpen}
-                style={{ direction: isRTL ? 'rtl' : 'ltr' }}
-            >
-                <div className="flex items-start justify-between gap-4 border-b border-slate-200 px-6 py-5">
-                    <div className="min-w-0">
-                        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-indigo-500">
-                            {t('common.helpCenter', 'Help Center')}
-                        </p>
-                        <h2 className="mt-1 text-xl font-bold text-slate-900">{resolvedTitle}</h2>
-                        <p className="mt-2 text-sm text-slate-500">
-                            {pathname}
-                        </p>
-                    </div>
-
-                    <button
-                        type="button"
-                        onClick={onClose}
-                        className="rounded-xl p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-800"
-                        title={t('common.close', 'Close')}
-                    >
-                        <X className="h-5 w-5" />
-                    </button>
+        <Dialog
+            open={Boolean(isOpen)}
+            onOpenChange={(next) => {
+                if (!next) {
+                    onClose?.()
+                }
+            }}
+            title={resolvedTitle}
+            closeOnOverlayClick
+            closeOnEscape
+            restoreFocusRef={restoreFocusRef}
+            className="pos-help-drawer"
+        >
+            <div className="pos-help__content">
+                <div>
+                    <p className="pos-help__eyebrow">{t('common.helpCenter', 'Help Center')}</p>
                 </div>
 
-                <div className="flex-1 overflow-y-auto px-6 py-6">
-                    {isLoading ? (
-                        <div className="flex h-full min-h-48 flex-col items-center justify-center gap-3 text-slate-500">
-                            <LoaderCircle className="h-6 w-6 animate-spin" />
-                            <p className="text-sm">{t('common.loading', 'Loading...')}</p>
-                        </div>
-                    ) : (
-                        <div className="space-y-4">
-                            {error ? (
-                                <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-                                    {error}
-                                </div>
-                            ) : null}
+                {isLoading ? (
+                    <div className="pos-help__loading">
+                        <LoaderCircle className="pos-help__spinner" aria-hidden="true" />
+                        <p>{t('common.loading', 'Loading...')}</p>
+                    </div>
+                ) : (
+                    <>
+                        {error ? (
+                            <div className="pos-help__error">{error}</div>
+                        ) : null}
 
-                            <div className="space-y-4 text-sm leading-7 text-slate-700">
-                                <ReactMarkdown
-                                    components={{
-                                        h1: ({ children }) => <h1 className="text-2xl font-bold text-slate-900">{children}</h1>,
-                                        h2: ({ children }) => <h2 className="pt-3 text-xl font-semibold text-slate-900">{children}</h2>,
-                                        h3: ({ children }) => <h3 className="pt-2 text-base font-semibold text-slate-900">{children}</h3>,
-                                        p: ({ children }) => <p className="text-sm leading-7 text-slate-700">{children}</p>,
-                                        ul: ({ children }) => <ul className="list-disc space-y-2 ps-5">{children}</ul>,
-                                        ol: ({ children }) => <ol className="list-decimal space-y-2 ps-5">{children}</ol>,
-                                        li: ({ children }) => <li className="text-sm leading-7 text-slate-700">{children}</li>,
-                                        hr: () => <hr className="border-slate-200" />,
-                                        strong: ({ children }) => <strong className="font-semibold text-slate-900">{children}</strong>,
-                                        code: ({ children }) => <code className="rounded bg-slate-100 px-1 py-0.5 text-[13px] text-slate-900">{children}</code>,
-                                    }}
-                                >
-                                    {content}
-                                </ReactMarkdown>
+                        <div className="pos-help__markdown">
+                            <ReactMarkdown
+                                remarkPlugins={markdownPlugins}
+                                components={{
+                                    h1: ({ children }) => <h1 dir="auto" className="pos-help__md-h1">{children}</h1>,
+                                    h2: ({ children }) => <h2 dir="auto" className="pos-help__md-h2">{children}</h2>,
+                                    h3: ({ children }) => <h3 dir="auto" className="pos-help__md-h3">{children}</h3>,
+                                    h4: ({ children }) => <h4 dir="auto">{children}</h4>,
+                                    h5: ({ children }) => <h5 dir="auto">{children}</h5>,
+                                    h6: ({ children }) => <h6 dir="auto">{children}</h6>,
+                                    blockquote: ({ children }) => <blockquote dir="auto">{children}</blockquote>,
+                                    p: ({ children }) => <p dir="auto" className="pos-help__md-p">{children}</p>,
+                                    ul: ({ children }) => <ul dir="auto" className="pos-help__md-list">{children}</ul>,
+                                    ol: ({ children, start }) => <ol dir="auto" start={start} className="pos-help__md-list">{children}</ol>,
+                                    li: ({ children }) => <li dir="auto">{children}</li>,
+                                    hr: () => <hr className="pos-help__md-hr" />,
+                                    strong: ({ children }) => <strong className="pos-help__md-strong">{children}</strong>,
+                                    code: ({ children }) => <code className="pos-help__md-code">{children}</code>,
+                                }}
+                            >
+                                {content}
+                            </ReactMarkdown>
+                        </div>
+
+                        <section className="pos-help__assistant">
+                            <div className="pos-help__assistant-head">
+                                <div className="pos-help__assistant-icon" aria-hidden="true">
+                                    <Sparkles size={16} />
+                                </div>
+                                <div>
+                                    <h3 className="pos-help__assistant-title">
+                                        {isRTL ? 'اسأل المساعد' : 'Ask the assistant'}
+                                    </h3>
+                                    <p className="pos-help__assistant-copy">
+                                        {isRTL
+                                            ? 'الرد يعتمد فقط على المقال الحالي ومسار الصفحة المفتوحة.'
+                                            : 'Answers use only the current help article and page context.'}
+                                    </p>
+                                </div>
                             </div>
 
-                            <section className="rounded-3xl border border-indigo-100 bg-gradient-to-br from-indigo-50 via-white to-slate-50 p-5 shadow-sm">
-                                <div className="flex items-start gap-3">
-                                    <div className="rounded-2xl bg-indigo-600 p-2 text-white shadow-sm">
-                                        <Sparkles className="h-4 w-4" />
-                                    </div>
-                                    <div className="min-w-0 flex-1">
-                                        <h3 className="text-base font-semibold text-slate-900">
-                                            {isRTL ? 'اسأل المساعد' : 'Ask the assistant'}
-                                        </h3>
-                                        <p className="mt-1 text-sm text-slate-600">
-                                            {isRTL
-                                                ? 'الرد يعتمد فقط على المقال الحالي ومسار الصفحة المفتوحة.'
-                                                : 'Answers use only the current help article and page context.'}
-                                        </p>
-                                    </div>
+                            <form className="pos-help__form" onSubmit={handleAskAssistant}>
+                                <textarea
+                                    value={assistantQuestion}
+                                    onChange={(event) => setAssistantQuestion(event.target.value)}
+                                    rows={3}
+                                    maxLength={2000}
+                                    aria-label={isRTL ? 'سؤال المساعد' : 'Assistant question'}
+                                    className="pos-help__textarea"
+                                    placeholder={isRTL
+                                        ? 'اكتب سؤالك عن هذه الصفحة أو المشكلة التي تواجهها'
+                                        : 'Ask about this page or describe the issue you are facing'}
+                                />
+
+                                <div className="pos-help__actions">
+                                    <p className="pos-help__hint">
+                                        {isRTL
+                                            ? 'مثال: لماذا لا يظهر المساعد في المتجر؟'
+                                            : 'Example: Why is the assistant not showing on the storefront?'}
+                                    </p>
+
+                                    <Button
+                                        type="submit"
+                                        size="sm"
+                                        loading={isAskingAssistant}
+                                        disabled={!assistantQuestion.trim()}
+                                    >
+                                        {isRTL ? 'اسأل' : 'Ask'}
+                                    </Button>
                                 </div>
+                            </form>
 
-                                <form className="mt-4 space-y-3" onSubmit={handleAskAssistant}>
-                                    <textarea
-                                        value={assistantQuestion}
-                                        onChange={(event) => setAssistantQuestion(event.target.value)}
-                                        rows={3}
-                                        maxLength={2000}
-                                        className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
-                                        placeholder={isRTL
-                                            ? 'اكتب سؤالك عن هذه الصفحة أو المشكلة التي تواجهها'
-                                            : 'Ask about this page or describe the issue you are facing'}
-                                    />
+                            {assistantError ? (
+                                <div className="pos-help__assistant-error">{assistantError}</div>
+                            ) : null}
 
-                                    <div className="flex items-center justify-between gap-3">
-                                        <p className="text-xs text-slate-500">
-                                            {isRTL
-                                                ? 'مثال: لماذا لا يظهر المساعد في المتجر؟'
-                                                : 'Example: Why is the assistant not showing on the storefront?'}
-                                        </p>
-
-                                        <button
-                                            type="submit"
-                                            disabled={isAskingAssistant || !assistantQuestion.trim()}
-                                            className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
-                                        >
-                                            {isAskingAssistant ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}
-                                            <span>{isRTL ? 'اسأل' : 'Ask'}</span>
-                                        </button>
-                                    </div>
-                                </form>
-
-                                {assistantError ? (
-                                    <div className="mt-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-                                        {assistantError}
-                                    </div>
-                                ) : null}
-
-                                {assistantAnswer ? (
-                                    <div className="mt-4 rounded-2xl border border-slate-200 bg-white px-4 py-4 shadow-sm">
-                                        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                                            {isRTL ? 'الرد' : 'Answer'}
-                                        </p>
-                                        <div className="whitespace-pre-wrap text-sm leading-7 text-slate-700">
-                                            {assistantAnswer}
-                                        </div>
-                                    </div>
-                                ) : null}
-                            </section>
-                        </div>
-                    )}
-                </div>
-            </aside>
-        </>
+                            {assistantAnswer ? (
+                                <div className="pos-help__answer">
+                                    <p className="pos-help__answer-label">
+                                        {isRTL ? 'الرد' : 'Answer'}
+                                    </p>
+                                    <p className="pos-help__answer-body">{assistantAnswer}</p>
+                                </div>
+                            ) : null}
+                        </section>
+                    </>
+                )}
+            </div>
+        </Dialog>
     )
 }

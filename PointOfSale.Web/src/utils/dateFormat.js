@@ -31,7 +31,12 @@ const DEFAULT_COMPACT_NUMBER_OPTIONS = {
     notation: 'compact',
 }
 
-const DEFAULT_CURRENCY_CODE = 'EGP'
+/**
+ * Neutral "no confirmed value" marker already used by the Dashboard presentation.
+ * A currency amount whose currency is unknown, unsupported or whose amount is not
+ * a finite number is rendered as this marker, never as a plausible EGP value.
+ */
+export const UNAVAILABLE_CURRENCY_VALUE = '\u2014'
 
 const getDocumentLanguage = () => (
     typeof document !== 'undefined'
@@ -89,8 +94,30 @@ const createNumberFormatter = (locale, options = DEFAULT_NUMBER_OPTIONS) => (
     new Intl.NumberFormat(normalizeLocale(locale), options)
 )
 
-const resolveCurrencyCode = (currency) => {
-    return assertTwoDecimalCurrency(normalizeCurrencyCode(currency || DEFAULT_CURRENCY_CODE))
+/**
+ * Currency must come from confirmed settings or the record itself. Neither an
+ * omitted argument nor an invalid code is evidence of an EGP configuration.
+ */
+const resolveRequestedCurrencyCode = (currency) => {
+    if (typeof currency !== 'string' || !/^[a-z]{3}$/i.test(currency.trim())) return null
+    try {
+        return assertTwoDecimalCurrency(normalizeCurrencyCode(currency))
+    } catch {
+        return null
+    }
+}
+
+// Amount validity is decided independently of currency validity.
+const isFormattableAmount = (value) => {
+    if (typeof value === 'number') {
+        return Number.isFinite(value)
+    }
+
+    if (typeof value === 'string') {
+        return /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$/.test(value.trim()) && Number.isFinite(Number(value))
+    }
+
+    return false
 }
 
 export const formatDate = (value, locale, options = DEFAULT_DATE_OPTIONS) => {
@@ -132,29 +159,32 @@ export const formatCompactNumber = (value, locale, options = DEFAULT_COMPACT_NUM
     formatNumber(value, locale, options)
 )
 
-export const formatCurrency = (value, currency = DEFAULT_CURRENCY_CODE, locale, options = {}) => {
-    const normalizedCurrency = resolveCurrencyCode(currency)
+export const formatCurrency = (value, currency, locale, options = {}) => {
+    if (!isFormattableAmount(value)) {
+        return UNAVAILABLE_CURRENCY_VALUE
+    }
+
+    const normalizedCurrency = resolveRequestedCurrencyCode(currency)
+
+    if (normalizedCurrency === null) {
+        return UNAVAILABLE_CURRENCY_VALUE
+    }
 
     try {
         return createNumberFormatter(locale, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+            ...options,
             style: 'currency',
             currency: normalizedCurrency,
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-            ...options,
         }).format(toSafeNumber(value))
     } catch {
-        return createNumberFormatter(locale, {
-            style: 'currency',
-            currency: DEFAULT_CURRENCY_CODE,
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-            ...options,
-        }).format(toSafeNumber(value))
+        // A formatter failure is not evidence that the currency is EGP.
+        return UNAVAILABLE_CURRENCY_VALUE
     }
 }
 
-export const formatCompactCurrency = (value, currency = DEFAULT_CURRENCY_CODE, locale, options = {}) => (
+export const formatCompactCurrency = (value, currency, locale, options = {}) => (
     formatCurrency(value, currency, locale, {
         notation: 'compact',
         minimumFractionDigits: 0,
@@ -163,6 +193,6 @@ export const formatCompactCurrency = (value, currency = DEFAULT_CURRENCY_CODE, l
     })
 )
 
-export const formatSignedCurrency = (value, currency = DEFAULT_CURRENCY_CODE, locale, options = {}) => {
+export const formatSignedCurrency = (value, currency, locale, options = {}) => {
     return formatCurrency(value, currency, locale, { ...options, signDisplay: 'always' })
 }

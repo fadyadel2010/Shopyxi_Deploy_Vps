@@ -1,0 +1,77 @@
+[data-product="pos"] .pos-table-container {
+  width: 100%;
+  overflow-x: auto;
+  background-color: var(--pos-table-bg);
+  border: var(--pos-border-width) solid var(--pos-table-border);
+  border-radius: var(--pos-radius-card);
+}
+
+[data-product="pos"] .pos-table-container:focus-visible {
+  outline: var(--pos-focus-ring-width) solid var(--pos-color-focus-ring);
+  outline-offset: var(--pos-focus-ring-offset);
+}
+
+[data-product="pos"] .pos-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--pos-table-bg);
+  color: var(--pos-table-text);
+  font-family: var(--pos-font-family-ui);
+  font-size: var(--pos-font-size-14);
+  line-height: var(--pos-line-height-20);
+  text-align: start;
+}
+
+[data-product="pos"] .pos-table__caption {
+  caption-side: top;
+  padding: var(--pos-space-3) var(--pos-space-4);
+  color: var(--pos-table-header-text);
+  font-size: var(--pos-font-size-13);
+  text-align: start;
+}
+
+[data-product="pos"] .pos-table__header-cell {
+  background-color: var(--pos-table-header-bg);
+  color: var(--pos-table-header-text);
+  font-weight: var(--pos-font-weight-semibold);
+  text-align: start;
+  padding-block: var(--pos-space-2);
+  padding-inline: var(--pos-space-4);
+  border-block-end: var(--pos-border-width) solid var(--pos-table-border);
+  white-space: nowrap;
+}
+
+[data-product="pos"] .pos-table__cell {
+  padding-block: var(--pos-space-3);
+  padding-inline: var(--pos-space-4);
+  border-block-end: var(--pos-border-width) solid var(--pos-table-border);
+  vertical-align: middle;
+}
+
+[data-product="pos"] .pos-table__head .pos-table__header-cell {
+  background-color: var(--pos-table-header-bg);
+}
+
+[data-product="pos"] .pos-table__body .pos-table__row:last-child .pos-table__cell {
+  border-block-end: 0;
+}
+
+[data-product="pos"] .pos-table__body .pos-table__row[data-selected="true"] {
+  background-color: var(--pos-table-row-selected-bg);
+}
+
+[data-product="pos"] .pos-table__body .pos-table__row:hover {
+  background-color: var(--pos-table-row-hover-bg);
+}
+
+[data-product="pos"] .pos-table__empty {
+  padding-block: var(--pos-space-8);
+  padding-inline: var(--pos-space-4);
+  color: var(--pos-table-text-muted);
+  text-align: center;
+}
+
+[data-product="pos"] .pos-table__foot .pos-table__cell {
+  background-color: var(--pos-table-header-bg);
+  font-weight: var(--pos-font-weight-medium);
+}
