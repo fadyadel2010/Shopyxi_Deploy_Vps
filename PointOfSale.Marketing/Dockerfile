@@ -17,4 +17,4 @@ COPY --chown=101:101 nginx.conf /etc/nginx/nginx.conf
 EXPOSE 8080 8081
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s CMD wget -q -O /dev/null http://127.0.0.1:8081/healthz || exit 1
 STOPSIGNAL SIGQUIT
-ENTRYPOINT ["/usr/sbin/nginx", "-g", "daemon off;"]
+ENTRYPOINT ["/usr/sbin/nginx", "-e", "/dev/stderr", "-g", "daemon off;"]

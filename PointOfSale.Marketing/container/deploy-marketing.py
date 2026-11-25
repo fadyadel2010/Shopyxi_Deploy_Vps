@@ -66,13 +66,18 @@ def deploy(args):
         "revision": previous["metadata"]["annotations"]["deployment.kubernetes.io/revision"]})
     # Retain actual previous public bytes, so rollback is verified rather than
     # declaring recovery from Kubernetes readiness alone.
+    def public_response(path):
+        request = urllib.request.Request("https://shopyxi.com" + path,
+            headers={"User-Agent": "SHOPYXI-Marketing-Release-Verification/1.0"})
+        return urllib.request.urlopen(request, timeout=30)
+
     def public_hash(path):
-        with urllib.request.urlopen("https://shopyxi.com" + path, timeout=30) as response:
+        with public_response(path) as response:
             return {"status": response.status, "sha256": hashlib.sha256(response.read()).hexdigest()}
     previous_public = {}
     route_map = json.loads((APP / "dist/routes.json").read_text(encoding="utf-8"))
     for pathname in [r["path"] for r in route_map] + ["/robots.txt", "/sitemap.xml"]:
-        with urllib.request.urlopen("https://shopyxi.com" + pathname, timeout=30) as response:
+        with public_response(pathname) as response:
             body = response.read()
             previous_public[pathname] = {"status": response.status, "sha256": hashlib.sha256(body).hexdigest()}
             if pathname == "/en/":
@@ -105,9 +110,9 @@ def deploy(args):
         "--memory-limit", "67108864",
         "--mount", "type=tmpfs,src=tmpfs,dst=/tmp,options=mode=1777",
         image, "marketing-preflight-" + commit[:12], "/bin/sh", "-ec",
-        "nginx -t; nginx; wget -q -O - http://127.0.0.1:8081/healthz; "
+        "nginx -e /dev/stderr -t; nginx -e /dev/stderr; wget -q -O - http://127.0.0.1:8081/healthz; "
         "wget -q --header='Host: shopyxi.com' -O /dev/null http://127.0.0.1:8080/ar/; "
-        "find /site -type f -exec sha256sum {} \\;; sha256sum /etc/nginx/nginx.conf; nginx -s quit")
+        "find /site -type f -exec sha256sum {} \\;; sha256sum /etc/nginx/nginx.conf; nginx -e /dev/stderr -s quit")
     (out / "image-preflight.txt").write_text(preflight, encoding="utf-8")
     actual_files = {}
     for line in preflight.splitlines():

@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "pass": true,
   "sourceSha256": "64a1b9ffdaa0b82d4a7a7e47563501ba6a97ddc7557dd5dbcdfecf05d66f6b8a",
-  "inputsSha256": "9dcaccf833d768a409fab2ef2b5764da6803aad7a2b13548a2bad7ee43396ec5",
+  "inputsSha256": "8d792b0b2eecf77a98fa9214ae5847b6a91e481b310aa0b0f01a33c6abc06fb0",
   "engines": [
     "chromium",
     "firefox",
@@ -20,8 +20,8 @@
   "externalRequests": 0,
   "brokenResponses": 0,
   "screenshots": 48,
-  "browserReportSha256": "e0e743afc053d10030239a9dd3a6ddfb72d0bcee378d3bf976036fcfd09a57cc",
-  "completedUtc": "2026-11-25T12:08:45.819Z",
+  "browserReportSha256": "1e30e101dd4f947feaeeb5652e90e7684b2e1499df723c50d23b4139d216d91e",
+  "completedUtc": "2026-11-25T12:28:12.601Z",
   "limits": "Automated installed desktop engines and responsive emulation; no physical-device, native-editor or screen-reader certification.",
   "binding": "All src, assets, scripts, tests, packaging, lockfile, release policy and approval inputs; qualification itself excluded to avoid circularity."
 }

@@ -87,7 +87,7 @@ def build(args):
     raw_layer = stream.getvalue()
     config["config"] = {
         "User": "101:101", "WorkingDir": "/",
-        "Entrypoint": ["/usr/sbin/nginx", "-g", "daemon off;"],
+        "Entrypoint": ["/usr/sbin/nginx", "-e", "/dev/stderr", "-g", "daemon off;"],
         "Env": ["PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],
         "ExposedPorts": {"8080/tcp": {}, "8081/tcp": {}}, "StopSignal": "SIGQUIT",
         "Healthcheck": {"Test": ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8081/healthz || exit 1"],
