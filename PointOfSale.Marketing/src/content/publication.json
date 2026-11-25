@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "authority": "User's 2026-11-25 Marketing remediation/deployment request, conditional on source evidence and technical readiness; not approval by the historical PO/RO/FO/AR reviewer list.",
+  "historicalRegister": "claims.json preserves historical proposed wording and multi-reviewer PENDING status. Only the source-supported public subset below may render publicly.",
+  "supported": ["C01", "C02", "C03", "C04", "C05", "C06", "C07", "C08", "C09", "C10", "C11", "C12", "C13", "C14", "C15", "C16", "C17", "C18", "C19", "C20", "C21", "C22", "C23", "C24", "C25", "C26", "C27", "C27a", "C28", "C29", "C30", "C31", "C32", "C33", "C34", "C35", "C37", "C38", "C40", "C43", "C44", "C45", "C46", "C47", "C48", "C50", "C51", "C52", "C53", "C54", "C55"],
+  "excluded": ["C36", "C39", "C41", "C42", "C49"],
+  "overrides": {
+    "C15": {
+      "en": "Manage stock across multiple warehouses.",
+      "ar": "أدر المخزون عبر مستودعات متعددة."
+    },
+    "C27": {
+      "en": "Payment, shipping and other integrations depend on supported capabilities, configuration and operational readiness.",
+      "ar": "تعتمد عمليات الربط بالدفع والشحن وغيرها على الإمكانات المدعومة والإعدادات والجاهزية التشغيلية."
+    },
+    "C53": {
+      "en": "Start with a SHOPYXI account.",
+      "ar": "ابدأ بإنشاء حساب في SHOPYXI."
+    },
+    "C55": {
+      "en": "Create your account",
+      "ar": "أنشئ حسابك"
+    }
+  },
+  "boundaries": [
+    "Capabilities describe implemented source workflows, not guaranteed deployment entitlements, commercial packages, outcomes or provider acceptance.",
+    "No free offer, duration or price is asserted; the registration link is navigation only, with no registration submission in qualification.",
+    "No consultation/contact process, customer evidence, legal workflow, independent reviewer approval or universal accessibility certification is asserted.",
+    "Screenshot evidence is synthetic demonstration data, not a customer endorsement or proof of production business acceptance."
+  ]
+}

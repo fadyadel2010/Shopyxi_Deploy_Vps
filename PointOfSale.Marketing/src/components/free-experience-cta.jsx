@@ -39,7 +39,7 @@ function CompositionWindow({ product, variant }) {
       <span className="fx-window-pill" />
     </span>
     <span className="fx-window-shot">
-      <CaptureImage image={image} alt={variant === 'folio' ? screen.detailAlt : screen.alt} />
+            <CaptureImage image={image} alt={variant === 'folio' ? screen.detailAlt : screen.alt} />
     </span>
   </figure>;
 }
@@ -53,11 +53,10 @@ function ProductTiles() {
 }
 
 export function FreeExperienceCTA() {
-  const { locale, t } = useMarketing();
+  const { locale, t, publicRelease } = useMarketing();
   return <section className="fx-section" id="free-experience" aria-labelledby="fx-title">
     <div className="fx-shell">
       <div className="fx-panel">
-        <span className="fx-panel-glow" aria-hidden="true" />
         <div className="fx-copy">
           <span className="fx-badge"><Rocket className="fx-badge-icon" size={15} strokeWidth={2.1} aria-hidden="true" />
             <Label id="fxBadge" className="fx-badge-text" /></span>
@@ -70,7 +69,7 @@ export function FreeExperienceCTA() {
             <UserRoundPlus className="fx-cta-icon" size={21} strokeWidth={2} aria-hidden="true" />
             <Claim id="C55" as="span" />
           </a>
-          <ul className="fx-benefits" aria-label={t('fxBenefitsLabel')}>
+          <ul className="fx-benefits" aria-label={publicRelease ? (locale === 'ar' ? 'خطوات البدء' : 'Getting started') : t('fxBenefitsLabel')}>
             {BENEFIT_LABEL.map((id, i) => {
               const Icon = BENEFIT_ICON[i];
               return <li className="fx-benefit" key={id} data-benefit={id}>
@@ -82,6 +81,7 @@ export function FreeExperienceCTA() {
         </div>
         <div className="fx-art" role="group" aria-label={copy[locale].compositionLabel}>
           <div className="fx-stage">
+            <span className="fx-panel-glow" aria-hidden="true" />
             <span className="fx-glow" aria-hidden="true" />
             {WINDOWS.map(window => <CompositionWindow key={window.product} {...window} />)}
             <ProductTiles />

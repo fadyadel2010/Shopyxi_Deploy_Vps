@@ -19,13 +19,11 @@
   padding-block: 0;
   border-block-start: 4px solid var(--sf-signal);
   background-color: var(--sf-field);
-  background-image:
-    radial-gradient(46rem 27rem at 102% -10%, rgb(210 199 249 / .58), transparent 70%),
-    radial-gradient(40rem 25rem at -8% 112%, rgb(215 205 250 / .62), transparent 72%),
-    linear-gradient(180deg, #f8f7fd 0%, #f2f0fa 100%);
+  /* A solid lavender field keeps navigation contrast measurable in every engine. */
   color: var(--sf-muted);
 }
 [data-shopyxi-marketing] .sf-ambient {
+  display: none;
   position: absolute;
   z-index: 0;
   inset: 0;

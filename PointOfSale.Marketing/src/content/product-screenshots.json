@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "syntheticOnly": true,
   "actualReleaseUi": true,
-  "review": "Owner review pending. Crops preserve original pixels; UI and application bundles unchanged.",
+  "review": "Preserved existing synthetic captures under the user's conditional 2026-11-25 Marketing release authorization. All 20 public assets hash-checked and pixel-compared with retained hashed original crops; no other reviewer approval or production business acceptance claimed.",
   "disclosure": {
     "en": "Actual SHOPYXI application screen. All displayed data is synthetic demonstration data.",
     "ar": "شاشة فعلية من تطبيق SHOPYXI. جميع البيانات المعروضة بيانات تجريبية."

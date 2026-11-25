@@ -35,8 +35,17 @@ try {
     await session.send('DOM.enable'); await session.send('CSS.enable');
     const doc = await session.send('DOM.getDocument');
     for (const sample of samples) {
-      const { nodeId } = await session.send('DOM.querySelector', { nodeId:doc.root.nodeId, selector:`[data-font-inspection="${sample.index}"]` });
-      const { fonts } = await session.send('CSS.getPlatformFontsForNode', { nodeId });
+      // CDP reports fonts for a node's own text, not necessarily nested links/bdi.
+      // Inspect the complete rendered subtree rather than treating an empty parent
+      // glyph list as a font failure.
+      const selector = `[data-font-inspection="${sample.index}"]`;
+      const { nodeIds } = await session.send('DOM.querySelectorAll', {
+        nodeId: doc.root.nodeId, selector: `${selector}, ${selector} *`
+      });
+      const fonts = [];
+      for (const nodeId of nodeIds) {
+        fonts.push(...(await session.send('CSS.getPlatformFontsForNode', { nodeId })).fonts);
+      }
       results.samples.push({ route:route.path, ...sample, fonts,
         pass:fonts.length>0 && fonts.every(f => f.isCustomFont && f.familyName==='Cairo') });
     }

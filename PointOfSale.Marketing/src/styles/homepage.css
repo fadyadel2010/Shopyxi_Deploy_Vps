@@ -412,6 +412,7 @@ html[dir="rtl"] [data-shopyxi-marketing] .hero-windows { --hx-tilt-rear: 2.1deg;
 [data-shopyxi-marketing] .hero-window-lights i:nth-child(2) { background: #f2bd52; }
 [data-shopyxi-marketing] .hero-window-lights i:nth-child(3) { background: #57c583; }
 [data-shopyxi-marketing] .hero-window-bar .window-index { margin-inline-start: .25rem; color: #7e92b0; font-size: .625rem; font-weight: 650; letter-spacing: .07em; flex: 0 0 auto; }
+[data-shopyxi-marketing] .hero-window-commercehub .window-index { display: none; }
 [data-shopyxi-marketing] .hero-window-bar .window-name {
   display: block;
   min-width: 0;

@@ -59,7 +59,7 @@ function HeroWindow({ product, priority = false }) {
     <a className="hero-window-frame" href={image.publicPath}>
       <span className="hero-window-bar">
         <span className="hero-window-lights" aria-hidden="true"><i /><i /><i /></span>
-        <bdi className="window-index" dir="ltr">{products.find(p => p.key === product).n}</bdi>
+        <bdi className="window-index" dir="ltr" aria-hidden="true">{products.find(p => p.key === product).n}</bdi>
         <span className="window-name">{BRAND[product]}</span>
       </span>
       <span className="hero-window-shot">

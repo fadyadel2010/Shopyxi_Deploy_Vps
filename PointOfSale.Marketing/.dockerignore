@@ -1,0 +1,10 @@
+node_modules
+dist
+.build
+test-output
+temp
+.cache
+.env*
+*.log
+*-audit.json
+**/__pycache__

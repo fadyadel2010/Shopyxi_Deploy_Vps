@@ -1,5 +1,5 @@
 /* Implementation-only refinements. All selectors/tokens remain marketing-scoped. */
-[data-shopyxi-marketing] .review-label { font-size: .75rem; }
+[data-shopyxi-marketing] .review-label { font-size: .75rem; min-block-size: 3.825rem; }
 [data-shopyxi-marketing] .review-label small { font-size: .75rem; max-width: 85ch; }
 [data-shopyxi-marketing] .variant-label { font-size: .75rem; }
 [data-shopyxi-marketing] .header-inner { flex-wrap: wrap; }

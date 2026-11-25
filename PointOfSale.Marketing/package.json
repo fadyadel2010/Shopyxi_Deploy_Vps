@@ -8,7 +8,7 @@
     "build": "node scripts/build.mjs",
     "build:public": "node scripts/build.mjs --public",
     "preview": "node scripts/preview.mjs",
-    "test": "node --test tests/static.test.mjs",
+    "test": "node --test tests/static.test.mjs tests/arabic-default.test.mjs tests/screenshots.test.mjs tests/publication.test.mjs",
     "test:browser": "node tests/browser.mjs",
     "test:public": "node --test tests/public-static.test.mjs tests/release-guard.test.mjs",
     "test:public:browser": "node tests/public.mjs"

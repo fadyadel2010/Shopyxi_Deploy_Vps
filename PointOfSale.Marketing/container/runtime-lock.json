@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "packages": [
+    "nginx=1.30.7-r0",
+    "musl=1.2.6-r3",
+    "libcrypto3=3.5.9-r1",
+    "libssl3=3.5.9-r1",
+    "pcre2=10.49-r0",
+    "zlib=1.4-r0"
+  ],
+  "layerSha256": "747b897499dc08eb6a23c6de61fa05d743a6315a32383f2955bfa83bc75f0734",
+  "diffSha256": "2901700c52b609198fb3a06f8ec921e47834d5ffc3ac020a2ed2d768e53d884f",
+  "signatureVerification": "Alpine apk default signature verification using keys from pinned official Alpine base; never --allow-untrusted."
+}

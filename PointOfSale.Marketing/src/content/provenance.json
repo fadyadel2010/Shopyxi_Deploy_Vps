@@ -7,7 +7,7 @@
     "docs/branding/assets/SHOPYXI_primary_logo_transparent.png": "8fd64e7a193a081394a9ed699417cc30387cbc8644711fbff786163c2e2d70aa"
   },
   "claims": 56,
-  "claimApproval": "PENDING",
+  "claimApproval": "Historical multi-reviewer approval remains PENDING; public publication uses the evidence-supported subset and conservative overrides in publication.json. No historical reviewer approval is inferred.",
   "productEvidenceStatuses": "Unchanged; Phase 1 evidence matrix is authoritative.",
   "logo": {
     "sha256": "8fd64e7a193a081394a9ed699417cc30387cbc8644711fbff786163c2e2d70aa",
@@ -15,5 +15,5 @@
     "height": 747,
     "treatment": "Byte-for-byte copy, no recoloring/cropping/resampling"
   },
-  "derived": "Exact claim pairs; inherited Phase 2 labels/product maps; Phase 2.1 Signal Stage CSS with unused Open Canvas rules omitted. Review-only editorial metadata updated. Phase 1F-D adds C52-C55 (PENDING) and the free experience CTA."
+  "derived": "Historical claim pairs remain exact in review mode. Public mode uses publication.json; unsupported free-offer and consultation wording is replaced or excluded. Current source evidence is documented in CLAIMS-EVIDENCE.md. Historical import source hashes are archival, not current release qualification."
 }

@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
-import { routes, siteOrigin, accessDestinations } from '../src/routes.mjs';
+import { routes, siteOrigin, accessDestinations, registrationDestination } from '../src/routes.mjs';
 const app = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = file => fs.readFileSync(path.join(app, 'dist', file), 'utf8');
 const receipt = JSON.parse(read('build-receipt.json'));
@@ -27,7 +27,9 @@ for (const route of routes) test(`${route.path}: public content, working scope a
   assert.equal((html.match(/<h1\b/g) || []).length, 1);
   assert.doesNotMatch(html, /data-review-only|data-approval="PENDING"|href="#demo"|id="demo"|class="placeholder"|<form\b|<input\b|<textarea\b|<button\b/);
   const body = html.slice(html.indexOf('<body'));
-  assert.deepEqual([...body.matchAll(/href="(https:[^"]*)"/g)].map(m => m[1]), accessDestinations);
+  assert.deepEqual([...body.matchAll(/href="(https:[^"]*)"/g)].map(m => m[1]),
+    route.page === 'home' ? [...accessDestinations, registrationDestination] : accessDestinations);
+  assert.doesNotMatch(body, /free experience|تجربتك المجانية|تجربة مجانية|Ask us to review|discuss any additional branch/i);
   const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map(m => m[1]);
   for (const m of html.matchAll(/href="#([^"]+)"/g)) assert.ok(ids.includes(m[1]), m[1]);
   for (const locale of ['en', 'ar']) assert.ok(html.includes(`hrefLang="${locale}"`) || html.includes(`hreflang="${locale}"`));

@@ -57,5 +57,7 @@ try {
   await new Promise(resolve => server.close(resolve));
 }
 await fs.mkdir(evidence, { recursive: true });
-await fs.writeFile(path.join(evidence, 'visual-performance.json'), JSON.stringify({ method: 'Cold Chromium contexts; local no-store preview; font requests delayed 600ms; synthetic laboratory observations, not field CWV.', results }, null, 2));
+const pass = results.length === 4 && results.every(result => result.cls <= .1);
+await fs.writeFile(path.join(evidence, 'visual-performance.json'), JSON.stringify({ pass, method: 'Cold Chromium contexts; local no-store preview; font requests delayed 600ms; CLS must be <=0.1; synthetic laboratory observations, not field CWV.', results }, null, 2));
 console.log(JSON.stringify(results.map(({locale,width,cls,requestedBytes}) => ({locale,width,cls,requestedBytes})),null,2));
+if (!pass) process.exitCode = 1;

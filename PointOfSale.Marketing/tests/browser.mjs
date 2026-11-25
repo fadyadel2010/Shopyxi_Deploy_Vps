@@ -264,7 +264,7 @@ try {
     await session.send('DOM.enable'); await session.send('CSS.enable');
     const doc = await session.send('DOM.getDocument');
     await page.evaluate(() => document.fonts.ready);
-    for (const selector of ['h1', '.hero-copy > p', '.window-name', '.window-index', '.hero-copy .eyebrow bdi']) {
+    for (const selector of ['h1', '.hero-copy > p', '.window-name', '.hero-window-pos .window-index', '.hero-copy .eyebrow bdi']) {
       const { nodeId } = await session.send('DOM.querySelector', { nodeId: doc.root.nodeId, selector });
       const fonts = await session.send('CSS.getPlatformFontsForNode', { nodeId });
       results.fonts.push({ locale, selector, fonts: fonts.fonts });
@@ -294,7 +294,8 @@ try {
     screenshots: results.screenshots.length, externalRequests: results.externalRequests.length,
     consoleErrors: results.consoleErrors.length, brokenResponses: results.brokenResponses.length, errors: results.errors.length
   };
-  results.pass = !Object.entries(results.summary).some(([k, n]) => /failed|Violations|externalRequests|consoleErrors|brokenResponses|^errors$/.test(k) && n);
+  results.pass = results.states.length === (smoke ? 6 : 180) &&
+    !Object.entries(results.summary).some(([k, n]) => /failed|Violations|Incomplete|externalRequests|consoleErrors|brokenResponses|^errors$/.test(k) && n);
   await fs.writeFile(path.join(evidence, smoke ? 'browser-smoke.json' : 'browser-results.json'), JSON.stringify(results, null, 2) + '\n');
   console.log(JSON.stringify({ pass: results.pass, ...results.summary, failed: results.states.filter(x => !x.pass).map(x => ({ route: x.route, width: x.width, mode: x.mode, outside: x.outside })), failedAssertionDetails: results.assertions.filter(x => !x.pass), errorDetails: results.errors }, null, 2));
   if (!results.pass) process.exitCode = 1;

@@ -1,20 +1,27 @@
 {
+  "schemaVersion": 2,
   "pass": true,
-  "sourceSha256": "86cb95e99babc010037be30746815260e4a71587d780eeef308781fada337f8e",
+  "sourceSha256": "64a1b9ffdaa0b82d4a7a7e47563501ba6a97ddc7557dd5dbcdfecf05d66f6b8a",
+  "inputsSha256": "9dcaccf833d768a409fab2ef2b5764da6803aad7a2b13548a2bad7ee43396ec5",
   "engines": [
     "chromium",
     "firefox",
     "webkit"
   ],
   "states": 180,
+  "failedStates": 0,
+  "assertions": 513,
+  "failedAssertions": 0,
   "axeAudits": 72,
-  "errors": 0,
-  "consoleErrors": 0,
-  "externalRequests": 0,
   "axeViolations": 0,
   "axeIncompleteAudits": 0,
+  "consoleErrors": 0,
+  "errors": 0,
+  "externalRequests": 0,
   "brokenResponses": 0,
-  "browserReportSha256": "f0c01e4e66b4852efe816ebd761c2247ed883d2a87d4d7562138d654fca78fd2",
-  "completedUtc": "2026-11-22T23:21:27.377Z",
-  "limits": "Automated installed desktop engines/responsive emulation; no physical-device or screen-reader certification."
+  "screenshots": 48,
+  "browserReportSha256": "e0e743afc053d10030239a9dd3a6ddfb72d0bcee378d3bf976036fcfd09a57cc",
+  "completedUtc": "2026-11-25T12:08:45.819Z",
+  "limits": "Automated installed desktop engines and responsive emulation; no physical-device, native-editor or screen-reader certification.",
+  "binding": "All src, assets, scripts, tests, packaging, lockfile, release policy and approval inputs; qualification itself excluded to avoid circularity."
 }

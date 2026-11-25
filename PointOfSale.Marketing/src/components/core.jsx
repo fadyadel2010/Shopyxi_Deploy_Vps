@@ -4,6 +4,7 @@ import claims from '../content/claims.json';
 import labels from '../content/labels.json';
 import products from '../content/products.json';
 import { pagePath } from '../routes.mjs';
+import { publicClaim } from '../publication.mjs';
 export { claims, labels, products };
 export const MarketingContext = createContext(null);
 export const useMarketing = () => useContext(MarketingContext);
@@ -15,7 +16,7 @@ export function Mixed({ text }) {
 }
 export function Claim({ id, as: Tag = 'p', className = '' }) {
   const { locale, publicRelease } = useMarketing();
-  return <Tag className={className} data-claim={id} data-approval={publicRelease ? 'APPROVED' : 'PENDING'}><Mixed text={claims[id][locale]} /></Tag>;
+  return <Tag className={className} data-claim={id} data-approval={publicRelease ? 'SOURCE_SUPPORTED' : claims[id].approval}><Mixed text={publicRelease ? publicClaim(claims, id, locale) : claims[id][locale]} /></Tag>;
 }
 export function Label({ id, as: Tag = 'span', className = '', claim }) {
   const { t } = useMarketing();

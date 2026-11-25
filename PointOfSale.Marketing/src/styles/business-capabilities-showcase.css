@@ -253,6 +253,7 @@ html[dir="rtl"] [data-shopyxi-marketing] .bc-panel-storefront {
 [data-shopyxi-marketing] .bc-glow {
   position: absolute;
   z-index: 0;
+  max-inline-size: 84%;
   border-radius: 50%;
   pointer-events: none;
   background: radial-gradient(closest-side, var(--bc-glow-a), transparent 100%);
@@ -260,7 +261,7 @@ html[dir="rtl"] [data-shopyxi-marketing] .bc-panel-storefront {
 [data-shopyxi-marketing] .bc-glow-a {
   inline-size: 26rem;
   block-size: 20rem;
-  inset-inline-end: -6rem;
+  inset-inline-end: 0;
   inset-block-start: 2%;
 }
 [data-shopyxi-marketing] .bc-glow-b {
@@ -272,7 +273,7 @@ html[dir="rtl"] [data-shopyxi-marketing] .bc-panel-storefront {
 }
 [data-shopyxi-marketing] .bc-panel-storefront .bc-glow-a {
   inset-inline-end: auto;
-  inset-inline-start: -6rem;
+  inset-inline-start: 0;
 }
 [data-shopyxi-marketing] .bc-panel-storefront .bc-glow-b {
   inset-inline-end: auto;
@@ -369,20 +370,25 @@ html[dir="rtl"] [data-shopyxi-marketing] .bc-panel-storefront {
 [data-shopyxi-marketing] .bc-lights i:nth-child(2) { background: #febc2e; }
 [data-shopyxi-marketing] .bc-lights i:nth-child(3) { background: #28c840; }
 [data-shopyxi-marketing] .bc-window-label {
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
   min-inline-size: 0;
   max-inline-size: 100%;
   color: #dbe4f5;
   font-size: .6rem;
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.8;
   letter-spacing: .035em;
   text-align: center;
-  white-space: normal;
+  white-space: nowrap;
   overflow-wrap: anywhere;
   word-break: normal;
 }
 [data-shopyxi-marketing] .bc-window-label * {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   overflow-wrap: anywhere;
   word-break: normal;
 }
@@ -419,13 +425,13 @@ html[dir="rtl"] [data-shopyxi-marketing] .bc-panel-storefront {
 [data-shopyxi-marketing] .bc-panel-pos .bc-shot-pos {
   inset-inline-end: 7rem;
   inset-block-start: 50%;
-  transform: translateY(-50%) rotate(-1.3deg);
+  transform: translateY(-50%);
 }
 /* Panel 02: mirrored composition, capture at the outer edge */
 [data-shopyxi-marketing] .bc-panel-storefront .bc-shot-storefront {
   inset-inline-start: 7rem;
   inset-block-start: 50%;
-  transform: translateY(-50%) rotate(1deg);
+  transform: translateY(-50%);
 }
 /* Panel 03: two independent product windows, deliberately overlapped */
 [data-shopyxi-marketing] .bc-panel-channels .bc-shot-affiliate {
@@ -433,14 +439,14 @@ html[dir="rtl"] [data-shopyxi-marketing] .bc-panel-storefront {
   inset-block-start: 4%;
   block-size: min(92%, 248px);
   z-index: 2;
-  transform: rotate(-1.6deg);
+  transform: none;
 }
 [data-shopyxi-marketing] .bc-panel-channels .bc-shot-commercehub {
   inset-inline-start: 2.5%;
   inset-block-end: 3%;
   block-size: min(82%, 228px);
   z-index: 3;
-  transform: rotate(1.1deg);
+  transform: none;
 }
 
 /* Floating product icons */
@@ -762,13 +768,13 @@ html[dir="rtl"] [data-shopyxi-marketing] .bc-desc {
        width does not. Keep the untouched 3:2 capture inside the visual column,
        with room for the inline offset and rotation; normal-size art is unchanged. */
     block-size: min(84%, calc((100vw - var(--sm-gutter) * 2 - 4.1rem - 2rem) / 1.5 + 1.5rem));
-    transform: rotate(-1.2deg);
+     transform: none;
   }
   [data-shopyxi-marketing] .bc-panel-channels .bc-shot-commercehub {
     inset-inline-start: 2.5%;
     inset-block-end: 3%;
     block-size: 74%;
-    transform: rotate(.9deg);
+     transform: none;
   }
   [data-shopyxi-marketing] .bc-panel-channels .bc-float {
     inline-size: 3.2rem;
@@ -857,7 +863,7 @@ html[dir="rtl"] [data-shopyxi-marketing] .bc-desc {
   [data-shopyxi-marketing] .bc-panel-channels .bc-shot-commercehub {
     inline-size: 92%;
     margin-inline-start: auto;
-    transform: rotate(1.1deg);
+     transform: none;
   }
   [data-shopyxi-marketing] .bc-panel-channels .bc-float {
     inline-size: 2.9rem;

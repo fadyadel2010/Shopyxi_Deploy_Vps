@@ -1,66 +1,99 @@
-# SHOPYXI Marketing — Phase 1H source, review only
+# SHOPYXI Marketing
 
-Independent bilingual static React package. It is not merged into Admin,
-Storefront, CommerceHub or any other application. It has no runtime business API,
-forms, tracking, remote fonts, account integration or customer-session dependency.
+Standalone, bilingual static site. `/` temporarily redirects to `/ar/`; twelve
+English/Arabic routes remain directly addressable. Cairo and genuine synthetic-data
+product captures are local assets. React renders at build time only.
 
-## Release status
+## Install and qualify
 
-**Public release remains BLOCKED.** Phase 1H qualifies the local Marketing review
-candidate with documented warnings, not an overall end-to-end/public release.
-The registration destination had external Cloudflare-beacon CSP diagnostics;
-56 source claims remain PENDING, and historical approval/qualification files do
-not bind the redesigned source. Those files, CSP, claims and release checks are
-preserved unchanged. Synchronizing this package is not publication approval.
+Use Node 22 and the committed lockfile, in a clean checkout:
 
-## Isolated review
-
-Use Node 22+ and the committed exact-version manifest/lockfile. Dependency
-provisioning and browser installation are separate local setup operations:
-
-```powershell
-npm ci --ignore-scripts
+```sh
+npm ci
 npm run build
 npm test
 node --test tests/arabic-default.test.mjs tests/screenshots.test.mjs
-node --test tests/release-guard.test.mjs
+node tests/font-inspect.mjs
 npm run test:browser
-npm run preview
+npm run test:public:browser
+node scripts/seal-qualification.mjs test-output/public/public-browser-results.json
+npm run build:public
+npm run test:public
 ```
 
-Browser tests require an already provisioned compatible Chromium. They serve only
-an ephemeral loopback preview, block nonlocal requests and do not activate customer
-destinations. Preview defaults to `http://127.0.0.1:4183/`; `/` redirects to Arabic.
-The twelve localized routes are generated in review mode with noindex metadata.
+Install the exact locked Playwright browsers with `npx playwright install` when
+not already provisioned. Qualification requires Chromium, Firefox and WebKit,
+180 responsive states, 72 axe audits and no failures, incomplete audits, external
+requests or console/network errors. Reports/screenshots stay in ignored
+`test-output/` or `MARKETING_EVIDENCE_DIR`, not in Git. Review builds are always
+nonindexable, including under NODE_ENV=production. Never bypass `build:public`.
 
-`MARKETING_DIST` selects isolated output for the build, preview and main static/
-browser suites. `MARKETING_EVIDENCE_DIR` selects disposable test evidence.
-Some historical diagnostics explicitly read `dist/`; run them only in a copied
-package, never against a protected working copy. `tests/independent-build.mjs`
-also writes build output and is a historical helper, not the reconciliation runner.
+`release-approval.json` records the actual user authorization and scope;
+`CLAIMS-EVIDENCE.md` and `src/content/publication.json` distinguish source review
+from the historical multi-reviewer PENDING register. Unsupported free-offer and
+consultation wording does not ship. Source/asset/script/test/packaging/lockfile
+changes invalidate qualification. LF checkout rules make hashes portable.
+Approval hashes must be reviewed and updated before qualification; there is no
+automatic approval command. Reviewers other than the user are not presumed.
 
-## Included and excluded material
+## Production image and existing VPS delivery
 
-Current source, tests, build/preview helpers, nginx configuration, unchanged release
-records, exact lockfile and the 25 currently required public assets are included.
-The two immutable claim registers and original logo under `../docs/` are required
-test fixtures. Cairo retains its SIL OFL license. Product screenshots are actual
-application captures with synthetic data and unchanged provenance/hash records.
+`Dockerfile` is a pinned multi-stage public build with UID/GID 101 runtime.
+Only verified compiled files and `nginx.conf` are copied into the final stage;
+no source, npm dependencies, reports, internal receipts or secrets ship.
+The existing daemonless workflow is also supported by `container/build-image.py`:
 
-Historical editorial masters, superseded captures, import/comparison helpers that
-require historical evidence, prior review reports, browser evidence, `dist/`,
-`node_modules/`, caches and local environment files are not synchronized. They
-remain protected in the original working copy; their exclusion does not authorize
-deletion. Historical provenance paths are retained as historical records, not
-claimed to be newly reproduced evidence.
+```sh
+python container/build-image.py --source-commit <clean-committed-SHA> --output <external-evidence-directory>
+```
 
-The current public-static assertions and typography diagnostic have documented
-unresolved results; do not weaken their assertions or turn review output into a
-public artifact to claim success.
+First provision the runtime with `python container/prepare-runtime.py --output
+<external-evidence-directory>`. It uses a disposable container in the existing
+containerd's dedicated Marketing build namespace, verifies standard Alpine package
+signatures and installs the exact patched versions in `container/runtime-lock.json`.
+No host OS package installation, host mounts, public listener or Kubernetes object
+is created. Runtime files are normalized into a SHA-256 locked layer.
 
-## Production stop line
+The image builder validates the public receipt, clean commit, runtime-layer lock
+and every artifact hash, then writes a deterministic OCI archive. It does not run
+Docker: it reproduces the runtime copy stage using the **already guarded public
+artifact**. The pinned Alpine + stable Nginx runtime avoids known vulnerabilities
+in the older nginx-unprivileged image and omits its unnecessary curl/XML/XSLT/Brotli
+packages. Docker/BuildKit is an optional alternative, not a new registry or VPS
+dependency. Keep vulnerability/configuration scan results outside Git. Never
+deploy an unqualified or vulnerable candidate.
 
-`build:public` is fail-closed and requires actual scoped approval plus source-bound
-technical qualification. Do not edit gates to bypass it. No public build, image
-build/import, Kubernetes change, DNS/configuration change or Production deployment
-is authorized by this source reconciliation. A separate review/request is required.
+Production already uses OCI upload → remote archive hash check →
+`k3s ctr -n k8s.io images import` → tag immutable digest reference →
+CRI verification on every schedulable node. There is currently one node.
+Use `localhost/shopyxi/marketing:<source-SHA>` and deploy only
+`shopixy-app/deployment/shopyxi-marketing`, container `marketing`, by digest
+with imagePullPolicy Never. Do not apply broad manifests.
+
+Before rollout save Deployment JSON/YAML, UID/resourceVersion, image digest,
+revision, Pod readiness/restarts, and the unrelated-resource specifications.
+Verify the candidate on the node, including Nginx config, UID, private health
+port 8081, public port 8080, host admission, routes, headers and file hashes.
+Use a resourceVersion/UID/image-tested JSON patch of the existing image field.
+Wait for rollout and verify exact artifact bytes through `https://shopyxi.com`,
+all routes/assets, browser console/network, CSP, robots/sitemap and readiness.
+`container/deploy-marketing.py --evidence <image-evidence-directory>` automates
+node digest checks, isolated preflight, guarded image-only patch, rollout, live
+artifact/three-engine verification and automatic image rollback on failure.
+
+On critical failure, patch **only** Marketing back to the saved immutable image,
+wait for rollout and verify the old site is healthy. Keep old image/tag, snapshots,
+OCI provenance and failure evidence. Never remove the previous image.
+
+## Runtime contract and scope
+
+Nginx retains self-only CSP/no connections/no forms, security headers,
+no-transform/revalidated HTML, immutable hashed CSS/JS, revalidated fonts/images,
+real 404/405, exact `shopyxi.com` host admission and private `/healthz` on 8081.
+No public health route is introduced: the existing Traefik private-path rule
+intentionally denies public `/healthz`. `www` routing is owned elsewhere and is
+unchanged. No Service, ingress, DNS, TLS, middleware, database, business API,
+registration submission, tracking or other application is modified.
+
+Automated accessibility checks are not universal conformance, physical-device,
+screen-reader, native-editor or third-party approval.

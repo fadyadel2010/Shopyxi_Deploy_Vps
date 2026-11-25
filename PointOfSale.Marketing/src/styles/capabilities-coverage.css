@@ -19,11 +19,7 @@
   padding-block: clamp(2rem, 2.9vw, 2.85rem) clamp(2.5rem, 3.6vw, 3.4rem);
   color: var(--cc-ink);
   background-color: var(--cc-canvas);
-  background-image:
-    radial-gradient(48rem 31rem at 3% 2%, rgb(198 219 255 / .5), transparent 63%),
-    radial-gradient(47rem 32rem at 100% 24%, rgb(220 204 252 / .52), transparent 64%),
-    radial-gradient(46rem 28rem at 52% 108%, rgb(231 226 250 / .58), transparent 72%),
-    linear-gradient(180deg, #f7f5fe 0%, #f4f2fc 54%, #f7f5fd 100%);
+  /* Deterministic contrast behind copy; atmosphere remains inside illustrations. */
   overflow-wrap: break-word;
 }
 [data-shopyxi-marketing] .cc-orb {
@@ -135,7 +131,7 @@
   block-size: 64%;
   border-start-end-radius: var(--cc-radius-card);
   pointer-events: none;
-  background: radial-gradient(120% 120% at 100% 0%, rgb(var(--cc-accent-rgb) / .1), transparent 72%);
+  background: none;
 }
 [data-shopyxi-marketing] .cc-card-blue { --cc-accent: #2563eb; --cc-accent-rgb: 37 99 235; }
 [data-shopyxi-marketing] .cc-card-purple { --cc-accent: #7c3aed; --cc-accent-rgb: 124 58 237; }

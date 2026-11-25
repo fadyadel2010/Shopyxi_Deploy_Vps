@@ -53,7 +53,8 @@ test('provenance records the 56-claim register and its exact audited hash', () =
   const registerPath = 'docs/marketing/phase-1-discovery-20261121-01/SHOPYXI-MARKETING-CLAIMS-REGISTER.md';
   assert.equal(provenance.claims, Object.keys(claims).length);
   assert.equal(provenance.claims, 56);
-  assert.equal(provenance.sources[registerPath], sha(fs.readFileSync(path.join(root, registerPath))));
+  // Historical imports were LF; checkout line endings are not content changes.
+  assert.equal(provenance.sources[registerPath], sha(fs.readFileSync(path.join(root, registerPath), 'utf8').replaceAll('\r\n', '\n')));
   assert.ok(Object.values(claims).every(c => c.approval === 'PENDING'));
 });
 for (const r of routes) test(`${r.path}: static content, SEO, links, exact claims and disclosures`, () => {

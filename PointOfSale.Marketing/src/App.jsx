@@ -15,6 +15,7 @@ import { metadata } from './metadata.mjs';
 import { csp, pagePath, siteOrigin } from './routes.mjs';
 import { capabilityGroups } from './components/editorial.jsx';
 import { ProductScreenshot, ScreenshotDisclosure } from './components/product-screen.jsx';
+import { publicClaim } from './publication.mjs';
 
 // Phase 1F-A: legacy Proof, Trust and FAQ are detached from the homepage
 // composition only. Their components/exports, claims and labels stay intact for
@@ -84,6 +85,7 @@ function Product({ p }) {
 }
 function Head({ route, assets, publicRelease }) {
   const meta = metadata(route, claims, labels);
+  if (publicRelease) meta.description = publicClaim(claims, meta.claim, route.locale);
   return <head><meta charSet="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta httpEquiv="Content-Security-Policy" content={csp} />
     <meta name="robots" content={publicRelease ? 'index, follow' : 'noindex, nofollow, noarchive'} /><meta name="referrer" content="no-referrer" />

@@ -7,13 +7,17 @@ import { gzipSync, brotliCompressSync } from 'node:zlib';
 import { build, transform } from 'esbuild';
 import { routes } from '../src/routes.mjs';
 import { verifyScreenshots } from './screenshots.mjs';
+import { releaseInputs } from './release-inputs.mjs';
 const app = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 // MARKETING_DIST lets an isolated review/preview build be produced outside the
 // committed dist/ output. Defaults to dist/ for the normal workflow.
 const dist = path.resolve(process.env.MARKETING_DIST || path.join(app, 'dist'));
 const gates = JSON.parse(await fs.readFile(path.join(app, 'publication-gates.json'), 'utf8'));
 const publicRelease = process.argv.includes('--public');
+let publicInputBinding;
 if (publicRelease) {
+  const inputs = await releaseInputs(app);
+  publicInputBinding = { sourceSha256: inputs.sourceSha256, inputsSha256: inputs.inputsSha256 };
   const pending = gates.gates.filter(g => g.required && g.status !== 'APPROVED').map(g => g.id);
   const approval = JSON.parse(await fs.readFile(path.join(app, 'release-approval.json'), 'utf8'));
   const contentPaths = [
@@ -28,18 +32,11 @@ if (publicRelease) {
   let technical = {};
   try { technical = JSON.parse(await fs.readFile(path.join(app, 'release-qualification.json'), 'utf8')); }
   catch (e) { if (e.code !== 'ENOENT') throw e; }
-  const sourceManifest = {};
-  async function sourceHashes(directory) {
-    for (const entry of (await fs.readdir(path.join(app, directory), { withFileTypes: true })).sort((a, b) => a.name.localeCompare(b.name, 'en'))) {
-      const relative = `${directory}/${entry.name}`;
-      if (entry.isDirectory()) await sourceHashes(relative);
-      else sourceManifest[relative] = createHash('sha256').update(await fs.readFile(path.join(app, relative))).digest('hex');
-    }
-  }
-  await sourceHashes('src');
-  const orderedSource = Object.fromEntries(Object.entries(sourceManifest).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0));
-  const sourceSha256 = createHash('sha256').update(JSON.stringify(orderedSource)).digest('hex');
+  const sourceSha256 = inputs.sourceSha256;
   const technicalQualified = technical.pass === true && technical.sourceSha256 === sourceSha256 &&
+    technical.inputsSha256 === inputs.inputsSha256 &&
+    technical.failedStates === 0 && technical.failedAssertions === 0 &&
+    /^[a-f0-9]{64}$/.test(technical.browserReportSha256 || '') &&
     ['chromium', 'firefox', 'webkit'].every(engine => technical.engines?.includes(engine)) &&
     technical.states === 180 && technical.axeAudits === 72 && technical.errors === 0 &&
     technical.consoleErrors === 0 && technical.externalRequests === 0 && technical.axeViolations === 0 &&
@@ -48,7 +45,8 @@ if (publicRelease) {
   if (pending.length || gates.publicReleaseBlocked || !gates.phase4Authorized ||
       gates.releaseState !== 'PUBLIC_APPROVED_LEAN' ||
       !technicalQualified || !screenshotsQualified ||
-      approvedContentSha256 !== approval.approvedContentSha256 ||
+       approvedContentSha256 !== approval.approvedContentSha256 ||
+       sourceSha256 !== approval.publicSourceSha256 ||
       approval.scope.demoSubmission !== false || approval.scope.leadCollection !== false ||
       approval.scope.productScreenshots !== true || approval.scope.aboutCompanyFacts !== false) {
     console.error(JSON.stringify({ publicReleaseBlocked: true, pending, technicalQualified, screenshotsQualified, approvedContentMatches: approvedContentSha256 === approval.approvedContentSha256,
@@ -115,6 +113,7 @@ const sizes = await Promise.all(generatedFiles.map(async file => {
 }));
 const receipt = {
   mode: publicRelease ? 'public-lean' : 'review', optimizedStaticBuild: true, publicReleaseBlocked: !publicRelease, node: process.version,
+  ...publicInputBinding,
   routes: routes.length, assets, generatedFiles: [...generatedFiles, 'build-receipt.json'],
   totalBytes: sizes.reduce((n, x) => n + x.bytes, 0),
   browserRuntime: 'Only navigation enhancement; React, ReactDOM, Lucide package code never shipped.',

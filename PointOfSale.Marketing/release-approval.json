@@ -1,24 +1,25 @@
 {
-  "schemaVersion": 1,
-  "authority": "Original lean-launch approval plus owner-requested Arabic-default routing and genuine current-release synthetic product captures; continued execution explicitly requested.",
-  "date": "2026-11-23",
-  "approvedContentSha256": "e8f020eb29b7948bc080cf521322bb10d0c5cc6fd1d241d55185fcffc4bb71f4",
+  "schemaVersion": 2,
+  "authority": "User request: SHOPYXI Marketing — Full Production Remediation and Deployment, 2026-11-25. Explicit authorization to deploy only Marketing once every required release condition genuinely passes.",
+  "date": "2026-11-25",
+  "approvedContentSha256": "3434eb08ac3e9f11c1de2add5a2b2af29c0aef0782371be4c933cb80be2e9997",
+  "publicSourceSha256": "64a1b9ffdaa0b82d4a7a7e47563501ba6a97ddc7557dd5dbcdfecf05d66f6b8a",
   "scope": {
     "existingBilingualCopyAndProductBoundaries": true,
-    "cairoAndFourEditorialArtworks": true,
     "publicIndexingAtApex": true,
     "demoSubmission": false,
     "leadCollection": false,
     "productScreenshots": true,
     "aboutCompanyFacts": false,
-    "universalAccessibilityConformanceClaim": false
+    "universalAccessibilityConformanceClaim": false,
+    "deployment": "Only the existing shopixy-app/shopyxi-marketing Deployment image; no Service, routing, DNS, TLS or other applications."
   },
   "conditions": [
-    "Preserve existing design, Cairo, bilingual page structure and factual qualification boundaries.",
-    "Replace only four product-story and corresponding product-page figures with reviewed actual release captures: POS V05 secondary (V03 identity-column defect), Storefront V13, Affiliate V18 and CommerceHub V23. Preserve unrelated editorial artwork.",
-    "Screenshots must use synthetic-only isolated data, immutable originals, lossless pixel-equal assets and exact EN/AR demonstration disclosures; no fake UI, no production sessions or business writes.",
-    "No forms, contact destination, invented legal/privacy workflow, tracking, cookies or runtime business API.",
-    "Technical release requires static, browser, accessibility and production security/routing checks."
-  ],
-  "screenshotProvenanceSha256": "0ec9f57410e2840d65f82f46f81a9cd30358300eda2d3079855e80a5f03f1085"
+    "The supported public subset and exact conservative EN/AR overrides are in src/content/publication.json; source evidence and limitations are in CLAIMS-EVIDENCE.md.",
+    "Historical claims.json multi-reviewer PENDING statuses are not converted to approvals. No approval by another reviewer is claimed.",
+    "Preserve genuine current-release screenshots, synthetic-data disclosures, Cairo, existing routes and security boundaries.",
+    "No free offer, invented capabilities, customer evidence, consultation/contact process, lead form, tracking or runtime business API.",
+    "Fresh locked-dependency, static, three-engine, accessibility, screenshot, production configuration and security checks are mandatory.",
+    "Qualification must match every exact final release input; build:public must succeed. Save and retain the prior production digest and rollback specification."
+  ]
 }
